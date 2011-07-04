@@ -1,0 +1,74 @@
+/**
+ * @version   $Id: upload.css 259 2011-07-01 09:27:59Z happy_noodle_boy $
+ * @package   	JCE
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later
+ * This version may have been modified pursuant
+ * to the GNU General Public License, and as distributed it includes or
+ * is derivative of works licensed under the GNU General Public License or
+ * other free or open source software licenses.
+ */
+span.upload_container {
+    position: relative;
+    overflow: hidden;
+    float: left;
+    min-width: 50px;
+    min-height: 20px;
+    vertical-align: middle;
+}
+span.upload_container input[type="text"] {
+	padding: 2px;
+}
+span.upload_container input[type="file"] {
+    position	: absolute;
+    top			: 0;
+    right		: 0;
+    font-size	: 20px;
+    padding		: 0;
+    margin		: 0;
+    height 		: 26px;
+}
+#jce span.upload_container button {
+    margin-left: 5px;
+}
+#jce button span.browse, #jce button span.import {
+    left: 0;
+    margin-top: -10px;
+    width: 20px;
+    height: 20px;
+}
+#jce button span.browse {
+    left : 6px;
+    background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1100px; !important;
+}
+#jce button span.import {
+    background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -480px; !important;
+}
+#jce button.ui-state-loading span.ui-icon {
+   background : url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center;
+}
+#jce span.upload_clear {
+    display: inline-block;
+    float: left;
+    margin: 7px 5px 0 -20px;
+    cursor: pointer;
+}
+
+#jce #upload_button {
+}
+
+#jce label[for="import"] {
+    float: left;
+	margin-right: 5px;
+}
+#jce input.upload_text {
+	float: left;
+    color: #888;
+    height: 24px;
+}
+#jce input.upload_text.upload_file {
+    color: #888;
+}
+#jce input.upload_text.placeholder {
+    color: #888;
+}

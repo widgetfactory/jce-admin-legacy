@@ -1,0 +1,139 @@
+/**
+ * @version		$Id: profiles.css 226 2011-06-13 09:59:05Z happy_noodle_boy $
+ * @package   	JCE
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later
+ * This version may have been modified pursuant
+ * to the GNU General Public License, and as distributed it includes or
+ * is derivative of works licensed under the GNU General Public License or
+ * other free or open source software licenses.
+ */
+@import url("select.css");
+@import url("upload.css");
+@import url("colorpicker.css");
+@import url("extensions.css");
+@import url("../../../../../components/com_jce/editor/libraries/css/files.css");
+@import url("../../../../../components/com_jce/editor/tiny_mce/themes/advanced/skins/default/ui.css");
+@import url("layout.css");
+
+#profile-list a {
+	text-decoration: underline;
+}
+
+table#profiles_restrictions p {
+	margin : 0 0 5px 0;
+	padding : 0;
+}
+table#profiles_restrictions p label, table#profiles_restrictions p input {
+	vertical-align : middle;
+}
+table#profiles_restrictions p button {
+	margin : 5px 5px 0 0;
+}
+div#plugin_params h3 span.defaultSkin span.mceIcon, div#plugin_params h3 img {
+	display: inline-block;
+	vertical-align:middle;
+	margin: 0 10px 0 0;
+}
+div#plugin_params h3.plugin_params_visible {
+	display : block;
+}
+div#plugin_params h3.plugin_params_hidden {
+	display : none;
+}
+input#components-all, input#components-select, label[for="components-all"], label[for="components-select"] {
+	clear: none;
+	float: none;
+	display: inline;
+	margin: 0 5px 0 0;
+}
+#jce button span.icon-add, #jce button span.icon-remove, #jce button span.icon-legend {
+	left: 0;
+	margin-top: -10px;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+}
+#jce #search {
+	width: 200px;
+}
+
+#jce button span.icon-legend { 
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -880px;
+}
+#jce button span.icon-remove { 
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -180px;
+}
+#jce button span.icon-add { 
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -300px;
+}
+#jce span.profiles-enable,  #jce span.profiles-disable {
+	background: url(../img/tick.png) no-repeat 0 0;
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	cursor: pointer;
+}
+#jce span.profiles-disable {
+	background: url(../img/error.png) no-repeat 0 0;
+}
+#jce span.profiles-enable.loading,  #jce span.profiles-disable.loading {
+	background : url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center;
+}
+#jce input[type="radio"] + label {
+	display: inline;
+}
+
+#jce table tfoot td, table tfoot th {
+	text-align:center;
+}
+
+#jce .jgrid span.downarrow {
+	background-image:url("../img/down.png");
+}
+#jce .jgrid span.uparrow {
+	background-image:url("../img/up.png");
+}
+#jce .jgrid span.state {
+	display:inline-block;
+	height:16px;
+	width: 16px;
+}
+#jce a.saveorder {
+	display: inline-block;
+	float: none;
+	vertical-align: middle;
+}
+div#plugin_params span.mceIcon {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 2px 0 0;
+}
+
+div#plugin_params fieldset {
+	margin-left: 0;
+}
+div#plugin_params h2 {
+	font-size: 1.5em;
+	padding: 0 0.1em
+}
+
+#jce #tabs h2 {
+	margin: 0 0 0.8em 0;
+}
+
+#jce td.order span {
+	width:18px;
+	display: inline-block;
+}
+#jce td.order span a span span {
+	display: none;
+}
+#jce span.browser {
+	width: 20px;
+	height: 20px;
+	background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -960px;
+	cursor: pointer;
+	display: inline-block;
+	vertical-align:middle;
+}

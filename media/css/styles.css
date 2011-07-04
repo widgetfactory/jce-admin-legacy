@@ -1,0 +1,434 @@
+/**
+ * @version		$Id: styles.css 226 2011-06-13 09:59:05Z happy_noodle_boy $
+ * @package   	JCE
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later
+ * This version may have been modified pursuant
+ * to the GNU General Public License, and as distributed it includes or
+ * is derivative of works licensed under the GNU General Public License or
+ * other free or open source software licenses.
+ */
+#jce, #jce td {
+    font-size: 11px;
+}
+#jce.dialog:hover, #jce.dialog:visited {
+	text-decoration: none;
+}
+#jce .ui-tabs .ui-tabs-hide {
+    display: block !important;
+    position: absolute;
+    top: -10000px;
+    left: -10000px;
+}
+
+#jce .ui-tabs-nav .ui-state-disabled {
+    display:none !important;
+}
+#jce .ui-addselect {
+    background-color:#DDD;
+}
+#jce fieldset {
+    padding: 5px;
+	margin: 5px 0;
+}
+#jce input, #jce textarea, #jce select, #jce img, #jce label {
+    float: none;
+    margin: 0;
+    padding: 0;
+    font-size: 1em;
+    clear: none;
+    display: inline;
+}
+#jce fieldset button {
+    float: none;
+}
+#jce fieldset textarea {
+    padding: 2px;
+    width: 300px;
+}
+#jce input[type="checkbox"] {
+    border: none;
+}
+#jce input[type="text"], #jce input[type="password"], #jce select {
+    height: 20px;
+    line-height: 18px;
+    padding: 1px 2px;
+}
+#jce input[type="checkbox"], input[type="radio"] {
+    height: auto;
+    border: 0 none;
+}
+#jce input[disabled], select[disabled] {
+    opacity : 0.5;
+}
+#jce legend {
+    font-size: 1.1em;
+}
+#jce select.inputbox.levels, select.inputbox.users {
+    width: 200px;
+}
+#jce select {
+    min-width : 50px;
+}
+#jce select[multiple] {
+    height: auto !important;
+}
+#jce input, label {
+    vertical-align: middle;
+}
+#jce label {
+    line-height: 24px;
+}
+
+#jce input[type="radio"] + label {
+    margin: 0 0 0 5px;
+}
+#jce fieldset label {
+    font-size: 1em;
+}
+#jce button {
+    cursor: pointer;
+    min-width: 50px;
+    min-height: 24px;
+    vertical-align:middle;
+    padding: 1px;
+    float: none;
+    font-size: 1em;
+    clear: none;
+}
+div#jce {
+    padding: 5px;
+    background-color: #FFFFFF;
+}
+div#jce textarea {
+    max-width : 375px;
+}
+div#jce textarea.text_area {
+    padding: 5px;
+}
+div#jce button {
+    margin : 0 2px 0 3px;
+    font-size: 10.5px;
+}
+/* Parameters */
+#jce fieldset.adminform {
+    color: #000000;
+    font-family: Verdana,Arial,sans-serif;
+    font-size: 1em;
+}
+#jce ul.adminformlist {
+    /*display: inline-block;*/
+}
+#jce ul.adminformlist, #jce dl.adminformlist, dl.adminformlist > dd, #jce ul.adminformlist > li {
+    list-style: none outside none !important;
+    margin: 5px;
+    padding: 0;
+	display: inline-block;
+}
+#jce ul.adminformlist + ul {
+	display: block;
+	clear: left;
+}
+#jce dl.adminformlist dt {
+    margin: 5px;
+    font-weight: bold;
+}
+#jce ul.adminformlist > li, #jce dl.adminformlist > dd {
+    vertical-align: middle;
+    background: url('../img/list_label_bg.gif') repeat-y;
+    margin: 2px;
+    float: left;
+    clear: both;
+    display: inline-block;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    width: 100%;
+}
+#jce ul.adminformlist > li > div {
+	margin-left: 210px;
+}
+#jce ul.adminformlist > li > div h4 {
+	margin-left: 10px;
+}
+#jce ul.adminformlist > li {
+    line-height: 24px;
+}
+#jce dl.adminformlist > dd {
+    display: block;
+    float: none;
+}
+#jce dl.adminformlist dd {
+    margin: 10px 2px;
+}
+#jce ul.adminformlist > li > label:first-child, #jce ul.adminformlist > li > h4:first-child, #jce ul.adminformlist > li > span:first-child, #jce dl.adminformlist > dd > label:first-child, #jce dl.adminformlist > dd > span:first-child {
+    display: inline-block;
+    margin: 2px 5px;
+    width: 200px;
+    max-width: 200px;
+    min-width: 200px;
+    padding: 0 0 0 5px;
+    vertical-align: top;
+	float: left;
+}
+#jce ul.adminformlist li input, #jce ul.adminformlist li textarea, #jce ul.adminformlist li select, #jce dl.adminformlist dd input, #jce dl.adminformlist dd textarea, #jce dl.adminformlist dd select {
+    vertical-align: middle;
+}
+#jce .ui-widget {
+    font-size: 1em;
+}
+#jce td.ui-state-default {
+    text-align:right;
+    width: 150px;
+    vertical-align:middle;
+}
+#jce img.pluginicon {
+    vertical-align: middle;
+    line-height: 20px;
+    padding: 0 3px 3px 0;
+    text-align: right;
+}
+#jce ul.widget-checklist {
+    list-style : none;
+    margin: 0 !important;
+    padding: 0;
+    display: inline-block;
+    min-width : 200px;
+}
+#jce ul.widget-checklist li {
+    line-height : 20px;
+    width: 100%;
+    margin: 1px 0;
+    padding: 0;
+    background-repeat: no-repeat;
+    background-position: 98% center;
+    padding: 2px;
+}
+#jce ul.widget-checklist li.flash {
+    background-image: url('../img/flash.gif');
+}
+#jce ul.widget-checklist li.silverlight {
+    background-image: url('../img/silverlight.gif');
+}
+#jce ul.widget-checklist li.gears {
+    background-image: url('../img/gears.gif');
+}
+#jce ul.widget-checklist li.browserplus {
+    background-image: url('../img/browserplus.gif');
+}
+#jce ul.widget-checklist li.html5 {
+    background-image: url('../img/html5.gif');
+}
+
+#jce ul.widget-checklist li.ui-state-highlight {
+	border: 1px dashed #ccc;
+	height: 22px; 
+}
+/* Formats */
+#jce ul.widget-checklist.sortable li span.widget-checklist-p {}
+#jce ul.widget-checklist.sortable li span.widget-checklist-address {font-style:italic}
+#jce ul.widget-checklist.sortable li span.widget-checklist-pre {font-family:monospace}
+#jce ul.widget-checklist.sortable li span.widget-checklist-h1 {font-weight:bolder; font-size: 1.8em}
+#jce ul.widget-checklist.sortable li span.widget-checklist-h2 {font-weight:bolder; font-size: 1.5em}
+#jce ul.widget-checklist.sortable li span.widget-checklist-h3 {font-weight:bolder; font-size: 1.17em}
+#jce ul.widget-checklist.sortable li span.widget-checklist-h4 {font-weight:bolder; font-size: 1em}
+#jce ul.widget-checklist.sortable li span.widget-checklist-h5 {font-weight:bolder; font-size: .83em}
+#jce ul.widget-checklist.sortable li span.widget-checklist-h6 {font-weight:bolder; font-size: .75em}
+
+#jce ul.widget-checklist.sortable li input {
+    cursor: default;
+}
+#jce ul.widget-checklist.sortable li, ul.widget-checklist.sortable li label {
+    cursor: move;
+}
+#jce ul.widget-checklist li span {
+    vertical-align:middle;
+    line-height:20px;
+}
+#jce span.viewbox, #jce span.checkbox {
+    cursor:pointer;
+    display: inline-block;
+    height:20px;
+    width:20px;
+}
+#jce span.checkbox {
+    background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -740px;
+}
+#jce span.checkbox.checked {
+    background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -760px;
+}
+#jce span.checkbox.disabled {
+    opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30);
+}
+#jce div.loader {
+    background: #FFFFFF url("../../../../../components/com_jce/editor/tiny_mce/themes/advanced/skins/default/img/progress.gif") no-repeat center center;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#jce span.widget-password {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-left: 5px;
+    background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1140px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+#jce span.widget-password.locked {
+    background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1120px;
+}
+#jce table {
+    width: 100%;
+	border: 1px solid #CCC;
+	border-right-width: 0;
+	border-spacing: 0;
+}
+#jce table th, #jce table td {
+    padding: 5px;
+	border-spacing: 0;
+	line-height: 20px;
+}
+
+#jce table thead th, #jce table tbody td {
+	border-bottom: 1px solid #bbbbbb;
+	border-left: 1px solid #ffffff;
+	border-right: 1px solid #cccccc;
+	border-top: 1px solid #ffffff;
+}
+
+#jce table th{
+	font-size: 1.1em;
+	text-shadow: 0px 1px 1px rgba(255,255,255,1);
+}
+
+#jce table th, #jce table tfoot td {
+	background-color: #F0F0F0;
+}
+
+#jce table tbody tr:last-child td {
+	border-bottom-width: 0;
+}
+
+#jce table tfoot td {
+	border: 0;
+	border-right: 1px solid #cccccc;
+	border-top: 1px solid #bbbbbb;
+}
+
+#jce table[cellspacing="0"] {
+	border: 1px solid #CCC;
+}
+#jce table[cellspacing="0"] td {
+	border: 0;
+}
+#jce table tr.odd {
+    background-color: #F8F8F8;
+}
+#jce table tbody tr:hover {
+    background-color: #f4f8fd;
+}
+#jce table#profiles-toolbar tbody tr:hover, #jce table#users-toolbar tbody tr:hover {
+    background-color: inherit;
+}
+#jce div.limit select {
+    margin: 0 0 0 5px;
+}
+#jce table div.pagination {
+    display:table;
+    margin:0 auto;
+    padding:0;
+}
+
+input.placeholder, textarea.placeholder {
+	color: #bbb;
+}
+/** IE Specific **/
+input.ie_input_text {
+	height: 20px;
+	line-height: 18px;
+	padding: 1px;
+}
+button.ie_button {
+	min-width: 0;
+	height: 26px;
+}
+input.ie_upload_input_file {
+	position	: absolute;
+	top			: 0;
+	right		: 0;
+	font-size	: 20px;
+	padding		: 0;
+	margin		: 0;
+}
+
+/* Parameter Lists */
+
+dl.adminformlist dd.ie_adminformlist, #jce ul.adminformlist li.ie_adminformlist {
+	list-style: none outside none !important;
+	margin: 5px;
+	padding: 0;
+}
+
+#jce dl.adminformlist dd.ie_adminformlist {
+	display: block;
+	float: none;	
+}
+
+#jce ul.adminformlist li.ie_adminformlist label.ie_adminformlist_child, #jce ul.adminformlist li.ie_adminformlist span.ie_adminformlist_child, 
+#jce dl.adminformlist dd.ie_adminformlist label.ie_adminformlist_child, #jce dl.adminformlist dd.ie_adminformlist span.ie_adminformlist_child {
+	display: inline-block;
+	margin: 2px 5px;
+	width: 200px;
+	max-width: 200px;
+	min-width: 200px;
+	padding: 0 0 0 5px;
+	vertical-align: top;
+	font-weight: normal;
+}
+
+#jce ul.adminformlist li.ie_adminformlist, #jce dl.adminformlist dd.ie_adminformlist {
+	line-height: 24px;
+	vertical-align: middle;
+	background: url('../img/list_label_bg.gif') repeat-y;
+	margin: 2px;
+	float: left;
+	clear: both;
+	display: inline-block;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	width: 100%;
+}
+
+body.ui-jce .ui-dialog-content.ui-widget-content {
+	padding: 10px;
+}
+
+#jce a.dialog:hover, #jce a.dialog:active {
+	text-decoration: none;
+}
+
+#jce #accordian ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#jce #search {
+	width: 200px;
+}
+
+#toolbar span.icon-32-update span.icon-32-error {
+	background: url('../img/error.png') no-repeat bottom right;
+}

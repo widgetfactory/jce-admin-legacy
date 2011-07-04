@@ -1,0 +1,54 @@
+/**
+ * @version		$Id: installer.css 226 2011-06-13 09:59:05Z happy_noodle_boy $
+ * @package   	JCE
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later
+ * This version may have been modified pursuant
+ * to the GNU General Public License, and as distributed it includes or
+ * is derivative of works licensed under the GNU General Public License or
+ * other free or open source software licenses.
+ */
+@import url("upload.css");
+
+#jce button.install_discover.install.disabled {
+	color: #BBBBBB;
+}
+#jce button.install_discover.discover {
+	margin-left: 0px;
+}
+#jce button span.icon-discover, #jce button span.icon-install, #jce button span.icon-remove {
+	left: 0;
+	margin-top: -10px;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+}
+#jce button.install_discover span.icon-discover {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1040px;
+}
+#jce button span.icon-install {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -480px;
+}
+#jce button span.icon-remove {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -180px;
+}
+#jce button.loading span.icon-install, #jce button.loading span.icon-discover, #jce button.loading span.icon-remove {
+	background : url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center;
+}
+#jce div#install_discovered {
+	clear: both;
+	margin: 0 0 0 5px;
+}
+#jce dl.adminformlist {
+	display: block;
+}
+#jce dl.adminformlist > dd > span {
+	margin-top: 2px;
+	display: inline-block;
+}
+#jce table.install-summary tr.odd, #jce table.install-summary tr:hover {
+	background-color: inherit;
+}
+#jce #installer_filter_plugin, #jce #installer_filter_extension {
+  margin: 0 5px;
+}

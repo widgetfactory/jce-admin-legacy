@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<profiles>
+	<help>
+		<topic key="admin.profiles.about" title="WF_PROFILES_HELP_ABOUT" />
+		<topic key="admin.profiles.manage" title="WF_PROFILES_HELP_MANAGE">
+			<subtopic key="admin.profiles.manage.copy" title="WF_PROFILES_HELP_MANAGE_COPY" />
+			<subtopic key="admin.profiles.manage.delete" title="WF_PROFILES_HELP_MANAGE_DELETE" />
+			<subtopic key="admin.profiles.manage.export" title="WF_PROFILES_HELP_MANAGE_EXPORT" />
+			<subtopic key="admin.profiles.manage.import" title="WF_PROFILES_HELP_MANAGE_IMPORT" />
+			<subtopic key="admin.profiles.manage.ordering" title="WF_PROFILES_HELP_MANAGE_ORDERING" />
+			<subtopic key="admin.profiles.manage.enable" title="WF_PROFILES_HELP_MANAGE_ENABLE" />
+		</topic>
+		<topic key="admin.profiles.edit" title="WF_PROFILES_HELP_EDIT">
+			<subtopic key="admin.profiles.edit.setup" title="WF_PROFILES_HELP_EDIT_SETUP" />
+			<subtopic key="admin.profiles.edit.features" title="WF_PROFILES_HELP_EDIT_FEATURES" />
+			<subtopic key="admin.profiles.edit.editor" title="WF_PROFILES_HELP_EDIT_EDITOR" />
+			<subtopic key="admin.profiles.edit.plugins" title="WF_PROFILES_HELP_EDIT_PLUGINS" />
+			<subtopic key="admin.profiles.edit.widgets" title="WF_PROFILES_HELP_EDIT_WIDGETS" />
+		</topic>
+	</help>
+	<profiles>
+		<profile name="Default" default="default">
+			<description>WF_PROFILES_DEFAULT_DESC</description>
+			<users></users>
+			<types></types>
+			<components></components>
+			<area>0</area>
+			<rows>help,newdocument,undo,redo,spacer,bold,italic,underline,strikethrough,justifyfull,justifycenter,justifyleft,justifyright,spacer,blockquote,formatselect,styleselect,removeformat,cleanup;fontselect,fontsizeselect,forecolor,backcolor,spacer,paste,indent,outdent,numlist,bullist,sub,sup,textcase,charmap,hr;directionality,fullscreen,preview,source,print,searchreplace,spacer,table;visualaid,visualchars,nonbreaking,style,xhtmlxtras,anchor,unlink,link,imgmanager,spellchecker,article</rows>
+			<plugins>contextmenu,browser,inlinepopups,media,help,paste,searchreplace,directionality,fullscreen,preview,source,table,textcase,print,style,nonbreaking,visualchars,xhtmlxtras,imgmanager,link,spellchecker,article</plugins>
+			<published>1</published>
+			<ordering>1</ordering>
+			<params></params>
+		</profile>
+		<profile name="Front End">
+			<description>WF_PROFILES_FRONTEND_DESC</description>
+			<users></users>
+			<types></types>
+			<components></components>
+			<area>1</area>
+			<rows>help,newdocument,undo,redo,spacer,bold,italic,underline,strikethrough,justifyfull,justifycenter,justifyleft,justifyright,spacer,formatselect,styleselect;paste,searchreplace,indent,outdent,numlist,bullist,cleanup,charmap,removeformat,hr,sub,sup,textcase,nonbreaking,visualchars;fullscreen,preview,print,visualaid,style,xhtmlxtras,anchor,unlink,link,imgmanager,spellchecker,article</rows>
+			<plugins>contextmenu,inlinepopups,help,paste,searchreplace,fullscreen,preview,print,style,textcase,nonbreaking,visualchars,xhtmlxtras,imgmanager,link,spellchecker,article</plugins>
+			<published>0</published>
+			<ordering>2</ordering>
+			<params></params>
+		</profile>
+	</profiles>
+</profiles>

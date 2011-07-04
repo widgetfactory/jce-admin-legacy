@@ -1,0 +1,29 @@
+/**
+ * @version		$Id: legend.css 203 2011-06-01 19:02:19Z happy_noodle_boy $
+ * @package   	JCE
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later
+ * This version may have been modified pursuant
+ * to the GNU General Public License, and as distributed it includes or
+ * is derivative of works licensed under the GNU General Public License or
+ * other free or open source software licenses.
+ */
+
+@import url("../../../../../components/com_jce/editor/tiny_mce/themes/advanced/skins/default/ui.css");
+#jce span.mceIcon, #jce span.mceSeparator {
+	float: left;
+}
+#jce span.mceSeparator {
+	display: block;
+	padding: 1px 0;
+}
+
+#jce span.mceIcon {
+	background-color: #F0F0EE !important;
+}
+#jce p.title, #jce p.description {
+	margin : 2px 0;
+}
+#jce p.title {
+	font-weight: bold;
+}

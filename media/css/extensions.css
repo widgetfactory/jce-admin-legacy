@@ -1,0 +1,199 @@
+/**
+ * @version		$Id: extensions.css 203 2011-06-01 19:02:19Z happy_noodle_boy $
+ * @package   	JCE
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later
+ * This version may have been modified pursuant
+ * to the GNU General Public License, and as distributed it includes or
+ * is derivative of works licensed under the GNU General Public License or
+ * other free or open source software licenses.
+ */
+#jce ul li div.extension_mapper {
+	min-width : 200px;
+	margin: 5px 0 5px 215px;
+	position: relative;
+}
+#jce div.extension_group_container {
+	width: 130px;
+	height: 160px;
+	border: 1px solid #9FBBDD;
+	padding:1px;
+	margin:1px;
+	float: left;
+}
+#jce div.extension_group_container div {
+	margin: 0 1px;
+}
+#jce div.extension_group_container div.extension_group_titlebar {
+	position: relative;
+	height: 40px;
+}
+#jce div.extension_group_container div.extension_list_container {
+	width: inherit;
+	height: 70px;
+	margin: 0;
+	overflow: hidden;
+}
+#jce div.extension_group_container span.extension_group_title {
+	text-align: center;
+	display: inline-block;
+    line-height: 20px;
+    width: 96px;
+    padding: 0 0 0 10px;
+}
+#jce div.jce_extensions_group {
+	background-color:white;
+	display:inline-block;
+	height:22px;
+	line-height:22px;
+	vertical-align:middle;
+	cursor: default;
+	padding-left: 22px;
+}
+#jce div.extension_group_container div.extension_list_container input {
+	vertical-align: middle;
+	margin-top: 2px;
+	padding: 1px;
+	font-size: inherit;
+	vertical-align: middle;
+	height: 14px;
+	margin: 0;
+	line-height: 12px;
+}
+#jce div.extension_group_container div.extension_list_scroll_top, #jce div.extension_group_container div.extension_list_scroll_bottom {
+	visibility:hidden;
+	height:10px;
+	margin: 1px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	border:1px solid #9FBBDD;
+	cursor: pointer;
+}
+#jce div.extension_list_scroll_top span.extension_list_scroll_top_icon, #jce div.extension_list_scroll_bottom span.extension_list_scroll_bottom_icon {
+	position: relative;
+	width: 16px;
+	height: 10px;
+	margin: -3px 0 0 -8px;
+	left: 50%;
+}
+
+#jce div.extension_list_container ul.extension_list  {
+	list-style : none;
+	margin:0;
+	padding:0;
+	min-height: 100%;
+}
+#jce div.extension_list_container ul.extension_list li {
+	border: 1px solid #9FBBDD;
+	cursor:move;
+	height:20px;
+	line-height: 16px;
+	margin:1px;
+	padding:0 0 0 22px;
+	vertical-align:middle;
+	display: block;
+	min-width: 100px;
+	position: relative;
+	background-color: #FFF;
+}
+#jce div.extension_list_container ul.extension_list li span input.duplicate {
+	color: red;
+}
+#jce div.extension_list_container ul.extension_list li.sortable-highlight {
+	border: 1px dashed #9FBBDD;
+}
+#jce div.extension_mapper span.checkbox {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+#jce div.extension_mapper span.checkbox.view {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1180px;
+	right: 20px;
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+	-ms-filter:alpha(opacity=30);
+}
+#jce div.extension_mapper span.checkbox.checked.view {
+	opacity: 1;
+	filter:alpha(opacity=100);
+	-ms-filter:alpha(opacity=100);
+}
+#jce span.extension_edit {
+	display : inline-block;
+	width 	: 20px;
+	height 	: 20px;
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1080px;
+	vertical-align: middle;
+}
+#jce span.extension_edit.loader {
+	background : url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center;
+}
+#jce div.extension_list_add {
+	height : 20px;
+	border: 1px dashed #888;
+}
+#jce div.extension_mapper div.extension_group_add {
+	width: 130px;
+	height: 160px;
+	border: 1px solid #9FBBDD;
+	padding:1px;
+	margin:1px;
+	float: left;
+	position: relative;
+	border: 1px dashed #888;
+	font-size: 0.9em;
+}
+#jce div.extension_mapper div.extension_group_add span {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -540px;
+	color: #888;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    margin: auto;
+    position: absolute;
+    text-align: center;
+    top: 60px;
+    vertical-align: middle;
+    width: 130px;
+}
+#jce div.extension_mapper span.extension_group_remove {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -560px;
+	cursor:pointer;
+	height:20px;
+	width: 20px;
+	display: inline-block;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+#jce div.extension_group_container div.extension_list_add span {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -540px;
+	cursor:pointer;
+	display: inline-block;
+	text-align: center;
+	font-size: 0.9em;
+	color: #888;
+	line-height: 20px;
+    padding: 0 0 0 25px;
+    text-align: center;
+    vertical-align: middle;
+}
+#jce div.extension_group_container ul.extension_list li span.extension_list_remove {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -560px;
+	cursor:pointer;
+	height:20px;
+	width: 20px;
+	/*float: right;*/
+	position: absolute;
+	right:0;
+	top:0;
+	display: inline-block;
+}
+#jce div.extension_group_container span.extension_group_title.custom input {
+	height: 14px;
+    line-height: 10px;
+    padding: 1px;
+    margin: 1px;
+}

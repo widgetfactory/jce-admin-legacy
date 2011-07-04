@@ -1,0 +1,129 @@
+/**
+ * @version		$Id: icons.css 222 2011-06-11 17:32:06Z happy_noodle_boy $
+ * @package   	JCE
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later
+ * This version may have been modified pursuant
+ * to the GNU General Public License, and as distributed it includes or
+ * is derivative of works licensed under the GNU General Public License or
+ * other free or open source software licenses.
+ */
+/*.icon-32-export { 
+	background: url(../img/toolbar.png) no-repeat 0 -224px; 
+}
+
+.icon-32-save { 
+	background: url(../img/toolbar.png) no-repeat 0 -352px; 
+}
+
+.icon-32-publish { 
+	background: url(../img/toolbar.png) no-repeat 0 -192px; 
+}
+
+.icon-32-config { 
+	background: url(../img/toolbar.png) no-repeat 0 -320px; 
+}
+
+.icon-32-unpublish { 
+	background: url(../img/toolbar.png) no-repeat 0 -128px; 
+}
+
+.icon-32-new { 
+	background: url(../img/toolbar.png) no-repeat 0 -288px; 
+}
+
+.icon-32-edit { 
+	background: url(../img/toolbar.png) no-repeat 0 -160px; 
+}
+
+.icon-32-update { 
+	background: url(../img/toolbar.png) no-repeat 0 -384px; 
+}
+
+.icon-32-copy { 
+	background: url(../img/toolbar.png) no-repeat 0 -64px; 
+}
+
+.icon-32-delete { 
+	background: url(../img/toolbar.png) no-repeat 0 -96px; 
+}
+
+.icon-32-cancel { 
+	background: url(../img/toolbar.png) no-repeat 0 -32px; 
+}
+
+.icon-32-apply { 
+	background: url(../img/toolbar.png) no-repeat 0 0; 
+}
+
+.icon-32-help { 
+	background: url(../img/toolbar.png) no-repeat 0 -256px; 
+}
+*/
+.icon-48-logo {
+	background-image: url(../img/logo.png);
+}
+
+span.icon-remove, span.icon-add, span.icon-legend {
+	cursor: pointer;
+	line-height: 20px;
+	height: 20px;
+	float: left;
+	margin: 2px;
+	padding-right: 2px;
+}
+.icon-remove { 
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -340px;
+}
+.icon-add { 
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -300px;
+}
+.icon-download { 
+	display: block;
+	line-height: 20px;
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1160px;
+	padding-left: 22px;
+	vertical-align: middle;
+}
+.icon-text {
+	margin-left: 22px;
+	vertical-align: middle;
+	line-height: 20px;
+} 
+.icon-edit {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1080px;
+	line-height: 20px;
+	float: left;
+	padding-right: 2px;
+}
+.icon-update {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat;
+	line-height: 20px;
+	float: left;
+	padding-right: 2px;
+}
+button#update.check span.icon-update {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1040px;
+}
+ul#table_status {
+	list-style: none;
+	margin:0;
+	padding:0;
+}
+ul#table_status li {
+	list-style: none;
+	margin:0;
+	padding: 0 0 0 20px;
+	line-height: 20px;
+}
+span.ok, span.error, span.update_icon {
+	display: inline-block;
+	height: 20px;
+	width: 20px;
+}
+span.ok, ul#table_status li.ok {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -520px;
+}
+span.error, ul#table_status li.error {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1060px;
+}

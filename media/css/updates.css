@@ -1,0 +1,89 @@
+/**
+ * @version		$Id: updates.css 203 2011-06-01 19:02:19Z happy_noodle_boy $
+ * @package   	JCE
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later
+ * This version may have been modified pursuant
+ * to the GNU General Public License, and as distributed it includes or
+ * is derivative of works licensed under the GNU General Public License or
+ * other free or open source software licenses.
+ */
+body#jce {
+	background: #FFFFFF none !important;
+}
+#jce button span.icon-update, #jce button span.icon-install {
+	left: 0;
+	margin-top: -10px;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+}
+#jce button.check span.icon-update {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1040px;
+}
+#jce button.install span.icon-install {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -480px;
+}
+#jce button.loading span.icon-update {
+	background: url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat 0 0;
+}
+#jce span.priority {
+	line-height: 20px;
+	width: 80%;
+	display: block;
+	text-align: center;
+	font-weight: bold;
+	color : #000000;
+}
+#jce span.priority.high {
+	background-color: #FFCCCC;
+	color: #CC0000;
+	border: 1px solid #CC0000;
+}
+#jce span.priority.medium {
+	background-color: #FFFFCC;
+	border: 1px solid #FFD700;
+	color: #CCAC00;
+}
+#jce span.priority.low {
+	background-color: #BBDDFF;
+	border: 1px solid #0000CD;
+	color : #0000CD;
+}
+#jce span.priority.installed {
+	background-color: #BBEEAA;
+	border: 1px solid #008000;
+	color : #008000;
+}
+#jce span.checkbox.loader, #jce span.checkbox.checked.loader, #jce span.checkbox.checked.disabled.loader {
+	background: url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center center;
+	cursor: default;
+}
+#jce span.checkbox.tick, #jce span.checkbox.checked.tick, #jce span.checkbox.checked.disabled.tick {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -760px;
+	cursor: default;
+}
+#jce span.checkbox.error, #jce span.checkbox.checked.error, #jce span.checkbox.checked.disabled.error {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1060px;
+	cursor: default;
+}
+#jce span.checkbox.alert, #jce span.checkbox.checked.alert, #jce span.checkbox.checked.disabled.alert {
+	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -20px;
+	cursor: default;
+}
+#jce table.adminlist tbody tr:hover {
+	background-color: #FFD;
+}
+#jce table.adminlist tbody tr {
+	line-height: 20px;
+}
+#jce fieldset {
+	margin : 10px 0 0 0;
+}
+#jce div#updates-info {
+	height: 200px;
+	overflow: auto;
+}
+#jce tr.selected {
+	font-weight: bold;
+}
