@@ -255,21 +255,23 @@ class WFModelProfiles extends WFModel
                     switch ($item->name()) {
 						case 'name':
 							$name = $item->data();
-							
-							// check for name
-			                $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
-			                $db->setQuery($query);
-			                // create name copy if exists
-			                while ($db->loadResult()) {
-			                    $name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
-			                    
-			                    $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
-			                    
-			                    $db->setQuery($query);
-			                }
-			                // set name
-			                $row->name = $name;
-							
+							// only if name set and table name not set
+							if ($name && !$row->name) {
+								// check for name
+				                $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
+				                $db->setQuery($query);
+				                // create name copy if exists
+				                while ($db->loadResult()) {
+				                    $name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
+				                    
+				                    $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
+				                    
+				                    $db->setQuery($query);
+				                }
+				                // set name
+				                $row->name = $name;
+							}
+
 							break;	
                         case 'description':
                             $row->description = WFText::_($item->data());
