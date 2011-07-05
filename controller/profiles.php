@@ -342,9 +342,7 @@ class WFControllerProfiles extends WFController
 			$profile->published = 0;
 				
 			$buffer .= "\n\t\t";
-			$buffer .= '<profile name="'.$this->encodeData($profile->name).'">';
-				
-			unset($profile->name);
+			$buffer .= '<profile>';
 			 
 			foreach ($profile as $key => $value) {
 				if ($key == 'params') {

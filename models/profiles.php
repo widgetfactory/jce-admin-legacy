@@ -233,22 +233,44 @@ class WFModelProfiles extends WFModel
                 $row = JTable::getInstance('profiles', 'WFTable');
                 // get profile name                 
                 $name  = (string)$profile->attributes()->name;
-                // check for name
-                $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
-                $db->setQuery($query);
-                // create name copy if exists
-                while ($db->loadResult()) {
-                    $name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
-                    
-                    $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
-                    
-                    $db->setQuery($query);
-                }
-                // set name
-                $row->name = $name;
-                
+				
+				// backwards compatability
+				if ($name) {
+					// check for name
+	                $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
+	                $db->setQuery($query);
+	                // create name copy if exists
+	                while ($db->loadResult()) {
+	                    $name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
+	                    
+	                    $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
+	                    
+	                    $db->setQuery($query);
+	                }
+	                // set name
+	                $row->name = $name;
+				}
+
                 foreach ($profile->children() as $item) {
                     switch ($item->name()) {
+						case 'name':
+							$name = $item->data();
+							
+							// check for name
+			                $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
+			                $db->setQuery($query);
+			                // create name copy if exists
+			                while ($db->loadResult()) {
+			                    $name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
+			                    
+			                    $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
+			                    
+			                    $db->setQuery($query);
+			                }
+			                // set name
+			                $row->name = $name;
+							
+							break;	
                         case 'description':
                             $row->description = WFText::_($item->data());
                             
