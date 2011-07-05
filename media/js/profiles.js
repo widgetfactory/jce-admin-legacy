@@ -155,6 +155,9 @@
         },
 
         onSubmit : function() {
+            // select all users
+            $('option', '#users').prop('selected', true);
+            
             $('div#tabs-editor, div#tabs-plugins').find(':input[name]').each( function() {
                 // disable blank or placeholder values
                 if ($(this).val() === '' || $(this).hasClass('placeholder')) {
