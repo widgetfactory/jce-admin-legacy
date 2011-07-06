@@ -36,7 +36,7 @@ class WFText
 			
 			if (strpos($string, 'WF_') !== false) {
 				// remove prefix
-				$translated = preg_replace(array('#^(WF_)#', '#(LABEL|OPTION)_#', '#_(DESC|TITLE)#'), '', $string);			
+				$translated = preg_replace(array('#^(WF_)#', '#(LABEL|OPTION|FILEGROUP)_#', '#_(DESC|TITLE)#'), '', $string);			
 				$translated = ucwords(strtolower(str_replace('_', ' ', $translated)));
 			}
 		}
