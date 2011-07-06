@@ -650,14 +650,9 @@ class WFInstaller extends JObject
 			// swap array values with keys, convert to lowercase and return array keys as values
 			$tables = array_keys(array_change_key_case(array_flip($tables)));
 			$app	= JFactory::getApplication();
+			$match 	= str_replace('#__', strtolower($app->getCfg('dbprefix', '')), $table);
 			
-			foreach($tables as $item) {
-				if (strpos($item, $app->getCfg('dbprefix', '') . str_replace('#__', '', $table)) !== false) {
-					return true;
-				}	
-			}
-			
-			return false;
+			return in_array($match, $tables);
 		}
 		
 		// try with query
