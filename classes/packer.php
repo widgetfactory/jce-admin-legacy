@@ -78,25 +78,20 @@ class WFPacker extends JObject
 	 * @copyright Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.
 	 */
 	private function _getEncoding()
-	{
-		if (!isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
-			return false;
-		}
-
-		$encoding = false;
-
-		if (false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
-			$encoding = 'gzip';
-		}
-
-		if (false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'x-gzip')) {
-			$encoding = 'x-gzip';
+	{		
+		// Check if it supports gzip
+		$encodings 	= (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) ? strtolower($_SERVER['HTTP_ACCEPT_ENCODING']) : "";
+		$encoding 	= preg_match( '/\b(x-gzip|gzip)\b/', $encodings, $match) ? $match[1] : "";
+		
+		// Is northon antivirus header
+		if (isset($_SERVER['---------------'])) {
+			$encoding = "x-gzip";
 		}
 		
 		return $encoding;
 	}
 
-	function pack($minify = true, $gzip = true)
+	function pack($minify = true, $gzip = false)
 	{
 		$type = $this->getType();
 
@@ -122,10 +117,9 @@ class WFPacker extends JObject
 		$files = $this->getFiles();
 		
 		$encoding = self::_getEncoding();
-		
-		if (!$encoding || !extension_loaded('zlib') || ini_get('zlib.output_compression')) {
-			$gzip = false;
-		}
+
+		$zlib 	= extension_loaded('zlib') && ini_get('zlib.output_compression');
+		$gzip 	= $gzip && !empty($encoding) && $zlib && function_exists('gzencode');
 
 		$content = $this->getContentStart();
 
@@ -134,49 +128,32 @@ class WFPacker extends JObject
 		}
 
 		$content .= $this->getContentEnd();
+		
+		// pack javascript
+		if($minify) {
+			if($this->getType() == 'javascript') {
+				$content = $this->jsmin($content);
+			}
+
+			if($this->getType() == 'css') {
+				$content = $this->cssmin($content);
+			}
+		}
 
 		// Generate GZIP'd content
 		if($gzip) {
-			// pack javascript
-			if($minify) {
-				if($this->getType() == 'javascript') {
-					$content = $this->jsmin($content);
-				}
-
-				if($this->getType() == 'css') {
-					$content = $this->cssmin($content);
-				}
-			}
-
 			header("Content-Encoding: " . $encoding);
-			$data = gzencode($content, 9, FORCE_GZIP);
-
-			// Stream to client
-			die($data);
-		} else {
-			if($minify) {
-				if($type == 'javascript') {
-					$content = $this->jsmin($content);
-				}
-
-				if($type == 'css') {
-					$content = $this->cssmin($content);
-				}
-			}
-			// Stream uncompressed content
-			die($content);
+			$content = gzencode($content, 9, FORCE_GZIP);
 		}
+		
+		// stream to client
+		die($content);
 	}
 
 	function jsmin($data) 
 	{			
 		require_once (dirname(__FILE__) . DS . 'jsmin.php');
 		$data = trim(JSMin::minify($data));
-		
-		/*require_once (dirname(__FILE__) . DS . 'jspacker.php');
-					
-		$jspacker = new JavaScriptPacker($data, 'None', false, false);
-		$data  = $jspacker->pack();*/
 		
 		return $data;
 	}
