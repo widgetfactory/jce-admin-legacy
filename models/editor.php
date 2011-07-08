@@ -271,11 +271,12 @@ class WFModelEditor extends JModel
         $wf = WFEditor::getInstance();
         
         $settings = array(
+            'document_base_url' => JURI::root(),
             'language' 			=> $wf->getLanguage(),
             'directionality' 	=> $wf->getLanguageDir(),
             'theme' 			=> 'none',
             'invalid_elements' 	=> 'applet,iframe,object,embed,script,style',
-            'plugins'			 => ''
+            'plugins'			=> ''
         );
         
         return $settings;
