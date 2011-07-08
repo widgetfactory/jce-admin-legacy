@@ -271,7 +271,7 @@ class WFModelEditor extends JModel
         $wf = WFEditor::getInstance();
         
         $settings = array(
-            'document_base_url' => JURI::root(),
+            'base' 				=> JURI::root(),
             'language' 			=> $wf->getLanguage(),
             'directionality' 	=> $wf->getLanguageDir(),
             'theme' 			=> 'none',
