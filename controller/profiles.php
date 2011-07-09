@@ -403,6 +403,8 @@ class WFControllerProfiles extends WFController
 		$input		= JRequest::getVar('import_input');
 
 		$model 		= $this->getModel('profiles', 'WFModel');
+		
+		jimport('joomla.filesystem.file');
 
 		if (!is_array($file)) {
 			$mainframe->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_NOFILE'), 'error');
