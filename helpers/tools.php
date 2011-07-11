@@ -46,7 +46,7 @@ class WFToolsHelper {
 		
 		if ($data) {
 			if (preg_match_all('/@import url\(([^\)]+)\)/', $data, $matches)) {
-				$template = self::getTemplate();
+				$template = self::getTemplates();
 				
 				foreach ($matches[1] as $match) {
 					$file = JPATH_SITE.DS.'templates'.DS.$template.DS.'css'.DS.$match;
