@@ -111,7 +111,8 @@ class WFModelEditor extends JModel
 			
 			// Editor Toggle
 			$settings['toggle']			= $wf->getParam('editor.toggle', 1, 1);
-			$settings['toggle_label']	= htmlspecialchars($wf->getParam('editor.toggle_label'));
+			$settings['toggle_label']	= htmlspecialchars($wf->getParam('editor.toggle_label', '[show/hide]', '[show/hide]'));
+			$settings['toggle_state']	= $wf->getParam('editor.toggle_state', 1, 1);
 
             // elements
             // Get Extended elements
@@ -271,7 +272,7 @@ class WFModelEditor extends JModel
         $wf = WFEditor::getInstance();
         
         $settings = array(
-            'base' 				=> JURI::root(),
+            'base_url' 			=> JURI::root(),
             'language' 			=> $wf->getLanguage(),
             'directionality' 	=> $wf->getLanguageDir(),
             'theme' 			=> 'none',
@@ -547,15 +548,15 @@ class WFModelEditor extends JModel
      *
      * @access public
      */
-    function getSiteTemplate()
+    function getSiteTemplates()
     {
-        $db = JFactory::getDBO();
-        $app = JFactory::getApplication();
-        $id = 0;
+        $db 	= JFactory::getDBO();
+        $app 	= JFactory::getApplication();
+        $id 	= 0;
         
         if ($app->isSite()) {
-            $menus = JSite::getMenu();
-            $menu = $menus->getActive();
+            $menus 	= JSite::getMenu();
+            $menu 	= $menus->getActive();
             
             if ($menu) {
                 $id = isset($menu->template_style_id) ? $menu->template_style_id : $menu->id;
@@ -564,124 +565,148 @@ class WFModelEditor extends JModel
         
         // Joomla! 1.5
         if (WF_JOOMLA15) {
-            $query = 'SELECT menuid AS id, template' . ' FROM #__templates_menu' . ' WHERE client_id = 0';
+            $query = 'SELECT menuid as id, template'
+            . ' FROM #__templates_menu'
+            . ' WHERE client_id = 0'
+			;
             
             $db->setQuery($query);
             $templates = $db->loadObjectList();
             // Joomla! 1.6+
         } else {
-            $query = 'SELECT id, template' . ' FROM #__template_styles' . ' WHERE client_id = 0' . ' AND home = 1';
+            $query = 'SELECT id, template'
+            . ' FROM #__template_styles'
+            . ' WHERE client_id = 0'
+            . ' AND home = 1'
+            ;
             
             $db->setQuery($query);
             $templates = $db->loadObjectList();
         }
-        
-        foreach ($templates as $template) {
-            if ($id == $template->id) {
-                return $template->template;
+		
+		$assigned = array();
+			
+		foreach ($templates as $template) {
+            if ($id) {
+            	if ($id == $template->id) {
+               		$assigned[] = $template->template;
+            	}
+            } else {
+            	$assigned[] = $template->template;
             }
         }
-        // return first in list
-        return $templates[0]->template;
+
+        // return templates
+        return $assigned;
     }
     
     function getStyleSheets($absolute = false)
     {
-        jimport('joomla.filesystem.file');
+        jimport('joomla.filesystem.folder');
+		jimport('joomla.filesystem.file');
         
         $wf = WFEditor::getInstance();
+		
+		$path = '';
+		$url  = '';
         
-        $template = $this->getSiteTemplate();
-        
-        // Template CSS
-        $path = JPATH_SITE . DS . 'templates' . DS . $template . DS . 'css';
-        $url  = "templates/" . $template . "/css";
-        
+		// get templates
+        $templates = $this->getSiteTemplates();
+		
+		foreach($templates as $template) {
+			// Template CSS
+        	$path = JPATH_SITE . DS . 'templates' . DS . $template . DS . 'css';
+			// get the first path that exists
+			if (is_dir($path)) {
+				$url  = "templates/" . $template . "/css";	
+				break;
+			}
+		}
+
         $styles      = '';
         $stylesheets = array();
         $files       = array();
-        
-        // Joomla! 1.5 standard
-        $file = 'template.css';
-        
-        $css = JFolder::files($path, '(base|core|template|template_css)\.css$', false, true);
-        
-        foreach ($css as $item) {
-            if (JFile::exists($item)) {
-                $file = $item;
-                // look for php equivalent eg: template.css.php
-                if (JFile::exists($item . '.php')) {
-                    $file = $item . '.php';
-                }
-            }
-        }
-        
-        $global  = intval($wf->getParam('editor.content_css', 1));
-        $profile = intval($wf->getParam('editor.profile_content_css', 2));
-        
-        // use getParam so result is cleaned
-        $global_custom = $wf->getParam('editor.content_css_custom', '');
-        // Replace $template variable with site template name
-        $global_custom = str_replace('$template', $template, $global_custom);
-        // explode to array
-        $global_custom = explode(',', $global_custom);
-        
-        switch ($global) {
-            // Custom template css files
-            case 0:
-                $files = $global_custom;
-                break;
-            // Template css (template.css or template_css.css)
-            case 1:
-                $files[] = $url . '/' . basename($file);
-                break;
-            // Nothing, use editors default stylesheet
-            case 2:
-                $files = array();
-                break;
-        }
-        
-        $profile_custom = $wf->getParam('editor.profile_content_css_custom', '');
-        // Replace $template variable with site template name
-        $profile_custom = str_replace('$template', $template, $profile_custom);
-        // explode to array
-        $profile_custom = explode(',', $profile_custom);
-        
-        switch ($profile) {
-            // add to global config value
-            case 0:
-                $files = array_merge($files, $profile_custom);
-                break;
-            // overwrite global config value
-            case 1:
-                $files = $profile_custom;
-                break;
-            // inherit global config value
-            case 2:
-                break;
-        }
-        // get rid of duplicate css files
-        $files = array_unique($files);
-        
-        $root = $absolute ? JPATH_SITE : JURI::root(true);
-        
-        // check each file and make array of stylesheets
-        foreach ($files as $file) {
-            if ($file && JFile::exists(JPATH_SITE . DS . $file)) {
-                $stylesheets[] = $root . '/' . $file;
-            }
-        }
-        // get rid of duplicate stylesheets
-        $stylesheets = array_unique($stylesheets);
-        
-        // default editor stylesheet
-        if ($global == 2 && !count($stylesheets)) {
-            $styles = '';
-        } else {
-            if (count($stylesheets)) {
-                $styles = implode(',', $stylesheets);
-            }
-        }
+		
+		if ($path) {			
+			// Joomla! 1.5 standard
+	        $file = 'template.css';
+	        
+	        $css 	= JFolder::files($path, '(base|core|template|template_css)\.css$', false, true);
+			// use the first result
+			$file 	= $css[0]; 
+			
+			// check for php version
+			if (JFile::exists($file . '.php')) {
+				$file = $file . '.php';
+	        }
+	        
+	        $global  = intval($wf->getParam('editor.content_css', 1));
+	        $profile = intval($wf->getParam('editor.profile_content_css', 2));
+	        
+	        // use getParam so result is cleaned
+	        $global_custom = $wf->getParam('editor.content_css_custom', '');
+	        // Replace $template variable with site template name
+	        $global_custom = str_replace('$template', $template, $global_custom);
+	        // explode to array
+	        $global_custom = explode(',', $global_custom);
+	        
+	        switch ($global) {
+	            // Custom template css files
+	            case 0:
+	                $files = $global_custom;
+	                break;
+	            // Template css (template.css or template_css.css)
+	            case 1:
+	                $files[] = $url . '/' . basename($file);
+	                break;
+	            // Nothing, use editors default stylesheet
+	            case 2:
+	                $files = array();
+	                break;
+	        }
+	        
+	        $profile_custom = $wf->getParam('editor.profile_content_css_custom', '');
+	        // Replace $template variable with site template name
+	        $profile_custom = str_replace('$template', $template, $profile_custom);
+	        // explode to array
+	        $profile_custom = explode(',', $profile_custom);
+	        
+	        switch ($profile) {
+	            // add to global config value
+	            case 0:
+	                $files = array_merge($files, $profile_custom);
+	                break;
+	            // overwrite global config value
+	            case 1:
+	                $files = $profile_custom;
+	                break;
+	            // inherit global config value
+	            case 2:
+	                break;
+	        }
+	        // get rid of duplicate css files
+	        $files = array_unique($files);
+	        
+	        $root = $absolute ? JPATH_SITE : JURI::root(true);
+	        
+	        // check each file and make array of stylesheets
+	        foreach ($files as $file) {
+	            if ($file && JFile::exists(JPATH_SITE . DS . $file)) {
+	                $stylesheets[] = $root . '/' . $file;
+	            }
+	        }
+	        // get rid of duplicate stylesheets
+	        $stylesheets = array_unique($stylesheets);
+	        
+	        // default editor stylesheet
+	        if ($global == 2 && !count($stylesheets)) {
+	            $styles = '';
+	        } else {
+	            if (count($stylesheets)) {
+	                $styles = implode(',', $stylesheets);
+	            }
+	        }
+		}
         
         return $styles;
     }

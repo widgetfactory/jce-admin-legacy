@@ -11,7 +11,7 @@
  */
 class WFToolsHelper {
 	
-	function getTemplate()
+	function getTemplates()
 	{
 		$db = JFactory::getDBO();
 		
@@ -31,7 +31,7 @@ class WFToolsHelper {
 		}
 
 		$db->setQuery($query);	
-		return $db->loadResult();
+		return $db->loadResultArray();
 	}
 	
 	function parseColors($file)
@@ -70,11 +70,20 @@ class WFToolsHelper {
 		jimport('joomla.filesystem.file');
 		
 		$colors 	= array();
+		$path		= '';
 		
-		$template 	= self::getTemplate();
-		$path 		= JPATH_SITE.DS.'templates'.DS.$template.DS.'css';
+		$templates 	= self::getTemplates();		
 		
-		if (JFolder::exists($path)) {
+		foreach($templates as $template) {
+			// Template CSS
+        	$path = JPATH_SITE . DS . 'templates' . DS . $template . DS . 'css';
+			// get the first path that exists
+			if (is_dir($path)) {
+				break;
+			}
+		}
+		
+		if ($path) {
 			$files = JFolder::files($path, '\.css$', false, true);
 		
 			foreach ($files as $file) {
