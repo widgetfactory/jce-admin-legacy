@@ -167,7 +167,7 @@ class WFModelUpdates extends WFModel
             if ($data->name && $data->url && $data->hash) {
 				$tmp = $config->getValue('config.tmp_path');
 				// create path for package file
-				$path = $tmp.DS.basename($data->name);
+				$path = $tmp . DS . basename($data->name);
 				// download file
 				if ($this->connect($data->url, null, $path)) {
 					if (JFile::exists($path) && @filesize($path) > 0) {
@@ -189,9 +189,10 @@ class WFModelUpdates extends WFModel
                     } else {
                     	$result = array('error'=>WFText::_('WF_UPDATES_ERROR_FILE_MISSING_OR_INVALID'));
                     }
-                } else {
-                	$result = array('error'=>WFText::_('WF_UPDATES_DOWNLOAD_ERROR_DATA_TRANSFER'));
-                }	
+				} else {
+					$result = array('error'=>WFText::_('WF_UPDATES_DOWNLOAD_ERROR_DATA_TRANSFER'));	
+				}
+	
             } else {
             	$result = array('error'=>WFText::_('WF_UPDATES_DOWNLOAD_ERROR_MISSING_DATA'));
             }
@@ -284,10 +285,12 @@ class WFModelUpdates extends WFModel
      * @return 	Mixed 	Boolean or JSON String on error
      */
     function connect($url, $data = '', $download = '')
-    {
-        $fp = false;
-		
+    {		
 		@error_reporting(E_ERROR);
+		
+		jimport('joomla.filesystem.file');
+		
+		$fp = false;
 		
 		// Use curl if it exists
         if (function_exists('curl_init')) {
@@ -298,7 +301,7 @@ class WFModelUpdates extends WFModel
             // Pretend we are IE7, so that webservers play nice with us
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0)');
             //curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_TIMEOUT, $download ? 30 : 5);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			
 			 // The @ sign allows the next line to fail if open_basedir is set or if safe mode is enabled
@@ -313,7 +316,8 @@ class WFModelUpdates extends WFModel
             if ($data && !$download) {
                 curl_setopt($ch, CURLOPT_POST, 1);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            }
+            }	
+			
 			// file download
 			if ($download) {
 				$fp = @fopen ($download, 'wb');						
@@ -322,14 +326,16 @@ class WFModelUpdates extends WFModel
 
             $result = curl_exec($ch);
 			
+			// file download
+			if ($download && $result === false) {
+				die(json_encode(array('error' => 'TRANSFER ERROR : '. curl_error($ch))));	
+			}
+
             curl_close($ch);
+			
 			// close fopen handler
 			if ($fp) {
-				fclose($fp);
-			}
-			
-			if (curl_errno($ch)) {
-				return array('error' => 'CURL ERROR : '. curl_error($ch));
+				@fclose($fp);
 			}
 			
 			return $result;
