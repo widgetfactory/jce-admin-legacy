@@ -33,19 +33,21 @@
             return this.each( function() {
                 var v = $(this).attr('placeholder'), iv = $(this).val();
 
-                if (iv == '' || iv == v) {
+                if (iv === '' || iv == v) {
                     $(this).addClass('placeholder').val(v).click( function() {
                         if ($(this).hasClass('placeholder')) {
                             $(this).val('').removeClass('placeholder');
                         }
                     }).blur( function() {
-                        if (iv == '' || iv == v) {
+                        iv = $(this).val();
+                        if (iv === '' || iv == v) {
                             $(this).addClass('placeholder').val(v);
                         }
                     });
                 }
                 $(this).change( function() {
-                    if (iv == '') {
+                    iv = $(this).val();
+                    if (iv === '') {
                         $(this).addClass('placeholder').val(v);
                     } else {
                         $(this).removeClass('placeholder');
