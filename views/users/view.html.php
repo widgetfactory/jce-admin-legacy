@@ -43,12 +43,12 @@ class WFViewUsers extends JView
 
 		$filter_order		= $app->getUserStateFromRequest("$option.$view.filter_order",		'filter_order',		'a.name',	'cmd' );
 		$filter_order_Dir	= $app->getUserStateFromRequest("$option.$view.filter_order_Dir",	'filter_order_Dir',	'',			'word' );
-		$filter_type		= $app->getUserStateFromRequest("$option.$view.filter_type",			'filter_type', 		0,			'string' );
+		$filter_type		= $app->getUserStateFromRequest("$option.$view.filter_type",		'filter_type', 		0,			'string' );
 		$search				= $app->getUserStateFromRequest("$option.$view.search",				'search', 			'',			'string' );
 		$search				= JString::strtolower( $search );
 
 		$limit				= $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'), 'int' );
-		$limitstart 		= $app->getUserStateFromRequest("$option.$view..limitstart", 'limitstart', 0, 'int' );
+		$limitstart 		= $app->getUserStateFromRequest("$option.$view.limitstart", 'limitstart', 0, 'int' );
 
 		$where = array();
 		
