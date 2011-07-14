@@ -62,7 +62,7 @@ class WFViewUsers extends JView
 		
 		if (WF_JOOMLA15) {
 			if ($filter_type) {
-				$where[] = 'a.usertype = LOWER('.$db->Quote($filter_type).') ';
+				$where[] = 'a.gid ='.(int)$filter_type;
 			}
 			// exclude any child group id's for this user
 			$pgids = $acl->get_group_children( $currentUser->get('gid'), 'ARO', 'RECURSE' );
