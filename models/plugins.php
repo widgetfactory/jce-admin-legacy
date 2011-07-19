@@ -97,30 +97,33 @@ class WFModelPlugins extends WFModel {
 				$xml = WFXMLElement::getXML($folder . DS . $name . '.xml');
 
 				if($xml) {
-					$plugins[$name] = new StdClass();
+					$params = $xml->params;	
+						
+					if (!isset($plugins[$name])) {
+						$plugins[$name] = new StdClass();
+						
+						$plugins[$name]->name = $name;
 
-					$plugins[$name]->name = $name;
+						$plugins[$name]->title = (string)$xml->name;
+						$plugins[$name]->icon = (string)$xml->icon;
+						
+						$editable = (int)$xml->attributes()->editable;
+						$plugins[$name]->editable = $editable ? $editable : ($params && count($params->children()) ? 1 : 0);
 
-					$plugins[$name]->title = (string)$xml->name;
-					$plugins[$name]->icon = (string)$xml->icon;
-
-					$plugins[$name]->author = (string)$xml->author;
-					$plugins[$name]->version = (string)$xml->version;
-					$plugins[$name]->creationdate = (string)$xml->creationDate;
-					$plugins[$name]->description = (string)$xml->description;
+						$row = (int)$xml->attributes()->row;
 					
-					$plugins[$name]->authorUrl = (string)$xml->authorUrl;
+						$plugins[$name]->row = $row ? $row : 4;
 
-					$params = $xml->params;
+						$plugins[$name]->core = (int)$xml->attributes()->core ? 1 : 0;
+					}
 
-					$editable = (int)$xml->attributes()->editable;
-					$plugins[$name]->editable = $editable ? $editable : ($params && count($params->children()) ? 1 : 0);
-
-					$row = (int)$xml->attributes()->row;
-					$plugins[$name]->row = $row ? $row : 4;
-
-					$plugins[$name]->core = (int)$xml->attributes()->core ? 1 : 0;
-					$plugins[$name]->type = 'plugin';
+					$plugins[$name]->author 		= (string)$xml->author;
+					$plugins[$name]->version 		= (string)$xml->version;
+					$plugins[$name]->creationdate 	= (string)$xml->creationDate;
+					$plugins[$name]->description 	= (string)$xml->description;
+					
+					$plugins[$name]->authorUrl 		= (string)$xml->authorUrl;
+					$plugins[$name]->type 			= 'plugin';
 				}
 			}
 		}
@@ -152,6 +155,7 @@ class WFModelPlugins extends WFModel {
 			$name = basename($file, '.xml');
 			$object->name = $name;
 			$object->description = '';
+			$object->id = $object->folder . '.' . $object->name;
 
 			$xml = WFXMLElement::getXML($file);
 
@@ -170,6 +174,7 @@ class WFModelPlugins extends WFModel {
 				$object->author 		= (string)$xml->author;
 				$object->version 		= (string)$xml->version;
 				$object->type 			= (string)$xml->attributes()->folder;
+				$object->authorUrl 		= (string)$xml->authorUrl;
 				
 				
 				$object->folder = (string)$xml->attributes()->folder;
