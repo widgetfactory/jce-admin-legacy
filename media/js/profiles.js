@@ -196,6 +196,9 @@
             	$parent.hide().appendTo($target).show('slow');
             	
             	$(this).empty();
+            	
+            	self.setRows();
+                self.setPlugins();
             });
 
             $('ul.sortableRow').sortable({
