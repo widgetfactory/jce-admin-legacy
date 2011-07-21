@@ -621,6 +621,8 @@ class WFModelEditor extends JModel
 				$url  = "templates/" . $template . "/css";	
 				break;
 			}
+			
+			$path = '';
 		}
 
         $styles      = '';

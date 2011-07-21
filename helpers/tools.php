@@ -81,6 +81,8 @@ class WFToolsHelper {
 			if (is_dir($path)) {
 				break;
 			}
+			// reset path
+			$path = '';
 		}
 		
 		if ($path) {
