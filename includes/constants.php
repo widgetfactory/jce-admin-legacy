@@ -20,7 +20,7 @@ define('WF_JOOMLA15', version_compare(JVERSION, '1.6', '<'));
 // define JQuery version
 define('WF_JQUERY', '1.6.2');
 // define JQuery UI version
-define('WF_JQUERYUI', '1.8.13');
+define('WF_JQUERYUI', '1.8.14');
 
 // Some shortcuts to make life easier
 
