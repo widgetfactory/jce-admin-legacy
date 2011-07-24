@@ -28,10 +28,11 @@ class WFToolbarHelper {
 		
 		$options = array(
 			'width' 	=> 760,
-			'height'	=> 540
+			'height'	=> 540,
+			'modal'		=> true
 		);
 		
-		$html 	= '<a href="index.php?option=com_jce&amp;view=help&amp;tmpl=component&amp;section=admin'. $link .'&amp;lang='.substr($tag, 0, strpos( $tag, '-')).'" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog modal help" title="'.WFText::_('WF_HELP').'">';
+		$html 	= '<a href="index.php?option=com_jce&amp;view=help&amp;tmpl=component&amp;section=admin'. $link .'&amp;lang='.substr($tag, 0, strpos( $tag, '-')).'" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog help" title="'.WFText::_('WF_HELP').'">';
 		$html  .= '<span class="icon-32-help" title="'.WFText::_('WF_HELP').'"></span>'.WFText::_('WF_HELP').'</a>';		 
 		
 		$bar->appendButton('Custom', $html, 'help');
@@ -52,10 +53,11 @@ class WFToolbarHelper {
 		
 		$options = array(
 			'width' 	=> 760,
-			'height'	=> 540
+			'height'	=> 540,
+			'modal'		=> true
 		);
 		
-		$html 	= '<a href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog modal preferences" title="'.WFText::_('WF_PREFERENCES_TITLE').'">';
+		$html 	= '<a href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog preferences" title="'.WFText::_('WF_PREFERENCES_TITLE').'">';
 		$html  .= '<span class="icon-32-config icon-32-options" title="'.WFText::_('WF_PREFERENCES_TITLE').'"></span>'.WFText::_('WF_PREFERENCES').'</a>';
 		
 		$bar->appendButton('Custom', $html, 'config');
@@ -76,11 +78,12 @@ class WFToolbarHelper {
 		// Add a configuration button
 		$options = array(
 			'width' 	=> 760,
-			'height'	=> 540
+			'height'	=> 540,
+			'modal'		=> true
 		);
 		
 		if ($enabled) {
-			$html 	= '<a href="index.php?option=com_jce&amp;view=updates&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog modal updates" title="'.WFText::_('WF_UPDATES').'">';
+			$html 	= '<a href="index.php?option=com_jce&amp;view=updates&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog updates" title="'.WFText::_('WF_UPDATES').'">';
 			$html  .= '<span class="icon-32-default icon-32-update" title="'.WFText::_('WF_UPDATES_CHECK').'"></span>'.WFText::_('WF_UPDATES').'</a>';
 		} else {
 			$html  = '<a href="#"><span class="icon-32-default icon-32-update" title="'.WFText::_('WF_UPDATES_NOSUPPORT').'"><span class="icon-32-error"></span></span>'.WFText::_('WF_UPDATES_NOSUPPORT').'</a>';

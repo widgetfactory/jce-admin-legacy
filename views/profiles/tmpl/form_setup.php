@@ -88,7 +88,7 @@ defined('_JEXEC') or die('ERROR_403');
 			<span style="display:inline-block;">
 				<?php echo $this->lists['users'];?>
 				<span style="display:block; margin:5px 0 0;">
-					<a class="dialog users modal" data-options="{'width':760, 'height':540}" title="<?php echo WFText::_('WF_PROFILES_USERS_ADD');?>" href="index.php?option=com_jce&tmpl=component&view=users">
+					<a class="dialog users" data-options="{'width':760, 'height':540, 'modal':true}" title="<?php echo WFText::_('WF_PROFILES_USERS_ADD');?>" href="index.php?option=com_jce&tmpl=component&view=users">
                 		<button id="users-add"><?php echo WFText::_('WF_PROFILES_USERS_ADD');?></button>
 					</a>
 					<button id="users-remove"><?php echo WFText::_('WF_PROFILES_REMOVE_USERS');?></button>

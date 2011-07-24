@@ -30,10 +30,12 @@
                 // Check updates
                 $.getJSON("index.php?option=com_jce&view=updates&task=update&step=check", {}, function(r) {
                     if (r && r.length) {
-                        $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="updates"><a title="' + options.labels.updates + '" class="dialog modal updates" data-options="{&quot;width&quot; : &quot;760&quot;, &quot;height&quot; : &quot;540&quot;}" href="index.php?option=com_jce&amp;view=updates&amp;tmpl=component">' + options.labels.updates_available + '</a></span></li>');
+                        $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="updates"><a title="' + options.labels.updates + '" class="dialog updates" href="index.php?option=com_jce&amp;view=updates&amp;tmpl=component">' + options.labels.updates_available + '</a></span></li>');
 
                         $('a.dialog.updates', 'div#jce ul.adminformlist').click( function(e) {
                             $.jce.createDialog({
+                            	width	: 760,
+                            	height	: 540,
                                 src 	: $(this).attr('href'),
                                 options : $(this).data('options'),
                                 modal	: true,
