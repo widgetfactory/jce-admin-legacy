@@ -67,10 +67,10 @@ defined('_JEXEC') or die('Restricted access');
 	                    <?php echo WFText::_( 'WF_CPANEL_FEED' );?>
 	                </span>
 	                <span style="display:inline-block;">
-                <?php if ($this->params->get('feed', 1)) :?>
+                <?php if ($this->params->get('feed', 0)) :?>
 	                <ul class="newsfeed"><li><?php echo WFText::_('WF_CPANEL_FEED_NONE');?></li></ul>
                 <?php else : ?>
-                	<?php echo WFText::_('WF_CPANEL_FEED_DISABLED');?> :: <a title="<?php echo WFText::_('WF_PREFERENCES');?>" class="dialog modal preferences" rel="{\'width\' : 760, \'height\' : 540}" href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component">[<?php echo WFText::_('WF_CPANEL_FEED_ENABLE');?>]</a>
+                	<?php echo WFText::_('WF_CPANEL_FEED_DISABLED');?> :: <a title="<?php echo WFText::_('WF_PREFERENCES');?>" class="dialog preferences" data-options="{'width':760,'height':540,'modal':true}" href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component">[<?php echo WFText::_('WF_CPANEL_FEED_ENABLE');?>]</a>
                 <?php endif; ?>
                 	</span>
                 </li>
