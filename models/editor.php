@@ -382,12 +382,9 @@ class WFModelEditor extends JModel
                         $en  = $path . DS . 'langs' . DS . 'en.js';
                         
                         if (JFile::exists($en) && !JFile::exists($new)) {
-                            // try to copy en.js as new language file
-                            if (!@JFile::copy($en, $new)) {
-                                // remove plugin and throw error
-                                $this->removeKeys($plugins, $plugin);
-                                JError::raiseNotice('SOME_ERROR_CODE', sprintf(WFText::_('PLUGIN NOT LOADED : LANGUAGE FILE MISSING'), 'components/com_jce/editor/tiny_mce/plugins/' . $plugin . '/langs/' . $language . '.js') . ' - ' . ucfirst($plugin));
-                            }
+							// remove plugin and throw error
+                           	$this->removeKeys($plugins, $plugin);
+							JError::raiseNotice('SOME_ERROR_CODE', sprintf(WFText::_('PLUGIN NOT LOADED : LANGUAGE FILE MISSING'), 'components/com_jce/editor/tiny_mce/plugins/' . $plugin . '/langs/' . $language . '.js') . ' - ' . ucfirst($plugin));
                         }
                     }
                 }
