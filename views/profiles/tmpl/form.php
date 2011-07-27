@@ -11,25 +11,8 @@
  * other free or open source software licenses.
  */
 
-defined('_JEXEC') or die('Restricted access');	
+defined('_JEXEC') or die('RESTRICTED');	
 ?>
-<script type="text/javascript">
-	function submitbutton(pressbutton) {
-		var form = document.adminForm;
-		// Cancel button
-		if (pressbutton == "cancelEdit") {
-			submitform(pressbutton);
-			return;
-		}
-		// validation
-		if (form.name.value == "") {
-			alert( "<?php echo WFText::_('WF_PROFILES_NAME_ALERT'); ?>" );
-		} else {			
-			$jce.Profiles.onSubmit();
-			submitform(pressbutton);
-		}
-	}
-</script>
 <form action="index.php" method="post" name="adminForm">
 	<div id="jce">
 		<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">

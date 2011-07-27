@@ -24,7 +24,7 @@ defined('_JEXEC') or die('ERROR_403');
 			<?php if ($this->profile->name == 'Default'){ echo $this->profile->name; ?>
                 <input type="hidden" name="name" id="profile_name" value="<?php echo $this->profile->name; ?>" />
             <?php }else{?>
-                <input class="text_area" type="text" name="name" id="profile_name" size="35" value="<?php echo $this->profile->name; ?>" />
+                <input class="text_area required" type="text" name="name" id="profile_name" size="35" value="<?php echo $this->profile->name; ?>" />
             <?php }?>
 	    </li>
 	    <li>

@@ -103,7 +103,9 @@ class WFController extends JController
 						'cancel' 	=> WFText::_('WF_LABEL_CANCEL'),
 						'select'	=> WFText::_('WF_LABEL_SELECT'),
 						'save'		=> WFText::_('WF_LABEL_SAVE'),
-						'saveclose' => WFText::_('WF_LABEL_SAVECLOSE')
+						'saveclose' => WFText::_('WF_LABEL_SAVECLOSE'),
+						'alert'		=> WFText::_('WF_LABEL_ALERT'),
+						'required'  => WFText::_('WF_MESSAGE_REQUIRED')
 					)
 				);
 				

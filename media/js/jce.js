@@ -15,7 +15,7 @@
 
         init : function(options) {
             var self = this;
-            $.extend(this.options, options);
+            $.extend(true, this.options, options);
 
             // add ui-jce class to body
             $('body').addClass('ui-jce');
@@ -168,10 +168,9 @@
 
             };
 
-            if (o.type == 'confirm') {
-                var text 	= o.title.split('::');
-                var title 	= text[0];
-                var message = text.length > 1 ? text[1] : text[0];
+            if (o.type == 'confirm' || o.type == 'alert') {
+                var text 	= o.text 	|| '';
+                var title 	= o.title 	|| (o.type == 'alert' ? self.options.labels.alert : '');
 
                 $.extend(settings, {
                     width 		: 300,
@@ -180,23 +179,20 @@
                     dialogClass	: 'ui-jce',
                     buttons : {
                         '$ok' : function() {
-                            if (/function\([^\)]*\)\{/.test(src)) {
-                                $.globalEval(src);
-                            } else {
-                                document.location.href = src;
-                            }
-                            $(this).dialog("close");
-                        },
-
-                        '$cancel' : function() {
+                        	if (src) {
+                        		if (/function\([^\)]*\)\{/.test(src)) {
+	                                $.globalEval(src);
+	                            } else {
+	                                document.location.href = src;
+	                            }	
+                        	}
                             $(this).dialog("close");
                         }
-
                     },
                     open : function() {
                         _fixDialog(div, settings);
 
-                        $(div).attr('id', 'dialog-confirm').append(message);
+                        $(div).attr('id', 'dialog-confirm').append(text);
 
                         $('button').each( function() {
                             var h = this.innerHTML;
@@ -214,6 +210,14 @@
                     }
 
                 });
+                
+                if (o.type == 'confirm') {
+                	$.extend(settings.buttons, {
+                		'$cancel' : function() {
+                            $(this).dialog("close");
+                        }
+                	});
+                }
             }
             
             // add idd if set

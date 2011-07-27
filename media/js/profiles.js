@@ -9,10 +9,41 @@
  * other free or open source software licenses.
  */
 (function($) {
+	if (typeof Joomla === 'undefined') {
+		Joomla = {};
+	}
+	
+    Joomla.submitbutton = submitbutton = function(button) {
+		// Cancel button
+		if (button == "cancelEdit") {
+			try {
+				Joomla.submitform(button);
+			} catch(e) {
+				submitform(button);
+			}
+
+			return;
+		}
+		
+		if ($jce.Profiles.validate()) {
+			$jce.Profiles.onSubmit();
+			try {
+				Joomla.submitform(button);
+			} catch(e) {
+				submitform(button);
+			}
+		}
+	};
+    
     // Create Profiles object
     $.jce.Profiles = {
+        
+        options : {},
+        
         init : function(options) {
             var self = this;
+            
+            $.extend(true, this.options, options);
             
             if ($.browser.msie) {
                 $('#jce').addClass('ie');
@@ -153,6 +184,33 @@
                 self.setPlugins();
             });
         },
+        
+        validate : function() {
+        	var required = [];
+        	
+        	$(':input.required').each(function() {
+        		if ($(this).val() === '') {
+        			required.push('<li>' + $('label[for="' + this.id + '"]').html() + '</li>');
+        		}
+        	});
+        	
+        	if (required.length) {
+        		var msg = '<p>' + $jce.options.labels.required + '</p>';
+        		msg += '<ul>';
+        		msg += required.join('');
+        		msg += '</ul>';
+        		
+        		$jce.createDialog({
+        			type  : 'alert',
+        			text  : msg,
+        			modal : true
+        		});
+      		
+        		return false;
+        	}
+			
+			return true;
+        },
 
         onSubmit : function() {
             // select all users
@@ -164,7 +222,6 @@
                     $(this).attr('disabled', 'disabled');
                 }
             });
-
         },
 
         createLayout : function() {
