@@ -349,6 +349,28 @@ class WFInstaller extends JObject
                     }
                 }
             }
+			
+			$folders = JFolder::folders(JPATH_ADMINISTRATOR . DS . 'language', '.', false, true, array('.svn', 'CVS', 'en-GB'));
+			
+			// remove old admin language files
+			foreach($folders as $folder) {
+				$name = basename($folder);
+				$files = array($name . '.com_jce.ini', $name . '.com_jce.menu.ini', $name . '.com_jce.xml');
+				foreach($files as $file) {
+					if (is_file($folder . DS . $file)) {
+						@JFile::delete($folder . DS . $file);
+					}
+				}
+			}
+
+			$folders = JFolder::folders(JPATH_SITE . DS . 'language', '.', false, true, array('.svn', 'CVS', 'en-GB'));
+			
+			// remove old site language files
+			foreach($folders as $folder) {
+				$files 	= JFolder::files($folder, '^' . basename($folder) . '\.com_jce([_a-z0-9]+)?\.(ini|xml)$', false, true);				
+				@JFile::delete($files);
+			}
+			
         } // end JCE 1.5 upgrade
         
         return true;
