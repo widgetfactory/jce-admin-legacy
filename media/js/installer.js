@@ -28,7 +28,7 @@
                 if ($('div#tabs input:checkbox:checked').length) {
                     $(this).addClass('ui-state-loading');
                     $('input[name="task"]').val('remove');
-                    $('form').submit();
+                    $('form[name="adminForm"]').submit();
                 }
                 e.preventDefault();
             });
