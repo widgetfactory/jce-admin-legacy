@@ -46,6 +46,8 @@
 			var self = this, o = this.options;
 			
 			var re = '.(' + o.extensions.join('|') + ')$';
+			
+			$form = $('form[name="adminForm"]');
 
 			if (o.iframe) {
 				var iframe = this.createIFrame();
@@ -115,13 +117,13 @@
 
 					if (iframe) {
 						// Set Target
-						$('form').attr('target', iframe.name);
+						$form.attr('target', iframe.name);
 					}
 
 					if ($(self.element).val() || $input.val()) {
 						$(this).addClass('ui-state-loading');
 						$('input[name="task"]').val(o.task || '');
-						$('form').submit();
+						$form.submit();
 					}
 
 					e.preventDefault();
@@ -171,7 +173,7 @@
 			// only create it once
 			if (!iframe) {
 				iframe 		= document.createElement('iframe');
-				var form 	= $('form');
+				var $form 	= $('form[name="adminForm"]');
 
 				$(iframe).attr({
 					'src' 	: 'javascript:""',
@@ -195,19 +197,19 @@
 
 					// Assume no error
 					if (result != '') {
-						$('form').removeAttr('target');
+						$form.removeAttr('target');
 						// append result
 						if (!document.getElementById(o.report)) {
-							$('form').prepend('<div id="'+ o.report +'"></div>');
+							$('#jce').append('<div id="'+ o.report +'"></div>');
 						}
-						$('form div#' + o.report).hide().html(result).fadeIn();
+						$('div#' + o.report, '#jce').hide().html(result).fadeIn();
 					}
 					if (o.button) {
 						var btn = document.getElementById(o.button);
 						$(btn).removeClass('loading');
 					}
 
-				}).appendTo('form');
+				}).appendTo($form);
 				// Change iframe name
 				if (!$.support.cssFloat) {
 					window.frames['upload_iframe'].name = 'upload_iframe';
@@ -216,7 +218,7 @@
 				$('<input/>').attr({
 					'type' 	: 'hidden',
 					'name'	: 'method'
-				}).val('iframe').appendTo('form');
+				}).val('iframe').appendTo($form);
 			}
 
 			return iframe;
