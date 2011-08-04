@@ -583,11 +583,9 @@ class WFModelEditor extends JModel
 		
 		$assigned = array();
 			
-		foreach ($templates as $template) {
-            if ($id) {
-            	if ($id == $template->id) {
-               		$assigned[] = $template->template;
-            	}
+		foreach ($templates as $template) {				
+            if ($id == $template->id) {
+               	array_unshift($assigned, $template->template);
             } else {
             	$assigned[] = $template->template;
             }
@@ -621,7 +619,7 @@ class WFModelEditor extends JModel
 			
 			$path = '';
 		}
-
+		
         $styles      = '';
         $stylesheets = array();
         $files       = array();
