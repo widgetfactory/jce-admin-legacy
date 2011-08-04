@@ -79,6 +79,8 @@ class WFController extends JController
                 if (method_exists('JHtml', 'core')) {
                 	JHtml::core();	
 				}
+				
+				require_once(JPATH_ADMINISTRATOR . DS . 'includes' . DS . 'toolbar.php');
                 
                 JToolBarHelper::title(WFText::_('WF_ADMINISTRATION') . ' &rsaquo;&rsaquo; ' . WFText::_('WF_' . strtoupper($view)), 'logo.png');
 
