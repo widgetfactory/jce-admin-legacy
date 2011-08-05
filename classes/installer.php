@@ -259,7 +259,6 @@ class WFInstaller extends JObject
 	                        		$data->$node->$key = $value;
 	                        	} else {
 	                        		$data->$node = new StdClass();
-									$this->log(json_encode(array($node, $key, $value)));
 	                        		$data->$node->$key = $value;
 	                        	}
                         	}
