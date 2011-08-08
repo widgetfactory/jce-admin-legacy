@@ -151,8 +151,11 @@ class WFPacker extends JObject
 	}
 
 	function jsmin($data) 
-	{			
-		require_once (dirname(__FILE__) . DS . 'jsmin.php');
+	{
+		if (!class_exists('JSMin') && !class_exists('JSMinException')) {
+			require_once (dirname(__FILE__) . DS . 'jsmin.php');
+		}	
+
 		$data = trim(JSMin::minify($data));
 		
 		return $data;
