@@ -270,8 +270,20 @@ class WFModelUpdates extends WFModel {
 
 		$fp = false;
 
-		// Use curl if it exists
-		if(function_exists('curl_init')) {
+		// try file_get_contents first (requires allow_url_fopen)
+		if(function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen')) {
+			if ($download) {
+				// use Joomla! installer function
+				jimport('joomla.installer.helper');
+				return @JInstallerHelper::downloadPackage($url, $download);
+			} else {
+				$options = array('http' => array('method' => 'POST', 'timeout' => 5, 'content' => $data));
+
+				$context = stream_context_create($options);
+				return @file_get_contents($url, false, $context);
+			}
+			// Use curl if it exists
+		} else if(function_exists('curl_init')) {
 
 			$ch = curl_init($url);
 			curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -318,26 +330,7 @@ class WFModelUpdates extends WFModel {
 
 			return $result;
 
-			// use file_get_contents
-		} else if(function_exists('file_get_contents')) {
-			// check for ini_get and url_fopen support
-			if(!function_exists('ini_get'))
-				return false;
-
-			if(!ini_get('allow_url_fopen'))
-				return false;
-
-			if($download) {
-				// use Joomla! installer function
-				jimport('joomla.installer.helper');
-				return @JInstallerHelper::downloadPackage($url, $download);
-			} else {
-				$options = array('http' => array('method' => 'POST', 'timeout' => 5, 'content' => $data));
-
-				$context = stream_context_create($options);
-				return @file_get_contents($url, false, $context);
-			}
-			// error
+			// error - no update support
 		} else {
 			return array('error' => WFText::_('WF_UPDATES_DOWNLOAD_ERROR_NO_CONNECT'));
 		}
