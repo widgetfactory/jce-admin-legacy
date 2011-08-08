@@ -629,9 +629,12 @@ class WFModelEditor extends JModel
 	        $file = 'template.css';
 	        
 	        $css 	= JFolder::files($path, '(base|core|template|template_css)\.css$', false, true);
-			// use the first result
-			$file 	= $css[0]; 
 			
+			if (!empty($css)) {
+				// use the first result
+				$file 	= $css[0]; 
+			}
+
 			// check for php version
 			if (JFile::exists($file . '.php')) {
 				$file = $file . '.php';
