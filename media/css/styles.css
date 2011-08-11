@@ -63,6 +63,11 @@
 }
 #jce legend {
     font-size: 1.1em;
+    font-weight: bold;
+    border: 0 none;
+    margin: auto;
+    padding: 0 5px;
+    width: auto;
 }
 #jce select.inputbox.levels, select.inputbox.users {
     width: 200px;
@@ -118,6 +123,13 @@ div#jce button {
 }
 #jce ul.adminformlist {
     /*display: inline-block;*/
+}
+/* Mission Control resets */
+#jce ul.adminformlist li label {
+	clear: none;
+	float: none;
+	width: auto;
+	padding: 0;
 }
 #jce ul.adminformlist, #jce dl.adminformlist, dl.adminformlist > dd, #jce ul.adminformlist > li {
     list-style: none outside none !important;
