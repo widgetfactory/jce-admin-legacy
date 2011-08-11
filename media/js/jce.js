@@ -286,7 +286,17 @@
         }
 
     };
+    
+    if (typeof window.SqueezeBox == 'undefined') {
+		window.SqueezeBox = {
+			close : function() {
+				alert('!');
+				
+				$('div.ui-dialog').dialog('close');
+			}
+		};
+	}
+    
 })(jQuery);
-
 // global shortcut
 var $jce = jQuery.jce;
