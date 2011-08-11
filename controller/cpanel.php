@@ -32,7 +32,7 @@ class WFControllerCpanel extends WFController
 	}
 	
 	function display()
-	{
+	{	
 		parent::display();
 	}
 	

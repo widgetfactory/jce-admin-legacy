@@ -63,6 +63,11 @@ class WFViewCpanel extends JView
 		$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.CPanel.init('.json_encode($options).')});');
 		
 		WFToolbarHelper::preferences();
+		
+		if (class_exists('JAccess')) {
+			WFToolbarHelper::access();
+		}
+
 		WFToolbarHelper::updates($canUpdate);
 
 		WFToolbarHelper::help( 'cpanel.about' );

@@ -20,8 +20,8 @@ defined('_JEXEC') or die('Restricted access');
 		    <?php foreach ($this->params->getGroups() as $group => $num) : ?>
 		    	<li><a href="#tabs-<?php echo $group;?>"><?php echo JText :: _('WF_PREFERENCES_' . strtoupper($group));?></a></li>
 		    <?php endforeach;?>
-		    <?php if ($this->access) : ?>
-		    	<li><a href="#tabs-access"><?php echo JText :: _('WF_PREFERENCES_ACCESS');?></a></li>
+		    <?php if ($this->permissons) : ?>
+		    	<li><a href="#tabs-access"><?php echo JText :: _('WF_PREFERENCES_PERMISSIONS');?></a></li>
 		    <?php endif;?>		
 		    </ul>	
 		    <?php foreach ($this->params->getGroups() as $group => $num) : ?>
@@ -29,11 +29,15 @@ defined('_JEXEC') or die('Restricted access');
 					<?php echo $this->params->render('params[preferences]', $group);?>
 				</div>
 			<?php endforeach;?>
-			<?php if ($this->access) : ?>
+			<?php if ($this->permissons) : ?>
 				<div id="tabs-access">
-					<div id="accordian">
-						<?php echo $this->access;?>
-					</div>
+					<?php
+					foreach ($this->permissons as $field):
+					?>
+						<?php echo $field->input; ?>
+					<?php
+					endforeach;
+					?>
 				</div>
 			<?php endif;?>
 		</div>

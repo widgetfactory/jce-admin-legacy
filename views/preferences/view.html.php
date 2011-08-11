@@ -30,6 +30,7 @@ class WFViewPreferences extends JView
         $db =JFactory::getDBO();
 
         $client = JRequest::getWord('client', 'admin');
+		$model = $this->getModel();
         
         $this->document->setTitle(WFText::_('WF_PREFERENCES_TITLE'));		
 		$this->document->addStyleSheet('templates/system/css/system.css');
@@ -41,15 +42,11 @@ class WFViewPreferences extends JView
         $params = new WFParameter($component->params, $xml, 'preferences');
         $params->addElementPath(JPATH_COMPONENT.DS.'elements');
         
-        $this->assignRef('params', $params);
-
-		$model = $this->getModel();	
-							
-		//$access = $model->getAccessRules();	
-		//$this->assignRef('access', $access);
-		
-		$this->assign('access', null);
+        $form = $model->getForm('permissions');
         
+        $this->assignRef('params', $params);		
+		$this->assignRef('permissons', $form);
+
 		$this->document->addScript('components/com_jce/media/js/preferences.js?version=' . $model->getVersion());
 		
         if (JRequest::getInt('close') == 1) {

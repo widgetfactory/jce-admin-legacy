@@ -127,7 +127,9 @@ class WFController extends JController
 
     function loadMenu()
     {
-        $view = JRequest::getWord('view', 'cpanel');
+        $view 	= JRequest::getWord('view', 'cpanel');
+		$model 	= $this->getModel($view);
+        
         JSubMenuHelper::addEntry(WFText::_('WF_CPANEL'), 'index.php?option=com_jce&view=cpanel', $view == 'cpanel');
         
         $subMenus = array(
@@ -140,8 +142,10 @@ class WFController extends JController
             $subMenus['WF_MEDIABOX'] = 'mediabox';
         }
         
-        foreach ($subMenus as $menu => $item) {
-            JSubMenuHelper::addEntry(WFText::_($menu), 'index.php?option=com_jce&view=' . $item, $view == $item);
+        foreach ($subMenus as $menu => $item) {        	
+			if ($model->authorize($item)) {
+				JSubMenuHelper::addEntry(WFText::_($menu), 'index.php?option=com_jce&view=' . $item, $view == $item);
+			}
         }
     }
 	
@@ -207,28 +211,12 @@ class WFController extends JController
 	
 	function authorize($task)
 	{
-		$user = JFactory::getUser();
+		$view 	= JRequest::getWord('view', 'cpanel');	
+		$model 	= $this->getModel($view);
 		
-		// Joomla! 1.5
-		if (isset($user->gid)) {
-			// get rules from parameters
-			$component 	= JComponentHelper::getComponent('com_jce');
-			$params 	= new WFParameter($component->params);
-			
-			if (isset($params->access)) {
-				$rules 	= $params->access;
-				$rule 	= 'core.' . $task;
-				if (isset($rules->$rule) && is_object($rules->$rule)) {
-					$gid = $user->$gid;	
-					if (isset($rules->$rule->$gid) && $rules->$rule->$gid == 0) {
-						$this->setRedirect('index.php', WFText::_('ALERTNOTAUTH'));	
-					}	
-				}
-			}	
-		} else {
-			if (!$user->authorise('core.' . $task, 'com_jce')) {
-				$this->setRedirect('index.php', WFText::_('ALERTNOTAUTH'));
-			}
+		if (!$model->authorize($task)) {
+			$this->setRedirect('index.php', WFText::_('ALERTNOTAUTH'));
+			return false;
 		}
 		
 		return true;

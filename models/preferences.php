@@ -18,214 +18,105 @@ defined('_JEXEC') or die();
 require_once(dirname(__FILE__) . DS . 'model.php');
 
 class WFModelPreferences extends WFModel {
+	
+	protected function checkRule($rules, $action, $gid)
+	{		
+		if (is_object($rules)) {				
+			if (isset($rules->$action)) {
+				$rule = $rules->$action;	
+				return (isset($rule->$gid) && $rule->$gid != 0);
+			}
+		}
 
-	/**
-	 * Get Access Rules
-	 */
-	public function getAccessRules()
+		// set Manager to false, Administrator and Super Administrator to true
+		return $gid > 23;
+	}	
+		
+	public function getForm($group = null)
 	{
-		// Initialise some field attributes.
-		$section 	= 'component';
-		$component 	= 'com_jce';
+		jimport('joomla.form.form');
 		
-		// Build the form control.
-		$curLevel = 0;
+		if (class_exists('JForm')) {
+			JForm::addFormPath(JPATH_ADMINISTRATOR.'/components/com_jce');
 		
-		// load access classes
-		jimport('joomla.access.access');
-		
-		if (class_exists('JAccess')) {
-			// Get the actions for the asset.
-			$actions = JAccess::getActions($component, $section);	
+			$form = JForm::getInstance('com_jce.component', 'config', array('control' => 'params'), false, '/config');
 			
-			// Get the explicit rules for this asset.
-			// Need to find the asset id by the name of the component.
-			$db = JFactory::getDbo();
-			$db->setQuery('SELECT id FROM #__assets WHERE name = ' . $db->quote($component));
-			$assetId = (int) $db->loadResult();
-	
-			if ($error = $db->getErrorMsg()) {
-				JError::raiseNotice(500, $error);
+			if ($group) {
+				return $form->findFieldsByGroup($group);
 			}
 	
-			// Get the rules for just this asset (non-recursive).
-			$assetRules = JAccess::getAssetRules($assetId);
+			return $form;
 		} else {
-			$actions = array();	
-		}
+			$component 	= WFExtensionHelper::getComponent();
+        	// get params definitions
+        	$params		= json_decode($component->params);
+        	$rules 		= isset($params->access) ? $params->access : null;
 
-		// Get actions from access.xml
-		self::_getActions($actions);
+			// Build the form control.
+			$curLevel 	= 0;	
+				
+			$actions 	= $this->getActions();
+			$groups 	= $this->getUserGroups();
+			
+			$form		= array();
+			
+			foreach ($groups as $group) {
+				$difLevel 	= $group->level - $curLevel;	
+					
+				$html 		= array();	
+				$item 		= new StdClass();
+				
+				$html[] = '<h3><a href="#"><span>' . str_repeat('<span> &rsaquo; </span> ', $curLevel = $group->level) . $group->text . '</span></a></h3>';
+				$html[] = '<div>';
+				$html[] =			'<table border="0" cellspacing="1">';
+				$html[] =				'<thead>';
+				$html[] =					'<tr>';
+				$html[] =						'<th><span>' . WFText::_('WF_RULES_ACTION') . '</span></th>';
+				$html[] =						'<th><span>' . WFText::_('WF_RULES_SELECT_SETTING') . '</span></th>';				
+				$html[] =					'</tr>';
+				$html[] =				'</thead>';
+				$html[] =				'<tbody>';
+				
+				foreach ($actions as $action) {
+					$html[] =				'<tr>';
+					$html[] =					'<td><label class="hasTip" for="' . $action->name . '_' . $group->value . '" title="'.htmlspecialchars(WFText::_($action->title).'::'.WFText::_($action->description), ENT_COMPAT, 'UTF-8').'">' . WFText::_($action->title) . '</label></td>';
+					$html[] =					'<td>';	
+					$html[] = '<select name="params[rules][' . $action->name . '][' . $group->value . ']" id="' . $action->name . '_' . $group->value . '" title="' . WFText::sprintf('WF_RULES_SELECT_ALLOW_DENY_GROUP', WFText::_($action->title), trim($group->text)) . '">';
+	
+					$assetRule = $this->checkRule($rules, $action->name, $group->value);	
+
+					$html[] = '<option value="1"' . ($assetRule === true ? ' selected="selected"' : '') . '>' . WFText::_('WF_RULES_ALLOWED') . '</option>';
+					$html[] = '<option value="0"' . ($assetRule === false ? ' selected="selected"' : '') . '>' . WFText::_('WF_RULES_DENIED') . '</option>';
+	
+					$html[] = '</select>&#160; ';	
+					$html[] = '</td>';	
+					$html[] = '</tr>';
+				}
+
+				$html[] = '</tbody>';
+				$html[] = '</table>';
+				$html[] = '</div>';
+				 
+				$item->input = implode('', $html);
+				
+				$form[] = $item;
+			}
+
+			return $form;
+		}
 		
-		// get User Groups
-		$groups = $this->getUserGroups();	
-			
-		$html = array();	
-			
-		$html[] = '<p class="rule-desc">' . JText::_('JLIB_RULES_SETTINGS_DESC') . '</p>';
-		$html[] = '<ul id="rules">';
-
-		// Start a row for each user group.
-		foreach ($groups as $group)
-		{
-			$difLevel = $group->level - $curLevel;
-
-			if ($difLevel > 0) {
-				$html[] = '<li><ul>';
-			}
-			else if ($difLevel < 0) {
-				$html[] = str_repeat('</ul></li>', -$difLevel);
-			}
-
-			$html[] = '<li>';
-			$html[] =	'<h3><a href="#"><span>';
-			$html[] =	str_repeat('<span class="level"> &rsaquo; </span> ', $curLevel = $group->level) . $group->text;
-			$html[] =	'</span></a></h3>';
-			$html[] =	'<div>';
-			$html[] =			'<table class="group-rules">';
-			$html[] =				'<thead>';
-			$html[] =					'<tr>';
-
-			$html[] =						'<th class="actions" id="actions-th' . $group->value . '">';
-			$html[] =							'<span class="acl-action">' . JText::_('JLIB_RULES_ACTION') . '</span>';
-			$html[] =						'</th>';
-
-			$html[] =						'<th class="settings" id="settings-th' . $group->value . '">';
-			$html[] =							'<span class="acl-action">' . JText::_('JLIB_RULES_SELECT_SETTING') . '</span>';
-			$html[] =						'</th>';
-
-			// The calculated setting is not shown for the root group of global configuration.
-			$canCalculateSettings = ($group->parent_id || !empty($component));
-			
-			if ($canCalculateSettings) {
-				$html[] =					'<th id="aclactionth' . $group->value . '">';
-				$html[] =						'<span class="acl-action">' . JText::_('JLIB_RULES_CALCULATED_SETTING') . '</span>';
-				$html[] =					'</th>';
-			}
-
-			$html[] =					'</tr>';
-			$html[] =				'</thead>';
-			$html[] =				'<tbody>';
-
-			foreach ($actions as $action)
-			{
-				$html[] =				'<tr>';
-				$html[] =					'<td headers="actions-th' . $group->value . '">';
-				$html[] =						'<label class="hasTip" for="' . $action->name . '_' . $group->value . '" title="'.htmlspecialchars(JText::_($action->title).'::'.JText::_($action->description), ENT_COMPAT, 'UTF-8').'">';
-				$html[] =						JText::_($action->title);
-				$html[] =						'</label>';
-				$html[] =					'</td>';
-
-				$html[] =					'<td headers="settings-th' . $group->value . '">';
-
-				$html[] = '<select name="params[rules][' . $action->name . '][' . $group->value . ']" id="' . $action->name . '_' . $group->value . '" title="' . JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', JText::_($action->title), trim($group->text)) . '">';
-
-				if (class_exists('JAccess')) {
-					$inheritedRule	= JAccess::checkGroup($group->value, $action->name, $assetId);
-
-					// Get the actual setting for the action for this group.
-					$assetRule		= $assetRules->allow($action->name, $group->value);
-					
-					$coreAdmin 		= JAccess::checkGroup($group->value, 'core.admin');
-					
-				} else {
-					$inheritedRule = false;
-					$assetRule = false;	
-					$coreAdmin = false;
-				}
-
-				// Build the dropdowns for the permissions sliders
-
-				// The parent group has "Not Set", all children can rightly "Inherit" from that.
-				$html[] = '<option value=""' . ($assetRule === null ? ' selected="selected"' : '') . '>' .
-							JText::_(empty($group->parent_id) && empty($component) ? 'JLIB_RULES_NOT_SET' : 'JLIB_RULES_INHERITED') . '</option>';
-				$html[] = '<option value="1"' . ($assetRule === true ? ' selected="selected"' : '') . '>' .
-							JText::_('JLIB_RULES_ALLOWED') . '</option>';
-				$html[] = '<option value="0"' . ($assetRule === false ? ' selected="selected"' : '') . '>' .
-							JText::_('JLIB_RULES_DENIED') . '</option>';
-
-				$html[] = '</select>&#160; ';
-
-				// If this asset's rule is allowed, but the inherited rule is deny, we have a conflict.
-				if (($assetRule === true) && ($inheritedRule === false)) {
-					$html[] = JText::_('JLIB_RULES_CONFLICT');
-				}
-
-				$html[] = '</td>';
-
-				// Build the Calculated Settings column.
-				// The inherited settings column is not displayed for the root group in global configuration.
-				if ($canCalculateSettings) {
-					$html[] = '<td headers="aclactionth' . $group->value . '">';
-
-					// This is where we show the current effective settings considering currrent group, path and cascade.
-					// Check whether this is a component or global. Change the text slightly.
-
-					if ($coreAdmin !== true)
-					{
-						if ($inheritedRule === null) {
-							$html[] = '<span class="icon-16-unset">'.
-										JText::_('JLIB_RULES_NOT_ALLOWED').'</span>';
-						}
-						else if ($inheritedRule === true)
-						{
-							$html[] = '<span class="icon-16-allowed">'.
-										JText::_('JLIB_RULES_ALLOWED').'</span>';
-						}
-						else if ($inheritedRule === false) {
-							if ($assetRule === false) {
-								$html[] = '<span class="icon-16-denied">'.
-											JText::_('JLIB_RULES_NOT_ALLOWED').'</span>';
-							}
-							else {
-								$html[] = '<span class="icon-16-denied"><span class="icon-16-locked">'.
-											JText::_('JLIB_RULES_NOT_ALLOWED_LOCKED').'</span></span>';
-							}
-						}
-
-						//Now handle the groups with core.admin who always inherit an allow.
-					}
-					else if (!empty($component)) {
-						$html[] = '<span class="icon-16-allowed"><span class="icon-16-locked">'.
-									JText::_('JLIB_RULES_ALLOWED_ADMIN').'</span></span>';
-					}
-					else {
-						
-					}
-
-					$html[] = '</td>';
-				}
-
-				$html[] = '</tr>';
-			}
-
-			$html[] = '</tbody>';
-			$html[] = '</table>';
-
-			$html[] = '</div>';
-			$html[] = '</li>';
-
-		} // endforeach
-
-		$html[] = str_repeat('</ul></li>', $curLevel);
-		$html[] = '</ul><div class="rule-notes">';
-		if ($section == 'component' || $section == null ) {
-			$html[] = JText::_('JLIB_RULES_SETTING_NOTES');
-		} else {
-			$html[] = JText::_('JLIB_RULES_SETTING_NOTES_ITEM');
-		}
-		$html[] = '</div>';
-
-		return implode("\n", $html);	
+		return null;
 	}
-
+	
 	/**
 	 * Get Actions from access.xml file
 	 */
-	protected function _getActions(&$actions)
+	protected function getActions()
 	{
-		$file 	= JPATH_COMPONENT_ADMINISTRATOR . DS . 'access.xml';			
-		$xml 	= WFXMLElement::getXML($file);
+		$file 		= JPATH_COMPONENT_ADMINISTRATOR . DS . 'access.xml';			
+		$xml 		= WFXMLElement::getXML($file);
+		
+		$actions 	= array();
 		
 		if ($xml) {
 			// Iterate over the children and add to the actions.
@@ -240,29 +131,23 @@ class WFModelPreferences extends WFModel {
 				}
 			}
 		}
+		
+		return $actions;
 	}
 
 	/**
 	 * Get a list of the user groups.
-	 *
-	 * @return	array
-	 * @since	1.6
 	 */
 	protected function getUserGroups()
 	{
-		$db = JFactory::getDBO();	
-		
-		$table = WF_JOOMLA15 ? '#__core_acl_aro_groups' : '#__usergroups';
-		$where = WF_JOOMLA15 ? ' WHERE a.id IN (23,24,25) AND b.id IN (23,24,25)' : '';
-		$title = WF_JOOMLA15 ? 'name' : 'title';
-		
+		$db = JFactory::getDBO();			
 		
 		// Initialise variables.
 		$db		= JFactory::getDBO();
-		$query = 'SELECT a.id AS value, a.' . $title . ' AS text, COUNT(DISTINCT b.id) AS level, a.parent_id'
-		. ' FROM ' . $table . ' AS a'
-		. ' LEFT JOIN ' . $table . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt'
-		. $where
+		$query = 'SELECT a.id AS value, a.name AS text, COUNT(DISTINCT b.id) AS level, a.parent_id'
+		. ' FROM #__core_acl_aro_groups AS a'
+		. ' LEFT JOIN #__core_acl_aro_groups AS b ON a.lft >= b.lft AND a.rgt <= b.rgt'
+		. ' WHERE a.id IN (23,24,25) AND b.id IN (23,24,25)'
 		. ' GROUP BY a.id'
 		. ' ORDER BY a.lft ASC'
 		;

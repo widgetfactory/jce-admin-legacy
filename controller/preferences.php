@@ -45,8 +45,9 @@ class WFControllerPreferences extends WFController
 
 		$db = JFactory::getDBO();	
 
+		$post = JRequest::getVar('params', '', 'POST', 'ARRAY');
 		$registry = new JRegistry();
-		$registry->loadArray(JRequest::getVar('params', '', 'POST', 'ARRAY'));
+		$registry->loadArray($post);
 		
 		// get params
 		$component 	= WFExtensionHelper::getComponent();
@@ -55,29 +56,37 @@ class WFControllerPreferences extends WFController
 
 		// set preferences object
 		$preferences = $registry->toObject();	
-		
-		// Save the rules (only in Joomla! 1.6+)
+
 		if (isset($preferences->rules)) {
 			jimport('joomla.access.rules');
-			$rules	= new JRules($params->rules);
-			$asset	= JTable::getInstance('asset');
 			
-			$option = JRequest::getCmd('option');
+			if (class_exists('JRules')) {	
+			
+				$data 	= $this->filter($post);
+			
+				$rules	= new JRules($data['rules']);
+				$asset	= JTable::getInstance('asset');
+				
+				$option = JRequest::getCmd('option');
+	
+				if (!$asset->loadByName($option)) {
+					$root = JTable::getInstance('asset');
+					$root->loadByName('root.1');
+					$asset->name 	= $option;
+					$asset->title 	= $option;
+					$asset->setLocation($root->id,'last-child');
+				}
 
-			if (!$asset->loadByName($option)) {
-				$root = JTable::getInstance('asset');
-				$root->loadByName('root.1');
-				$asset->name 	= $option;
-				$asset->title 	= $option;
-				$asset->setLocation($root->id,'last-child');
-			}
-			$asset->rules = (string) $rules;
-
-			if (!$asset->check() || !$asset->store()) {
-				$this->setError($asset->getError());
-				return false;
-			}
-			unset($preferences->rules);
+				$asset->rules = (string) $rules;
+	
+				if (!$asset->check() || !$asset->store()) {
+					JError::raiseError(500, $asset->getError());
+					return false;
+				}
+			// Joomla! 1.5
+			} else {		
+				$params->access = $preferences->rules;
+			}	
 		}
 		
 		if (isset($preferences->preferences)) {

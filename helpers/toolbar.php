@@ -92,6 +92,22 @@ class WFToolbarHelper {
 		$bar->appendButton('Custom', $html, 'config');
 	}
 	
+	static function access() {
+		$bar = JToolBar::getInstance('toolbar');
+		
+		$options = array(
+			'width' 	=> 760,
+			'height'	=> 540,
+			'modal'		=> true,
+			'buttons'	=> '{}'
+		);
+		
+		$html 	= '<a href="index.php?option=com_config&amp;view=component&amp;component=com_jce&amp;path=&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog preferences" title="'.WFText::_('WF_PREFERENCES_TITLE').'">';
+		$html  .= '<span class="icon-32-lock" title="'.WFText::_('WF_ACCESS_TITLE').'"></span>'.WFText::_('WF_ACCESS').'</a>';
+		
+		$bar->appendButton('Custom', $html, 'access');	
+	}
+	
 	static function export()
 	{
 		$icon = WF_JOOMLA15 ? 'unarchive' : 'export';							

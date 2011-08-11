@@ -24,6 +24,39 @@ jimport('joomla.application.component.model');
  */
 class WFModel extends JModel 
 {
+	function authorize($task)
+	{
+		$user = JFactory::getUser();
+		
+		// Joomla! 1.5
+		if (isset($user->gid)) {
+			// get rules from parameters
+			$component 	= JComponentHelper::getComponent('com_jce');
+			$params		= json_decode($component->params);
+			$rules 		= isset($params->access) ? $params->access : null;
+			
+			if (is_object($rules)) {				
+				$action 	= ($task == 'admin') ? 'core.' . $task : 'jce.' . $task;
+				
+				if (isset($rules->$action)) {
+					$rule = $rules->$action;
+					$gid = $user->gid;						
+					if (isset($rule->$gid) && $rule->$gid == 0) {
+						return false;	
+					}	
+				}
+			}	
+		} else {
+			$action = ($task == 'admin') ? 'core.' . $task : 'jce.' . $task;	
+				
+			if (!$user->authorise($action, 'com_jce')) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	/**
      * Get the current version
      * @return Version
