@@ -269,9 +269,11 @@ class WFModelUpdates extends WFModel {
 		jimport('joomla.filesystem.file');
 
 		$fp = false;
+		
+		$fopen = function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen');
 
 		// try file_get_contents first (requires allow_url_fopen)
-		if(function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen')) {
+		if($fopen) {
 			if ($download) {
 				// use Joomla! installer function
 				jimport('joomla.installer.helper');
@@ -299,7 +301,7 @@ class WFModelUpdates extends WFModel {
 			@curl_setopt($ch, CURLOPT_MAXREDIRS, 20);
 
 			if(strpos($url, 'https://') !== false) {
-				@curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+				@curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 				@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
 			}
 
