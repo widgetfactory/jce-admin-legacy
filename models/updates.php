@@ -141,9 +141,7 @@ class WFModelUpdates extends WFModel {
 
 		$id = JRequest::getInt('id');
 
-		$vars = array('task' => 'download', 'id' => $id);
-
-		$file = $this->connect($this->url, $vars);
+		$file = $this->connect($this->url, 'task=download&id=' . $id);
 
 		if($file) {
 			$data = json_decode($file);
@@ -279,7 +277,7 @@ class WFModelUpdates extends WFModel {
 				jimport('joomla.installer.helper');
 				return @JInstallerHelper::downloadPackage($url, $download);
 			} else {
-				$options = array('http' => array('method' => 'POST', 'timeout' => 5, 'content' => $data));
+				$options = array('http' => array('method' => 'POST', 'timeout' => 10, 'content' => $data));
 
 				$context = stream_context_create($options);
 				return @file_get_contents($url, false, $context);
@@ -293,17 +291,15 @@ class WFModelUpdates extends WFModel {
 			// Pretend we are IE7, so that webservers play nice with us
 			curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0)');
 			//curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
-			curl_setopt($ch, CURLOPT_TIMEOUT, $download ? 30 : 5);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
 			// The @ sign allows the next line to fail if open_basedir is set or if safe mode is enabled
 			@curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 			@curl_setopt($ch, CURLOPT_MAXREDIRS, 20);
-
-			if(strpos($url, 'https://') !== false) {
-				@curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-				@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-			}
+			
+			@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
 			if($data && !$download) {
 				curl_setopt($ch, CURLOPT_POST, 1);
