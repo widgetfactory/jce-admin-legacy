@@ -42,7 +42,7 @@ class WFModelPreferences extends WFModel {
 			$form = JForm::getInstance('com_jce.component', 'config', array('control' => 'params'), false, '/config');
 			
 			if ($group) {
-				return $form->findFieldsByGroup($group);
+				return $form->getFieldset($group);
 			}
 	
 			return $form;
