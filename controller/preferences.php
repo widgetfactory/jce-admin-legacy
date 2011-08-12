@@ -37,6 +37,18 @@ class WFControllerPreferences extends WFController
 	{
 		parent::display();
 	}
+	
+	function filter($data)
+	{
+		$model 	= $this->getModel('preferences');
+		$form 	= $model->getForm();
+		
+		if (is_a($form, 'JForm')) {
+			return $form->filter($data);
+		}
+		
+		return $data;
+	}
 
 	function save()
 	{
