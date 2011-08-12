@@ -32,11 +32,20 @@ defined('_JEXEC') or die('Restricted access');
 			<?php if ($this->permissons) : ?>
 				<div id="tabs-access">
 					<?php
+					
+					if (!class_exists('JForm')) : 
+						echo '<div id="access-accordian">';
+					endif;
+					
 					foreach ($this->permissons as $field):
 					?>
 						<?php echo $field->input; ?>
 					<?php
 					endforeach;
+					
+					if (!class_exists('JForm')) : 
+						echo '</div>';
+					endif;
 					?>
 				</div>
 			<?php endif;?>

@@ -14,7 +14,7 @@
     		// Tabs
            	$('#tabs').tabs();
            	
-           	$('#tabs-access').accordion({ collapsible: true });
+           	$('#access-accordian').accordion({ collapsible: true });
     	},
     	
     	close : function() {
