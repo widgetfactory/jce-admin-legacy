@@ -54,6 +54,7 @@
 			<folder>views</folder>
 			<file>access.xml</file>
 			<file>controller.php</file>
+			<file>config.xml</file>
 			<file>index.html</file>
 			<file>install.php</file>
 			<file>jce.php</file>
