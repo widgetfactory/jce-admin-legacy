@@ -14,7 +14,6 @@
   	<uninstallfile>install.php</uninstallfile>
 	
 	<files folder="components/com_jce">
-		<folder>controller</folder>
 		<folder>editor</folder>
 		<folder>media</folder>
 		<folder>views</folder>
@@ -43,6 +42,7 @@
 		<files folder="administrator/components/com_jce">
 			<folder>adapters</folder>
 			<folder>classes</folder>
+			<folder>controller</folder>
 			<folder>elements</folder>
 			<folder>helpers</folder>
 			<folder>includes</folder>
@@ -52,6 +52,7 @@
 			<folder>tables</folder>
 			<folder>views</folder>
 			<file>access.xml</file>
+			<file>controller.php</file>
 			<file>config.xml</file>
 			<file>index.html</file>
 			<file>install.php</file>
