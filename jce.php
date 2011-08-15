@@ -48,7 +48,7 @@ if (file_exists($controllerPath)) {
 switch ($view) {
 	case 'editor':
 	case 'help':
-	case 'popup':
+	case 'popup':	
 		break;
 	case 'cpanel':
 		// Authorise

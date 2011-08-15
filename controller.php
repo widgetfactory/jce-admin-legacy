@@ -153,7 +153,7 @@ class WFController extends JController
             'base_path' => dirname(__FILE__)
         ));
         
-        switch ($name) {
+        switch ($name) {	
             case 'help':
                 if ($model = $this->getModel($name)) {
                     $view->setModel($model, true);
@@ -173,7 +173,7 @@ class WFController extends JController
                 }
                 
                 $this->loadMenu();
-                
+
                 break;
         }
         
@@ -201,6 +201,11 @@ class WFController extends JController
 	function authorize($task)
 	{
 		$view 	= JRequest::getWord('view', 'cpanel');	
+		
+		if ($view == 'popup') {
+			return true;
+		}
+		
 		$model 	= $this->getModel($view);
 		
 		if (!$model->authorize($task)) {

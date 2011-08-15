@@ -31,9 +31,6 @@ class WFControllerPopup extends JController
 	function __construct($config = array())
 	{
 		parent::__construct($config);
-
-		// Register Extra tasks
-		$this->registerTask( 'popup', 'display' );		
 	}
 
 	/**
