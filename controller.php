@@ -29,6 +29,8 @@ class WFController extends JController
     function __construct($default = array())
     {
         parent::__construct($default);
+		
+		$view = JRequest::getWord('view', 'cpanel');
 
         $this->registerTask('apply', 'save');
         $this->registerTask('unpublish', 'publish');
@@ -39,9 +41,7 @@ class WFController extends JController
         wfimport('admin.helpers.parameter');
         wfimport('admin.helpers.extension');
         wfimport('admin.helpers.xml');
-        
-        $view = JRequest::getWord('view', 'cpanel');       
-        
+
         $document = JFactory::getDocument();
         
         $document->setTitle(WFText::_('WF_ADMINISTRATION') . ' :: ' . WFText::_('WF_' . strtoupper($view)));
@@ -51,28 +51,18 @@ class WFController extends JController
 		
 		$model = $this->getModel($view);
         
-        // jquery versions
-        $jquery = array('jquery/jquery-' . WF_JQUERY . '.min.js', 'jquery/jquery-ui-' . WF_JQUERYUI . '.custom.min.js');
+        // jquery versions		
+		$document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
+		$document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
+		
+		// jQuery noConflict
+        $document->addScriptDeclaration('jQuery.noConflict();');
+		
+		$scripts = array();
         
         switch ($view) {
-        	case 'popup' :
-                break;
             case 'help':
-                $scripts = array_merge($jquery, array(
-                    'help.js'
-                ));
-                // Load scripts
-                foreach ($scripts as $script) {
-                    $document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/' . $script . '?version=' . $model->getVersion());
-                }
-                
-                $document->addScriptDeclaration('jQuery.noConflict();');
-                
-		        require_once(dirname(__FILE__) . DS . 'helpers' . DS . 'system.php');
-                
-                $app = JFactory::getApplication();
-                $app->registerEvent('onAfterRender', 'WFSystemHelper');
-                
+                $scripts[] = 'help.js';
                 break;
             default:
                 // load Joomla! core javascript
@@ -87,17 +77,13 @@ class WFController extends JController
                 $params = WFParameterHelper::getComponentParams();
                 $theme  = $params->get('preferences.theme', 'jce');
                 
-                $scripts = array_merge($jquery, array(
+                $scripts = array_merge(array(
                     'tips.js',
-                    'html5.js',
-                    'jce.js'
+                    'html5.js'
                 ));
-                // Load scripts
-                foreach ($scripts as $script) {
-                    $document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/' . $script . '?version=' . $model->getVersion());
-                }
-                
-                $document->addScriptDeclaration('jQuery.noConflict();');
+
+				// Load admin scripts
+				$document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js?version=' . $model->getVersion());
 				
 				$options = array(
 					'labels' => array(
@@ -112,17 +98,22 @@ class WFController extends JController
 				);
 				
                 $document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');
-                
-                require_once(dirname(__FILE__) . DS . 'helpers' . DS . 'system.php');
-                
-                $app = JFactory::getApplication();
-                $app->registerEvent('onAfterRender', 'WFSystemHelper');
 				
 				$installer = WFInstaller::getInstance();
                 $installer->check();
                 
                 break;
         }
+
+		// Load site scripts
+        foreach ($scripts as $script) {
+        	$document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/' . $script . '?version=' . $model->getVersion());
+        }
+                           
+		require_once(dirname(__FILE__) . DS . 'helpers' . DS . 'system.php');
+                
+        $app = JFactory::getApplication();
+       	$app->registerEvent('onAfterRender', 'WFSystemHelper');
     }
 
     function loadMenu()
@@ -163,8 +154,6 @@ class WFController extends JController
         ));
         
         switch ($name) {
-            case 'popup':
-                break;
             case 'help':
                 if ($model = $this->getModel($name)) {
                     $view->setModel($model, true);

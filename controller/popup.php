@@ -41,6 +41,13 @@ class WFControllerPopup extends JController
 	 */
 	function display()
 	{		
-		parent::display();
+		$document = JFactory::getDocument();
+		
+		$this->addViewPath(JPATH_COMPONENT . DS . 'views');
+
+		$view = $this->getView('popup', $document->getType());
+		
+		$view->assignRef('document', $document);
+        $view->display();
 	}
 }
