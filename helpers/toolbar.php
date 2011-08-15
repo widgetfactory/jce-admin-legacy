@@ -114,14 +114,14 @@ class WFToolbarHelper {
 		self::custom('export', $icon . '.png', $icon . '_f2.png', WFText::_('WF_PROFILES_EXPORT'), true);
 	}
 	
-	static function save($task = 'save', $alt = 'Save')
+	static function save($task = 'save')
 	{
-		return JToolbarHelper::save($task, $alt);
+		return JToolBarHelper::save($task);
 	}
 	
-	static function apply($task = 'apply', $alt = 'Apply')
+	static function apply($task = 'apply')
 	{
-		return JToolbarHelper::apply($task, $alt);
+		return JToolbarHelper::apply($task);
 	}
 	
 	static function cancel($task = 'cancel', $alt = 'Cancel')
