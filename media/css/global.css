@@ -9,5 +9,5 @@
  * other free or open source software licenses.
  */
 @import url("styles.css");
-@import url("tips.css");
+@import url('../../../../../components/com_jce/editor/libraries/css/tips.css');
 @import url("icons.css");

@@ -117,7 +117,7 @@ class WFViewProfiles extends JView
                     )
                 );
 
-                $this->document->addScript('components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
+                $this->document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
                 $this->document->addScriptDeclaration('jQuery(document).ready(function($){$(":file").upload(' . json_encode($options) . ')});');
                 
                 $this->setLayout('default');
@@ -128,16 +128,17 @@ class WFViewProfiles extends JView
                 // Load media   
                 $scripts = array(
                     'profiles.js',
-                    'select.js',
-                    'colorpicker.js',
                     'extensions.js',
                     'checklist.js',
                 	'parameter.js'
                 );
                 // Load scripts
                 foreach ($scripts as $script) {
-                    $this->document->addScript('components/com_jce/media/js/' . $script);
+                    $this->document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/' . $script . '?version=' . $model->getVersion());
                 }
+
+				$this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
+				$this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/select.js?version=' . $model->getVersion());
                 
                 $cid = JRequest::getVar('cid', array(
                     0

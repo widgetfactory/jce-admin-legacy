@@ -8,7 +8,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-@import url("select.css");
+@import url("../../../../../components/com_jce/editor/libraries/css/select.css");
 @import url("upload.css");
 @import url("colorpicker.css");
 @import url("extensions.css");

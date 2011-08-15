@@ -71,7 +71,10 @@ class WFViewHelp extends JView
 			'key'		=> $key,
 			'pattern' 	=> $pattern
 		);
-		$this->document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jquery/jquery-ui-layout.js?version=' . $model->getVersion());
+		
+		$this->document->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/libraries/css/help.css');
+		
+		$this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-layout.js?version=' . $model->getVersion());
 		$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Help.init('.json_encode($options).');});');
         
         parent::display($tpl);

@@ -50,7 +50,7 @@ class WFModelEditor extends JModel
         if ($profile) {
 			// get jqueryui theme
             $dialog_theme     = $wf->getParam('editor.dialog_theme', 'jce');
-            $dialog_theme_css = JFolder::files(WF_ADMINISTRATOR . DS . 'media' . DS . 'css' . DS . 'jquery' . DS . $dialog_theme, '\.css$');
+            $dialog_theme_css = JFolder::files(WF_EDITOR_LIBRARIES . DS . 'css' . DS . 'jquery' . DS . $dialog_theme, '\.css$');
             
             $settings = array_merge($settings, array(
                 'theme' 		=> 'advanced',
@@ -99,7 +99,7 @@ class WFModelEditor extends JModel
             $settings['height'] = $wf->getParam('editor.height');
             
             // 'Look & Feel'
-            $settings['jquery_ui'] = JURI::root(true) . '/administrator/components/com_jce/media/css/jquery/' . $dialog_theme . '/' . basename($dialog_theme_css[0]);
+            $settings['jquery_ui'] 		= JURI::root(true) . '/components/com_jce/editor/libraries/css/jquery/' . $dialog_theme . '/' . basename($dialog_theme_css[0]);
             
             $skin                     	= explode('.', $wf->getParam('editor.toolbar_theme', 'default', 'default'));
             $settings['skin']         	= $skin[0];

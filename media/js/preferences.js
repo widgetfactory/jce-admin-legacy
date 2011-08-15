@@ -15,6 +15,8 @@
            	$('#tabs').tabs();
            	
            	$('#access-accordian').accordion({ collapsible: true });
+           	
+           	$('.hasTip').removeClass('hasTip');
     	},
     	
     	close : function() {

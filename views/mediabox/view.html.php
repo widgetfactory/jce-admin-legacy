@@ -79,8 +79,8 @@ class WFViewMediabox extends JView
         $this->assignRef('params', $params);
         $this->assignRef('client', $client);
         
-        $this->document->addScript('components/com_jce/media/js/colorpicker.js?version=' . $model->getVersion());
-        $this->document->addStyleSheet('components/com_jce/media/css/colorpicker.css');
+        $this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
+        $this->document->addStyleSheet('components/com_jce/media/css/colorpicker.css?version=' . $model->getVersion());
         
         $options = array(
 			'template_colors' 	=> WFToolsHelper::getTemplateColors(),
