@@ -75,18 +75,13 @@ class WFInstaller extends JObject
         if (!$this->profiles) {
             return $this->redirect();
         }
+		
         // Check Editor is installed
-        if (!$this->checkEditorFiles()) {
-            return $this->redirect(WFText::_('WF_EDITOR_FILES_ERROR'), 'error');
-        }
-        if (!$this->checkEditor() && $this->checkEditorFiles()) {
+        if (!$this->checkEditor()) {
             $link = JHTML::link('index.php?option=com_jce&amp;task=repair&amp;type=editor', WFText::_('WF_EDITOR_INSTALL'));
             return $this->redirect(WFText::_('WF_EDITOR_INSTALLED_MANUAL_ERROR') . ' - ' . $link, 'error');
         }
-        // Check Editor is installed
-        if (!$this->checkEditor()) {
-            return $this->redirect(WFText::_('WF_EDITOR_INSTALLED_ERROR'), 'error');
-        }
+		
         // Check Editor is enabled
         if (!$this->checkEditorEnabled()) {
             return $this->redirect(WFText::_('WF_EDITOR_ENABLED_ERROR'), 'error');
@@ -154,6 +149,41 @@ class WFInstaller extends JObject
 		wfimport('admin.helpers.xml');
         
        	$base = dirname(dirname(__FILE__));
+		
+		// cleanup javascript and css files moved to site
+		if (version_compare($version, '2.0.10', '<')) {
+       		$path 		= dirname(dirname(__FILE__)) . DS . 'media';	
+				
+       		$scripts 	= array('help.js', 'html5.js', 'select.js', 'tips.js');	
+			
+			foreach($scripts as $script) {
+				if (is_file($path . DS . 'js' . DS . $script)) {
+					@JFile::delete($path . DS . 'js' . DS . $script);
+				}
+			}
+			
+			if (is_dir($path . DS . 'js' . DS . 'jquery')) {
+				@JFolder::delete($path . DS . 'js' . DS . 'jquery');
+			}
+					
+			$styles 	= array('help.css', 'select.css', 'tips.css');
+			
+			foreach($styles as $style) {
+				if (is_file($path . DS . 'css' . DS . $style)) {
+					@JFile::delete($path . DS . 'css' . DS . $style);
+				}
+			}
+			
+			// delete jquery
+			if (is_dir($path . DS . 'css' . DS . 'jquery')) {
+				@JFolder::delete($path . DS . 'css' . DS . 'jquery');
+			}
+			
+			// remove popup controller
+			if (is_dir(JPATH_SITE . DS . 'components' . DS . 'com_jce' . DS . 'controller')) {
+				@JFolder::delete(JPATH_SITE . DS . 'components' . DS . 'com_jce' . DS . 'controller');
+			}
+       	}
        	
        	if (version_compare($version, '2.0.0beta2', '<')) {
        		if ($this->checkTable('#__jce_profiles')) {
