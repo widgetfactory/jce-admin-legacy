@@ -154,7 +154,7 @@ class WFInstaller extends JObject
 		if (version_compare($version, '2.0.10', '<')) {
        		$path 		= dirname(dirname(__FILE__)) . DS . 'media';	
 				
-       		$scripts 	= array('help.js', 'html5.js', 'select.js', 'tips.js');	
+       		$scripts 	= array('colorpicker.js', 'help.js', 'html5.js', 'select.js', 'tips.js');	
 			
 			foreach($scripts as $script) {
 				if (is_file($path . DS . 'js' . DS . $script)) {
