@@ -220,7 +220,7 @@
                 }
             }
             
-            // add idd if set
+            // add id if set
             if (o.id) {
             	$(div).attr('id', o.id);
             }
