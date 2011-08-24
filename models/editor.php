@@ -269,9 +269,12 @@ class WFModelEditor extends JModel
      */
     public function getEditorSettings()
     {
+        wfimport('editor.libraries.classes.token');	
+	
         $wf = WFEditor::getInstance();
         
         $settings = array(
+        	'token'				=> WFToken::getToken(),
             'base_url' 			=> JURI::root(),
             'language' 			=> $wf->getLanguage(),
             'directionality' 	=> $wf->getLanguageDir(),
