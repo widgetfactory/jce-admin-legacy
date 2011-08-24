@@ -127,7 +127,7 @@
             this.createLayout();
 
             // Browser
-            $('input.browser').each( function() {
+            /*$('input.browser').each( function() {
                 var el = this;
 
                 $('<span class="browser"></span>').click( function() {
@@ -148,7 +148,7 @@
                     }));
                 }).insertAfter(this);
 
-            });
+            });*/
 
             // Check list
             $('select.checklist, input.checklist').checkList();
@@ -217,8 +217,8 @@
             $('option', '#users').prop('selected', true);
             
             $('div#tabs-editor, div#tabs-plugins').find(':input[name]').each( function() {
-                // disable blank or placeholder values
-                if ($(this).val() === '' || $(this).hasClass('placeholder')) {
+                // disable placeholder values
+                if ($(this).hasClass('placeholder')) {
                     $(this).attr('disabled', 'disabled');
                 }
             });
