@@ -146,5 +146,23 @@ class WFModel extends JModel
         
         return $output;
     }
+
+	public function getBrowserLink($element = null, $filter = '')
+	{
+		wfimport('editor.libraries.classes.token');	
+		$token = WFToken::getToken();
+		
+		$url = 'index.php?option=com_jce&view=editor&layout=plugin&plugin=browser&standalone=1&' . $token . '=1';
+		
+		if ($element) {
+			$url .= '&element=' . $element;
+		}
+		
+		if ($filter) {
+			$url .= '&filter=' . $filter;
+		}
+
+		return $url;
+	}
 }
 ?>
