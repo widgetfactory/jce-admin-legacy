@@ -88,16 +88,14 @@ input#components-all, input#components-select, label[for="components-all"], labe
 	text-align:center;
 }
 
-#jce .jgrid span.downarrow {
-	background-image:url("../img/down.png");
-}
-#jce .jgrid span.uparrow {
-	background-image:url("../img/up.png");
-}
 #jce .jgrid span.state {
 	display:inline-block;
-	height:16px;
-	width: 16px;
+	height:12px;
+	width: 12px;
+	vertical-align: middle;
+}
+#jce .jgrid span.text {
+	display: none;
 }
 #jce a.saveorder {
 	display: inline-block;
