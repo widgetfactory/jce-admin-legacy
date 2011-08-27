@@ -10,7 +10,7 @@
  */
 
 (function($) {        
-    $.Browser = {
+    $.WFBrowserWidget = {
         options : {
     		element : null,
     		
@@ -34,7 +34,8 @@
     				insert : false
     			},
     			expandable : false
-    		}
+    		},
+    		close : null
     	},
     		
     	init : function(options) {    		
@@ -52,12 +53,12 @@
     			// add insert button action
 	            $('button#insert').show().click( function(e) {
 	                self.insert();
-	                win.$jce.closeDialog('#' + self.options.element + '_browser');
+	                self.close();
 	                e.preventDefault();
 	            });
 	            
 	            $('button#cancel').show().click( function(e) {
-	            	win.$jce.closeDialog('#' + self.options.element + '_browser');
+	            	self.close();
 	            	
 	            	e.preventDefault();
 	            });
@@ -76,6 +77,15 @@
        			var src = WFFileBrowser.getSelectedItems(0);
 
        			window.parent.document.getElementById(this.options.element).value = $(src).data('url');
+       		}
+       },
+       
+       close : function() {
+       		var fn = this.options.close;
+       		if (fn)	{
+       			fn.call(this);
+       		} else {
+       			$('#' + this.options.element + '_browser').dialog('close').dialog('destroy');
        		}
        }
     }
