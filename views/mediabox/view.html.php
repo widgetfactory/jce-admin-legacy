@@ -97,7 +97,7 @@ class WFViewMediabox extends JView
 			)
         );
 
-		$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init();$("input.color").colorpicker('.json_encode($options).');});');
+		$this->document->addScriptDeclaration('jQuery(document).ready(function($){$("input.color").colorpicker('.json_encode($options).');});');
 
 		WFToolbarHelper::save();
 		WFToolbarHelper::apply();
