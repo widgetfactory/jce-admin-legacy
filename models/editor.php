@@ -212,10 +212,7 @@ class WFModelEditor extends JModel
                 else if (!is_numeric($v)) {
                     $v = '"' . trim($v, '"') . '"';
                 }
-                // 1 or 0 become true/false
-                else if ($v == '1' || $v == '0') {
-                    $v = intval($v) ? 'true' : 'false';
-                }
+
                 $output .= "\t\t\t" . $k . ": " . $v . "";
                 if ($i < count($settings)) {
                     $output .= ",\n";
