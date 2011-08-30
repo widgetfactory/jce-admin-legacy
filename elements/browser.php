@@ -72,7 +72,7 @@ class JElementBrowser extends JElement
 		$html .= ' />';
 		
 		$options = array(
-			'width' 	=> 760,
+			'width' 	=> 765,
 			'height'	=> 480,
 			'modal' 	=> true,
 			'id'		=> $attributes['id'] . '_browser'

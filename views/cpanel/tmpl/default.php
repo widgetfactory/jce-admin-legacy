@@ -26,7 +26,7 @@ defined('_JEXEC') or die('Restricted access');
 			<li class="cpanel-icon hasTip" title="<?php echo WFText::_( 'WF_INSTALL' ) . '::' . WFText::_( 'WF_INSTALLER_DESC' );?>"><a href="index.php?option=com_jce&amp;view=installer"><span class="install"></span><?php echo WFText::_( 'WF_INSTALL' );?></a></li>
 		<?php endif;?>
 		<?php if ($this->model->authorize('browser')) :?>
-			<li class="cpanel-icon hasTip" title="<?php echo WFText::_( 'WF_BROWSER_TITLE' ) . '::' . WFText::_( 'WF_CPANEL_BROWSER_DESC' );?>"><a href="<?php echo $this->model->getBrowserLink();?>" class="dialog browser" target="_blank" data-options="{'width':760,'height':480, 'modal':true}" title="<?php echo WFText::_( 'WF_BROWSER_TITLE' );?>"><span class="browser"></span><?php echo WFText::_( 'WF_BROWSER_TITLE' );?></a></li>
+			<li class="cpanel-icon hasTip" title="<?php echo WFText::_( 'WF_BROWSER_TITLE' ) . '::' . WFText::_( 'WF_CPANEL_BROWSER_DESC' );?>"><a href="<?php echo $this->model->getBrowserLink();?>" class="dialog browser" target="_blank" data-options="{'width':765,'height':480, 'modal':true}" title="<?php echo WFText::_( 'WF_BROWSER_TITLE' );?>"><span class="browser"></span><?php echo WFText::_( 'WF_BROWSER_TITLE' );?></a></li>
 		<?php endif;?>
 	<?php if (JPluginHelper::isEnabled('system', 'jcemediabox') && $this->model->authorize('mediabox')) :?>
 		<li class="cpanel-icon hasTip" title="<?php echo WFText::_( 'WF_MEDIABOX' ) . '::' . WFText::_( 'WF_MEDIABOX_DESC' );?>"><a href="index.php?option=com_jce&amp;view=mediabox"><span class="mediabox"></span><?php echo WFText::_( 'WF_MEDIABOX' );?></a></li>
