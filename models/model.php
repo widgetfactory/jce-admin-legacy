@@ -149,7 +149,8 @@ class WFModel extends JModel
 
 	public function getBrowserLink($element = null, $filter = '')
 	{
-		wfimport('editor.libraries.classes.token');	
+		require_once(JPATH_SITE .DS. 'components' .DS. 'com_jce' .DS. 'editor' .DS. 'libraries' .DS. 'classes' .DS. 'token.php');	
+		
 		$token = WFToken::getToken();
 		
 		$url = 'index.php?option=com_jce&view=editor&layout=plugin&plugin=browser&standalone=1&' . $token . '=1';
