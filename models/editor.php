@@ -60,39 +60,21 @@ class WFModelEditor extends JModel
             
             // Theme and skins
             $theme = array(
-                'toolbar_location' => array(
-                    'top',
-                    'bottom'
-                ),
-                'toolbar_align' => array(
-                    'left',
-                    'center'
-                ),
-                'statusbar_location' => array(
-                    'bottom',
-                    'top'
-                ),
-                'path' => array(
-                    1,
-                    1
-                ),
-                'resizing' => array(
-                    1,
-                    0
-                ),
-                'resize_horizontal' => array(
-                    1,
-                    1
-                ),
-                'resizing_use_cookie' => array(1, 1)
+                'toolbar_location' 		=> array('top','bottom', 'string'),
+                'toolbar_align' 		=> array('left', 'center', 'string'),
+                'statusbar_location' 	=> array('bottom','top', 'string'),
+                'path' 					=> array(1, 1, 'boolean'),
+                'resizing' 				=> array(1, 0, 'boolean'),
+                'resize_horizontal' 	=> array(1, 1, 'boolean'),
+                'resizing_use_cookie' 	=> array(1, 1, 'boolean')
             );
             
             foreach ($theme as $k => $v) {
-                $settings['theme_advanced_' . $k] = $wf->getParam('editor.' . $k, $v[0], $v[1]);
+                $settings['theme_advanced_' . $k] = $wf->getParam('editor.' . $k, $v[0], $v[1], $v[2]);
             }
 			
 			if (!$wf->getParam('editor.use_cookies', 1)) {
-				$settings['theme_advanced_resizing_use_cookie'] = 0;
+				$settings['theme_advanced_resizing_use_cookie'] = false;
 			}
             
             $settings['width']  = $wf->getParam('editor.width');
@@ -208,6 +190,10 @@ class WFModelEditor extends JModel
                     // replace hash delimiters with / for javascript regular expression
                     $v = preg_replace('@^#(.*)#$@', '/$1/', $v);
                 }
+				// boolean
+				else if (is_bool($v)) {
+					$v = $v ? 'true' : 'false';
+				}
                 // anything that is not solely an integer
                 else if (!is_numeric($v)) {
                     $v = '"' . trim($v, '"') . '"';
