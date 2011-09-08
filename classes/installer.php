@@ -232,6 +232,12 @@ class WFInstaller extends JObject
                 $db->setQuery($query);
                 $plugins = $db->loadAssocList('id');
                 
+                $map = array(
+                	'advlink' => 'link',
+                	'advcode' => 'source',
+                	'tablecontrols' => 'table'
+                );
+                
                 if ($this->createProfilesTable()) {
                     foreach ($groups as $group) {
                         $row = JTable::getInstance('profiles', 'WFTable');
@@ -245,7 +251,14 @@ class WFInstaller extends JObject
                                     $icons[] = 'spacer';
                                 } else {
                                     if (isset($plugins[$id])) {
-                                        $icons[] = $plugins[$id]['icon'];
+                                        $icon = $plugins[$id]['icon'];
+                                        
+                                        // map old icon names to new
+                                        if (isset($map[$icon])) {
+                                        	$icon = $map[$icon];
+                                        }
+                                        
+                                        $icons[] = $icon;
                                     }
                                 }
                             }
@@ -258,7 +271,14 @@ class WFInstaller extends JObject
                         // transfer plugin ids to names
                         foreach (explode(',', $group->plugins) as $id) {
                             if (isset($plugins[$id])) {
-                                $items[] = $plugins[$id]['name'];
+                                $name = $plugins[$id]['name'];
+                                
+                                // map old icon names to new
+                                if (isset($map[$name])) {
+                                    $name = $map[$name];
+                                }
+                                
+                                $names[] = $name;
                             }
                         }
                         $group->plugins = implode(',', $names);
@@ -270,31 +290,52 @@ class WFInstaller extends JObject
                         foreach($params as $key => $value) {
                         	$parts 	= explode('_', $key);
 
-							$node = array_shift($parts);	
-							
+							$node 	= array_shift($parts);
+
 							// special consideration for imgmanager_ext!!
 							if (strpos($key, 'imgmanager_ext_') !== false) {
 								$node = $node . '_' . array_shift($parts);
 							}
 							
-							// convert some keys
-							if ($key == 'advlink') {
-								$key = 'link';
+							// convert some nodes
+							if (isset($map[$node])) {
+								$node = $map[$node];
 							}
 
                         	$key = implode('_', $parts);
-                        	
+
                         	if ($value !== '') {
-	                        	if (isset($data->$node) && is_object($data->$node)) {
-	                        		$data->$node->$key = $value;
-	                        	} else {
+	                        	if (!isset($data->$node) || !is_object($data->$node)) {
 	                        		$data->$node = new StdClass();
-	                        		$data->$node->$key = $value;
 	                        	}
+	                        	// convert Link parameters
+	                        	if ($node == 'link' && $key != 'target') {
+                        			$sub = $key;
+                        			$key = 'links';
+                        			
+                        			if (!isset($data->$node->$key)) {
+                        				$data->$node->$key = new StdClass();	
+                        			}
+                        			
+                        			if (preg_match('#^(content|contacts|static|weblinks|menu)$#', $sub)) {
+										if (!isset($data->$node->$key->joomlalinks)) {
+                        					$data->$node->$key->joomlalinks = new StdClass();
+                        					$data->$node->$key->joomlalinks->enable = 1;
+                        				}
+                        				$data->$node->$key->joomlalinks->$sub = $value;
+                        			} else {
+                        				$data->$node->$key->$sub = new StdClass();
+                        				$data->$node->$key->$sub->enable = 1;
+                        			}
+                        		} else {
+                        			$data->$node->$key = $value;
+                        		}
                         	}
                         }
                         
                         $group->params = json_encode($data);
+                        
+                        unset($group->id);
                         
                         // bind data
                         $row->bind($group);
@@ -307,8 +348,26 @@ class WFInstaller extends JObject
                         if ($row->name == 'Front End') {
                             $row->area = 1;
                         }
-
-                        if (!$row->store()) {
+						
+						if ($this->checkTable('#__wf_profiles')) {
+                        	$name = $row->name;
+                        
+                        	// check for existing profile
+	                		$query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
+	                		$db->setQuery($query);
+	                		// create name copy if exists
+	                		while ($db->loadResult()) {
+	                    		$name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
+	                    
+	                    		$query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
+	                    
+	                    		$db->setQuery($query);
+	                		}
+	                		// set name
+	                		$row->name = $name;
+                        }
+                        	
+                    	if (!$row->store()) {
                         	$mainframe->enqueueMessage('Conversion of group data failed : ' . $row->name, 'error');
                     	}
                     }
@@ -316,7 +375,7 @@ class WFInstaller extends JObject
                     // Drop tables
                     $query = 'DROP TABLE IF EXISTS #__jce_groups';
                     $db->setQuery($query);
-                    $db->query();
+                   	$db->query();
                     
                     // If profiles table empty due to error, install profiles data
                     if (!$this->checkTableContents('#__wf_profiles')) {
@@ -334,7 +393,7 @@ class WFInstaller extends JObject
             // Drop tables
             $query = 'DROP TABLE IF EXISTS #__jce_plugins';
             $db->setQuery($query);
-            $db->query();
+           	$db->query();
             
             // Drop tables
             $query = 'DROP TABLE IF EXISTS #__jce_extensions';
