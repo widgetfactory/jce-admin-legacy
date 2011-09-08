@@ -290,6 +290,27 @@ class WFParameter extends JParameter
 		return false;
 	}
 	
+	public function mergeParams($params1, $params2, $toObject = true)
+	{
+		$merged = $params1;
+		
+		foreach ($params2 as $key => $value) {
+			if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+				$merged[$key] = self::mergeParams($merged[$key], $value);
+			} else {
+				if ($value !== '') {
+					$merged[$key] = $value;
+				}	
+			}
+		}	
+			
+		if ($toObject) {
+			return self::array_to_object($merged);
+		}	
+			
+		return $merged;
+	}
+	
 	/**
 	 * Method to determine if an array is an associative array.
 	 *
