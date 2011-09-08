@@ -21,11 +21,7 @@ defined('_JEXEC') or die('ERROR_403');
             <label for="profile_name" class="hasTip" title="<?php echo WFText::_('WF_PROFILES_NAME').'::'.WFText::_( 'WF_PROFILES_NAME_DESC' ); ?>">
                 <?php echo WFText::_( 'WF_PROFILES_NAME' ); ?>:
             </label>
-			<?php if ($this->profile->name == 'Default'){ echo $this->profile->name; ?>
-                <input type="hidden" name="name" id="profile_name" value="<?php echo $this->profile->name; ?>" />
-            <?php }else{?>
-                <input class="text_area required" type="text" name="name" id="profile_name" size="35" value="<?php echo $this->profile->name; ?>" />
-            <?php }?>
+            <input class="text_area required" type="text" name="name" id="profile_name" size="35" value="<?php echo $this->profile->name; ?>" />
 	    </li>
 	    <li>
             <label for="profile_description" class="hasTip" title="<?php echo WFText::_('WF_PROFILES_DESCRIPTION').'::'.WFText::_('WF_PROFILES_DESCRIPTION_DESC'); ?>">
