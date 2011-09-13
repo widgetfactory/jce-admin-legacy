@@ -233,9 +233,10 @@ class WFInstaller extends JObject
                 $plugins = $db->loadAssocList('id');
                 
                 $map = array(
-                	'advlink' => 'link',
-                	'advcode' => 'source',
-                	'tablecontrols' => 'table'
+                	'advlink' 		=> 'link',
+                	'advcode' 		=> 'source',
+                	'tablecontrols' => 'table',
+                	'styleprops'	=> 'style'
                 );
                 
                 if ($this->createProfilesTable()) {
@@ -262,7 +263,7 @@ class WFInstaller extends JObject
                                     }
                                 }
                             }
-                            $rows[] = implode(',', $icons);
+                            $rows[] = str_replace(array('cite,abbr,acronym,del,ins,attribs', 'search,replace', 'ltr,rtl', 'readmore,pagebreak'), array('xhtmlxtras', 'searchreplace', 'directionality', 'article'), implode(',', $icons));
                         }
                         
                         $group->rows = implode(';', $rows);
