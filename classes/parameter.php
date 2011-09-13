@@ -114,12 +114,12 @@ class WFParameter extends JParameter
 	 *
 	 * @param	string	Registry path (e.g. editor.width)
 	 * @param   string	Optional default value, returned if the internal value is null.
-	 * @param 	string  Optional group name. If teh default vaue is null and the gorup value is set, the default value will be retrieved from the xml file
 	 * @return	mixed	Value of entry or null
 	 * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
 	 */
-	public function get($path, $default = '')
+	public function get($path, $default = '', $allowempty = true)
 	{
+		// set default value as result	
 		$result = $default;
 		
 		// Explode the registry path into an array
@@ -131,15 +131,19 @@ class WFParameter extends JParameter
 		// Traverse the registry to find the correct node for the result.
 		foreach ($nodes as $n) {
 			if (isset($node->$n)) {
-				$node = $node->$n;
-				$found = true;
+				$node 	= $node->$n;
+				$found 	= true;
 			} else {
-				$found = false;
+				$found 	= false;
 				break;
 			}
 		}
-		if ($found && $node !== null && $node !== '') {
-			$result = $node;
+		
+		if ($found) {
+			$result = $node;	
+			if ($allowempty === false && $result === '') {
+				$result = $default;
+			}	
 		}
 		
 		if (is_numeric($result)) {
