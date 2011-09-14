@@ -243,13 +243,15 @@ class WFInstaller extends JObject
                     foreach ($groups as $group) {
                         $row = JTable::getInstance('profiles', 'WFTable');
 						
+						$rows = array();
+						
 						// transfer row ids to names
                         foreach (explode(';', $group->rows) as $item) {
                             $icons = array();
                             foreach (explode(',', $item) as $id) {
                                 // spacer
                                 if ($id == '00') {
-                                    $icons[] = 'spacer';
+                                    $icon = 'spacer';
                                 } else {
                                     if (isset($plugins[$id])) {
                                         $icon = $plugins[$id]['icon'];
@@ -258,15 +260,15 @@ class WFInstaller extends JObject
                                         if (isset($map[$icon])) {
                                         	$icon = $map[$icon];
                                         }
-                                        
-                                        $icons[] = $icon;
                                     }
                                 }
+								$icons[] = $icon;
                             }
+
                             $rows[] = str_replace(array('cite,abbr,acronym,del,ins,attribs', 'search,replace', 'ltr,rtl', 'readmore,pagebreak'), array('xhtmlxtras', 'searchreplace', 'directionality', 'article'), implode(',', $icons));
                         }
-                        
-                        $group->rows = implode(';', $rows);
+                        // re-assign rows
+                        $row->rows = implode(';', $rows);
                         
                         $names = array();
                         // transfer plugin ids to names
@@ -282,7 +284,8 @@ class WFInstaller extends JObject
                                 $names[] = $name;
                             }
                         }
-                        $group->plugins = implode(',', $names);
+						 // re-assign plugins
+                        $row->plugins = implode(',', $names);
 						
 						// convert params to JSON
                         $params = WFParameterHelper::toObject($group->params);
@@ -333,14 +336,18 @@ class WFInstaller extends JObject
                         		}
                         	}
                         }
-                        
-                        $group->params = json_encode($data);
-                        
-                        unset($group->id);
-                        
-                        // bind data
-                        $row->bind($group);
-                        
+                        // re-assign params
+                        $row->params = json_encode($data);
+						
+						// re-assign other values
+						$row->name 			= $group->name;
+						$row->description 	= $group->description;
+						$row->users 		= $group->users;
+						$row->types 		= $group->types;
+						$row->components 	= $group->components;
+						$row->published 	= $group->published;
+						$row->ordering 		= $group->ordering;
+
 						// add area data
                         if ($row->name == 'Default') {
                             $row->area = 0;
@@ -371,6 +378,8 @@ class WFInstaller extends JObject
                     	if (!$row->store()) {
                         	$mainframe->enqueueMessage('Conversion of group data failed : ' . $row->name, 'error');
                     	}
+						
+						unset($row);
                     }
                     
                     // Drop tables
