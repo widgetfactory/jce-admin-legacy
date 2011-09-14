@@ -22,11 +22,11 @@ ul#cpanel li.cpanel-icon {
     height:100px;
     display: block;
     float: left;
-    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    text-shadow: 0 1px 0 #FFFFFF;
     -moz-box-shadow: 0.5pt 0.5pt 0.8pt #cccccc;
     -webkit-box-shadow: 1px 1px 1px #cccccc;
     box-shadow: 1px 1px 1px #cccccc;
-    padding: 1px;
+    padding: 5px;
 }
 ul#cpanel li.cpanel-icon span {
     background: url('../img/cpanel.png') no-repeat 0 0;
