@@ -265,7 +265,7 @@ class WFInstaller extends JObject
 								$icons[] = $icon;
                             }
 
-                            $rows[] = str_replace(array('cite,abbr,acronym,del,ins,attribs', 'search,replace', 'ltr,rtl', 'readmore,pagebreak'), array('xhtmlxtras', 'searchreplace', 'directionality', 'article'), implode(',', $icons));
+                            $rows[] = str_replace(array('cite,abbr,acronym,del,ins,attribs', 'search,replace', 'ltr,rtl', 'readmore,pagebreak', 'cut,copy,paste'), array('xhtmlxtras', 'searchreplace', 'directionality', 'article', 'paste'), implode(',', $icons));
                         }
                         // re-assign rows
                         $row->rows = implode(';', $rows);
