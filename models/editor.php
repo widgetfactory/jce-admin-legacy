@@ -821,7 +821,7 @@ class WFModelEditor extends JModel
             	$files[] = WF_EDITOR_LIBRARIES . DS . 'css' . DS . 'editor.css';
                 $dialog  = $wf->getParam('editor.dialog_theme', 'jce');
 
-                $files[] =WF_EDITOR_THEMES . DS . $themes[0] . DS . 'skins' . DS . $toolbar[0] . DS . 'ui.css';
+                $files[] = WF_EDITOR_THEMES . DS . $themes[0] . DS . 'skins' . DS . $toolbar[0] . DS . 'ui.css';
                 
                 if (isset($toolbar[1])) {
                     $files[] = WF_EDITOR_THEMES . DS . $themes[0] . DS . 'skins' . DS . $toolbar[0] . DS . 'ui_' . $toolbar[1] . '.css';
