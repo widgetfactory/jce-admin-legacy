@@ -85,6 +85,12 @@ class WFInstallerExtension extends JObject {
 		$plugin = $this->get('plugin');
 		$folder = $this->get('folder');
 		$extension = $this->get('extension');
+		
+	    if (version_compare($this->get('version'), '2.0.0', '<')) {
+			$this->parent->abort(WFText::_('WF_INSTALLER_INCORRECT_VERSION'));
+			return false;
+		}
+		
 		if(!empty($folder)) {
 			$this->parent->setPath('extension_root', JPATH_COMPONENT_SITE . DS . 'editor' . DS . 'extensions' . DS . $folder);
 		} else {
