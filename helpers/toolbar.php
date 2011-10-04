@@ -27,8 +27,8 @@ class WFToolbarHelper {
 		$bar 		= JToolBar::getInstance('toolbar');
 		
 		$options = array(
-			'width' 	=> 760,
-			'height'	=> 540,
+			'width' 	=> 780,
+			'height'	=> 560,
 			'modal'		=> true
 		);
 		
