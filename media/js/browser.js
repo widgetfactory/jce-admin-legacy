@@ -85,7 +85,7 @@
        		if (fn)	{
        			fn.call(this);
        		} else {
-       			$('#' + this.options.element + '_browser').dialog('close').dialog('destroy');
+       			window.parent.$jce.closeDialog('#' + this.options.element + '_browser');
        		}
        }
     }

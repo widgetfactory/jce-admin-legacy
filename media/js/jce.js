@@ -28,7 +28,7 @@
             // Style stuff
             $('div.icon a').addClass('ui-widget-content ui-corner-all');
 
-            $('a.dialog').click( function(e) {
+            $('a.dialog').click( function(e) {                
                 self.createDialog({
                     src 	: $(this).attr('href'),
                     options : $(this).data('options'),
@@ -221,8 +221,8 @@
             }
             
             // add id if set
-            if (o.id) {
-            	$(div).attr('id', o.id);
+            if (data.id) {
+            	$(div).attr('id', data.id);
             }
 
             $(div).css('overflow', 'hidden').attr('title', title).dialog($.extend(settings, data));
