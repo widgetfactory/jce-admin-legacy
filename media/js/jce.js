@@ -132,6 +132,8 @@
             } else {
                 data = o.options;
             }
+            
+            data = data || {};
 
             var settings = {
                 bgiframe: true,
