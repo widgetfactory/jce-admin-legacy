@@ -256,11 +256,13 @@ class WFModelEditor extends JModel
 	
         $wf = WFEditor::getInstance();
         
+        $language = JFactory::getLanguage();
+        
         $settings = array(
         	'token'				=> WFToken::getToken(),
             'base_url' 			=> JURI::root(),
             'language' 			=> $wf->getLanguage(),
-            'directionality' 	=> $wf->getLanguageDir(),
+            'directionality' 	=> $language->isRTL() ? 'rtl' : 'ltr',
             'theme' 			=> 'none',
             'invalid_elements' 	=> 'applet,iframe,object,embed,script,style',
             'plugins'			=> ''
