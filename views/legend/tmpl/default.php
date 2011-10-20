@@ -19,9 +19,9 @@ defined('_JEXEC') or die('Restricted access');
 			<table class="ui-widget ui-widget-content">
 				<thead>
 					<tr class="ui-widget-header">
-						<th nowrap="nowrap" width="20%" class="title"><?php echo WFText::_('WF_LEGEND_NAME');?>:
+						<th nowrap="nowrap" width="20%" class="title"><?php echo WFText::_('WF_LEGEND_NAME');?>
 						</th>
-						<th nowrap="nowrap" class="title"><?php echo WFText::_('WF_LEGEND_BUTTON');?>:
+						<th nowrap="nowrap" class="title"><?php echo WFText::_('WF_LEGEND_BUTTON');?>
 						</th>
 					</tr>
 				</thead>

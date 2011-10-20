@@ -45,10 +45,15 @@
 #jce dl.adminformlist > dd > span {
 	margin-top: 2px;
 	display: inline-block;
+	position: relative;
 }
 #jce table.install-summary tr.odd, #jce table.install-summary tr:hover {
 	background-color: inherit;
 }
 #jce #installer_filter_plugin, #jce #installer_filter_extension {
   margin: 0 5px;
+}
+
+html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
+	float: right;
 }

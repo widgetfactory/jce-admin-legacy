@@ -104,7 +104,7 @@ $spacer = file_exists(WF_EDITOR.DS.'tiny_mce'.DS.'themes'.DS.'advanced'.DS.'img'
                  if (!$plugin->icon) :
                     if ($plugin->editable) : ?>
                         <li class="editable">
-                            <label valign="top" class="key"><?php echo WFText::_($plugin->title);?>:</label>
+                            <label valign="top" class="key"><?php echo WFText::_($plugin->title);?></label>
 							<input type="checkbox" value="<?php echo $plugin->name;?>" <?php echo in_array( $plugin->name, explode( ',', $this->profile->plugins ) ) ? 'checked="checked"' : '';?>/>
                         	<?php echo WFText::_('WF_'.strtoupper($plugin->name).'_DESC');?>
 						</li>

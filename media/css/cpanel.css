@@ -28,6 +28,10 @@ ul#cpanel li.cpanel-icon {
     box-shadow: 1px 1px 1px #cccccc;
     padding: 5px;
 }
+html[dir="rtl"] ul#cpanel li.cpanel-icon {
+	float: right;
+}
+
 ul#cpanel li.cpanel-icon span {
     background: url('../img/cpanel.png') no-repeat 0 0;
     display: block;

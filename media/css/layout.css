@@ -159,6 +159,10 @@ html {
 	top:0;
 	right: -20px;
 }
+html[dir="rtl"] #jce span.sortableOption {
+	left: -20px;
+	right: auto;
+}
 #jce span.sortableOption span {
 	width : 20px;
 	height: 20px;

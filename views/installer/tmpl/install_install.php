@@ -17,7 +17,7 @@ defined('_JEXEC') or die('Restricted access');
 <dl class="adminformlist">	
 	<dt><?php echo WFText::_('WF_INSTALLER_INSTALL_DESC');?></dt>
 	<dd>
-		<label for="install" class="hasTip" title="<?php echo WFText::_('WF_INSTALLER_PACKAGE'); ?>::<?php echo WFText::_('WF_INSTALLER_PACKAGE_DESC'); ?>"><?php echo WFText::_('WF_INSTALLER_PACKAGE'); ?>:</label>
+		<label for="install" class="hasTip" title="<?php echo WFText::_('WF_INSTALLER_PACKAGE'); ?>::<?php echo WFText::_('WF_INSTALLER_PACKAGE_DESC'); ?>"><?php echo WFText::_('WF_INSTALLER_PACKAGE'); ?></label>
 		<span>
 			<input type="file" name="install" id="upload" placeholder="<?php echo $this->state->get('install.directory'); ?>" />
 			<button id="install_button"><?php echo WFText::_('WF_INSTALLER_UPLOAD'); ?></button>

@@ -13,6 +13,9 @@
 	margin: 5px 0 5px 215px;
 	position: relative;
 }
+html[dir="rtl"] #jce ul li div.extension_mapper {
+	margin: 5px 215px 5px 0;
+}
 #jce div.extension_group_container {
 	width: 130px;
 	height: 160px;
@@ -20,6 +23,9 @@
 	padding:1px;
 	margin:1px;
 	float: left;
+}
+html[dir="rtl"] #jce div.extension_group_container {
+	float: right;
 }
 #jce div.extension_group_container div {
 	margin: 0 1px;
@@ -41,6 +47,9 @@
     width: 96px;
     padding: 0 0 0 10px;
 }
+html[dir="rtl"] #jce div.extension_group_container span.extension_group_title {
+    padding: 0 10px 0 0;
+}
 #jce div.jce_extensions_group {
 	background-color:white;
 	display:inline-block;
@@ -57,7 +66,7 @@
 	font-size: inherit;
 	vertical-align: middle;
 	height: 14px;
-	margin: 0;
+	margin: 1px 0;
 	line-height: 12px;
 }
 #jce div.extension_group_container div.extension_list_scroll_top, #jce div.extension_group_container div.extension_list_scroll_bottom {
@@ -75,6 +84,11 @@
 	height: 10px;
 	margin: -3px 0 0 -8px;
 	left: 50%;
+}
+html[dir="rtl"] #jce div.extension_list_scroll_top span.extension_list_scroll_top_icon, 
+html[dir="rtl"] #jce div.extension_list_scroll_bottom span.extension_list_scroll_bottom_icon {
+	margin: -3px -8px 0 0;
+	right: 50%;
 }
 
 #jce div.extension_list_container ul.extension_list  {
@@ -96,6 +110,9 @@
 	position: relative;
 	background-color: #FFF;
 }
+html[dir="rtl"] #jce div.extension_list_container ul.extension_list li {
+	padding:0 22px 0 0;
+}
 #jce div.extension_list_container ul.extension_list li span input.duplicate {
 	color: red;
 }
@@ -113,6 +130,10 @@
 	opacity: 0.3;
 	filter:alpha(opacity=30);
 	-ms-filter:alpha(opacity=30);
+}
+html[dir="rtl"] #jce div.extension_mapper span.checkbox.view {
+	right: auto;
+	left: 20px;
 }
 #jce div.extension_mapper span.checkbox.checked.view {
 	opacity: 1;
@@ -143,6 +164,9 @@
 	position: relative;
 	border: 1px dashed #888;
 	font-size: 0.9em;
+}
+html[dir="rtl"] #jce div.extension_mapper div.extension_group_add {
+	float: right;
 }
 #jce div.extension_mapper div.extension_group_add span {
 	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -540px;
@@ -179,6 +203,10 @@
     padding: 0 0 0 25px;
     text-align: center;
     vertical-align: middle;
+}
+html[dir="rtl"] #jce div.extension_group_container div.extension_list_add span {
+    padding: 0 25px 0 0;
+    background-position: right -540px;
 }
 #jce div.extension_group_container ul.extension_list li span.extension_list_remove {
 	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -560px;

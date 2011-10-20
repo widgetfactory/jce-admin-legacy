@@ -18,7 +18,7 @@ defined('_JEXEC') or die('ERROR_403');
 	    <table width="100%" cellspacing="0" id="users-toolbar">
 			<tr>
 				<td width="100%">
-					<?php echo WFText::_('WF_LABEL_FILTER'); ?>:
+					<?php echo WFText::_('WF_LABEL_FILTER'); ?>
 					<input type="text" name="search" id="search" size="30" value="<?php echo $this->lists['search'];?>" class="text_area" onchange="document.adminForm.submit();" />
 					<button id="filter_go" onclick="this.form.submit();"><?php echo WFText::_('WF_LABEL_GO'); ?></button>
 					<button id="filter_reset" onclick="document.getElementById('search').value='';this.form.submit();"><?php echo WFText::_('WF_LABEL_RESET'); ?></button>

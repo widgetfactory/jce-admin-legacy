@@ -20,7 +20,7 @@ defined('_JEXEC') or die('RESTRICTED');
 	<!--div class="ui-layout-north"></div>
 	<div class="ui-layout-south"></div>
 	<div class="ui-layout-east"></div-->
-	<div class="ui-layout-west">
+	<div class="ui-layout-<?php echo $this->orientation; ?>">
 		<div id="help-menu"><?php echo $this->model->renderTopics();?></div>
 	</div>
 </div>

@@ -18,7 +18,7 @@ defined('_JEXEC') or die('Restricted access');
 	<dl class="adminformlist">
 		<dt><?php echo WFText::_('WF_INSTALLER_UNINSTALL_DESC');?></dt>
 		<dd>
-			<label for="install_uninstall" class="hasTip" title="<?php echo WFText::_('WF_INSTALLER_UNINSTAL'); ?>::<?php echo WFText::_('WF_INSTALLER_UNINSTALL_DESC'); ?>"><?php echo WFText::_('WF_INSTALLER_UNINSTAL'); ?>:</label>
+			<label for="install_uninstall" class="hasTip" title="<?php echo WFText::_('WF_INSTALLER_UNINSTAL'); ?>::<?php echo WFText::_('WF_INSTALLER_UNINSTALL_DESC'); ?>"><?php echo WFText::_('WF_INSTALLER_UNINSTAL'); ?></label>
 			<span>
 				<button class="install_uninstall"><?php echo WFText::_('WF_INSTALLER_UNINSTALL_SELECTED');?></button>
 			</span>

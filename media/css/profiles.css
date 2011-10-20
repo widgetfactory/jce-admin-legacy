@@ -135,3 +135,21 @@ div#plugin_params h2 {
 	display: inline-block;
 	vertical-align:middle;
 }
+
+html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-nav {
+	border-width: 0 0 0 1px;
+    float: right;
+    padding: 0 0.2em 0 0.1em;
+}
+html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-selected {
+    padding-left: 0.1em;
+    border-right-width: 1px;
+    margin-right: -1px;
+}
+html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-nav li {
+	margin: 0 1px 0.2em 0;
+	border-left: 0 none;
+}
+html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
+	margin: 0 13em 0 0;
+}

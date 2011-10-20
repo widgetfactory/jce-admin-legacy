@@ -27,6 +27,7 @@ class WFViewHelp extends JView
     {        
         $model 		=$this->getModel();
         $language 	= $model->getLanguage();
+        $lang 		= JFactory::getLanguage();
         
         $section 	= JRequest::getWord('section');
         $category 	= JRequest::getWord('category');
@@ -53,6 +54,7 @@ class WFViewHelp extends JView
 		}
 
         $this->assignRef('model', $model);
+        $this->assign('orientation', $lang->isRTL() ? 'east' : 'west'); 
         
         $key = array();
         
@@ -76,7 +78,7 @@ class WFViewHelp extends JView
 		
 		$this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-layout.js?version=' . $model->getVersion());
 		$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Help.init('.json_encode($options).');});');
-        
+
         parent::display($tpl);
     }
 }

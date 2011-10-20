@@ -38,7 +38,7 @@ span.upload_container input[type="file"] {
     height: 20px;
 }
 #jce button span.browse {
-    left : 6px;
+    left : 0;
     background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1100px; !important;
 }
 #jce button span.import {
@@ -48,18 +48,28 @@ span.upload_container input[type="file"] {
    background : url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center;
 }
 #jce span.upload_clear {
-    display: inline-block;
-    float: left;
-    margin: 7px 5px 0 -20px;
     cursor: pointer;
+    display: inline-block;
+    left: 0;
+    margin: 7px 0 0 -15px;
+    position: absolute;
+    right: 0;
 }
-
+html[dir="rtl"] #jce span.upload_clear {
+	left : 0;
+	right: auto;
+	margin: 7px 0 0 5px;
+}
 #jce #upload_button {
 }
 
 #jce label[for="import"] {
     float: left;
-	margin-right: 5px;
+	margin: 0 5px;
+	line-height: 28px;
+}
+html[dir="rtl"] #jce label[for="import"] {
+	float: right;
 }
 #jce input.upload_text {
 	float: left;

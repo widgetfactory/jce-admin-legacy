@@ -14,5 +14,5 @@
 #colorpicker.ui-dialog-content {height:290px;}
 #colorpicker_preview {position:relative;top:0;margin:5px 0 0;}
 #colorpicker_web ul, #colorpicker_named ul, #colorpicker_template ul {margin: 0;}
-span.colorpicker_widget {background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1000px;width: 16px;height: 16px;cursor: pointer;vertical-align: middle;display: inline-block;margin: 4px 0 2px 5px;}
+span.colorpicker_widget {background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1000px;width: 16px;height: 16px;cursor: pointer;vertical-align: middle;display: inline-block;margin: 4px 5px 2px 5px;}
 

@@ -152,13 +152,16 @@ div#jce button {
     float: left;
     clear: both;
     display: inline-block;
-    -moz-border-radius-topleft: 5px;
-    -moz-border-radius-bottomleft: 5px;
-    -webkit-border-top-left-radius: 5px;
-    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
     width: 100%;
+}
+html[dir="rtl"] #jce ul.adminformlist > li, 
+html[dir="rtl"] #jce dl.adminformlist > dd {
+	background-position: right;
 }
 #jce ul.adminformlist > li > div {
 	margin-left: 210px;
@@ -176,7 +179,9 @@ div#jce button {
 #jce dl.adminformlist dd {
     margin: 10px 2px;
 }
-#jce ul.adminformlist > li > label:first-child, #jce ul.adminformlist > li > h4:first-child, #jce ul.adminformlist > li > span:first-child, #jce dl.adminformlist > dd > label:first-child, #jce dl.adminformlist > dd > span:first-child {
+#jce ul.adminformlist > li > label:first-child, #jce ul.adminformlist > li > h4:first-child, 
+#jce ul.adminformlist > li > span:first-child, #jce dl.adminformlist > dd > label:first-child, 
+#jce dl.adminformlist > dd > span:first-child {
     display: inline-block;
     margin: 2px 5px;
     width: 200px;
@@ -184,7 +189,15 @@ div#jce button {
     min-width: 200px;
     padding: 0 0 0 5px;
     vertical-align: top;
-	float: left;
+    line-height: 30px;
+    float: left;
+}
+html[dir="rtl"] #jce ul.adminformlist > li > label:first-child, 
+html[dir="rtl"] #jce ul.adminformlist > li > h4:first-child, 
+html[dir="rtl"] #jce ul.adminformlist > li > span:first-child, 
+html[dir="rtl"] #jce dl.adminformlist > dd > label:first-child, 
+html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
+    float: none;
 }
 #jce ul.adminformlist li input, #jce ul.adminformlist li textarea, #jce ul.adminformlist li select, #jce dl.adminformlist dd input, #jce dl.adminformlist dd textarea, #jce dl.adminformlist dd select {
     vertical-align: middle;
@@ -443,4 +456,22 @@ body.ui-jce .ui-dialog-content.ui-widget-content {
 
 #toolbar span.icon-32-update span.icon-32-error {
 	background: url('../img/error.png') no-repeat bottom right;
+}
+
+#jce #profiles-toolbar span.upload-container {
+	float: right;
+	display : inline-block;
+	position: relative;
+}
+html[dir="rtl"] #jce #profiles-toolbar span.upload-container {
+	float: left;
+}
+#jce #profiles-toolbar label[for="search"] {
+	margin : 0 5px;
+}
+html[dir="rtl"] div.ui-dialog-buttonset button.ui-button span.ui-button-text {
+	padding: 0.4em 2.1em 0.4em 1em
+}
+html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
+	float: right;
 }
