@@ -29,8 +29,6 @@ class WFController extends JController
     function __construct($default = array())
     {
         parent::__construct($default);
-		
-		$view = JRequest::getWord('view', 'cpanel');
 
         $this->registerTask('apply', 'save');
         $this->registerTask('unpublish', 'publish');
@@ -42,78 +40,8 @@ class WFController extends JController
         wfimport('admin.helpers.extension');
         wfimport('admin.helpers.xml');
 
-        $document = JFactory::getDocument();
-        
-        $document->setTitle(WFText::_('WF_ADMINISTRATION') . ' :: ' . WFText::_('WF_' . strtoupper($view)));
-        
         $language = JFactory::getLanguage();
         $language->load('com_jce', JPATH_ADMINISTRATOR);
-		
-		$model = $this->getModel($view);
-        
-        // jquery versions		
-		$document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
-		$document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
-		
-		// jQuery noConflict
-        $document->addScriptDeclaration('jQuery.noConflict();');
-		
-		$scripts = array();
-        
-        switch ($view) {
-            case 'help':
-                $scripts[] = 'help.js';
-                break;
-            default:
-                // load Joomla! core javascript
-                if (method_exists('JHtml', 'core')) {
-                	JHtml::core();	
-				}
-				
-				require_once(JPATH_ADMINISTRATOR . DS . 'includes' . DS . 'toolbar.php');
-                
-                JToolBarHelper::title(WFText::_('WF_ADMINISTRATION') . ' &rsaquo;&rsaquo; ' . WFText::_('WF_' . strtoupper($view)), 'logo.png');
-
-                $params = WFParameterHelper::getComponentParams();
-                $theme  = $params->get('preferences.theme', 'jce');
-                
-                $scripts = array_merge(array(
-                    'tips.js',
-                    'html5.js'
-                ));
-
-				// Load admin scripts
-				$document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js?version=' . $model->getVersion());
-				
-				$options = array(
-					'labels' => array(
-						'ok' 		=> WFText::_('WF_LABEL_OK'),
-						'cancel' 	=> WFText::_('WF_LABEL_CANCEL'),
-						'select'	=> WFText::_('WF_LABEL_SELECT'),
-						'save'		=> WFText::_('WF_LABEL_SAVE'),
-						'saveclose' => WFText::_('WF_LABEL_SAVECLOSE'),
-						'alert'		=> WFText::_('WF_LABEL_ALERT'),
-						'required'  => WFText::_('WF_MESSAGE_REQUIRED')
-					)
-				);
-				
-                $document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');
-				
-				$installer = WFInstaller::getInstance();
-                $installer->check();
-                
-                break;
-        }
-
-		// Load site scripts
-        foreach ($scripts as $script) {
-        	$document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/' . $script . '?version=' . $model->getVersion());
-        }
-                           
-		require_once(dirname(__FILE__) . DS . 'helpers' . DS . 'system.php');
-                
-        $app = JFactory::getApplication();
-       	$app->registerEvent('onAfterRender', 'WFSystemHelper');
     }
 
     function loadMenu()
@@ -146,21 +74,75 @@ class WFController extends JController
      */
     function display()
     {
-        $document = JFactory::getDocument();
-        $name = JRequest::getWord('view', 'cpanel');
+        $document 	= JFactory::getDocument();
+        $name 		= JRequest::getWord('view', 'cpanel');
         
         $view = $this->getView($name, $document->getType(), '', array(
             'base_path' => dirname(__FILE__)
         ));
+		
+		$document = JFactory::getDocument();        
+        $document->setTitle(WFText::_('WF_ADMINISTRATION') . ' :: ' . WFText::_('WF_' . strtoupper($name)));
+		
+		$model = $this->getModel($name);
         
-        switch ($name) {	
+        // jquery versions		
+		$document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
+		$document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
+		
+		// jQuery noConflict
+        $document->addScriptDeclaration('jQuery.noConflict();');
+		
+		$scripts = array();
+        
+        switch ($name) {
             case 'help':
-                if ($model = $this->getModel($name)) {
+                $scripts[] = 'help.js';
+				
+				if ($model = $this->getModel($name)) {
                     $view->setModel($model, true);
                 }
+				
                 break;
             default:
-                $view->addHelperPath(dirname(__FILE__) . DS . 'helpers');
+                // load Joomla! core javascript
+                if (method_exists('JHtml', 'core')) {
+                	JHtml::core();	
+				}
+				
+				require_once(JPATH_ADMINISTRATOR . DS . 'includes' . DS . 'toolbar.php');
+                
+                JToolBarHelper::title(WFText::_('WF_ADMINISTRATION') . ' &rsaquo;&rsaquo; ' . WFText::_('WF_' . strtoupper($name)), 'logo.png');
+
+                $params = WFParameterHelper::getComponentParams();
+                $theme  = $params->get('preferences.theme', 'jce');
+                
+                $scripts = array_merge(array(
+                    'tips.js',
+                    'html5.js'
+                ));
+
+				// Load admin scripts
+				$document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js?version=' . $model->getVersion());
+				
+				$options = array(
+					'labels' => array(
+						'ok' 		=> WFText::_('WF_LABEL_OK'),
+						'cancel' 	=> WFText::_('WF_LABEL_CANCEL'),
+						'select'	=> WFText::_('WF_LABEL_SELECT'),
+						'save'		=> WFText::_('WF_LABEL_SAVE'),
+						'saveclose' => WFText::_('WF_LABEL_SAVECLOSE'),
+						'alert'		=> WFText::_('WF_LABEL_ALERT'),
+						'required'  => WFText::_('WF_MESSAGE_REQUIRED')
+					)
+				);
+				
+                $document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');
+				
+				$installer = WFInstaller::getInstance();
+                $installer->check();
+				
+				$view->addHelperPath(dirname(__FILE__) . DS . 'helpers');
                 $this->addModelPath(dirname(__FILE__) . DS . 'models');
                  
                 $view->loadHelper('toolbar');
@@ -173,10 +155,20 @@ class WFController extends JController
                 }
                 
                 $this->loadMenu();
-
+                
                 break;
         }
-        
+
+		// Load site scripts
+        foreach ($scripts as $script) {
+        	$document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/' . $script . '?version=' . $model->getVersion());
+        }
+                           
+		require_once(dirname(__FILE__) . DS . 'helpers' . DS . 'system.php');
+                
+        $app = JFactory::getApplication();
+       	$app->registerEvent('onAfterRender', 'WFSystemHelper');
+		
         $view->assignRef('document', $document);
         $view->display();
     }
