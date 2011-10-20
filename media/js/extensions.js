@@ -420,7 +420,7 @@
          * @param {Object} container
          */
         _setValues: function() {
-            var v = $(this.element).val(), id = $(this.element).attr('id'), groups = [], title;
+            var id = $(this.element).attr('id'), groups = [], title = '';
 
             // Iterate through child divs
             $('div.extension_group_container', '#' + id + '_mapper').each( function() {

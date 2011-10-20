@@ -73,13 +73,11 @@
 
         createElement: function(el, ul, n) {
             // Create elements
-            var self = this, d = document, v, s, li = d.createElement('li'), label = d.createElement('label'), check = d.createElement('span');
+            var self = this, d = document, li = d.createElement('li'), check = d.createElement('span');
 
             $(li).attr({
                 title: n.value
             }).addClass('ui-widget-content ui-corner-all').appendTo(ul);
-
-            $(li).addClass(v);
 
             // Add checkboxes
             $(check).addClass('checkbox').addClass( function() {

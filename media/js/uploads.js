@@ -43,14 +43,14 @@
 		},
 		
 		_createUploader : function() {
-			var self = this, o = this.options;
+			var self = this, o = this.options, iframe;
 			
 			var re = '.(' + o.extensions.join('|') + ')$';
 			
 			$form = $('form[name="adminForm"]');
 
 			if (o.iframe) {
-				var iframe = this.createIFrame();
+				iframe = this.createIFrame();
 			}
 			
 			// create button
@@ -74,15 +74,16 @@
 				$input.prop('readonly', 'readonly').appendTo($container);
 			}
 
-			var $span = $('<span/>').addClass('upload_clear ui-icon ui-icon-circle-close').css('opacity', 0.15).insertBefore($container).click( function() {
+			$('<span/>').addClass('upload_clear ui-icon ui-icon-circle-close').css('opacity' , 0.15).insertBefore($container).click( function() {
 				$input.val('').focus();
 				$(self.element).val('');
 			});
+			
 			$button.html(o.labels.browse).button({
 				icons: {
 					primary: 'browse'
 				}
-			}).css('position', 'static').click( function(e) {
+			}).click( function(e) {
 				e.preventDefault();
 			});
 			// hide file input element
@@ -166,7 +167,7 @@
 		},
 		
 		createIFrame : function() {
-			var self = this, o = this.options;
+			var o = this.options;
 
 			var iframe = document.getElementById('upload_iframe');
 

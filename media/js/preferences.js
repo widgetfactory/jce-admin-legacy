@@ -23,8 +23,8 @@
     		this.init();
 
     		window.setTimeout(function(){
-    			window.parent.document.location.href="index.php?option=com_jce&view=cpanel"}, 
-    		1000);
+    			window.parent.document.location.href="index.php?option=com_jce&view=cpanel";
+    		}, 1000);
     	}
 	};
 })(jQuery);

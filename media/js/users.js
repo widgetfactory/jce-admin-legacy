@@ -11,7 +11,7 @@
 (function($) {
     $.jce.Users = {
         select : function() {
-            var self = this, u = [], v, s, o, h;
+            var u = [], v, s, o, h;
             s = window.parent.document.getElementById('users').options;
 
             $('input:checkbox:checked').each( function() {

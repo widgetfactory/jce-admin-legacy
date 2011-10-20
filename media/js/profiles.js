@@ -112,8 +112,10 @@
             	selected : -1
             }).addClass('ui-tabs-vertical ui-helper-clearfix');
             
+            var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
+            
             // make vertical tabs
-            $("#tabs-editor > ul > li, #tabs-plugins #tabs-editor > ul > li").removeClass('ui-corner-top').addClass('ui-corner-left');
+            $("#tabs-editor ul.ui-tabs-nav > li, #tabs-plugins ul.ui-tabs-nav > li").removeClass('ui-corner-top').addClass('ui-corner-' + dir);
             
             $("#tabs-plugins").tabs('select', $('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first', '#tabs-plugins').index());
 

@@ -88,7 +88,7 @@
        			window.parent.$jce.closeDialog('#' + this.options.element + '_browser');
        		}
        }
-    }
+    };
 })(jQuery);
 
 //fake tinyMCE object for language files

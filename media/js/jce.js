@@ -77,8 +77,7 @@
 
         createDialog : function(o) {
             var self = this;
-
-            function _fixDialog(el, settings) {
+        	function _fixDialog(el, settings) {
                 // opera bug?
                 if (parseFloat(el.style.height) == 0) {
                     var h = settings.height;
@@ -97,9 +96,8 @@
             var buttons = {};
             var div		= document.createElement('div');
             var loader	= document.createElement('div');
-            var title 	= o.title || '';
-
             var iframe 	= document.createElement('iframe');
+            var title 	= o.title || '';
 
             if (o.type == 'users') {
                 $.extend(buttons, {
@@ -238,7 +236,7 @@
          * Password input
          */
         _passwordWidget : function(el) {
-            var id = el.id, span = document.createElement('span');
+            var span = document.createElement('span');
 
             $(span).addClass('widget-password locked').insertAfter(el).click( function() {
                 el = $(this).siblings('input[type="password"]');

@@ -261,8 +261,6 @@
             var t = this, n = 0;
             var s = $('table tbody span.checkbox.checked.downloaded');
 
-            var info = $('div#updates-info');
-
             /**
              * Run install on each update
              * @param {Int} n index
