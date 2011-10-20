@@ -28,10 +28,7 @@ class WFControllerPopup extends JController
 	 *
 	 * @params	array	Controller configuration array
 	 */
-	function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
+	function __construct($config = array()){}
 
 	/**
 	 * Displays a view
