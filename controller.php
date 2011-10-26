@@ -201,7 +201,12 @@ class WFController extends JController
 		$model 	= $this->getModel($view);
 		
 		if (!$model->authorize($task)) {
-			$this->setRedirect('index.php', WFText::_('ALERTNOTAUTH'));
+			
+			if ($model->authorize('manage')) {
+				$this->setRedirect('index.php?option=com_jce', WFText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			} else {
+				$this->setRedirect('index.php', WFText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			}
 			return false;
 		}
 		

@@ -52,7 +52,7 @@ switch ($view) {
 		break;
 	case 'cpanel':
 		// Authorise
-		$controller->authorize('admin');
+		$controller->authorize('manage');
 		break;
 	default:
 		// Authorise

@@ -42,8 +42,12 @@ class WFViewPreferences extends JView
         $params = new WFParameter($component->params, $xml, 'preferences');
         $params->addElementPath(JPATH_COMPONENT.DS.'elements');
         
-        $form = $model->getForm('permissions');
-        
+        if ($model->authorize('admin')) {
+        	$form = $model->getForm('permissions');
+        } else {
+        	$form = null;
+        }
+
         $this->assignRef('params', $params);		
 		$this->assignRef('permissons', $form);
 

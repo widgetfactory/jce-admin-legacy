@@ -28,29 +28,29 @@ class WFModel extends JModel
 	{
 		$user = JFactory::getUser();
 		
-		// Joomla! 1.5
-		if (isset($user->gid)) {
+		// Joomla! 1.7+
+		if (method_exists('JUser', 'getAuthorisedViewLevels')) {
+			$action = ($task == 'admin' || $task == 'manage') ? 'core.' . $task : 'jce.' . $task;
+			
+			if (!$user->authorise($action, 'com_jce')) {
+				return false;
+			}
+		} else {
 			// get rules from parameters
 			$component 	= JComponentHelper::getComponent('com_jce');
 			$params		= json_decode($component->params);
 			$rules 		= isset($params->access) ? $params->access : null;
-			
-			if (is_object($rules)) {				
-				$action 	= ($task == 'admin') ? 'core.' . $task : 'jce.' . $task;
 				
+			if (is_object($rules)) {
+				$action 	= ($task == 'admin' || $task == 'manage') ? 'core.' . $task : 'jce.' . $task;
+			
 				if (isset($rules->$action)) {
 					$rule = $rules->$action;
-					$gid = $user->gid;						
+					$gid = $user->gid;
 					if (isset($rule->$gid) && $rule->$gid == 0) {
-						return false;	
-					}	
+						return false;
+					}
 				}
-			}	
-		} else {
-			$action = ($task == 'admin') ? 'core.' . $task : 'jce.' . $task;	
-				
-			if (!$user->authorise($action, 'com_jce')) {
-				return false;
 			}
 		}
 		

@@ -22,7 +22,7 @@ defined('_JEXEC') or die('Restricted access');
 		<?php if ($this->model->authorize('profiles')) :?>
 			<li class="cpanel-icon hasTip" title="<?php echo WFText::_( 'WF_PROFILES' ) . '::' . WFText::_( 'WF_PROFILES_DESC' );?>"><a href="index.php?option=com_jce&amp;view=profiles"><span class="profiles"></span><?php echo WFText::_( 'WF_PROFILES' );?></a></li>
 		<?php endif;?>
-		<?php if ($this->model->authorize('install')) :?>
+		<?php if ($this->model->authorize('installer')) :?>
 			<li class="cpanel-icon hasTip" title="<?php echo WFText::_( 'WF_INSTALL' ) . '::' . WFText::_( 'WF_INSTALLER_DESC' );?>"><a href="index.php?option=com_jce&amp;view=installer"><span class="install"></span><?php echo WFText::_( 'WF_INSTALL' );?></a></li>
 		<?php endif;?>
 		<?php if ($this->model->authorize('browser')) :?>
@@ -70,17 +70,19 @@ defined('_JEXEC') or die('Restricted access');
                     </span>
                     <?php echo $this->version;?>
                 </li>
-                 <li>
-	                <span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_FEED' ) .'::'.WFText::_( 'WF_CPANEL_FEED_DESC' );?>">
-	                    <?php echo WFText::_( 'WF_CPANEL_FEED' );?>
-	                </span>
-	                <span style="display:inline-block;">
-                <?php if ($this->params->get('feed', 0)) :?>
-	                <ul class="newsfeed"><li><?php echo WFText::_('WF_CPANEL_FEED_NONE');?></li></ul>
-                <?php else : ?>
-                	<?php echo WFText::_('WF_CPANEL_FEED_DISABLED');?> :: <a title="<?php echo WFText::_('WF_PREFERENCES');?>" class="dialog preferences" data-options="{'width':760,'height':540,'modal':true}" href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component">[<?php echo WFText::_('WF_CPANEL_FEED_ENABLE');?>]</a>
+                <?php if ($this->params->get('feed', 0) || $this->model->authorize('preferences')) :?>
+	                 <li>
+		                <span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_FEED' ) .'::'.WFText::_( 'WF_CPANEL_FEED_DESC' );?>">
+		                    <?php echo WFText::_( 'WF_CPANEL_FEED' );?>
+		                </span>
+		                <span style="display:inline-block;">
+	                <?php if ($this->params->get('feed', 0)) :?>
+		                <ul class="newsfeed"><li><?php echo WFText::_('WF_CPANEL_FEED_NONE');?></li></ul>
+	                <?php else :?>
+	                		<?php echo WFText::_('WF_CPANEL_FEED_DISABLED');?> :: <a title="<?php echo WFText::_('WF_PREFERENCES');?>" class="dialog preferences" data-options="{'width':760,'height':540,'modal':true}" href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component">[<?php echo WFText::_('WF_CPANEL_FEED_ENABLE');?>]</a>
+	                <?php endif; ?>
+	                	</span>
+	                </li>
                 <?php endif; ?>
-                	</span>
-                </li>
 	</ul>
 </div>
