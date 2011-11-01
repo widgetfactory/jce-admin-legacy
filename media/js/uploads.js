@@ -66,7 +66,7 @@
 			var $input = $('<input/>').attr({
 				'type' 			: 'text',
 				'name'			: $(this.element).attr('name') + '_input',
-				'placeholder'	: $(this.element).attr('placeholder'),
+				'placeholder'	: $(this.element).attr('placeholder')
 			}).addClass('ui-widget-content upload_text ui-corner-all').css({
 				'width': o.width
 			}).appendTo($inputcontainer);
