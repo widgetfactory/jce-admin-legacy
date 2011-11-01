@@ -56,11 +56,13 @@
 			// create button
 			var $button = $('<button/>');
 
-			var $container = $('<span/>').addClass('upload_container').insertBefore(this.element).append(this.element).hover( function() {
+			var $buttoncontainer = $('<span/>').addClass('upload_button_container').insertBefore(this.element).append(this.element).hover( function() {
 				$button.addClass('ui-state-hover');
 			}, function() {
 				$button.removeClass('ui-state-hover');
 			});
+			
+			var $inputcontainer = $('<span/>').addClass('upload_input_container').insertBefore($buttoncontainer);
 			
 			var $input = $('<input/>').attr({
 				'type' 			: 'text',
@@ -68,13 +70,13 @@
 				'placeholder'	: $(this.element).attr('placeholder'),
 			}).addClass('ui-widget-content upload_text ui-corner-all').css({
 				'width': o.width
-			}).insertBefore($container);
+			}).appendTo($inputcontainer);
 
 			if (o.readonly) {
-				$input.prop('readonly', 'readonly').appendTo($container);
+				$input.prop('readonly', 'readonly').appendTo($buttoncontainer);
 			}
 
-			$('<span/>').addClass('upload_clear ui-icon ui-icon-circle-close').css('opacity' , 0.15).insertBefore($container).click( function() {
+			$('<span/>').addClass('upload_clear ui-icon ui-icon-circle-close').css('opacity' , 0.15).appendTo($inputcontainer).click( function() {
 				$input.val('').focus();
 				$(self.element).val('');
 			});
@@ -134,7 +136,7 @@
 					}
 				});
 
-				$container.append(btn);
+				$buttoncontainer.append(btn);
 
 				// add input wrapper
 				$('<span style="position:absolute;overflow:hidden;display:inline-block;"></span>').css({
