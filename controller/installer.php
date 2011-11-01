@@ -50,7 +50,7 @@ class WFControllerInstaller extends WFController
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'RESTRICTED' );
 
-		$model = $this->getModel();
+		$model = $this->getModel('installer');
 
 		if ($model->install()) {
 			$cache =JFactory::getCache('mod_menu');
