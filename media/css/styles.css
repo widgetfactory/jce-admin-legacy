@@ -169,7 +169,7 @@ html[dir="rtl"] #jce dl.adminformlist > dd {
 	margin-left: 10px;
 }
 #jce ul.adminformlist > li {
-    line-height: 24px;
+    line-height: 30px;
 }
 #jce dl.adminformlist > dd {
     display: block;
