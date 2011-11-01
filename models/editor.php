@@ -314,16 +314,16 @@ class WFModelEditor extends JModel
         if (is_object($profile)) {
             $plugins = explode(',', $profile->plugins);
             
-            $plugins = array_unique(array_merge($plugins, array(
+            $plugins = array_unique(array_merge(array(
                 'advlist',
             	'autolink',
+            	'cleanup',
                 'code',
-                'cleanup',
                 'format',
             	'lists',
                 'tabfocus',
                 'wordcount'
-            )));
+            ), $plugins));
             
             $compress = $wf->getParam('editor.compress_javascript', 0);
             
@@ -426,7 +426,9 @@ class WFModelEditor extends JModel
                 $keys
             );
         }
+        
         $array = array_diff($array, $keys);
+        
     }
     /**
      * Add keys to an array
