@@ -48,13 +48,16 @@ switch ($view) {
 	case 'help':
 	case 'popup':	
 		break;
-	case 'cpanel':
-		// Authorise
-		$controller->authorize('manage');
-		break;
 	default:
+		if ($view == 'cpanel') {
+			$view = 'manage';
+		}
 		// Authorise
-        $controller->authorize($view);
+		$controller->authorize($view);
+		
+		$installer = WFInstaller::getInstance();
+		$installer->check();
+	
 		break;	
 }
 

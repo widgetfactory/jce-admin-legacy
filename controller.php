@@ -96,51 +96,48 @@ class WFController extends JController
     			break;
     		default:
     			// load Joomla! core javascript
-    			if (method_exists('JHtml', 'core')) {
-    			JHtml::core();
-    		}
-    	
-    		require_once(JPATH_ADMINISTRATOR . DS . 'includes' . DS . 'toolbar.php');
-    	
-    		JToolBarHelper::title(WFText::_('WF_ADMINISTRATION') . ' &rsaquo;&rsaquo; ' . WFText::_('WF_' . strtoupper($name)), 'logo.png');
-    	
-    		$params = WFParameterHelper::getComponentParams();
-    		$theme  = $params->get('preferences.theme', 'jce');
-    	
-    		$scripts = array_merge(array(
-    	    	'tips.js',
-				'html5.js'
-    		));
-    	
-    		// Load admin scripts
-    		$document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js?version=' . $model->getVersion());
-    	
-    		$options = array(
-				'labels' => array(
-					'ok' 		=> WFText::_('WF_LABEL_OK'),
-					'cancel' 	=> WFText::_('WF_LABEL_CANCEL'),
-					'select'	=> WFText::_('WF_LABEL_SELECT'),
-					'save'		=> WFText::_('WF_LABEL_SAVE'),
-					'saveclose' => WFText::_('WF_LABEL_SAVECLOSE'),
-					'alert'		=> WFText::_('WF_LABEL_ALERT'),
-					'required'  => WFText::_('WF_MESSAGE_REQUIRED')
-    			)
-    		);
-    	
-    		$document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');
-    	
-    		$installer = WFInstaller::getInstance();
-    		$installer->check();
-    	
-    		$view->addHelperPath(dirname(__FILE__) . DS . 'helpers');
-    		$this->addModelPath(dirname(__FILE__) . DS . 'models');
-    		 
-    		$view->loadHelper('toolbar');
-    		$view->loadHelper('tools');
-    		$view->loadHelper('xml');
-    		$view->loadHelper($name);
-
-    		$this->loadMenu();
+	    		if (method_exists('JHtml', 'core')) {
+	    			JHtml::core();
+	    		}
+	    	
+	    		require_once(JPATH_ADMINISTRATOR . DS . 'includes' . DS . 'toolbar.php');
+	    	
+	    		JToolBarHelper::title(WFText::_('WF_ADMINISTRATION') . ' &rsaquo;&rsaquo; ' . WFText::_('WF_' . strtoupper($name)), 'logo.png');
+	    	
+	    		$params = WFParameterHelper::getComponentParams();
+	    		$theme  = $params->get('preferences.theme', 'jce');
+	    	
+	    		$scripts = array_merge(array(
+	    	    	'tips.js',
+					'html5.js'
+	    		));
+	    	
+	    		// Load admin scripts
+	    		$document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js?version=' . $model->getVersion());
+	    	
+	    		$options = array(
+					'labels' => array(
+						'ok' 		=> WFText::_('WF_LABEL_OK'),
+						'cancel' 	=> WFText::_('WF_LABEL_CANCEL'),
+						'select'	=> WFText::_('WF_LABEL_SELECT'),
+						'save'		=> WFText::_('WF_LABEL_SAVE'),
+						'saveclose' => WFText::_('WF_LABEL_SAVECLOSE'),
+						'alert'		=> WFText::_('WF_LABEL_ALERT'),
+						'required'  => WFText::_('WF_MESSAGE_REQUIRED')
+	    			)
+	    		);
+	    	
+	    		$document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');
+	
+	    		$view->addHelperPath(dirname(__FILE__) . DS . 'helpers');
+	    		$this->addModelPath(dirname(__FILE__) . DS . 'models');
+	    		 
+	    		$view->loadHelper('toolbar');
+	    		$view->loadHelper('tools');
+	    		$view->loadHelper('xml');
+	    		$view->loadHelper($name);
+	
+	    		$this->loadMenu();
     	
     		break;
     	}
