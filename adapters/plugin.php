@@ -1,18 +1,15 @@
 <?php
 /**
- * @version   $Id: plugin.php 203 2011-06-01 19:02:19Z happy_noodle_boy $
- * @package   JCE
- * @copyright Copyright © 2009-2011 Ryan Demmer. All rights reserved.
- * @copyright Copyright © 2005 - 2007 Open Source Matters. All rights reserved.
- * @license   GNU/GPL 2 or later
- * This version may have been modified pursuant
+ * @package   	JCE
+ * @copyright 	Copyright � 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
 
-// Check to ensure this file is within the rest of the framework
-defined('JPATH_BASE') or die();
+defined('JPATH_BASE') or die('RESTRICTED');
 
 /**
  * JCE Plugin installer
@@ -26,17 +23,19 @@ class WFInstallerPlugin extends JObject
     /**
      * Constructor
      *
-     * @access  protected
      * @param object  $parent Parent object [JInstaller instance]
      * @return  void
-     * @since 1.5
      */
     function __construct(&$parent)
     {
         $this->parent = $parent;
     }
     
-    function setManifest($manifest)
+    /**
+     * Setup manifest data
+     * @param object $manifest
+     */
+    private function setManifest($manifest)
     {
         // element
         foreach (array(
@@ -75,14 +74,12 @@ class WFInstallerPlugin extends JObject
     }
     
     /**
-     * Custom install method
+     * Install method
      *
      * @access  public
      * @return  boolean True on success
-     * @since 1.5
-     * Minor alteration - see below
      */
-    function install()
+    public function install()
     {
         // Get a database connector object
         $db = $this->parent->getDBO();
@@ -294,8 +291,12 @@ class WFInstallerPlugin extends JObject
         
         return true;
     }
-
-	function addIndexfiles()
+	
+    /**
+     * Add index.html files to each folder
+     * @access private
+     */
+	private function addIndexfiles()
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
@@ -318,15 +319,13 @@ class WFInstallerPlugin extends JObject
 	}
     
     /**
-     * Custom uninstall method
+     * Uninstall method
      *
      * @access  public
-     * @param int   $cid  The id of the plugin to uninstall
-     * @param int   $clientId The id of the client (unused)
+     * @param 	string   $name  The name of the plugin to uninstall
      * @return  boolean True on success
-     * @since 1.5
      */
-    function uninstall($name)
+    public function uninstall($name)
     {
         // Initialize variables
         $row    = null;

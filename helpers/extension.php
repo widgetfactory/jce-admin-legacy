@@ -1,25 +1,16 @@
 <?php
 /**
- * @version   $Id: extension.php 201 2011-05-08 16:27:15Z happy_noodle_boy $
  * @package   	JCE
  * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
- * @copyright 	Copyright © 2005 - 2007 Open Source Matters. All rights reserved.
- * @license   	GNU/GPL 2 or later
+ * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
 
-/**
- * JCE Component Helper Class
- * @author ryandemmer
- */
 class WFExtensionHelper {
-	/*
-	 * Get the JCE Component
-	 * @return Component object
-	 */
+
 	function getComponent($id =null, $option ='com_jce')
 	{
 
@@ -46,10 +37,6 @@ class WFExtensionHelper {
 		return $component;
 	}
 
-	/*
-	 * Get the JCE Component
-	 * @return Component object
-	 */
 	function getPlugin($id =null, $element ='jce', $folder ='editors')
 	{
 

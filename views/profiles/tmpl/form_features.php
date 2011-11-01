@@ -1,20 +1,15 @@
-<?php 
+<?php
 /**
- * @version		$Id: form_features.php 222 2011-06-11 17:32:06Z happy_noodle_boy $
  * @package   	JCE
- * @copyright 	Copyright Â© 2009-2011 Ryan Demmer. All rights reserved.
- * @copyright	Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.
- * @license   	GNU/GPL 2 or later
- * This version may have been modified pursuant
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
 
-defined('_JEXEC') or die('ERROR_403');
-
-$rows 	= $this->model->getRowArray($this->profile->rows);
-$spacer = file_exists(WF_EDITOR.DS.'tiny_mce'.DS.'themes'.DS.'advanced'.DS.'img'.DS.'spacer.gif'); 
+defined('_JEXEC') or die('RESTRICTED');
 
 ?>
 <fieldset class="first">
@@ -33,12 +28,12 @@ $spacer = file_exists(WF_EDITOR.DS.'tiny_mce'.DS.'themes'.DS.'advanced'.DS.'img'
 			<span class="profileLayoutContainer">
 				<ul class="sortableList" id="profileLayout">
 				<?php
-				for ($i=1; $i <= count($rows); $i++) : ?>
+				for ($i=1; $i <= count($this->rows); $i++) : ?>
 				    <li class="sortableListItem">
 				        <ul class="sortableRow">
-							<?php for ($x = 1; $x <= count($rows); $x++ ) :
+							<?php for ($x = 1; $x <= count($this->rows); $x++ ) :
 						        if ($i == $x) :
-						            $icons = explode(',', $rows[$x]);
+						            $icons = explode(',', $this->rows[$x]);
 		
 									foreach ($icons as $icon) :
 										if ($icon == 'spacer') :
@@ -79,7 +74,7 @@ $spacer = file_exists(WF_EDITOR.DS.'tiny_mce'.DS.'themes'.DS.'advanced'.DS.'img'
 							endif;
 
 						    foreach ($this->plugins as $plugin) :
-	                            if (!in_array($plugin->name, explode(',', implode(',', $rows)))) :
+	                            if (!in_array($plugin->name, explode(',', implode(',', $this->rows)))) :
 	                                if ($plugin->icon && $plugin->row == $i) :
 	                                    echo '<li class="sortableRowItem ' . $plugin->type . '" data-name="' . $plugin->name . '">' . $this->model->getIcon($plugin) . '</li>';
 						            endif;

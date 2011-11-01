@@ -1,18 +1,15 @@
 <?php
 /**
- * @version   $Id: installer.php 201 2011-05-08 16:27:15Z happy_noodle_boy $
  * @package   	JCE
- * @copyright 	Copyright Â© 2009-2011 Ryan Demmer. All rights reserved.
- * @copyright	Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.
- * @license   	GNU/GPL 2 or later
- * This version may have been modified pursuant
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('RESTRICTED');
 
 jimport('joomla.installer.installer');
 jimport('joomla.installer.helper');
@@ -73,8 +70,6 @@ class WFModelInstaller extends WFModel
     {
         $mainframe = JFactory::getApplication();
         
-        $this->setState('action', 'install');
-        
         if (!$package) {
             $package = $this->_getPackage();
         }
@@ -109,7 +104,7 @@ class WFModelInstaller extends WFModel
             'extension.message' => $installer->get('extension.message')
         );
         
-        $this->setState('result', $this->_result);
+        $this->setState('install.result', $this->_result);
         
         // Cleanup the install files
         if (!is_file($package['packagefile'])) {
@@ -125,8 +120,6 @@ class WFModelInstaller extends WFModel
     function remove($id, $type)
     {
         $mainframe = JFactory::getApplication();
-        
-        $this->setState('action', 'uninstall');
         
         $installer = JInstaller::getInstance();
         
@@ -161,13 +154,13 @@ class WFModelInstaller extends WFModel
         $result = $result ? true : false;
         
         $this->_result[] = array(
-            'name' => $installer->get('name'),
-            'type' => $type,
-            'version' => $installer->get('version'),
-            'result' => $result
+            'name' 		=> $installer->get('name'),
+            'type' 		=> $type,
+            'version'	=> $installer->get('version'),
+            'result' 	=> $result
         );
         
-        $this->setState('result', $this->_result);
+        $this->setState('install.result', $this->_result);
         
         return $result;
     }

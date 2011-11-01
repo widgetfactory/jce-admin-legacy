@@ -1,18 +1,15 @@
 <?php
 /**
- * @version   $Id: editor.php 256 2011-06-30 09:36:47Z happy_noodle_boy $
  * @package   	JCE
- * @copyright 	Copyright Â© 2009-2011 Ryan Demmer. All rights reserved.
- * @copyright	Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.
- * @license   	GNU/GPL 2 or later
- * This version may have been modified pursuant
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('RESTRICTED');
 
 wfimport('admin.classes.text');
 wfimport('admin.helpers.xml');
@@ -22,7 +19,7 @@ wfimport('editor.libraries.classes.editor');
 
 class WFModelEditor extends JModel
 {
-    public function buildEditor()
+	public function buildEditor()
     {
         // get document
         $document = JFactory::getDocument();
@@ -94,26 +91,7 @@ class WFModelEditor extends JModel
 			// Editor Toggle
 			$settings['toggle']			= $wf->getParam('editor.toggle', 1, 1);
 			$settings['toggle_label']	= htmlspecialchars($wf->getParam('editor.toggle_label', '[show/hide]', '[show/hide]'));
-			$settings['toggle_state']	= $wf->getParam('editor.toggle_state', 1, 1);
-
-            // elements
-            // Get Extended elements
-            $settings['extended_valid_elements'] = $wf->getParam('editor.extended_elements', '', '');
-            // Configuration list of invalid elements as array
-            $settings['invalid_elements']        = explode(',', $wf->getParam('editor.invalid_elements', 'applet', ''));
-            
-            // Add elements to invalid list (removed by plugin)
-            $this->addKeys($settings['invalid_elements'], array(
-                'iframe',
-                'object',
-                'param',
-                'embed',
-                'audio',
-                'video',
-                'source',
-                'script',
-                'style'
-            ));
+			$settings['toggle_state']	= $wf->getParam('editor.toggle_state', 1, 1);  
         }// end profile
         
         //Other - user specified
@@ -178,10 +156,7 @@ class WFModelEditor extends JModel
         foreach ($settings as $k => $v) {
             // If the value is an array, implode!
             if (is_array($v)) {
-                $v = implode(',', $v);
-                if ($v[0] == ',') {
-                    $v = substr($v, 1);
-                }
+                $v = ltrim(implode(',', $v), ',');
             }
             // Value must be set
             if ($v !== '') {
@@ -264,7 +239,6 @@ class WFModelEditor extends JModel
             'language' 			=> $wf->getLanguage(),
             'directionality' 	=> $language->isRTL() ? 'rtl' : 'ltr',
             'theme' 			=> 'none',
-            'invalid_elements' 	=> 'applet,iframe,object,embed,script,style',
             'plugins'			=> ''
         );
         

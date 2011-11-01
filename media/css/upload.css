@@ -1,14 +1,13 @@
 /**
- * @version   $Id: upload.css 259 2011-07-01 09:27:59Z happy_noodle_boy $
  * @package   	JCE
- * @copyright 	Copyright Â© 2009-2011 Ryan Demmer. All rights reserved.
- * @license   	GNU/GPL 2 or later
- * This version may have been modified pursuant
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-span.upload_container {
+span.upload_button_container {
     position: relative;
     overflow: hidden;
     float: left;
@@ -16,10 +15,16 @@ span.upload_container {
     min-height: 20px;
     vertical-align: middle;
 }
-span.upload_container input[type="text"] {
+span.upload_input_container {
+    position: relative;
+    overflow: hidden;
+    float: left;
+    vertical-align: middle;
+}
+span.upload_button_container input[type="text"] {
 	padding: 2px;
 }
-span.upload_container input[type="file"] {
+span.upload_button_container input[type="file"] {
     position	: absolute;
     top			: 0;
     right		: 0;
@@ -28,7 +33,7 @@ span.upload_container input[type="file"] {
     margin		: 0;
     height 		: 26px;
 }
-#jce span.upload_container button {
+#jce span.upload_button_container button {
     margin-left: 5px;
 }
 #jce button span.browse, #jce button span.import {
@@ -50,10 +55,9 @@ span.upload_container input[type="file"] {
 #jce span.upload_clear {
     cursor: pointer;
     display: inline-block;
-    left: 0;
-    margin: 7px 0 0 -15px;
+    margin: 7px 0 0 0;
     position: absolute;
-    right: 0;
+    right: 5px;
 }
 html[dir="rtl"] #jce span.upload_clear {
 	left : 0;

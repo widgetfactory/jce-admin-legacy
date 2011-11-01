@@ -1,18 +1,15 @@
 <?php
 /**
- * @version		$Id: language.php 237 2011-06-17 12:55:17Z happy_noodle_boy $
- * @package   JCE
- * @copyright Copyright © 2009-2011 Ryan Demmer. All rights reserved.
- * @copyright Copyright © 2005 - 2007 Open Source Matters. All rights reserved.
- * @license   GNU/GPL 2 or later
- * This version may have been modified pursuant
+ * @package   	JCE
+ * @copyright 	Copyright � 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
 
-// Check to ensure this file is within the rest of the framework
-defined('JPATH_BASE') or die ();
+defined('JPATH_BASE') or die('RESTRICTED');
 
 /**
  * Language installer
@@ -26,16 +23,18 @@ class WFInstallerLanguage extends JObject
     /**
      * Constructor
      *
-     * @access	protected
      * @param	object	$parent	Parent object [JInstaller instance]
      * @return	void
-     * @since	1.5
      */
     function __construct( & $parent)
     {
         $this->parent = $parent;
     }
     
+    /**
+    * Setup manifest data
+    * @param object $manifest
+    */
 	function setManifest($manifest)
 	{		
         // element
@@ -61,13 +60,12 @@ class WFInstallerLanguage extends JObject
 	}
 
     /**
-     * Custom install method
+     * Install method
      *
      * @access	public
      * @return	boolean	True on success
-     * @since	1.5
      */
-    function install()
+    public function install()
     {        
         // Get the extension manifest object
         $manifest = $this->parent->getManifest();
@@ -128,8 +126,12 @@ class WFInstallerLanguage extends JObject
 
         return true;
     }
-
-	function addIndexfiles($path)
+	
+    /**
+    * Add index.html files to each folder
+    * @access private
+    */
+	private function addIndexfiles($path)
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
@@ -151,13 +153,11 @@ class WFInstallerLanguage extends JObject
 	}
 
     /**
-     * Custom uninstall method
+     * Uninstall method
      *
      * @access	public
      * @param	string	$tag		The tag of the language to uninstall
-     * @param	int		$clientId	The id of the client (unused)
      * @return	mixed	Return value for uninstall method in component uninstall file
-     * @since	1.5
      */
     function uninstall($tag)
     {

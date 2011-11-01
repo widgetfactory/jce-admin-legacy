@@ -1,18 +1,15 @@
 <?php
 /**
- * @version		$Id: installer.php 201 2011-05-08 16:27:15Z happy_noodle_boy $
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
- * @copyright 	Copyright © 2005 - 2007 Open Source Matters. All rights reserved.
- * @license   	GNU/GPL 2 or later
- * This version may have been modified pursuant
+ * @copyright 	Copyright � 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('RESTRICTED');
 
 /**
  * Plugins Component Controller
@@ -52,34 +49,17 @@ class WFControllerInstaller extends WFController
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'RESTRICTED' );
-		
-		$document 	= JFactory::getDocument();
-		$view 		= $this->getView('installer', $document->getType());
-		$model 		= $this->getModel('installer');
+
+		$model = $this->getModel();
 
 		if ($model->install()) {
 			$cache =JFactory::getCache('mod_menu');
 			$cache->clean();
 		}
-		
+
+		$view = $this->getView();
 		$view->setModel($model, true);
-		
-		$method = JRequest::getWord('method');
-		
-		if ($method && $method == 'iframe') {
-			$view->setLayout('install');
-			exit($view->loadTemplate('message'));
-		}
-		
-		$view->loadHelper('toolbar');
-		$this->loadMenu();
-		
-		// load head override
-		$app =JFactory::getApplication();
-		$app->registerEvent('onAfterRender', 'WFSystemHelper');
-		
-		$view->assignRef('document', $document);	
-		$view->display();
+        $view->display();
 	}
 
 	/**
@@ -95,8 +75,6 @@ class WFControllerInstaller extends WFController
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'RESTRICTED' );
 
-		$document 	= JFactory::getDocument();
-		$view 		= $this->getView('installer', $document->getType());
 		$model 		= $this->getModel('installer');
 		
 		$items = array(
@@ -119,16 +97,10 @@ class WFControllerInstaller extends WFController
 				}
 			}
 		}
-		$view->loadHelper('toolbar');
-		$this->loadMenu();
-		
-		// load head override
-		$app =JFactory::getApplication();
-		$app->registerEvent('onAfterRender', 'WFSystemHelper');
-		
-		$view->assignRef('document', $document);
-		$view->setModel($model, true);		
-		$view->display();
+
+		$view = $this->getView();
+		$view->setModel($model, true);
+        $view->display();
 	}
 }
 ?>

@@ -1,17 +1,15 @@
 <?php
 /**
- * @version   $Id: parameter.php 201 2011-05-08 16:27:15Z happy_noodle_boy $
- * @package   JCE
- * @copyright Copyright © 2009-2011 Ryan Demmer. All rights reserved.
- * @copyright Copyright © 2005 - 2007 Open Source Matters. All rights reserved.
- * @license   GNU/GPL 2 or later
- * This version may have been modified pursuant
+ * @package   	JCE
+ * @copyright 	Copyright � 2009-2011 Ryan Demmer. All rights reserved.
+ * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
 
-defined('_JEXEC') or die('ERROR_403');
+defined('_JEXEC') or die('RESTRICTED');
 
 jimport('joomla.html.parameter');
 
@@ -159,7 +157,7 @@ class WFParameter extends JParameter
 	 * @access	public
 	 * @param	string	The name of the control, or the default text area if a setup file is not found
 	 * @return	array	Array of all parameters, each as array Any array of the label, the form element and the tooltip
-	 * @since	1.5
+	 * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
 	 */
 	public function getParams($name = 'params', $group = '_default')
 	{
@@ -198,7 +196,7 @@ class WFParameter extends JParameter
 	 * @param	object	A param tag node
 	 * @param	string	The control name
 	 * @return	array	Any array of the label, the form element and the tooltip
-	 * @since	1.5
+	 * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
 	 */
 	public function getParam(&$node, $control_name = 'params', $group = '_default', $parent = '')
 	{
