@@ -42,16 +42,7 @@ class WFModelCpanel extends WFModel
     
     function getLicense()
     {
-        $file    	= JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_jce' . DS . 'jce.xml';
-        $license 	= 'GNU / GPL 2 or later';
-        
-        $xml = WFXMLElement::getXML($file);
-        
-        if ($xml) {
-            $licence = $xml->licence->data();
-        }
-        
-        return $license;
+        return '<a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html" title="GNU General Public License, version 2" target="_blank">GNU General Public License, version 2</a>';
     }
     
     function getFeeds()
