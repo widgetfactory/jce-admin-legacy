@@ -32,8 +32,9 @@ class WFText
 			}
 			
 			if (strpos($string, 'WF_') !== false) {
+				$view = JRequest::getWord('view', '');
 				// remove prefix
-				$translated = preg_replace(array('#^(WF_)#', '#(LABEL|OPTION|FILEGROUP)_#', '#_(DESC|TITLE)#'), '', $string);			
+				$translated = preg_replace(array('#^(WF_)#', '#(LABEL|OPTION|FILEGROUP|' . strtoupper($view) . ')_#', '#_(DESC|TITLE)#'), '', $string);			
 				$translated = ucwords(strtolower(str_replace('_', ' ', $translated)));
 			}
 		}
