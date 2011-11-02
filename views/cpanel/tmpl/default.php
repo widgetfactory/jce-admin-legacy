@@ -32,30 +32,13 @@ defined('_JEXEC') or die('RESTRICTED');
 	</ul>
 	<br style="clear:both;" />
 	<ul class="adminformlist">
-    	<li>
-        	<span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_FORUM' ) .'::'.WFText::_( 'WF_CPANEL_FORUM_DESC' );?>">
-            	<?php echo WFText::_( 'WF_CPANEL_FORUM' );?>
-            </span>
-            <a href="http://www.joomlacontenteditor.net/forum" target="_new">www.joomlacontenteditor.com/forum</a>
-       </li>
                 <li>
-                    <span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_TUTORIALS' ) .'::'.WFText::_( 'WF_CPANEL_TUTORIALS_DESC' );?>">
-                        <?php echo WFText::_( 'WF_CPANEL_TUTORIALS' );?>
+                    <span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_SUPPORT' ) .'::'.WFText::_( 'WF_CPANEL_SUPPORT_DESC' );?>">
+                        <?php echo WFText::_( 'WF_CPANEL_SUPPORT' );?>
                     </span>
-                    <a href="http://www.joomlacontenteditor.net/support/tutorials" target="_new">www.joomlacontenteditor.com/tutorials</a>
+                    <a href="http://www.joomlacontenteditor.net/support" target="_new">www.joomlacontenteditor.com/support</a>
                 </li>
-                <li>
-                    <span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_DOCUMENTATION' ) .'::'.WFText::_( 'WF_CPANEL_DOCUMENTATION_DESC' );?>">
-                        <?php echo WFText::_( 'WF_CPANEL_DOCUMENTATION' );?>
-                    </span>
-                    <a href="http://www.joomlacontenteditor.net/support/documentation" target="_new">www.joomlacontenteditor.com/documentation</a>
-                </li>
-                <li>
-                    <span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_FAQ' ) .'::'.WFText::_( 'WF_CPANEL_FAQ_DESC' );?>">
-                        <?php echo WFText::_( 'WF_CPANEL_FAQ' );?>
-                    </span>
-                    <a href="http://www.joomlacontenteditor.net/support/faq" target="_new">www.joomlacontenteditor.com/faq</a>
-                </li>
+              
                 <li>
                     <span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_LICENCE' ) .'::'.WFText::_( 'WF_CPANEL_LICENCE_DESC' );?>">
                         <?php echo WFText::_( 'WF_CPANEL_LICENCE' );?>
