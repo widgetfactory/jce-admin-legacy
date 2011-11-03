@@ -107,6 +107,11 @@ class WFParameter extends JParameter
 		return $results;
 	}
 	
+	private function isEmpty($value)
+	{
+		return (is_string($value) && $value == "") || (is_array($value) && empty($value));
+	}
+	
 	/**
 	 * Get a parameter value.
 	 *
@@ -139,8 +144,10 @@ class WFParameter extends JParameter
 		
 		if ($found) {
 			$result = $node;	
-			if ($allowempty === false && $result === '') {
-				$result = $default;
+			if ($allowempty === false) {
+				if (self::isEmpty($result)) {
+					$result = $default;
+				}
 			}	
 		}
 		
