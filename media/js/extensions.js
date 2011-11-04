@@ -221,8 +221,17 @@
             $('span.extension_group_title', $tmpl).attr('title', name).addClass(name);
 
             // add button action
-            $('div.extension_list_add span', $tmpl).click( function() {
-                self._createItem('custom').hide().prependTo($('ul.extension_list', $tmpl)).fadeIn('fast');
+            $('div.extension_list_add span', $tmpl).click( function() {            	
+            	self._createItem('custom').hide().prependTo($('ul.extension_list', $tmpl)).fadeIn('fast', function() {
+                	var parent = this.parentNode;
+                	
+                	// Show scroll buttons
+                    if (parent.firstChild.offsetHeight * parent.childNodes.length > parent.parentNode.offsetHeight) {
+                    	$(parent).parent('div.extension_list_container').next('div.extension_list_scroll_bottom').css('visibility', 'visible');
+                    }
+                    
+                    $(this).focus();
+                });
             });
 
             // Add scroll top button, click event and append
@@ -295,16 +304,21 @@
                         if ($('input', $item).val() != '') {
                             self._setValues();
                         }
+                        
+                        var parent = this.parentNode;                      
 
-                        var parent = $(this).parent();
-                        $(this).remove();
-
+                    	// Show scroll buttons
+                        if (parent.firstChild.offsetHeight * parent.childNodes.length < parent.parentNode.offsetHeight) {
+                        	$(parent).parent('div.extension_list_container').next('div.extension_list_scroll_bottom').css('visibility', 'hidden');
+                        }
+                        
                         if ($(parent).children().length == 0) {
                             $(parent).parents('div.extension_group_container').fadeOut('fast', function() {
                                 $(this).remove();
                             });
-
                         }
+                        
+                        $(this).remove();
                     });
 
                 });
@@ -312,7 +326,7 @@
                 // Set title html
             } else {
                 $item = $('<li class="file ' + v + '">' +
-                '	<span class="extension_title" title="' + value + '">' + value + '</span>'+
+                '	<span class="extension_title" title="' + value + '">' + value.replace(/[\W]+/, '') + '</span>'+
                 //'	<span class="checkbox view" role="checkbox" aria-checked="false"></span>'+
                 '	<span class="checkbox" role="checkbox" aria=checked="false"></span>'+
                 '</li>');
