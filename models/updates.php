@@ -83,9 +83,9 @@ class WFModelUpdates extends WFModel {
 	 */
 	function check() {
 		$result = false;
-
+		
 		// Get all extensions and version numbers
-		$data = array('task' => 'check');
+		$data = array('task' => 'check', 'jversion' => WF_JOOMLA15 ? '1.5' : '1.7');
 
 		wfimport('admin.helpers.extension');
 
