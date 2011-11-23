@@ -213,6 +213,10 @@ class WFPacker extends JObject
 					// process urls
 					$text = preg_replace_callback('#url\s?\([\'"]?([^\'"\))]+)[\'"]?\)#', array('WFPacker', 'processPaths'), $text);
 				}
+				// make sure text ends in a semi-colon;
+				if ($this->getType() == 'javascript') {
+					$text = rtrim($text, ';') . ';';
+				}
 
 				return $text;
 			}
