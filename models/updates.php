@@ -32,20 +32,20 @@ class WFModelUpdates extends WFModel {
 	 */
 	function getVersions() {
 		$db = JFactory::getDBO();
+		
+		$versions = array('joomla' => array(), 'jce' => array());
 
 		// Get Component xml
 		$com_xml = JApplicationHelper::parseXMLInstallFile(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_jce' . DS . 'jce.xml');
-
+		// set component version
+		$versions['joomla']['com_jce'] = $com_xml['version'];
+		// get mediabox version
 		$mediabox_xml_file = WF_JOOMLA15 ? JPATH_PLUGINS . DS . 'system' . DS . 'jcemediabox.xml' : JPATH_PLUGINS . DS . 'system' . DS . 'jcemediabox' . DS . 'jcemediabox.xml';
-
+		// set mediabox version
 		if(file_exists($mediabox_xml_file)) {
 			$mediabox_xml = JApplicationHelper::parseXMLInstallFile($mediabox_xml_file);
-		} else {
-			$mediabox_xml['version'] = 0;
-			// return 0 for false
+			$versions['joomla']['plg_jcemediabox'] = $mediabox_xml['version'];
 		}
-
-		$versions = array('joomla' => array('com_jce' => $com_xml['version'], 'plg_jcemediabox' => $mediabox_xml['version']), 'jce' => array());
 
 		$model = JModel::getInstance('plugins', 'WFModel');
 
