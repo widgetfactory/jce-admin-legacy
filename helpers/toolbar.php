@@ -11,9 +11,9 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 
-class WFToolbarHelper {
+abstract class WFToolbarHelper {
 	
-	static function help( $type, $alt='Help' ){
+	public static function help( $type, $alt='Help' ){
 		jimport('joomla.plugin.helper');
 		
 		$language 	= JFactory::getLanguage();
@@ -48,7 +48,7 @@ class WFToolbarHelper {
 	* @param	string	An alternative path for the configuation xml relative to JPATH_SITE
 	* @since 1.0
 	*/
-	static function preferences()
+	public static function preferences()
 	{
 		$bar = JToolBar::getInstance('toolbar');
 		
@@ -73,7 +73,7 @@ class WFToolbarHelper {
 	* @param	string	An alternative path for the configuation xml relative to JPATH_SITE
 	* @since 1.0
 	*/
-	static function updates($enabled = false)
+	public static function updates($enabled = false)
 	{
 		$bar = JToolBar::getInstance('toolbar');
 		// Add a configuration button
@@ -93,7 +93,7 @@ class WFToolbarHelper {
 		$bar->appendButton('Custom', $html, 'config');
 	}
 	
-	static function access() {
+	public static function access() {
 		$bar = JToolBar::getInstance('toolbar');
 		
 		$options = array(
@@ -109,53 +109,53 @@ class WFToolbarHelper {
 		$bar->appendButton('Custom', $html, 'access');	
 	}
 	
-	static function export()
+	public static function export()
 	{
 		$icon = WF_JOOMLA15 ? 'unarchive' : 'export';							
 		self::custom('export', $icon . '.png', $icon . '_f2.png', WFText::_('WF_PROFILES_EXPORT'), true);
 	}
 	
-	static function save($task = 'save')
+	public static function save($task = 'save')
 	{
 		return JToolBarHelper::save($task);
 	}
 	
-	static function apply($task = 'apply')
+	public static function apply($task = 'apply')
 	{
 		return JToolbarHelper::apply($task);
 	}
 	
-	static function cancel($task = 'cancel', $alt = 'Cancel')
+	public static function cancel($task = 'cancel', $alt = 'Cancel')
 	{
 		return JToolbarHelper::cancel($task, $alt);
 	}
 	
-	static function editListx($task = 'edit', $alt = 'Edit')
+	public static function editListx($task = 'edit', $alt = 'Edit')
 	{
 		return JToolbarHelper::editListx($task, $alt);
 	}
 	
-	static function addNewx($task = 'add', $alt = 'New')
+	public static function addNewx($task = 'add', $alt = 'New')
 	{
 		return JToolbarHelper::addNewx($task, $alt);
 	}
 	
-	static function custom($task = '', $icon = '', $iconOver = '', $alt = '', $listSelect = true, $x = false)
+	public static function custom($task = '', $icon = '', $iconOver = '', $alt = '', $listSelect = true, $x = false)
 	{
 		return JToolbarHelper::custom($task, $icon, $iconOver, $alt, $listSelect, $x);
 	}
 	
-	static function publishList($task = 'publish', $alt = 'Publish')
+	public static function publishList($task = 'publish', $alt = 'Publish')
 	{
 		return JToolbarHelper::publishList($task, $alt);
 	}
 	
-	static function unpublishList($task = 'unpublish', $alt = 'Unpublish')
+	public static function unpublishList($task = 'unpublish', $alt = 'Unpublish')
 	{
 		return JToolbarHelper::unpublishList($task, $alt);
 	}
 	
-	static function deleteList($msg = '', $task = 'remove', $alt = 'Delete')
+	public static function deleteList($msg = '', $task = 'remove', $alt = 'Delete')
 	{
 		return JToolbarHelper::deleteList($msg, $task, $alt);
 	}

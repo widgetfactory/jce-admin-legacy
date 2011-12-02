@@ -16,13 +16,33 @@ require_once(dirname(__FILE__) . DS . 'includes' . DS . 'base.php');
 // load installer class
 require_once(dirname(__FILE__) . DS . 'classes' . DS . 'installer.php');
 
+abstract class com_jceInstallerScript {
+	
+	public static function install() 
+	{	
+	    $installer = WFInstaller::getInstance();
+		$installer->install();
+	}
+	
+	public static function uninstall() 
+	{		
+	    $installer = WFInstaller::getInstance();
+	    $installer->uninstall();
+	}
+	
+	public static function update() 
+	{
+		$this->install();
+	}
+}
+
 /**
- * Installer function
- * @return
- */
+* Installer function
+* @return
+*/
 function com_install()
 {
-    return com_jceInstallerScript::install();
+	return com_jceInstallerScript::install();
 }
 /**
  * Uninstall function
@@ -30,27 +50,7 @@ function com_install()
  */
 function com_uninstall()
 {
-    return com_jceInstallerScript::uninstall();
-}
-
-class com_jceInstallerScript {
-	
-	function install() 
-	{	
-	    $installer = WFInstaller::getInstance();
-		$installer->install();
-	}
-	
-	function uninstall() 
-	{		
-	    $installer = WFInstaller::getInstance();
-	    $installer->uninstall();
-	}
-	
-	function update() 
-	{
-		$this->install();
-	}
+	return com_jceInstallerScript::uninstall();
 }
 
 ?>

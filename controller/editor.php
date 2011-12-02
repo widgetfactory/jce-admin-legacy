@@ -20,13 +20,12 @@ class WFControllerEditor extends JController
 	{
 	}
 
-	function execute()
+	function execute($task)
 	{
 		// Load language
 		$language = JFactory::getLanguage();
 		$language->load('com_jce', JPATH_ADMINISTRATOR);
 
-		$task   = JRequest::getCmd('task');
 		$layout = JRequest::getCmd('layout');
 		$plugin = JRequest::getCmd('plugin');
 

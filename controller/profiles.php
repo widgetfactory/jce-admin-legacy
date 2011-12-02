@@ -28,11 +28,6 @@ class WFControllerProfiles extends WFController
 		$this->registerTask('orderdown', 	'order');
 	}
 
-	function display()
-	{
-		parent::display();
-	}
-
 	function remove()
 	{
 		// Check for request forgeries

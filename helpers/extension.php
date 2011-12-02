@@ -9,9 +9,9 @@
  * other free or open source software licenses.
  */
 
-class WFExtensionHelper {
+abstract class WFExtensionHelper {
 
-	function getComponent($id =null, $option ='com_jce')
+	public static function getComponent($id =null, $option ='com_jce')
 	{
 
 		if(WF_JOOMLA15) {
@@ -37,7 +37,7 @@ class WFExtensionHelper {
 		return $component;
 	}
 
-	function getPlugin($id =null, $element ='jce', $folder ='editors')
+	public static function getPlugin($id =null, $element ='jce', $folder ='editors')
 	{
 
 		if(WF_JOOMLA15) {

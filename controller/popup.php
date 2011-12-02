@@ -26,7 +26,7 @@ class WFControllerPopup extends JController
 	/**
 	 * Displays a view
 	 */
-	function display()
+	function display($cachable = false, $params = false)
 	{		
 		$document = JFactory::getDocument();
 		

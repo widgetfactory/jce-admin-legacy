@@ -87,7 +87,7 @@ class WFViewProfiles extends JView
                 // search filter
                 $lists['search'] = $search;
                 
-                $this->assignRef('user', JFactory::getUser());
+                $this->assignRef('user', $user);
                 $this->assignRef('lists', $lists);
                 $this->assignRef('rows', $rows);
                 $this->assignRef('pagination', $pagination);

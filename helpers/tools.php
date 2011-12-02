@@ -11,9 +11,9 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 
-class WFToolsHelper {
+abstract class WFToolsHelper {
 	
-	function getTemplates()
+	public static function getTemplates()
 	{
 		$db = JFactory::getDBO();
 		
@@ -36,7 +36,7 @@ class WFToolsHelper {
 		return $db->loadResultArray();
 	}
 	
-	function parseColors($file)
+	public static function parseColors($file)
 	{
 		$data 	= '';
 		$colors = array();	
@@ -66,7 +66,7 @@ class WFToolsHelper {
 		return $colors;
 	}
 	
-	function getTemplateColors() 
+	public static function getTemplateColors() 
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
@@ -97,7 +97,7 @@ class WFToolsHelper {
 
 		return implode(",", array_unique($colors));
 	}
-	function getOptions($params)
+	public static function getOptions($params)
 	{
 		$options = array(
 			'editableselects' 	=>	array('label' => WFText::_('WF_TOOLS_EDITABLESELECT_LABEL')),

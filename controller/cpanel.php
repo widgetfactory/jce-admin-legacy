@@ -18,11 +18,6 @@ class WFControllerCpanel extends WFController
 		parent::__construct();
 	}
 	
-	function display()
-	{	
-		parent::display();
-	}
-	
 	function feed()
 	{
 		$model = $this->getModel('cpanel');

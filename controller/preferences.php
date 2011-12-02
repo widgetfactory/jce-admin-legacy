@@ -23,11 +23,6 @@ class WFControllerPreferences extends WFController
 		$this->registerTask( 'apply', 'save' );
 	}
 	
-	function display()
-	{
-		parent::display();
-	}
-	
 	function filter($data)
 	{
 		$model 	= $this->getModel('preferences');

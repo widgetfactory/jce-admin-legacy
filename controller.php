@@ -63,17 +63,28 @@ class WFController extends JController
      * and includes addition of the JDocument Object with required scripts and styles
      * @return object
      */
-    public function getView()
+    public function getView($name = '', $type = '', $prefix = '', $config = array())
     {
     	$language = JFactory::getLanguage();
     	$language->load('com_jce', JPATH_ADMINISTRATOR);
     	
     	$document 	= JFactory::getDocument();
-    	$name 		= JRequest::getWord('view', 'cpanel');
     	
-    	$view = parent::getView($name, $document->getType(), '', array(
-    		'base_path' => dirname(__FILE__)
-    	));
+    	if (!$name) {
+    		$name = JRequest::getWord('view', 'cpanel');
+    	}
+    	
+    	if (!$type) {
+    		$type = $document->getType();
+    	}
+    	
+    	if (empty($config)) {
+    		$config =  array(
+    			'base_path' => dirname(__FILE__)
+    		);
+    	}
+    	
+    	$view = parent::getView($name, $type, $prefix, $config);
     	
     	$document = JFactory::getDocument();
     	$document->setTitle(WFText::_('WF_ADMINISTRATION') . ' :: ' . WFText::_('WF_' . strtoupper($name)));
@@ -160,12 +171,17 @@ class WFController extends JController
     	
     	return $view;
     }
+    
+    public function pack()
+    {
+    	
+    }
 	
     /**
      * Display View
      * @return 
      */
-    public function display()
+    public function display($cachable = false, $params = false)
     {
         $view = $this->getView();
         $view->display();

@@ -28,11 +28,6 @@ class WFControllerUpdates extends WFController
 		parent::__construct();
 	}
 	
-	function display()
-	{
-		parent::display();
-	}
-	
 	function update()
 	{
 		$step 	= JRequest::getWord('step');		

@@ -18,7 +18,7 @@ class WFModelUpdates extends WFModel {
 
 	var $url = 'https://www.joomlacontenteditor.net/index.php?option=com_updates&format=raw';
 
-	function canUpdate() {
+	public static function canUpdate() {
 		if(!function_exists('curl_init')) {
 			return function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen');
 		}

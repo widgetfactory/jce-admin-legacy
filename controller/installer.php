@@ -32,11 +32,6 @@ class WFControllerInstaller extends WFController
 		$language = JFactory::getLanguage();		
 		$language->load( 'com_installer', JPATH_ADMINISTRATOR );
 	}
-		
-	function display()
-	{		
-		parent::display();
-	}
 
 	/**
 	 * Install an extension

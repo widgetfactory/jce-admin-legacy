@@ -19,10 +19,5 @@ class WFControllerHelp extends WFController
 	{		
 		parent::__construct($config);
 	}
-	
-	function display()
-	{
-		parent::display();
-	}
 }
 ?>

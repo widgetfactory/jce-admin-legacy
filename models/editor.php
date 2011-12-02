@@ -125,6 +125,12 @@ class WFModelEditor extends JModel
 
     	// create token
 		$token = WFToken::getToken();
+		$query = array(
+			'component_id' 	=> $component_id,
+			'version'		=> $version
+		);
+		
+		$query[$token] = 1;
 		
         // set compression
         if ($compress['javascript']) {
@@ -133,6 +139,8 @@ class WFModelEditor extends JModel
             $document->addScript($this->getURL(true) . '/tiny_mce/tiny_mce.js?version=' . $version);            
             // Editor
             $document->addScript($this->getURL(true) . '/libraries/js/editor.js?version=' . $version);
+            // languages TODO
+            //$document->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=pack&type=language&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
         }
         // set compression
         if ($compress['css']) {
@@ -143,10 +151,10 @@ class WFModelEditor extends JModel
             // get plugin styles
         	$this->getPluginStyles($settings);
         }
-		
+
 		// Get all optional plugin configuration options
         $this->getPluginConfig($settings);
-
+        
         // pass compresison states to settings
         $settings['compress'] = json_encode($compress);
         
@@ -237,6 +245,7 @@ class WFModelEditor extends JModel
         	'token'				=> WFToken::getToken(),
             'base_url' 			=> JURI::root(),
             'language' 			=> $wf->getLanguage(),
+            //'language_load'		=> false,
             'directionality' 	=> $language->isRTL() ? 'rtl' : 'ltr',
             'theme' 			=> 'none',
             'plugins'			=> ''
@@ -411,7 +420,7 @@ class WFModelEditor extends JModel
             }
         }
     }
-    
+
     /**
      * Remove keys from an array
      *
@@ -721,102 +730,143 @@ class WFModelEditor extends JModel
         // toolbar theme
         $toolbar = explode('.', $wf->getParam('editor.toolbar_theme', 'default'));
         
-        if ($type == 'javascript') {
-            $files = array();
-        	
-        	// add core file
-            $files[] = WF_EDITOR . DS . "tiny_mce/tiny_mce" . $suffix . ".js";
-            
-            // Add core languages
-            foreach ($languages as $language) {
-                $file = WF_EDITOR . DS . "tiny_mce/langs/" . $language . ".js";
-                if (!JFile::exists($file)) {
-                    $file = WF_EDITOR . DS . "tiny_mce/langs/en.js";
-                }
-                $files[] = $file;
-            }
-            
-            // Add themes
-            foreach ($themes as $theme) {
-                $files[] = WF_EDITOR . DS . "tiny_mce/themes/" . $theme . "/editor_template" . $suffix . ".js";
-                
-                foreach ($languages as $language) {
-                    $file = WF_EDITOR . DS . "tiny_mce/themes/" . $theme . "/langs/" . $language . ".js";
-                    if (!JFile::exists($file)) {
-                        $file = WF_EDITOR . DS . "tiny_mce/themes/" . $theme . "/langs/en.js";
-                    }
-                    
-                    $files[] = $file;
-                }
-            }
-            
-            // Add plugins
-            foreach ($plugins as $plugin) {
-                $files[] = WF_EDITOR . DS . "tiny_mce/plugins/" . $plugin . "/editor_plugin" . $suffix . ".js";
-                
-                foreach ($languages as $language) {
-                    $file = WF_EDITOR . DS . "tiny_mce/plugins/" . $plugin . "/langs/" . $language . ".js";
-                    if (!JFile::exists($file)) {
-                        $file = WF_EDITOR . DS . "tiny_mce/plugins/" . $plugin . "/langs/en.js";
-                    }
-                    if (JFile::exists($file)) {
-                    	$files[] = $file;
-					}
-                }
-            }
-            
-            // add Editor file          
-            $files[] = WF_EDITOR . DS . 'libraries' . DS . 'js' . DS . 'editor.js';            
-        }
+        switch($type) {
+        	case 'language':
+        		$files = array();
 
-        if ($type == 'css') {
-            $context = JRequest::getWord('context', 'editor');
-
-            if ($context == 'content') {
-                $files = array();
-                
-                $files[] = WF_EDITOR_THEMES . DS . $themes[0] . DS . 'skins' . DS . $toolbar[0] . DS . 'content.css';
-            	
-            	// get template stylesheets
-                $styles = explode(',', $this->getStyleSheets(true));
-                
-                foreach ($styles as $style) {
-                    if (JFile::exists($style)) {
-                        $files[] = $style;
-                    }
-                }
-                
-                // load content styles dor each plugin if they exist
-                foreach ($plugins as $plugin) {
-                    $content = WF_EDITOR_PLUGINS . DS . $plugin . DS . 'css' . DS . 'content.css';
-                    if (JFile::exists($content)) {
-                        $files[] = $content;
-                    }
-                }               
-            } else {
-                $files = array();
-            	
-            	$files[] = WF_EDITOR_LIBRARIES . DS . 'css' . DS . 'editor.css';
-                $dialog  = $wf->getParam('editor.dialog_theme', 'jce');
-
-                $files[] = WF_EDITOR_THEMES . DS . $themes[0] . DS . 'skins' . DS . $toolbar[0] . DS . 'ui.css';
-                
-                if (isset($toolbar[1])) {
-                    $files[] = WF_EDITOR_THEMES . DS . $themes[0] . DS . 'skins' . DS . $toolbar[0] . DS . 'ui_' . $toolbar[1] . '.css';
-                }
-                
-                // get external styles from config class for each plugin
-                foreach ($plugins as $plugin) {
-                	$class = WF_EDITOR_PLUGINS . DS . $plugin . DS . 'classes' . DS . 'config.php';
-                	if (JFile::exists($class)) {
-                		require_once($class);
-                		$classname = 'WF' . ucfirst($plugin) . 'PluginConfig';
-	                	if (class_exists($classname) && method_exists(new $classname, 'getStyles')) {
-	                    	$files = array_merge($files, (array)call_user_func(array($classname, 'getStyles')));
-	                    }
-                	}
-                }
-            }
+        		// Add core languages
+        		foreach ($languages as $language) {
+        			$file = WF_EDITOR . DS . "tiny_mce/langs/" . $language . ".js";
+        			if (!JFile::exists($file)) {
+        				$file = WF_EDITOR . DS . "tiny_mce/langs/en.js";
+        			}
+        			$files[] = $file;
+        		}
+        		
+        		// Add themes
+        		foreach ($themes as $theme) {        		
+        			foreach ($languages as $language) {
+        				$file = WF_EDITOR . DS . "tiny_mce/themes/" . $theme . "/langs/" . $language . ".js";
+        				if (!JFile::exists($file)) {
+        					$file = WF_EDITOR . DS . "tiny_mce/themes/" . $theme . "/langs/en.js";
+        				}
+        		
+        				$files[] = $file;
+        			}
+        		}
+        		
+        		// Add plugins
+        		foreach ($plugins as $plugin) {        		
+        			foreach ($languages as $language) {
+        				$file = WF_EDITOR . DS . "tiny_mce/plugins/" . $plugin . "/langs/" . $language . ".js";
+        				if (!JFile::exists($file)) {
+        					$file = WF_EDITOR . DS . "tiny_mce/plugins/" . $plugin . "/langs/en.js";
+        				}
+        				if (JFile::exists($file)) {
+        					$files[] = $file;
+        				}
+        			}
+        		}
+        		// reset type
+        		$type = 'javascript';
+        		
+        		break;
+        	case 'javascript':
+        		$files = array();
+        		 
+        		// add core file
+        		$files[] = WF_EDITOR . DS . "tiny_mce/tiny_mce" . $suffix . ".js";
+        		
+        		// Add core languages
+        		foreach ($languages as $language) {
+        			$file = WF_EDITOR . DS . "tiny_mce/langs/" . $language . ".js";
+        			if (!JFile::exists($file)) {
+        				$file = WF_EDITOR . DS . "tiny_mce/langs/en.js";
+        			}
+        			$files[] = $file;
+        		}
+        		
+        		// Add themes
+        		foreach ($themes as $theme) {
+        			$files[] = WF_EDITOR . DS . "tiny_mce/themes/" . $theme . "/editor_template" . $suffix . ".js";
+        		
+        			foreach ($languages as $language) {
+        				$file = WF_EDITOR . DS . "tiny_mce/themes/" . $theme . "/langs/" . $language . ".js";
+        				if (!JFile::exists($file)) {
+        					$file = WF_EDITOR . DS . "tiny_mce/themes/" . $theme . "/langs/en.js";
+        				}
+        		
+        				$files[] = $file;
+        			}
+        		}
+        		
+        		// Add plugins
+        		foreach ($plugins as $plugin) {
+        			$files[] = WF_EDITOR . DS . "tiny_mce/plugins/" . $plugin . "/editor_plugin" . $suffix . ".js";
+        		
+        			foreach ($languages as $language) {
+        				$file = WF_EDITOR . DS . "tiny_mce/plugins/" . $plugin . "/langs/" . $language . ".js";
+        				if (!JFile::exists($file)) {
+        					$file = WF_EDITOR . DS . "tiny_mce/plugins/" . $plugin . "/langs/en.js";
+        				}
+        				if (JFile::exists($file)) {
+        					$files[] = $file;
+        				}
+        			}
+        		}
+        		
+        		// add Editor file
+        		$files[] = WF_EDITOR . DS . 'libraries' . DS . 'js' . DS . 'editor.js';
+        		break;
+        	case 'css':
+        		$context = JRequest::getWord('context', 'editor');
+        		
+        		if ($context == 'content') {
+        			$files = array();
+        		
+        			$files[] = WF_EDITOR_THEMES . DS . $themes[0] . DS . 'skins' . DS . $toolbar[0] . DS . 'content.css';
+        			 
+        			// get template stylesheets
+        			$styles = explode(',', $this->getStyleSheets(true));
+        		
+        			foreach ($styles as $style) {
+        				if (JFile::exists($style)) {
+        					$files[] = $style;
+        				}
+        			}
+        		
+        			// load content styles dor each plugin if they exist
+        			foreach ($plugins as $plugin) {
+        				$content = WF_EDITOR_PLUGINS . DS . $plugin . DS . 'css' . DS . 'content.css';
+        				if (JFile::exists($content)) {
+        					$files[] = $content;
+        				}
+        			}
+        		} else {
+        			$files = array();
+        			 
+        			$files[] = WF_EDITOR_LIBRARIES . DS . 'css' . DS . 'editor.css';
+        			$dialog  = $wf->getParam('editor.dialog_theme', 'jce');
+        		
+        			$files[] = WF_EDITOR_THEMES . DS . $themes[0] . DS . 'skins' . DS . $toolbar[0] . DS . 'ui.css';
+        		
+        			if (isset($toolbar[1])) {
+        				$files[] = WF_EDITOR_THEMES . DS . $themes[0] . DS . 'skins' . DS . $toolbar[0] . DS . 'ui_' . $toolbar[1] . '.css';
+        			}
+        		
+        			// get external styles from config class for each plugin
+        			foreach ($plugins as $plugin) {
+        				$class = WF_EDITOR_PLUGINS . DS . $plugin . DS . 'classes' . DS . 'config.php';
+        				if (JFile::exists($class)) {
+        					require_once($class);
+        					$classname = 'WF' . ucfirst($plugin) . 'PluginConfig';
+        					if (class_exists($classname) && method_exists(new $classname, 'getStyles')) {
+        						$files = array_merge($files, (array)call_user_func(array($classname, 'getStyles')));
+        					}
+        				}
+        			}
+        		}
+        		break;
         }
         
         $packer->setFiles($files);

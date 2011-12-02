@@ -11,7 +11,7 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 
-class WFText
+abstract class WFText
 {
 	/**
 	 * Transalate a language string.
@@ -20,7 +20,7 @@ class WFText
 	 */
 	public static function _($string, $default = '')
 	{
-		$language =& JFactory::getLanguage();
+		$language = JFactory::getLanguage();
 
 		// replace legacy JCE_ prefix
 		$string 	= str_replace('JCE_', 'WF_', $string);		
@@ -49,7 +49,7 @@ class WFText
 	 */
 	public static function sprintf($string)
 	{
-		$language =& JFactory::getLanguage();
+		$language = JFactory::getLanguage();
 		
 		$args = func_get_args();
 		

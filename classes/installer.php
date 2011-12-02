@@ -44,7 +44,7 @@ class WFInstaller extends JObject
      * @return  WF_The editor object.
      * @since 1.5
      */
-    function &getInstance()
+    public static function &getInstance()
     {
         static $instance;
         

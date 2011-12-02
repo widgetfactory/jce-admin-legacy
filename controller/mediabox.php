@@ -19,11 +19,6 @@ class WFControllerMediabox extends WFController
 		
 		$this->registerTask( 'apply', 'save' );
 	}
-	
-	function display()
-	{
-		parent::display();
-	}
 
 	function save()
 	{

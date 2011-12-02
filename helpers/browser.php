@@ -11,7 +11,7 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 
-class WFBrowserHelper 
+abstract class WFBrowserHelper 
 {
 	public static function getBrowserLink($element = null, $filter = '')
 	{

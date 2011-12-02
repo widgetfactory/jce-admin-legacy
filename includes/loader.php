@@ -11,7 +11,7 @@
 
 defined( '_JEXEC') or die('RESTRICTED');
 
-class WFLoader {
+abstract class WFLoader {
 	/**
 	 * Loads a file from specified directories.
 	 *
@@ -19,7 +19,7 @@ class WFLoader {
 	 * @return void
 	 * @copyright Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.
 	 */
-	function import($path) {
+	public static function import($path) {
 		
 		static $paths;
 

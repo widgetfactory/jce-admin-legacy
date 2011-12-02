@@ -9,13 +9,13 @@
  * other free or open source software licenses.
  */
 
-class WFParameterHelper
+abstract class WFParameterHelper
 {
 	/**
 	 * Convert JSON data to JParameter Object
 	 * @param $data JSON data
 	 */
-	function toObject($data) 
+	public static function toObject($data) 
 	{
 		$param = new JParameter('');
 		$param->bind($data);
@@ -23,7 +23,7 @@ class WFParameterHelper
 		return $param->toObject();
 	}
 	
-	function getComponentParams($key = '', $path = '')
+	public static function getComponentParams($key = '', $path = '')
 	{
 		require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'parameter.php');		
 		$component = JComponentHelper::getComponent('com_jce');
