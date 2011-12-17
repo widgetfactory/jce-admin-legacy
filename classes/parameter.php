@@ -42,7 +42,7 @@ class WFParameter extends JParameter
 				}
        	 	}
 			
-			$this->bindData($this->_data, $data);
+			$this->bind($this->_data, $data);
 		}
 	}
 	/**
@@ -54,7 +54,7 @@ class WFParameter extends JParameter
 	 * @return	void
 	 * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
 	 */
-	public function bindData(&$parent, $data)
+	public function bind(&$parent, $data)
 	{
 		// Ensure the input data is an array.
 		if (is_object($data)) {
@@ -66,7 +66,7 @@ class WFParameter extends JParameter
 		foreach ($data as $k => $v) {
 			if (self::is_assoc($v) || is_object($v)) {
 				$parent->$k = new stdClass();
-				$this->bindData(&$parent->$k, $k);
+				$this->bind($parent->$k, $v);
 			} else {
 				$parent->$k = $v;
 			}
@@ -251,7 +251,7 @@ class WFParameter extends JParameter
 		$html 	= '<ul class="adminformlist">';
 		
 		foreach ($params as $item) {
-			if ($item instanceof WFParameter) {
+			if (is_a($item, 'WFParameter')) {
 				
 				foreach ($item->getGroups() as $group => $num) {
 					$label 	= $group;
@@ -299,7 +299,7 @@ class WFParameter extends JParameter
 		return false;
 	}
 	
-	public static function mergeParams($params1, $params2, $toObject = true)
+	public function mergeParams($params1, $params2, $toObject = true)
 	{
 		$merged = $params1;
 		
@@ -327,7 +327,7 @@ class WFParameter extends JParameter
 	 * @return	boolean		True if the array is an associative array.
 	 * @link	http://www.php.net/manual/en/function.is-array.php#98305
 	 */
-	private static function is_assoc($array) {
+	private function is_assoc($array) {
     	return (is_array($array) && (count($array) == 0 || 0 !== count(array_diff_key($array, array_keys(array_keys($array))))));
 	}
 	
@@ -335,7 +335,7 @@ class WFParameter extends JParameter
 	 * Convert an associate array to an object
 	 * @param array Associative array
 	 */
-	public static function array_to_object($array)
+	public function array_to_object($array)
 	{
 		$object = new StdClass();
 		

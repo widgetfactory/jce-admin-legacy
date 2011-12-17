@@ -11,11 +11,11 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 
-abstract class WFXMLHelper
+class WFXMLHelper
 {
-	public static function getElement($xml, $name, $default = '')
+	function getElement($xml, $name, $default = '')
     {
-    	if ($xml instanceof JSimpleXML) {
+    	if (is_a($xml, 'JSimpleXML')) {
     		$element = $xml->document->getElementByPath($name);
         	return $element ? $element->data() : $default;
     	} else {
@@ -23,12 +23,12 @@ abstract class WFXMLHelper
     	}
     }
     
-    public static function getElements($xml, $name)
+    function getElements($xml, $name)
     {
-        if ($xml instanceof JSimpleXML) {
+        if (is_a($xml, 'JSimpleXML')) {
 	        $element = $xml->document->getElementByPath($name);	
 			
-	        if ($element instanceof JSimpleXMLElement && count($element->children())) {
+	        if (is_a($element, 'JSimpleXMLElement') && count($element->children())) {
 	        	return $element;
 	        }
         } else {
@@ -38,9 +38,9 @@ abstract class WFXMLHelper
         return array();
     }
     
-    public static function getAttribute($xml, $name, $default = '')
+    function getAttribute($xml, $name, $default = '')
     {
-    	if ($xml instanceof JSimpleXML) {
+    	if (is_a($xml, 'JSimpleXML')) {
     		$value = (string) $xml->document->attributes($name);
     	} else {
     		$value = (string)$xml->attributes()->$name;
@@ -49,7 +49,7 @@ abstract class WFXMLHelper
     	return $value ? $value : $default;
     }
     
-    public static function getXML($file)
+    function getXML($file)
     {
     	// use JSimpleXML 	
     	if (!method_exists('JFactory', 'getXML')) {
