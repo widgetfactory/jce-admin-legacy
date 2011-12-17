@@ -42,7 +42,7 @@ class WFParameter extends JParameter
 				}
        	 	}
 			
-			$this->bind($this->_data, $data);
+			$this->bindData($this->_data, $data);
 		}
 	}
 	/**
@@ -54,7 +54,7 @@ class WFParameter extends JParameter
 	 * @return	void
 	 * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
 	 */
-	public function bind(&$parent, $data)
+	public function bindData(&$parent, $data)
 	{
 		// Ensure the input data is an array.
 		if (is_object($data)) {
@@ -66,7 +66,7 @@ class WFParameter extends JParameter
 		foreach ($data as $k => $v) {
 			if (self::is_assoc($v) || is_object($v)) {
 				$parent->$k = new stdClass();
-				$this->bind($parent->$k, $v);
+				$this->bindData($parent->$k, $v);
 			} else {
 				$parent->$k = $v;
 			}
@@ -250,8 +250,9 @@ class WFParameter extends JParameter
 		$params = $this->getParams($name, $group);		
 		$html 	= '<ul class="adminformlist">';
 		
-		foreach ($params as $item) {
-			if (is_a($item, 'WFParameter')) {
+		foreach ($params as $item) {			
+			//if (is_a($item, 'WFParameter')) {
+			if ($item instanceof WFParameter) {
 				
 				foreach ($item->getGroups() as $group => $num) {
 					$label 	= $group;
@@ -299,7 +300,7 @@ class WFParameter extends JParameter
 		return false;
 	}
 	
-	public function mergeParams($params1, $params2, $toObject = true)
+	public static function mergeParams($params1, $params2, $toObject = true)
 	{
 		$merged = $params1;
 		
@@ -327,7 +328,7 @@ class WFParameter extends JParameter
 	 * @return	boolean		True if the array is an associative array.
 	 * @link	http://www.php.net/manual/en/function.is-array.php#98305
 	 */
-	private function is_assoc($array) {
+	private static function is_assoc($array) {
     	return (is_array($array) && (count($array) == 0 || 0 !== count(array_diff_key($array, array_keys(array_keys($array))))));
 	}
 	
@@ -335,7 +336,7 @@ class WFParameter extends JParameter
 	 * Convert an associate array to an object
 	 * @param array Associative array
 	 */
-	public function array_to_object($array)
+	public static function array_to_object($array)
 	{
 		$object = new StdClass();
 		
