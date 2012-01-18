@@ -15,9 +15,9 @@ defined('_JEXEC') or die('RESTRICTED');
 define('WF_JOOMLA15', version_compare(JVERSION, '1.6', '<'));
 
 // define JQuery version
-define('WF_JQUERY', '1.6.3');
+define('WF_JQUERY', '1.7.1');
 // define JQuery UI version
-define('WF_JQUERYUI', '1.8.16');
+define('WF_JQUERYUI', '1.8.17');
 
 // Some shortcuts to make life easier
 
