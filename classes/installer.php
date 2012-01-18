@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -146,6 +146,18 @@ class WFInstaller extends JObject
 		wfimport('admin.helpers.xml');
         
        	$base = dirname(dirname(__FILE__));
+		
+		// remove old jQuery and jQuery UI versions
+		if (version_compare($version, '2.0.20', '<')) {
+			$path 	= JPATH_SITE . DS . 'components' . DS . 'com_jce' . DS . 'editor' . DS . 'libraries' . DS . 'js' . DS . 'jquery';	
+			$files 	= JFolder::files($path, '\.js', false, false, array('jquery-1.7.1.min.js', 'jquery-ui-1.8.17.custom.min.js', 'jquery-ui-layout.js'));
+
+			foreach($files as $file) {
+				if (is_file($path . DS . $file)) {
+					@JFile::delete($path . DS . $file);
+				}
+			}
+		}
 		
 		// cleanup javascript and css files moved to site
 		if (version_compare($version, '2.0.10', '<')) {
