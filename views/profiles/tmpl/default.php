@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -11,7 +11,7 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 ?>
-<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm">
+<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="adminForm">
 	<div id="jce">
 		<table id="profiles-toolbar" cellspacing="0">
 			<tr>
