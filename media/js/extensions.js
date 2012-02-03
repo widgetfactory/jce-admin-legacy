@@ -1,6 +1,6 @@
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -100,6 +100,18 @@
             }
 
             this._createSortable($('ul.extension_list', $container));
+            
+            $container.sortable({
+            	tolerance	: 'intersect',
+                placeholder	: 'sortable-highlight',
+                handle		: 'span.extension_group_handle',
+                update: function(event, ui) {
+                    self._setValues();
+                },
+                start : function(event, ui) {
+                	$(ui.placeholder).width($(ui.item).width()).height($(ui.item).height());
+                },
+            });
 
             return $container;
         },
@@ -136,6 +148,7 @@
 
             var $tmpl = $('<div class="extension_group_container" role="group">' +
             '	<div class="extension_group_titlebar">'+
+            '		<span class="extension_group_handle ui-icon ui-icon-arrow-4-diag"></span>' +
             '		<span class="extension_group_title"></span>' +
             '	</div>' +
             '	<div class="extension_list_add"><span role="button">' + this.options.labels.type_new + '</span></div>' +

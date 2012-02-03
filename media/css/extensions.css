@@ -1,18 +1,19 @@
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */ */
-#jce ul li div.extension_mapper {
+#jce div.extension_mapper {
 	min-width : 200px;
 	margin: 5px 0 5px 215px;
 	position: relative;
+	float : left;
 }
-html[dir="rtl"] #jce ul li div.extension_mapper {
+html[dir="rtl"] #jce div.extension_mapper {
 	margin: 5px 215px 5px 0;
 }
 #jce div.extension_group_container {
@@ -22,6 +23,11 @@ html[dir="rtl"] #jce ul li div.extension_mapper {
 	padding:1px;
 	margin:1px;
 	float: left;
+	background-color: #fff;
+}
+#jce div.sortable-highlight {
+	border: 1px dashed #9FBBDD;
+	float : left;
 }
 html[dir="rtl"] #jce div.extension_group_container {
 	float: right;
@@ -44,7 +50,7 @@ html[dir="rtl"] #jce div.extension_group_container {
 	display: inline-block;
     line-height: 20px;
     width: 96px;
-    padding: 0 0 0 10px;
+    padding: 0 16px;
 }
 html[dir="rtl"] #jce div.extension_group_container span.extension_group_title {
     padding: 0 10px 0 0;
@@ -223,4 +229,16 @@ html[dir="rtl"] #jce div.extension_group_container div.extension_list_add span {
     line-height: 10px;
     padding: 1px;
     margin: 1px;
+}
+
+#jce div.extension_group_container span.extension_group_handle {
+	position: absolute;
+    left: 0;
+    top: 0;
+    cursor : move;
+    display: inline-block;
+    margin: 2px 0;
+    opacity : 0.6;
+   	filter:alpha(opacity=60);
+	-ms-filter:alpha(opacity=60);
 }
