@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -179,7 +179,11 @@ class WFModelEditor extends JModel
 				}
                 // anything that is not solely an integer
                 else if (!is_numeric($v)) {
-                    $v = '"' . trim($v, '"') . '"';
+                	if (strpos($v, '"') === 0) {
+						$v = '"' . trim($v, '"') . '"';
+                	} else {
+                		$v = '"' . str_replace('"', '\"', $v) . '"';
+                	}
                 }
 
                 $output .= "\t\t\t" . $k . ": " . $v . "";
