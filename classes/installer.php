@@ -962,35 +962,49 @@ class WFInstaller extends JObject
      */
     function createProfilesTable()
     {
+        jimport('joomla.installer.helper');	
+			
         $mainframe = JFactory::getApplication();
         
-        $db = JFactory::getDBO();
+        $db 	= JFactory::getDBO();		
+		$driver = strtolower($db->name);
         
-        $query = "CREATE TABLE IF NOT EXISTS `#__wf_profiles` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `name` varchar(255) NOT NULL,
-        `description` varchar(255) NOT NULL,
-        `users` text NOT NULL,
-        `types` varchar(255) NOT NULL,
-        `components` text NOT NULL,
-        `area` tinyint(3) NOT NULL,
-        `rows` text NOT NULL,
-        `plugins` text NOT NULL,
-        `published` tinyint(3) NOT NULL,
-        `ordering` int(11) NOT NULL,
-        `checked_out` tinyint(3) NOT NULL,
-        `checked_out_time` datetime NOT NULL,
-        `params` text NOT NULL,
-        PRIMARY KEY (`id`)
-        );";
-        $db->setQuery($query);
-        
-        if (!$db->query()) {
-            $mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR') . $db->stdErr(), 'error');
-            return false;
-        } else {
-            return true;
-        }
+		switch($driver) {
+			case 'mysqli':
+				$driver = 'mysql';
+				break;
+			case 'sqlazure':
+				$driver = 'sqlsrv';
+				break;
+		}
+
+		$file = dirname(dirname(__FILE__)) . DS . 'sql' . DS . $driver . '.sql';
+		
+		if (is_file($file)) {
+			$buffer = file_get_contents($file);
+			
+			if ($buffer) {
+				$queries = JInstallerHelper::splitSql($buffer);
+				
+				if (count($queries)) {
+					$query = $queries[0];
+				
+					if ($query) {
+						$db->setQuery(trim($query));
+		        
+		        		if (!$db->query()) {
+		            		$mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR') . $db->stdErr(), 'error');
+		            		return false;
+		        		} else {
+		            		return true;
+		        		}
+					}
+				}
+			}
+		}
+		
+		$mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR'), 'error');
+		return false;
     }
     
     /**
