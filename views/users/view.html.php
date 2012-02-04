@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -93,7 +93,7 @@ class WFViewUsers extends JView
 			. ' INNER JOIN #__core_acl_groups_aro_map AS gm ON gm.aro_id = aro.id'
 			. ' INNER JOIN #__core_acl_aro_groups AS g ON g.id = gm.group_id'
 			. $where
-			. ' GROUP BY a.id'
+			. ' GROUP BY a.id, a.name, a.username, g.name'
 			. $orderby
 			;
 		} else {
@@ -113,7 +113,7 @@ class WFViewUsers extends JView
 			. ' LEFT JOIN #__user_usergroup_map AS map ON map.user_id = a.id'
 			. ' LEFT JOIN #__usergroups AS g ON g.id = map.group_id'
 			. $where
-			. ' GROUP BY a.id'
+			. ' GROUP BY a.id, a.name, a.username, g.title'
 			. $orderby
 			;
 		}
@@ -148,7 +148,7 @@ class WFViewUsers extends JView
 			$query = 'SELECT a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level'
 			. ' FROM #__usergroups AS a'
 			. ' LEFT JOIN #__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt'
-			. ' GROUP BY a.id'
+			. ' GROUP BY a.id, a.title, a.lft, a.rgt'
 			. ' ORDER BY a.lft ASC'
 			;
 	

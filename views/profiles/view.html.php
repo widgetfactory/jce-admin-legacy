@@ -72,7 +72,13 @@ class WFViewProfiles extends JView
                 jimport('joomla.html.pagination');
                 $pagination = new JPagination($total, $limitstart, $limit);
                 
-                $query = 'SELECT p.*, u.name AS editor' . ' FROM #__wf_profiles AS p' . ' LEFT JOIN #__users AS u ON u.id = p.checked_out' . $where . ' GROUP BY p.id' . $orderby;
+                $query = 'SELECT p.*, u.name AS editor' 
+                . ' FROM #__wf_profiles AS p' 
+                . ' LEFT JOIN #__users AS u ON u.id = p.checked_out' 
+                . $where 
+                //. ' GROUP BY p.id' 
+                . $orderby;
+				
                 $db->setQuery($query, $pagination->limitstart, $pagination->limit);
                 $rows = $db->loadObjectList();
                 if ($db->getErrorNum()) {
@@ -280,7 +286,12 @@ class WFViewProfiles extends JView
                     $join  = ' LEFT JOIN #__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt';
                     $where = '';
                     
-                    $query = 'SELECT a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level' . ' FROM #__usergroups AS a' . ' LEFT JOIN #__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt' . ' GROUP BY a.id' . ' ORDER BY a.lft ASC';
+                    $query = 'SELECT a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level'
+					. ' FROM #__usergroups AS a'
+					. ' LEFT JOIN #__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt'
+					. ' GROUP BY a.id, a.title, a.lft, a.rgt'
+					. ' ORDER BY a.lft ASC'
+					;
                     
                     // Prevent parenting to children of this item.
                     

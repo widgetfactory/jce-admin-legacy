@@ -48,6 +48,7 @@
 			<folder>media</folder>
 			<folder>models</folder>
 			<folder>plugin</folder>
+			<folder>sql</folder>
 			<folder>tables</folder>
 			<folder>views</folder>
 			<file>access.xml</file>

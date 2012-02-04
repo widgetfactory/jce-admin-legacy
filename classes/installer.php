@@ -978,7 +978,8 @@ class WFInstaller extends JObject
 				break;
 		}
 
-		$file = dirname(dirname(__FILE__)) . DS . 'sql' . DS . $driver . '.sql';
+		$file 	= dirname(dirname(__FILE__)) . DS . 'sql' . DS . $driver . '.sql';
+		$error 	= null;
 		
 		if (is_file($file)) {
 			$buffer = file_get_contents($file);
@@ -998,12 +999,20 @@ class WFInstaller extends JObject
 		        		} else {
 		            		return true;
 		        		}
+					}  else {
+						$error = 'NO SQL QUERY';
 					}
+				} else {
+					$error = 'NO SQL QUERIES';
 				}
+			} else {
+				$error = 'SQL FILE EMPTY';
 			}
+		} else {
+			$error = 'SQL FILE MISSING';
 		}
 		
-		$mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR'), 'error');
+		$mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR') . !is_null($error) ? ' - ' . $error : '', 'error');
 		return false;
     }
     

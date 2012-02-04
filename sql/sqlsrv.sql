@@ -1,5 +1,3 @@
-SET QUOTED_IDENTIFIER ON;
-
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[#__wf_profiles]') AND type in (N'U'))
 BEGIN
 CREATE TABLE [#__wf_profiles](

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -312,7 +312,7 @@ class WFModelProfiles extends WFModel
                 }
                 
                 if (!$row->store()) {
-                    $mainframe->enqueueMessage(WFText::_('WF_PROFILES_IMPORT_ERROR'));
+                    $mainframe->enqueueMessage(WFText::_('WF_PROFILES_IMPORT_ERROR'), $row->getError(), 'error');
                     return false;
                 } else {
                     $n++;
