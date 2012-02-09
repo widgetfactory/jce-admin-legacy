@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -206,12 +206,8 @@ class WFController extends JController
 	
 	public function authorize($task)
 	{
-		$view 	= JRequest::getWord('view', 'cpanel');	
-		
-		if ($view == 'popup') {
-			return true;
-		}
-		
+		$view = JRequest::getWord('view', 'cpanel');	
+
 		$model 	= $this->getModel($view);
 		
 		if (!$model->authorize($task)) {
