@@ -977,41 +977,69 @@ class WFInstaller extends JObject
 				$driver = 'sqlsrv';
 				break;
 		}
-
-		$file 	= dirname(dirname(__FILE__)) . DS . 'sql' . DS . $driver . '.sql';
-		$error 	= null;
-		
-		if (is_file($file)) {
-			$buffer = file_get_contents($file);
+		// speed up for mysql - most common
+		if ($driver == 'mysql') {
+			$query = "CREATE TABLE IF NOT EXISTS `#__wf_profiles` (
+	        `id` int(11) NOT NULL AUTO_INCREMENT,
+	        `name` varchar(255) NOT NULL,
+	        `description` varchar(255) NOT NULL,
+	        `users` text NOT NULL,
+	        `types` varchar(255) NOT NULL,
+	        `components` text NOT NULL,
+	        `area` tinyint(3) NOT NULL,
+	        `rows` text NOT NULL,
+	        `plugins` text NOT NULL,
+	        `published` tinyint(3) NOT NULL,
+	        `ordering` int(11) NOT NULL,
+	        `checked_out` tinyint(3) NOT NULL,
+	        `checked_out_time` datetime NOT NULL,
+	        `params` text NOT NULL,
+	        PRIMARY KEY (`id`)
+	        );";
+	        $db->setQuery($query);
 			
-			if ($buffer) {
-				$queries = JInstallerHelper::splitSql($buffer);
+			if ($db->query()) {
+            	return true;	
+			} else {
+				$error = $db->stdErr();
+			}
+		// sqlsrv	
+		} else {
+			$file 	= dirname(dirname(__FILE__)) . DS . 'sql' . DS . $driver . '.sql';
+			$error 	= null;
+			
+			if (is_file($file)) {
+				$buffer = file_get_contents($file);
 				
-				if (count($queries)) {
-					$query = $queries[0];
-				
-					if ($query) {
-						$db->setQuery(trim($query));
-		        
-		        		if (!$db->query()) {
-		            		$mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR') . $db->stdErr(), 'error');
-		            		return false;
-		        		} else {
-		            		return true;
-		        		}
-					}  else {
-						$error = 'NO SQL QUERY';
+				if ($buffer) {
+					$queries = JInstallerHelper::splitSql($buffer);
+					
+					if (count($queries)) {
+						$query = $queries[0];
+					
+						if ($query) {
+							$db->setQuery(trim($query));
+			        
+			        		if (!$db->query()) {
+			            		$mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR') . $db->stdErr(), 'error');
+			            		return false;
+			        		} else {
+			            		return true;
+			        		}
+						}  else {
+							$error = 'NO SQL QUERY';
+						}
+					} else {
+						$error = 'NO SQL QUERIES';
 					}
 				} else {
-					$error = 'NO SQL QUERIES';
+					$error = 'SQL FILE EMPTY';
 				}
 			} else {
-				$error = 'SQL FILE EMPTY';
+				$error = 'SQL FILE MISSING';
 			}
-		} else {
-			$error = 'SQL FILE MISSING';
 		}
-		
+
 		$mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR') . !is_null($error) ? ' - ' . $error : '', 'error');
 		return false;
     }
