@@ -18,13 +18,13 @@ defined( '_JEXEC' ) or die('RESTRICTED');
 		<dd><?php echo WFText::_($this->ftp->message); ?></dd>
 		<?php endif; ?>
 		<dd>
-			<label for="username" class="hasTip" title="<?php echo WFText::_('WF_LABEL_USERNAME'); ?>::<?php echo WFText::_('WF_LABEL_USERNAME_DESC'); ?>"><?php echo WFText::_('WF_LABEL_USERNAME'); ?></label>
+			<label for="username" class="tooltip" title="<?php echo WFText::_('WF_LABEL_USERNAME'); ?>::<?php echo WFText::_('WF_LABEL_USERNAME_DESC'); ?>"><?php echo WFText::_('WF_LABEL_USERNAME'); ?></label>
 			<span>
 				<input type="text" id="username" name="username" class="input_box" size="70" value="" />
 			</span>
 		</dd>
 		<dd>
-			<label for="username" class="hasTip" title="<?php echo WFText::_('WF_LABEL_PASSWORD'); ?>::<?php echo WFText::_('WF_LABEL_PASSWORD_DESC'); ?>"><?php echo WFText::_('WF_LABEL_PASSWORD'); ?></label>
+			<label for="username" class="tooltip" title="<?php echo WFText::_('WF_LABEL_PASSWORD'); ?>::<?php echo WFText::_('WF_LABEL_PASSWORD_DESC'); ?>"><?php echo WFText::_('WF_LABEL_PASSWORD'); ?></label>
 			<span>
 				<input type="password" id="password" name="password" class="input_box" size="70" value="" />
 			</span>

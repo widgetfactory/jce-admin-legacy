@@ -15,45 +15,45 @@ defined('_JEXEC') or die('RESTRICTED');
 <div id="jce" class="ui-corner-all">
 	<ul id="cpanel">
 		<?php if ($this->model->authorize('config')) :?>
-			<li class="cpanel-icon hasTip" title="<?php echo WFText::_( 'WF_CONFIG' ) . '::' . WFText::_( 'WF_CONFIG_DESC' );?>"><a href="index.php?option=com_jce&amp;view=config"><span class="config"></span><?php echo WFText::_( 'WF_CONFIG' );?></a></li>
+			<li class="cpanel-icon tooltip" title="<?php echo WFText::_( 'WF_CONFIG' ) . '::' . WFText::_( 'WF_CONFIG_DESC' );?>"><a href="index.php?option=com_jce&amp;view=config"><span class="config"></span><?php echo WFText::_( 'WF_CONFIG' );?></a></li>
 		<?php endif;?>
 		<?php if ($this->model->authorize('profiles')) :?>
-			<li class="cpanel-icon hasTip" title="<?php echo WFText::_( 'WF_PROFILES' ) . '::' . WFText::_( 'WF_PROFILES_DESC' );?>"><a href="index.php?option=com_jce&amp;view=profiles"><span class="profiles"></span><?php echo WFText::_( 'WF_PROFILES' );?></a></li>
+			<li class="cpanel-icon tooltip" title="<?php echo WFText::_( 'WF_PROFILES' ) . '::' . WFText::_( 'WF_PROFILES_DESC' );?>"><a href="index.php?option=com_jce&amp;view=profiles"><span class="profiles"></span><?php echo WFText::_( 'WF_PROFILES' );?></a></li>
 		<?php endif;?>
 		<?php if ($this->model->authorize('installer')) :?>
-			<li class="cpanel-icon hasTip" title="<?php echo WFText::_( 'WF_INSTALL' ) . '::' . WFText::_( 'WF_INSTALLER_DESC' );?>"><a href="index.php?option=com_jce&amp;view=installer"><span class="install"></span><?php echo WFText::_( 'WF_INSTALL' );?></a></li>
+			<li class="cpanel-icon tooltip" title="<?php echo WFText::_( 'WF_INSTALL' ) . '::' . WFText::_( 'WF_INSTALLER_DESC' );?>"><a href="index.php?option=com_jce&amp;view=installer"><span class="install"></span><?php echo WFText::_( 'WF_INSTALL' );?></a></li>
 		<?php endif;?>
 		<?php if ($this->model->authorize('browser')) :?>
-			<li class="cpanel-icon hasTip" title="<?php echo WFText::_( 'WF_BROWSER_TITLE' ) . '::' . WFText::_( 'WF_CPANEL_BROWSER_DESC' );?>"><a href="<?php echo $this->model->getBrowserLink();?>" class="dialog browser" target="_blank" data-options="{'width':765,'height':480, 'modal':true}" title="<?php echo WFText::_( 'WF_BROWSER_TITLE' );?>"><span class="browser"></span><?php echo WFText::_( 'WF_BROWSER_TITLE' );?></a></li>
+			<li class="cpanel-icon tooltip" title="<?php echo WFText::_( 'WF_BROWSER_TITLE' ) . '::' . WFText::_( 'WF_CPANEL_BROWSER_DESC' );?>"><a href="<?php echo $this->model->getBrowserLink();?>" class="dialog browser" target="_blank" data-options="{'width':765,'height':480, 'modal':true}" title="<?php echo WFText::_( 'WF_BROWSER_TITLE' );?>"><span class="browser"></span><?php echo WFText::_( 'WF_BROWSER_TITLE' );?></a></li>
 		<?php endif;?>
 	<?php if (JPluginHelper::isEnabled('system', 'jcemediabox') && $this->model->authorize('mediabox')) :?>
-		<li class="cpanel-icon hasTip" title="<?php echo WFText::_( 'WF_MEDIABOX' ) . '::' . WFText::_( 'WF_MEDIABOX_DESC' );?>"><a href="index.php?option=com_jce&amp;view=mediabox"><span class="mediabox"></span><?php echo WFText::_( 'WF_MEDIABOX' );?></a></li>
+		<li class="cpanel-icon tooltip" title="<?php echo WFText::_( 'WF_MEDIABOX' ) . '::' . WFText::_( 'WF_MEDIABOX_DESC' );?>"><a href="index.php?option=com_jce&amp;view=mediabox"><span class="mediabox"></span><?php echo WFText::_( 'WF_MEDIABOX' );?></a></li>
 	<?php endif;?>		
 	</ul>
 	<br style="clear:both;" />
 	<ul class="adminformlist">
                 <li>
-                    <span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_SUPPORT' ) .'::'.WFText::_( 'WF_CPANEL_SUPPORT_DESC' );?>">
+                    <span class="tooltip" title="<?php echo WFText::_( 'WF_CPANEL_SUPPORT' ) .'::'.WFText::_( 'WF_CPANEL_SUPPORT_DESC' );?>">
                         <?php echo WFText::_( 'WF_CPANEL_SUPPORT' );?>
                     </span>
                     <a href="http://www.joomlacontenteditor.net/support" target="_new">www.joomlacontenteditor.com/support</a>
                 </li>
               
                 <li>
-                    <span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_LICENCE' ) .'::'.WFText::_( 'WF_CPANEL_LICENCE_DESC' );?>">
+                    <span class="tooltip" title="<?php echo WFText::_( 'WF_CPANEL_LICENCE' ) .'::'.WFText::_( 'WF_CPANEL_LICENCE_DESC' );?>">
                         <?php echo WFText::_( 'WF_CPANEL_LICENCE' );?>
                     </span>
                     <?php echo $this->model->getLicense();?>
                 </li>
                  <li>
-                    <span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_VERSION' ) .'::'.WFText::_( 'WF_CPANEL_VERSION_DESC' );?>">
+                    <span class="tooltip" title="<?php echo WFText::_( 'WF_CPANEL_VERSION' ) .'::'.WFText::_( 'WF_CPANEL_VERSION_DESC' );?>">
                         <?php echo WFText::_( 'WF_CPANEL_VERSION' );?>
                     </span>
                     <?php echo $this->version;?>
                 </li>
                 <?php if ($this->params->get('feed', 0) || $this->model->authorize('preferences')) :?>
 	                 <li>
-		                <span class="hasTip" title="<?php echo WFText::_( 'WF_CPANEL_FEED' ) .'::'.WFText::_( 'WF_CPANEL_FEED_DESC' );?>">
+		                <span class="tooltip" title="<?php echo WFText::_( 'WF_CPANEL_FEED' ) .'::'.WFText::_( 'WF_CPANEL_FEED_DESC' );?>">
 		                    <?php echo WFText::_( 'WF_CPANEL_FEED' );?>
 		                </span>
 		                <span style="display:inline-block;">

@@ -16,7 +16,7 @@ defined('_JEXEC') or die('RESTRICTED');
 	<dl class="adminformlist">
 		<dt><?php echo WFText::_('WF_INSTALLER_UNINSTALL_DESC');?></dt>
 		<dd>
-			<label for="install_uninstall" class="hasTip" title="<?php echo WFText::_('WF_INSTALLER_UNINSTAL'); ?>::<?php echo WFText::_('WF_INSTALLER_UNINSTALL_DESC'); ?>"><?php echo WFText::_('WF_INSTALLER_UNINSTAL'); ?></label>
+			<label for="install_uninstall" class="tooltip" title="<?php echo WFText::_('WF_INSTALLER_UNINSTAL'); ?>::<?php echo WFText::_('WF_INSTALLER_UNINSTALL_DESC'); ?>"><?php echo WFText::_('WF_INSTALLER_UNINSTAL'); ?></label>
 			<span>
 				<button class="install_uninstall"><?php echo WFText::_('WF_INSTALLER_UNINSTALL_SELECTED');?></button>
 			</span>
@@ -25,10 +25,10 @@ defined('_JEXEC') or die('RESTRICTED');
 </div>
 <div id="tabs">
 	<ul>
-		<li class="hasTip" title="<?php echo JText :: _('WF_INSTALLER_PLUGINS') . '::' . WFText::_('WF_INSTALLER_PLUGINS_DESC');?>"><a href="#tabs-plugins"><?php echo JText :: _('WF_INSTALLER_PLUGINS');?></a></li>
-		<li class="hasTip" title="<?php echo JText :: _('WF_INSTALLER_EXTENSIONS') . '::' . WFText::_('WF_INSTALLER_EXTENSIONS_DESC');?>"><a href="#tabs-extensions"><?php echo JText :: _('WF_INSTALLER_EXTENSIONS');?></a></li>
-		<li class="hasTip" title="<?php echo JText :: _('WF_INSTALLER_LANGUAGES') . '::' . WFText::_('WF_INSTALLER_LANGUAGES_DESC');?>"><a href="#tabs-languages"><?php echo JText :: _('WF_INSTALLER_LANGUAGES');?></a></li>
-		<li class="hasTip" title="<?php echo JText :: _('WF_INSTALLER_RELATED') . '::' . WFText::_('WF_INSTALLER_RELATED_DESC');?>"><a href="#tabs-related"><?php echo JText :: _('WF_INSTALLER_RELATED');?></a></li>
+		<li class="tooltip" title="<?php echo JText :: _('WF_INSTALLER_PLUGINS') . '::' . WFText::_('WF_INSTALLER_PLUGINS_DESC');?>"><a href="#tabs-plugins"><?php echo JText :: _('WF_INSTALLER_PLUGINS');?></a></li>
+		<li class="tooltip" title="<?php echo JText :: _('WF_INSTALLER_EXTENSIONS') . '::' . WFText::_('WF_INSTALLER_EXTENSIONS_DESC');?>"><a href="#tabs-extensions"><?php echo JText :: _('WF_INSTALLER_EXTENSIONS');?></a></li>
+		<li class="tooltip" title="<?php echo JText :: _('WF_INSTALLER_LANGUAGES') . '::' . WFText::_('WF_INSTALLER_LANGUAGES_DESC');?>"><a href="#tabs-languages"><?php echo JText :: _('WF_INSTALLER_LANGUAGES');?></a></li>
+		<li class="tooltip" title="<?php echo JText :: _('WF_INSTALLER_RELATED') . '::' . WFText::_('WF_INSTALLER_RELATED_DESC');?>"><a href="#tabs-related"><?php echo JText :: _('WF_INSTALLER_RELATED');?></a></li>
 	</ul>
 	<div id="tabs-plugins">
 		<?php if (count($this->plugins)) : ?>

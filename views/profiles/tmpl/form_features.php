@@ -24,7 +24,7 @@ defined('_JEXEC') or die('RESTRICTED');
 	<ul class="adminformlist" id="profileLayoutTable">
 		<!-- Active Editor Layout -->
 		<li>
-			<label class="hasTip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR').'::'.WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR'); ?></label>
+			<label class="tooltip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR').'::'.WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR'); ?></label>
 			<span class="profileLayoutContainer">
 				<ul class="sortableList" id="profileLayout">
 				<?php
@@ -59,7 +59,7 @@ defined('_JEXEC') or die('RESTRICTED');
 		</li>
 		<!-- Available Buttons -->
 		<li>
-			<label class="hasTip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE').'::'.WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE'); ?></label>
+			<label class="tooltip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE').'::'.WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE'); ?></label>
 			<span class="profileLayoutContainer">
 				<ul class="sortableList">
 				<?php 

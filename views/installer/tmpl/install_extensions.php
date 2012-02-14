@@ -35,7 +35,7 @@ defined('_JEXEC') or die('RESTRICTED');
 			<td align="center"><?php echo @$extension->version != '' ? $extension->version : '&nbsp;'; ?></td>
 			<td align="center"><?php echo @$extension->creationdate != '' ? $extension->creationdate : '&nbsp;'; ?></td>
 			<td>
-				<span class="editlinktip hasTip" title="<?php echo WFText::_( 'WF_LABEL_AUTHOR_INFO' );?>::<?php echo $extension->authorUrl; ?>">
+				<span class="editlinktip tooltip" title="<?php echo WFText::_( 'WF_LABEL_AUTHOR_INFO' );?>::<?php echo $extension->authorUrl; ?>">
 					<?php echo @$extension->author != '' ? $extension->author : '&nbsp;'; ?>
 				</span>
 			</td>

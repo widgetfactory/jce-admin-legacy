@@ -26,7 +26,7 @@ class WFModelCpanel extends WFModel
         
         $description = $description ? $text . '::' . $description : $text;
         ?>
-        <li class="cpanel-icon hasTip ui-corner-all" title="<?php echo $description;?>">
+        <li class="cpanel-icon tooltip ui-corner-all" title="<?php echo $description;?>">
           <a href="<?php echo $link;?>"><?php echo JHTML::_('image.site', $image, '/components/com_jce/media/img/cpanel/', NULL, NULL, $text);?><?php echo $text;?></a>
         </li>
         <?php

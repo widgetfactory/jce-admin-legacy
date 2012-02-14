@@ -76,7 +76,7 @@ class WFModelPreferences extends WFModel {
 				
 				foreach ($actions as $action) {
 					$html[] =				'<tr>';
-					$html[] =					'<td><label class="hasTip" for="' . $action->name . '_' . $group->value . '" title="'.htmlspecialchars(WFText::_($action->title).'::'.WFText::_($action->description), ENT_COMPAT, 'UTF-8').'">' . WFText::_($action->title) . '</label></td>';
+					$html[] =					'<td><label class="tooltip" for="' . $action->name . '_' . $group->value . '" title="'.htmlspecialchars(WFText::_($action->title).'::'.WFText::_($action->description), ENT_COMPAT, 'UTF-8').'">' . WFText::_($action->title) . '</label></td>';
 					$html[] =					'<td>';	
 					$html[] = '<select name="params[rules][' . $action->name . '][' . $group->value . ']" id="' . $action->name . '_' . $group->value . '" title="' . WFText::sprintf('WF_RULES_SELECT_ALLOW_DENY_GROUP', WFText::_($action->title), trim($group->text)) . '">';
 	

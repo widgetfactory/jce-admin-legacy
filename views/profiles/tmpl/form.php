@@ -15,10 +15,10 @@ defined('_JEXEC') or die('RESTRICTED');
 	<div id="jce">
 		<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 			<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-				<li class="ui-state-default ui-corner-top ui-state-active hasTip" title="<?php echo JText :: _('WF_PROFILES_SETUP'). '::'. JText :: _('WF_PROFILES_SETUP_DESC');?>"><a href="#tabs-setup"><?php echo JText :: _('WF_PROFILES_SETUP');?></a></li>
-				<li class="ui-state-default ui-corner-top hasTip" title="<?php echo JText :: _('WF_PROFILES_FEATURES'). '::'. JText :: _('WF_PROFILES_FEATURES_DESC');?>"><a href="#tabs-features"><?php echo JText :: _('WF_PROFILES_FEATURES');?></a></li>
-				<li class="ui-state-default ui-corner-top hasTip" title="<?php echo JText :: _('WF_PROFILES_EDITOR_PARAMETERS'). '::'. JText :: _('WF_PROFILES_EDITOR_PARAMETERS_DESC');?>"><a href="#tabs-editor"><?php echo JText :: _('WF_PROFILES_EDITOR_PARAMETERS');?></a></li>
-				<li class="ui-state-default ui-corner-top hasTip" title="<?php echo JText :: _('WF_PROFILES_PLUGIN_PARAMETERS'). '::'. JText :: _('WF_PROFILES_PLUGIN_PARAMETERS_DESC');?>"><a href="#tabs-plugins"><?php echo JText :: _('WF_PROFILES_PLUGIN_PARAMETERS');?></a></li>
+				<li class="ui-state-default ui-corner-top ui-state-active tooltip" title="<?php echo JText :: _('WF_PROFILES_SETUP'). '::'. JText :: _('WF_PROFILES_SETUP_DESC');?>"><a href="#tabs-setup"><?php echo JText :: _('WF_PROFILES_SETUP');?></a></li>
+				<li class="ui-state-default ui-corner-top tooltip" title="<?php echo JText :: _('WF_PROFILES_FEATURES'). '::'. JText :: _('WF_PROFILES_FEATURES_DESC');?>"><a href="#tabs-features"><?php echo JText :: _('WF_PROFILES_FEATURES');?></a></li>
+				<li class="ui-state-default ui-corner-top tooltip" title="<?php echo JText :: _('WF_PROFILES_EDITOR_PARAMETERS'). '::'. JText :: _('WF_PROFILES_EDITOR_PARAMETERS_DESC');?>"><a href="#tabs-editor"><?php echo JText :: _('WF_PROFILES_EDITOR_PARAMETERS');?></a></li>
+				<li class="ui-state-default ui-corner-top tooltip" title="<?php echo JText :: _('WF_PROFILES_PLUGIN_PARAMETERS'). '::'. JText :: _('WF_PROFILES_PLUGIN_PARAMETERS_DESC');?>"><a href="#tabs-plugins"><?php echo JText :: _('WF_PROFILES_PLUGIN_PARAMETERS');?></a></li>
 			</ul>
 			<div id="tabs-setup" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 				<?php echo $this->loadTemplate('setup');?>

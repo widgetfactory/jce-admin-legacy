@@ -16,25 +16,25 @@ defined('_JEXEC') or die('RESTRICTED');
 	<legend><?php echo WFText::_( 'WF_PROFILES_DETAILS' ); ?></legend>
 	<ul class="adminformlist">
 	    <li>
-            <label for="profile_name" class="hasTip" title="<?php echo WFText::_('WF_PROFILES_NAME').'::'.WFText::_( 'WF_PROFILES_NAME_DESC' ); ?>">
+            <label for="profile_name" class="tooltip" title="<?php echo WFText::_('WF_PROFILES_NAME').'::'.WFText::_( 'WF_PROFILES_NAME_DESC' ); ?>">
                 <?php echo WFText::_( 'WF_PROFILES_NAME' ); ?>
             </label>
             <input class="text_area required" type="text" name="name" id="profile_name" size="35" value="<?php echo $this->profile->name; ?>" />
 	    </li>
 	    <li>
-            <label for="profile_description" class="hasTip" title="<?php echo WFText::_('WF_PROFILES_DESCRIPTION').'::'.WFText::_('WF_PROFILES_DESCRIPTION_DESC'); ?>">
+            <label for="profile_description" class="tooltip" title="<?php echo WFText::_('WF_PROFILES_DESCRIPTION').'::'.WFText::_('WF_PROFILES_DESCRIPTION_DESC'); ?>">
                 <?php echo WFText::_('WF_PROFILES_DESCRIPTION'); ?>
             </label>
             <input class="text_area" type="text" name="description" id="profile_description" size="100" value="<?php echo $this->profile->description; ?>" />
 	    </li>
 	    <li>
-        	<label for="profile_published" class="hasTip" title="<?php echo WFText::_('WF_PROFILES_ENABLED').'::'.WFText::_('WF_PROFILES_ENABLED_DESC'); ?>">
+        	<label for="profile_published" class="tooltip" title="<?php echo WFText::_('WF_PROFILES_ENABLED').'::'.WFText::_('WF_PROFILES_ENABLED_DESC'); ?>">
         		<?php echo WFText::_( 'WF_PROFILES_ENABLED' ); ?>
         	</label>
             <?php echo $this->lists['published'];?>
 	    </li>
 	    <li>
-        	<label for="ordering" class="hasTip" title="<?php echo WFText::_('WF_PROFILES_ORDERING').'::'.WFText::_('WF_PROFILES_ORDERING_DESC'); ?>">
+        	<label for="ordering" class="tooltip" title="<?php echo WFText::_('WF_PROFILES_ORDERING').'::'.WFText::_('WF_PROFILES_ORDERING_DESC'); ?>">
             	<?php echo WFText::_( 'WF_PROFILES_ORDERING' ); ?>
 			</label>
             <?php echo $this->lists['ordering']; ?>
@@ -45,13 +45,13 @@ defined('_JEXEC') or die('RESTRICTED');
     <legend><?php echo WFText::_( 'WF_PROFILES_ASSIGNMENT' ); ?></legend>
     <ul class="adminformlist">
 		<li>
-            <label for="ordering" class="hasTip" title="<?php echo WFText::_('WF_PROFILES_AREA').'::'.WFText::_('WF_PROFILES_AREA_DESC'); ?>">
+            <label for="ordering" class="tooltip" title="<?php echo WFText::_('WF_PROFILES_AREA').'::'.WFText::_('WF_PROFILES_AREA_DESC'); ?>">
                 <?php echo WFText::_( 'WF_PROFILES_AREA' ); ?>
 			</label>
             <?php echo $this->lists['area']; ?>
         </li>
         <li>
-            <label for="ordering" class="hasTip" title="<?php echo WFText::_('WF_PROFILES_COMPONENTS').'::'.WFText::_('WF_PROFILES_COMPONENTS_DESC'); ?>">
+            <label for="ordering" class="tooltip" title="<?php echo WFText::_('WF_PROFILES_COMPONENTS').'::'.WFText::_('WF_PROFILES_COMPONENTS_DESC'); ?>">
                 <?php echo WFText::_( 'WF_PROFILES_COMPONENTS' ); ?>
 			</label>
 			<span style="display:inline-block;">
@@ -64,7 +64,7 @@ defined('_JEXEC') or die('RESTRICTED');
 			</span>
         </li>
         <li>
-            <label for="ordering" class="hasTip" title="<?php echo WFText::_('WF_PROFILES_GROUPS').'::'.WFText::_('WF_PROFILES_GROUPS_DESC'); ?>">
+            <label for="ordering" class="tooltip" title="<?php echo WFText::_('WF_PROFILES_GROUPS').'::'.WFText::_('WF_PROFILES_GROUPS_DESC'); ?>">
                 <?php echo WFText::_( 'WF_PROFILES_GROUPS' ); ?>
 			</label>
 			<span style="display:inline-block;">
@@ -76,7 +76,7 @@ defined('_JEXEC') or die('RESTRICTED');
 	        </span>
         </li>
         <li>
-            <label for="ordering" class="hasTip" title="<?php echo WFText::_('WF_PROFILES_USERS').'::'.WFText::_('WF_PROFILES_USERS_DESC'); ?>">
+            <label for="ordering" class="tooltip" title="<?php echo WFText::_('WF_PROFILES_USERS').'::'.WFText::_('WF_PROFILES_USERS_DESC'); ?>">
                 <?php echo WFText::_('WF_PROFILES_USERS'); ?>
 			</label>
 			<span style="display:inline-block;">

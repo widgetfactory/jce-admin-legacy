@@ -87,7 +87,7 @@ defined('_JEXEC') or die('RESTRICTED');
 						echo $row->name;
 					} else {	
 					?>
-						<span class="editlinktip hasTip" title="<?php echo WFText::_( 'WF_PROFILES_EDIT' );?>::<?php echo $row->name; ?>">
+						<span class="editlinktip tooltip" title="<?php echo WFText::_( 'WF_PROFILES_EDIT' );?>::<?php echo $row->name; ?>">
 						<a href="<?php echo $link; ?>">
 							<?php echo $row->name; ?></a></span>
 					<?php } ?>
