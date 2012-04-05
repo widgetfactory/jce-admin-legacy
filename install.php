@@ -17,29 +17,29 @@ require_once(dirname(__FILE__) . DS . 'includes' . DS . 'base.php');
 require_once(dirname(__FILE__) . DS . 'classes' . DS . 'installer.php');
 
 abstract class com_jceInstallerScript {
-	
-	public static function install() 
-	{	
-	    $installer = WFInstaller::getInstance();
+
+	public static function install()
+	{
+		$installer = WFInstaller::getInstance();
 		$installer->install();
 	}
-	
-	public static function uninstall() 
-	{		
-	    $installer = WFInstaller::getInstance();
-	    $installer->uninstall();
+
+	public static function uninstall()
+	{
+		$installer = WFInstaller::getInstance();
+		$installer->uninstall();
 	}
-	
-	public static function update() 
+
+	public static function update()
 	{
 		$this->install();
 	}
 }
 
 /**
-* Installer function
-* @return
-*/
+ * Installer function
+ * @return
+ */
 function com_install()
 {
 	return com_jceInstallerScript::install();
