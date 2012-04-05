@@ -159,6 +159,11 @@ class WFInstaller extends JObject
 			}
 		}
 		
+		// delete error.php file
+		if (version_compare($version, '2.0.12', '<')) {
+			@JFile::delete(JPATH_SITE . DS . 'components' . DS . 'com_jce' . DS . 'editor' . DS . 'libraries' . DS . 'classes' . DS . 'error.php');
+		}
+		
 		// cleanup javascript and css files moved to site
 		if (version_compare($version, '2.0.10', '<')) {
        		$path 		= dirname(dirname(__FILE__)) . DS . 'media';	
