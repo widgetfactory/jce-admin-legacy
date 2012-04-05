@@ -13,6 +13,7 @@ defined('_JEXEC') or die('RESTRICTED');
 
 // load base classes
 require_once(dirname(__FILE__) . DS . 'includes' . DS . 'base.php');
+
 // get the view
 $view = JRequest::getCmd('view', 'cpanel');
 // get task
@@ -29,10 +30,10 @@ jimport('joomla.application.component.helper');
 jimport('joomla.application.component.controller');
 
 // Require the base controller
-require_once (dirname( __FILE__ ) . DS . 'controller.php');
+require_once (WF_ADMINISTRATOR . DS . 'controller.php');
 
 // Load controller
-$controllerPath = dirname(__FILE__) . DS . 'controller' . DS . $view . '.php';
+$controllerPath = WF_ADMINISTRATOR . DS . 'controller' . DS . $view . '.php';
 
 if (file_exists($controllerPath)) {
     require_once ($controllerPath);
@@ -44,7 +45,7 @@ if (file_exists($controllerPath)) {
 // load default controller
 } else {
     $controller = new WFController(array(
-    	'base_path' => dirname(__FILE__)
+    	'base_path' => WF_ADMINISTRATOR
     ));
 }
 
