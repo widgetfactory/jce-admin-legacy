@@ -323,6 +323,7 @@ class WFModelInstaller extends WFModel
 					$row->version = (string)$xml->version;
 					$row->creationdate = (string)$xml->creationDate;
 					$row->description = (string)$xml->description;
+					$row->authorUrl = (string)$xml->authorUrl;
 				}
 			}
 
