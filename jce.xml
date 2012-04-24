@@ -59,7 +59,7 @@
 			<folder>includes</folder>
 			<folder>media</folder>
 			<folder>models</folder>
-			<folder>plugin</folder>
+			<folder>packages</folder>
 			<folder>sql</folder>
 			<folder>tables</folder>
 			<folder>views</folder>
