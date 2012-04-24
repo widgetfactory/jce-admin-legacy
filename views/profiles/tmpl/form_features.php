@@ -1,117 +1,152 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die('RESTRICTED');
 
+$position = 'mce' . ucfirst($this->profile->layout_params->get('toolbar_align', 'center'));
+
+// width and height
+$width = $this->profile->layout_params->get('editor_width', 600);
+$height = $this->profile->layout_params->get('editor_height', 'auto');
+
+if (is_numeric($width)) {
+    $width .= 'px';
+}
+if (is_numeric($height)) {
+    $height .= 'px';
+}
+
+$theme = $this->profile->layout_params->get('toolbar_theme', 'default') . 'Skin';
 ?>
 <fieldset class="first">
-	<legend><?php echo WFText::_( 'WF_PROFILES_FEATURES_LAYOUT' ); ?></legend>
-	<!--  Legend -->	
-	<div style="margin:5px 0 0 2px;">
-		<a class="dialog legend" data-options="{'width': 750, 'height': 600}" target="_blank" title="<?php echo WFText::_('WF_LEGEND_TITLE'); ?>" href="index.php?option=com_jce&tmpl=component&view=legend">
-			<button id="layout-legend"><?php echo WFText::_('WF_PROFILES_LEGEND');?></button>
-		</a>
-	</div>
-	
-	<ul class="adminformlist" id="profileLayoutTable">
-		<!-- Active Editor Layout -->
-		<li>
-			<label class="tooltip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR').'::'.WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR'); ?></label>
-			<span class="profileLayoutContainer">
-				<ul class="sortableList" id="profileLayout">
-				<?php
-				for ($i=1; $i <= count($this->rows); $i++) : ?>
-				    <li class="sortableListItem">
-				        <ul class="sortableRow">
-							<?php for ($x = 1; $x <= count($this->rows); $x++ ) :
-						        if ($i == $x) :
-						            $icons = explode(',', $this->rows[$x]);
-		
-									foreach ($icons as $icon) :
-										if ($icon == 'spacer') :
-											echo '<li class="sortableRowItem spacer"><span class="defaultSkin"><span class="mceSeparator"></span></span></li>';
-										endif;
-								
-								    	foreach ($this->plugins as $plugin) :
-											if ($plugin->icon && $plugin->name == $icon) :
-								            	echo '<li class="sortableRowItem ' . $plugin->type . '" data-name="' . $plugin->name . '">' . $this->model->getIcon($plugin) . '</li>';
-											endif;
-								        endforeach;
-									endforeach;
-						        endif;
-						    endfor;?>
-				        </ul>
-				        <span class="sortableHandle"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top:7px;"><img src="components/com_jce/media/img/spacer.gif" width="11px" height="20px" /></span></span>
-				    	<span class="sortableOption"></span>
-				    </li>
-				<?php endfor;?>
-				</ul>
-				<span class="widthMarker" style="width:<?php echo $this->width;?>px;"><span><?php echo $this->width;?>px</span></span>
-	 		</span>
-		</li>
-		<!-- Available Buttons -->
-		<li>
-			<label class="tooltip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE').'::'.WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE'); ?></label>
-			<span class="profileLayoutContainer">
-				<ul class="sortableList">
-				<?php 
-				for ($i = 1; $i <= 5; $i++) :
-				?>
-				    <li class="sortableListItem">
-				        <ul class="sortableRow">
-				        	<?php if ($i == 5) :
-								for ($x = 1; $x<=10; $x++) :?>
-									<li class="sortableRowItem spacer"><span class="defaultSkin"><span class="mceSeparator"></span></span></li>
-								<?php endfor;
-							endif;
+    <legend><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT'); ?></legend>
+    <!-- Layout Params -->
+    <div id="layout_params">
+        <?php foreach ($this->profile->layout_groups as $group => $num) : ?>
+            <div id="tabs-editor-<?php echo $group ?>">
+                <h2><?php echo WFText::_('WF_PROFILES_EDITOR_' . strtoupper($group)); ?></h2>
+            <?php echo $this->profile->layout_params->render('params[editor]', $group); ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
 
-						    foreach ($this->plugins as $plugin) :
-	                            if (!in_array($plugin->name, explode(',', implode(',', $this->rows)))) :
-	                                if ($plugin->icon && $plugin->row == $i) :
-	                                    echo '<li class="sortableRowItem ' . $plugin->type . '" data-name="' . $plugin->name . '">' . $this->model->getIcon($plugin) . '</li>';
-						            endif;
-						        endif;
-						    endforeach;?>
-				        </ul>
-						<span class="sortableHandle"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top:7px;"><img src="components/com_jce/media/img/spacer.gif" width="11px" height="20px" /></span></span>
-						<span class="sortableOption"></span>
-					</li>
-				<?php endfor;?>
-				</ul>
-			</span>	
-		</li>
-	</ul>
+    <ul class="adminformlist" id="profileLayoutTable">
+        <!-- Active Editor Layout -->
+        <li>
+            <label class="tooltip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR') . '::' . WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR'); ?></label>
+            <span class="profileLayoutContainer profileLayoutContainerCurrent <?php echo $theme; ?>">
+                <span class="widthMarker" style="width:<?php echo $width; ?>;"><span><?php echo $width; ?></span></span>
+                <!-- Toolbar -->
+                <span id="toolbar_container" class="profileLayoutContainerToolbar">
+                    <ul class="sortableList <?php echo $position; ?>">
+                        <?php for ($i = 1; $i <= count($this->rows); $i++) : ?>
+                            <li class="sortableListItem">
+                                <div class="sortableRow mceToolbar">
+                                    <?php for ($x = 1; $x <= count($this->rows); $x++) : ?>
+                                        <?php if ($i == $x) : ?>
+                                            <?php foreach (explode(',', $this->rows[$x]) as $icon) : ?>
+                                                <?php if ($icon == 'spacer') : ?>
+                                                    <span class="sortableRowItem spacer" data-name="spacer"><span class="mceSeparator">&nbsp;</span></span>
+                                                <?php endif; ?>
+                                                <?php foreach ($this->plugins as $plugin) : ?>
+                                                    <?php if ($plugin->icon && $plugin->name == $icon) : ?>
+                                                        <span data-name="<?php echo $plugin->name; ?>" class="sortableRowItem <?php echo $plugin->type; ?>"><?php echo $this->model->getIcon($plugin); ?></span>
+                                                    <?php
+                                                    endif;
+                                                endforeach;
+                                            endforeach;
+                                        endif;
+                                    endfor;
+                                    ?>
+                                </div>
+                                <span class="sortableRowHandle"><span class="ui-icon ui-icon-arrowthick-2-n-s"><img src="components/com_jce/media/img/spacer.gif" width="11px" height="20px" /></span></span>
+                                <span class="sortableOption"></span>
+                            </li>
+                        <?php endfor; ?>
+                    </ul>
+                </span>
+                <!--  Editor -->
+                <span id="editor_container" class="profileLayoutContainerEditor mceIframeContainer" style="width:<?php echo $width; ?>;height:<?php echo $height; ?>"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></span>
+                <!--  Statusbar -->
+                <span id="statusbar_container" class="profileLayoutContainerStatusBar"><span class="mceStatusbar"><span><span class="mcePathLabel">Path: </span></span><a href="#" class="mceResize"></a></span></span>
+            </span>
+        </li>
+        <!-- Available Buttons -->
+        <li>
+            <label class="tooltip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE') . '::' . WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE'); ?></label>
+            <span class="profileLayoutContainer <?php echo $theme; ?>">
+                <span class="profileLayoutContainerToolbar">
+                <ul class="sortableList">
+                    <?php for ($i = 1; $i <= 5; $i++) :?>
+                        <li class="sortableListItem">
+                            <div class="sortableRow mceToolbar">
+                                <?php if ($i == 5) :
+                                    for ($x = 1; $x <= 10; $x++) :
+                                ?>
+                                    <span class="sortableRowItem spacer"><span class="mceSeparator">&nbsp;</span></span>
+                                <?php
+                                    endfor;
+                                endif;
+
+                                foreach ($this->plugins as $plugin) :
+                                    if (!in_array($plugin->name, explode(',', implode(',', $this->rows)))) :
+                                        if ($plugin->icon && $plugin->row == $i) :
+                                            echo '<span class="sortableRowItem ' . $plugin->type . '" data-name="' . $plugin->name . '">' . $this->model->getIcon($plugin) . '</span>';
+                                        endif;
+                                    endif;
+                                endforeach;
+                                ?>
+                            </div>
+                            <span class="sortableRowHandle"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top:7px;"><img src="components/com_jce/media/img/spacer.gif" width="11px" height="20px" /></span></span>
+                            <span class="sortableOption"></span>
+                        </li>
+                    <?php endfor; ?>
+                </ul>
+                </span>
+            </span>	
+        </li>
+    </ul>
+    <!--  Legend -->	
+    <div>
+        <a class="dialog legend" data-options="{'width': 750, 'height': 600}" target="_blank" title="<?php echo WFText::_('WF_LEGEND_TITLE'); ?>" href="index.php?option=com_jce&tmpl=component&view=legend">
+            <button id="layout-legend"><?php echo WFText::_('WF_PROFILES_LEGEND'); ?></button>
+        </a>
+    </div>
+    <input type="hidden" name="rows" value="<?php echo $this->profile->rows; ?>" />
+    <input type="hidden" name="plugins" value="<?php echo $this->profile->plugins; ?>" />
 </fieldset>
 <fieldset>
-	<legend><?php echo WFText::_('WF_PROFILES_FEATURES_ADDITIONAL'); ?></legend>
-	<ul id="profileAdditionalFeatures" class="adminformlist">
-            <?php 
-            $i = 0;
-            foreach ($this->plugins as $plugin) :
-                 if (!$plugin->icon) :
-                    if ($plugin->editable) : ?>
-                        <li class="editable">
-                            <label valign="top" class="key"><?php echo WFText::_($plugin->title);?></label>
-							<input type="checkbox" value="<?php echo $plugin->name;?>" <?php echo in_array( $plugin->name, explode( ',', $this->profile->plugins ) ) ? 'checked="checked"' : '';?>/>
-                        	<?php echo WFText::_('WF_'.strtoupper($plugin->name).'_DESC');?>
-						</li>
-             <?php else : ?>
-                        <li>
-                            <label><?php echo WFText::_($plugin->title);?></label>
-							<input type="checkbox" value="<?php echo $plugin->name;?>" <?php echo in_array( $plugin->name, explode( ',', $this->profile->plugins ) ) ? 'checked="checked"' : '';?>/>
-                            <?php echo WFText::_('WF_'.strtoupper($plugin->name).'_DESC');?>
-                        </li>
-            <?php  endif;
+    <legend><?php echo WFText::_('WF_PROFILES_FEATURES_ADDITIONAL'); ?></legend>
+    <ul id="profileAdditionalFeatures" class="adminformlist">
+        <?php
+        $i = 0;
+        foreach ($this->plugins as $plugin) :
+            if (!$plugin->icon) :
+                if ($plugin->editable) :
+                    ?>
+                    <li class="editable">
+                        <label valign="top" class="key"><?php echo WFText::_($plugin->title); ?></label>
+                        <input type="checkbox" value="<?php echo $plugin->name; ?>" <?php echo in_array($plugin->name, explode(',', $this->profile->plugins)) ? 'checked="checked"' : ''; ?>/>
+            <?php echo WFText::_('WF_' . strtoupper($plugin->name) . '_DESC'); ?>
+                    </li>
+                    <?php else : ?>
+                    <li>
+                        <label><?php echo WFText::_($plugin->title); ?></label>
+                        <input type="checkbox" value="<?php echo $plugin->name; ?>" <?php echo in_array($plugin->name, explode(',', $this->profile->plugins)) ? 'checked="checked"' : ''; ?>/>
+                    <?php echo WFText::_('WF_' . strtoupper($plugin->name) . '_DESC'); ?>
+                    </li>
+                <?php
                 endif;
-                $i++;
-            endforeach;?>
-	</ul>
+            endif;
+            $i++;
+        endforeach;
+        ?>
+    </ul>
 </fieldset>

@@ -28,9 +28,9 @@ defined('_JEXEC') or die('RESTRICTED');
 			</div>
 			<div id="tabs-editor" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
 				<ul>
-				<?php 
-				foreach($this->groups as $group => $num) :
-					echo '<li><a href="#tabs-editor-'. $group.'"><span>'. WFText::_('WF_PROFILES_EDITOR_' . strtoupper($group)). '</span></a></li>';
+				<?php 				
+				foreach($this->profile->editor_groups as $name => $group) :
+					echo '<li><a href="#tabs-editor-'. $name.'"><span>'. WFText::_('WF_PROFILES_EDITOR_' . strtoupper($name)). '</span></a></li>';
 				endforeach;?>
 				</ul>
 				<?php echo $this->loadTemplate('editor');?>
@@ -63,8 +63,6 @@ defined('_JEXEC') or die('RESTRICTED');
 			</div>
 		</div>
 	</div>
-	<input type="hidden" name="rows" value="<?php echo $this->profile->rows; ?>" />
-	<input type="hidden" name="plugins" value="<?php echo $this->profile->plugins; ?>" />
 	<input type="hidden" name="option" value="com_jce" />
 	<input type="hidden" name="id" value="<?php echo $this->profile->id; ?>" />
 	<input type="hidden" name="cid[]" value="<?php echo $this->profile->id; ?>" />

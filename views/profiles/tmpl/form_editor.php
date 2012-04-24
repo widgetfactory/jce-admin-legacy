@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -13,10 +13,10 @@ defined('_JEXEC') or die('RESTRICTED');
 ?>
 <div id="editor_params">
 <?php
-	foreach ($this->params->getGroups() as $group => $num) : ?>
+	foreach ($this->profile->editor_groups as $group => $num) : ?>
 		<div id="tabs-editor-<?php echo $group?>">
 			<h2><?php echo WFText::_('WF_PROFILES_EDITOR_' . strtoupper($group)); ?></h2>
-			<?php echo $this->params->render('params[editor]', $group);?>
+			<?php echo $this->profile->editor_params->render('params[editor]', $group);?>
 		</div>
 	<?php endforeach;?>
 </div>

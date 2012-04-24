@@ -327,26 +327,30 @@ class WFViewProfiles extends JView
                 }
                 $lists['users'] = JHTML::_('select.genericlist', $options, 'users[]', 'class="inputbox users" size="10" multiple="multiple"', 'value', 'text', '');
                 
-                // get params definitions
-                $xml = WF_EDITOR_LIBRARIES . DS . 'xml' . DS . 'config' . DS . 'profiles.xml';
+                                
+                $rows = $model->getRowArray($row->rows);
                 
-                // get editor params
-                $params = new WFParameter($row->params, $xml, 'editor');               
-                $params->addElementPath(JPATH_COMPONENT . DS . 'elements');
-                $params->addElementPath(WF_EDITOR . DS . 'elements');
-                
-                // get width
-                $width = $params->get('editor_width', 600);
-                
-                $groups = $params->getGroups();                
-                $rows 	= $model->getRowArray($row->rows);
-                
-                $this->assign('width', 		$width);
+				$model->getEditorParams($row);
+				$model->getLayoutParams($row);
+				
+				$params = new WFParameter($row->params, '', 'editor');
+				
+				// load default theme css
+				//$this->document->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/tiny_mce/themes/advanced/skins/default/ui.css');
+				
+				// load other theme css
+				foreach($model->getThemes() as $theme) {
+					$files = JFolder::files($theme, 'ui([a-zA-Z0-9_-]*)\.css');
+					
+					foreach($files as $file) {
+						$this->document->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/tiny_mce/themes/advanced/skins/' . basename($theme) . '/' . $file);
+					}						
+				}
+
                 $this->assignRef('lists', 	$lists);
                 $this->assignRef('profile', $row);
                 $this->assignRef('rows', 	$rows);
                 $this->assignRef('params', 	$params);
-                $this->assignRef('groups', 	$groups);
                 $this->assignRef('plugins', $plugins);
                 
                 $options = WFToolsHelper::getOptions($params);
