@@ -1,14 +1,18 @@
-/**
- * JCE Component 	@@version@@
- * @package 		JCE
- * @url				http://www.joomlacontenteditor.net
- * @copyright 		@@copyright@@
- * @license 		@@licence@@
- * @date			@@date@@
- * This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
+ 
+ * @@name@@                 @@version@@
+ * @package                 JCE
+ * @url                     http://www.joomlacontenteditor.net
+ * @copyright               @@copyright@@
+ * @license                 @@licence@@
+ * @date                    @@date@@
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * NOTE : Javascript files have been compressed for speed and can be uncompressed using http://jsbeautifier.org/
- */
