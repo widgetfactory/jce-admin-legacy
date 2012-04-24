@@ -370,4 +370,49 @@ class WFModelProfiles extends WFModel
         }
         return null;
     }
+
+	function getEditorParams(&$row)
+	{
+		// get params definitions
+        $xml = WF_EDITOR_LIBRARIES . DS . 'xml' . DS . 'config' . DS . 'profiles.xml';
+                
+       	// get editor params
+		$params = new WFParameter($row->params, $xml, 'editor');               
+		$params->addElementPath(JPATH_COMPONENT . DS . 'elements');
+		$params->addElementPath(WF_EDITOR . DS . 'elements');
+
+		$groups = $params->getGroups();
+				
+		$row->editor_params = $params;
+		$row->editor_groups = $groups;
+	}
+	
+	function getLayoutParams(&$row)
+	{
+		// get params definitions
+        $xml = WF_EDITOR_LIBRARIES . DS . 'xml' . DS . 'config' . DS . 'layout.xml';
+                
+       	// get editor params
+		$params = new WFParameter($row->params, $xml, 'editor');               
+		$params->addElementPath(JPATH_COMPONENT . DS . 'elements');
+		$params->addElementPath(WF_EDITOR . DS . 'elements');
+
+		$groups = $params->getGroups();
+				
+		$row->layout_params = $params;
+		$row->layout_groups = $groups;
+	}
+	
+	function getPluginParameters()
+	{
+		
+	}
+	
+	function getThemes()
+	{
+		jimport('joomla.filesystem.folder');	
+		$path = WF_EDITOR_THEMES . DS . 'advanced' . DS . 'skins';
+		
+		return JFolder::folders($path, '.', false, true);
+	}
 }
