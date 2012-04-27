@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright Â© 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -84,7 +84,7 @@ class WFInstallerExtension extends JObject {
 		$folder = $this->get('folder');
 		$extension = $this->get('extension');
 		
-	    if (version_compare($this->get('version'), '2.0.0', '<')) {
+	    if (version_compare(WFXMLHelper::getAttribute($manifest, 'version'), '2.0.0', '<')) {
 			$this->parent->abort(WFText::_('WF_INSTALLER_INCORRECT_VERSION'));
 			return false;
 		}
