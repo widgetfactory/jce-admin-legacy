@@ -108,7 +108,7 @@ class WFModel extends JModel {
             return 'mceListBox';
         }
 
-        if (in_array($icon, array('paste', 'numlist', 'bullist', 'forecolor', 'backcolor', 'speelchecker', 'textcase'))) {
+        if (in_array($icon, array('paste', 'numlist', 'bullist', 'forecolor', 'backcolor', 'spellchecker', 'textcase'))) {
             return 'mceSplitButton';
         }
 
@@ -128,7 +128,7 @@ class WFModel extends JModel {
 
         foreach ($icons as $icon) {
             if ($icon == '|' || $icon == 'spacer') {
-                $span .= '<span class="mceSeparator">&nbsp;</span>';
+                $span .= '<span class="mceSeparator">|</span>';
             } else {
                 $path = $base . '/' . $icon . '.png';
 
