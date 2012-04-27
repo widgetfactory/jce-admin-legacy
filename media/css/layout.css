@@ -1,42 +1,75 @@
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- */
+*/
 html {
-	overflow-y: visible !important;
-} 
- 
-#profileLayoutTable {
-	position: relative;
+    overflow-y: visible !important;
 }
-
+#profileLayoutTable {
+    position: relative;
+}
+#jce ul#profileLayoutTable > li {
+    margin-bottom: 10px;
+}
 #profileLayoutTable ul {
     margin: 0 !important;
     list-style: none;
     position: relative;
 }
-
 #profileLayoutTable ul.sortableList {
-	padding: 0;
-	display: inline-block;
-	position: relative;
+    padding: 0;
+    display: inline-block;
+    position: relative;
 }
-
 #profileLayoutTable span.profileLayoutContainer {
-	display: block;
-	float: left;
-	position: relative;	
+    display: block;
+    float: left;
+    position: relative;
+    margin-left: 10px;
 }
-
 #profileLayoutTable li:first-child span.profileLayoutContainer {
-	margin: 25px 0 10px;
+    margin: 25px 0 0 10px;
 }
-
+#profileLayoutTable span.profileLayoutContainerToolbar, #profileLayoutTable span.profileLayoutContainerEditor, #profileLayoutTable span.profileLayoutContainerStatusBar {
+    display: block;
+}
+#profileLayoutTable span.profileLayoutContainerEditor {
+    margin: 1px 0;
+    width: 600px;
+    padding: 5px 2px 5px 1px;
+}
+#profileLayoutTable span.profileLayoutContainerEditor p {
+    line-height: 16px;
+    margin: 2px 5px;
+    white-space: normal;
+}
+#profileLayoutTable span.profileLayoutContainerStatusBar {
+    /*border : 1px solid #ccc;*/
+    width: 600px;
+    /*padding : 0 0 0 3px;*/
+    /*background-color : #F0F0EE;*/
+    margin-bottom: 1px;
+}
+#profileLayoutTable span.profileLayoutContainerStatusBar span.mceStatusbar > span {
+    padding: 0 2px;
+    float: left;
+    display: inline-block;
+}
+#profileLayoutTable span.profileLayoutContainerToolbar + span.profileLayoutContainerEditor {
+    margin: 0 0 1px 0;
+}
+#profileLayoutTable span.profileLayoutContainerStatusBar .mcePathLabel {
+    padding: 3px 2px 2px 0;
+}
+#profileLayoutTable span.profileLayoutContainerStatusBar a.mceResize {
+    cursor: default;
+    float: right;
+}
 #jce span.widthMarker {
     border: 1px dashed #999;
     border-bottom-width: 0;
@@ -47,8 +80,8 @@ html {
     text-align: center;
     top: -24px;
 }
-#jce  span.widthMarker span {
-	background: none repeat scroll 0 0 #FFFFFF;
+#jce span.widthMarker span {
+    background: none repeat scroll 0 0 #FFFFFF;
     display: inline-block;
     left: 50%;
     line-height: 20px;
@@ -56,142 +89,173 @@ html {
     position: absolute;
     top: -10px;
     width: 50px;
+    text-align: center;
 }
 #jce ul.sortableList.group {
     margin: 20px 0px 0px 0px;
 }
 #jce ul.sortableList li.sortableListItem {
-    height: 30px;
-    margin-bottom: 3px;
-    height: 30px;
-    /*float:left;
-	clear:left;*/
-	position: relative;
-	padding: 0 20px 0 0;
+    position: relative;
+    padding: 0 20px 0 0;
+    margin: 0 0 1px 0;
+    height: 28px;
 }
-#jce ul.sortableList li.sortableListItem ul {
+#jce ul.sortableList li.sortableListItem div.sortableRow {
     white-space: nowrap;
-    border: 1px solid #CCC;
-    padding: 0px 0px 0px 3px !important;
-    height: 30px;
-    margin: 0 !important;
-    background-color: #F0F0EE;
-    min-width: 600px;
+    padding: 0px 3px;
+    height: 26px;
+    margin: 0;
+    min-width: 597px;
+    /* Prevent spacing in inline-block spans */
+    font-size: 0;
+    letter-spacing: normal;
+    word-spacing: normal;
 }
-#jce ul.sortableList li.sortableListItem ul li {
-    list-style: none;
-    cursor: move;
-    height: 22px;
-    min-width: 20px;
+#jce ul.sortableList li.sortableListItem div.sortableRow span {
+    /* Prevent spacing in inline-block spans */
+    font-size: 0;
+    letter-spacing: normal;
+    word-spacing: normal;
 }
-#jce ul.sortableList li.sortableListItem ul li span {
+#jce ul.sortableList.mceLeft li.sortableListItem div.sortableRow {
+    text-align: left;
+}
+#jce ul.sortableList.mceCenter li.sortableListItem div.sortableRow {
+    text-align: center;
+}
+#jce ul.sortableList.mceRight li.sortableListItem div.sortableRow {
+    text-align: right;
+}
+#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem {
     cursor: move;
     display: inline-block;
+    height: 20px;
+    margin: 2px 1px 0 0;
+    min-width: 20px;
+    vertical-align: top;
 }
-#jce ul.sortableList li.sortableListItem ul li span.focus {
-	border: 1px solid red;
+
+#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem.ui-state-highlight {
+    border-style: dashed;
+    min-width: 5px;
 }
-#jce ul.sortableList li.sortableListItem ul li.spacer {
-	min-width: 0px;
-	margin: 3px 0px 1px !important;
-	clear: none;
+#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem.spacer {
+    min-width: 0px;
+    margin: 3px 0 0;
+    clear: none;
 }
-#jce ul.sortableList li.sortableListItem ul li span.defaultSkin span.mceSeparator {
-    margin: 1px 4px;
-}
-#jce ul.sortableList li.sortableListItem ul li img {
+#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem img {
     border: 0;
     padding: 0;
     margin: 0
 }
-#jce ul.sortableList li.sortableListItem.ui-state-highlight, ul.sortableList li.sortableRowItem.ui-state-highlight {
+#jce ul.sortableList li.sortableListItem.ui-state-highlight, 
+#jce ul.sortableList li.sortableRowItem.ui-state-highlight, 
+#jce span.profileLayoutContainer span.sortableContainer.ui-state-highlight {
     border: 1px dashed #CCCCCC;
 }
-#jce li.sortableRowItem {
-    float: left;
-    margin: 3px 0px 1px 0px !important;
-    padding: 0 !important;
+#jce span.profileLayoutContainer span.sortableContainer.ui-state-highlight {
+    display: block;
 }
-#jce li.sortableRowItem:hover span:first-child, li.sortableRowItem:hover span.mceButton {
-    background-color: #F0F0FF;
+#jce span.profileLayoutContainer span.sortableContainer.ui-state-highlight:first-child {
+    margin: 0 0 1px 0;
 }
-#jce li.sortableRowItem.ui-sortable-helper {
+#jce span.sortableRowItem.ui-sortable-helper {
     opacity: 0.8;
-    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
     filter: alpha(opacity=80);
 }
-#jce li.sortableRowItem span.mceButton {
-    /*width: auto;*/
-    background-color: #F0F0EE;
+#jce span.sortableRowItem span.mceButton {
+    cursor: move;
+    height: auto;
 }
-#jce li.sortableRowItem span.mceButton img {
+#jce span.sortableRowItem span.mceButton img {
     cursor: move;
 }
-#jce li.sortableRowItem.spacer span.defaultSkin {
-    padding:0;
-    border: 1px dotted #ccc;
-}
-#jce li.sortableRowItem span.mceSeparator {
-    padding: 0;
-    height: 18px;
-}
-#jce span.sortableHandle {
-    height: 30px;
-    width: 16px;
+
+#jce span.sortableRowHandle {
+    height: 26px;
     border: 1px solid #CCC;
     cursor: move;
     background-color: #F0F0EE;
     text-align: center;
-    margin: -32px -20px 0 0;
+    margin: -28px -19px 0 0;
     position: relative;
     display: block;
     float: right;
+}
+#jce span.sortableRowHandle span.ui-icon {
+    margin: 5px 0 0;
+}
+#jce span.sortableContainerHandle {
+    border: 1px solid #CCC;
+    cursor: move;
+    background-color: #F0F0EE;
+    text-align: center;
+    margin: 0 0 0 -20px;
+    position: relative;
+    display: block;
+    float: left;
+    height: 20px;
+}
+#jce span.sortableContainerHandle span.ui-icon {
+    margin: 2px 0 0;
 }
 #jce span.sortableHandle img {
     margin-top: 5px;
 }
 #jce span.sortableOption {
-	width : 20px;
-	height: 30px;
-	display: inline-block;
-	position: absolute;
-	top:0;
-	right: -20px;
+    width: 20px;
+    height: 30px;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: -20px;
 }
 html[dir="rtl"] #jce span.sortableOption {
-	left: -20px;
-	right: auto;
+    left: -20px;
+    right: auto;
 }
 #jce span.sortableOption span {
-	width : 20px;
-	height: 20px;
-	display: inline-block;
-	cursor: pointer;
-	vertical-align: middle;	
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: middle;
 }
 #jce span.sortableOption span {
-	margin: 5px 0;
-	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -300px;
+    margin: 5px 0;
+    background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -300px;
 }
 #profileLayout span.sortableOption span {
-	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -180px;
+    background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -180px;
 }
 #jce span.sortableRemove.hidden {
-	visibility: hidden;
+    visibility: hidden;
 }
 #jce button#layout-legend {
     margin: 0 0 0 7px;
 }
-
+#jce a.dialog.legend {
+    display: inline-block;
+    margin: 0 0 10px 0;
+}
 /* IE7 */
 #jce.ie7 span.sortableHandle {
-	position: absolute;
-	right: 20px;	
+    position: absolute;
+    right: 20px;
 }
 #jce.ie7 span.widthMarker {
-	margin-top: -20px;
+    margin-top: -20px;
 }
 #jce.ie7 ul.sortableList li.sortableListItem {
-	clear: none;
-	float: none;
+    clear: none;
+    float: none;
 }
+#jce.ie7 ul.sortableList li.sortableListItem span.sortableRow {
+    font-size: 0.01em;
+}
+#jce.ie7 ul.sortableList li.sortableListItem span.sortableRow span.sortableRowItem {
+    vertical-align: baseline;
+}
+

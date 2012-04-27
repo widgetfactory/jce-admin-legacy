@@ -23,7 +23,13 @@ if (is_numeric($height)) {
     $height .= 'px';
 }
 
-$theme = $this->profile->layout_params->get('toolbar_theme', 'default') . 'Skin';
+$theme = $this->profile->layout_params->get('toolbar_theme', 'default');
+if (strpos($theme, '.') === false) {
+    $theme = $theme.'Skin';
+} else {
+    $theme = str_replace(array('o2k7.silver', 'o2k7.black'), array('o2k7.Silver', 'o2k7.Black'), $theme);   
+    $theme = preg_replace('#([\w]+)\.([\w]+)#', '$1Skin $1Skin$2', $theme);
+}
 ?>
 <fieldset class="first">
     <legend><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT'); ?></legend>
@@ -53,7 +59,7 @@ $theme = $this->profile->layout_params->get('toolbar_theme', 'default') . 'Skin'
                                         <?php if ($i == $x) : ?>
                                             <?php foreach (explode(',', $this->rows[$x]) as $icon) : ?>
                                                 <?php if ($icon == 'spacer') : ?>
-                                                    <span class="sortableRowItem spacer" data-name="spacer"><span class="mceSeparator">&nbsp;</span></span>
+                                                    <span class="sortableRowItem spacer" data-name="spacer"><span class="mceSeparator">|</span></span>
                                                 <?php endif; ?>
                                                 <?php foreach ($this->plugins as $plugin) : ?>
                                                     <?php if ($plugin->icon && $plugin->name == $icon) : ?>
@@ -90,7 +96,7 @@ $theme = $this->profile->layout_params->get('toolbar_theme', 'default') . 'Skin'
                                 <?php if ($i == 5) :
                                     for ($x = 1; $x <= 10; $x++) :
                                 ?>
-                                    <span class="sortableRowItem spacer"><span class="mceSeparator">&nbsp;</span></span>
+                                    <span class="sortableRowItem spacer"><span class="mceSeparator">|</span></span>
                                 <?php
                                     endfor;
                                 endif;

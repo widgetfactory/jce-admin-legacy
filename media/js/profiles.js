@@ -1,6 +1,6 @@
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -8,31 +8,31 @@
  * other free or open source software licenses.
  */
 (function($) {
-	if (typeof Joomla === 'undefined') {
-		Joomla = {};
-	}
+    if (typeof Joomla === 'undefined') {
+        Joomla = {};
+    }
 	
     Joomla.submitbutton = submitbutton = function(button) {
-		// Cancel button
-		if (button == "cancelEdit") {
-			try {
-				Joomla.submitform(button);
-			} catch(e) {
-				submitform(button);
-			}
+        // Cancel button
+        if (button == "cancelEdit") {
+            try {
+                Joomla.submitform(button);
+            } catch(e) {
+                submitform(button);
+            }
 
-			return;
-		}
+            return;
+        }
 		
-		if ($jce.Profiles.validate()) {
-			$jce.Profiles.onSubmit();
-			try {
-				Joomla.submitform(button);
-			} catch(e) {
-				submitform(button);
-			}
-		}
-	};
+        if ($jce.Profiles.validate()) {
+            $jce.Profiles.onSubmit();
+            try {
+                Joomla.submitform(button);
+            } catch(e) {
+                submitform(button);
+            }
+        }
+    };
     
     // Create Profiles object
     $.jce.Profiles = {
@@ -104,11 +104,11 @@
 
             $( "select.editable, select.combobox" ).combobox(options.combobox);
 
-			// Editor Tabs
-			$("#tabs-editor").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
+            // Editor Tabs
+            $("#tabs-editor").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
 
             $("#tabs-plugins").tabs({
-            	selected : -1
+                selected : -1
             }).addClass('ui-tabs-vertical ui-helper-clearfix');
             
             var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
@@ -167,50 +167,134 @@
             });
 
             $('#paramseditorwidth').change( function() {
-                var v = $(this).val();
+                var v = $(this).val() || 600;
                 
-                if (v && /%/.test(v)) {
+                if (/%/.test(v)) {
                     return;
                 } else {
-                    if (v) {
-                        v = parseInt(v);
-                    } else {
-                        v = 600;
-                    }
-                    $('span.widthMarker', '#profileLayoutTable').width(v).children('span').html(v + 'px');
+                    v = parseInt(v);
+
+                    $('span.widthMarker span', '#profileLayoutTable').html(v + 'px');
+                    
+                    $('#editor_container').width(v);
+                    $('span.widthMarker, #statusbar_container span.mceStatusbar').width(v);
                 }
             });
+            
+            $('#paramseditorheight').change( function() {
+                var v = $(this).val() || 'auto';
+                
+                if (/%/.test(v)) {
+                    return;
+                } else {
+                    if ($.type(v) == 'number') {
+                        v = parseInt(v);
+                    }
+                    
+                    $('span.profileLayoutContainerEditor', '#profileLayoutTable').height(v)
+                }
+            });
+            
+            // Toolbar Theme
+            $('#paramseditortoolbar_theme').change( function() {
+                var v = $(this).val();
 
+                if (v.indexOf('.') != -1) {
+                    v = v.split('.');
+                    var s = v[0] + 'Skin';
+                    var c = v[1];
+            			
+                    v = s + ' ' + s + c.charAt(0).toUpperCase() + c.substring(1);
+                } else {
+                    v += 'Skin';
+                }
+            	
+                $('span.profileLayoutContainer').each(function() {
+                    var cls = this.className;
+                    cls = cls.replace(/([a-z0-9]+)Skin([a-z0-9]*)/gi, '');
+            		
+                    this.className = $.trim(cls);
+                }).addClass(v);
+            });
+            
+            // Toolbar Alignment
+            $('#paramseditortoolbar_align').change( function() {
+                var v = $(this).val();
+                $('ul.sortableList', '#toolbar_container').removeClass('mceLeft mceCenter mceRight').addClass('mce' + v.charAt(0).toUpperCase() + v.substring(1));
+            }).change();
+            
+            // Editor Path
+            $('#paramseditorpath').change( function() {
+                $('span.mceStatusbar span.mcePathLabel').toggle($(this).val() == 1);
+            }).change();
+
+            // Additional Features
             $('ul#profileAdditionalFeatures input:checkbox').click( function() {
                 self.setPlugins();
             });
+            
+            this._fixLayout();
+            
+            // toolbar position
+            $('#paramseditortoolbar_location').change(function() {
+                var $after = $('#editor_container');
+            	
+                if ($(this).val() == 'top') {
+                    $after = $('span.widthMarker');
+                }
+            	
+                $('#toolbar_container').insertAfter($after);
+            }).change();
+            
+            $('#paramseditorstatusbar_location').change(function() {
+                var v = $(this).val();
+                // show statusbar by default
+                $('#statusbar_container').show();
+            	
+                // hide statusbar
+                if (v == 'none') {
+                    $('#statusbar_container').hide();
+                }
+
+                var $after = $('#editor_container');
+            	
+                if (v == 'top') {
+                    $after = $('span.widthMarker');
+            		
+                    if ($('#paramseditortoolbar_location').val() == 'top') {
+                        $after = $('#toolbar_container');
+                    }
+                }
+
+                $('#statusbar_container').insertAfter($after);
+            }).change();
         },
         
         validate : function() {
-        	var required = [];
+            var required = [];
         	
-        	$(':input.required').each(function() {
-        		if ($(this).val() === '') {
-        			required.push('<li>' + $('label[for="' + this.id + '"]').html() + '</li>');
-        		}
-        	});
+            $(':input.required').each(function() {
+                if ($(this).val() === '') {
+                    required.push('<li>' + $('label[for="' + this.id + '"]').html() + '</li>');
+                }
+            });
         	
-        	if (required.length) {
-        		var msg = '<p>' + $jce.options.labels.required + '</p>';
-        		msg += '<ul>';
-        		msg += required.join('');
-        		msg += '</ul>';
+            if (required.length) {
+                var msg = '<p>' + $jce.options.labels.required + '</p>';
+                msg += '<ul>';
+                msg += required.join('');
+                msg += '</ul>';
         		
-        		$jce.createDialog({
-        			type  : 'alert',
-        			text  : msg,
-        			modal : true
-        		});
+                $jce.createDialog({
+                    type  : 'alert',
+                    text  : msg,
+                    modal : true
+                });
       		
-        		return false;
-        	}
+                return false;
+            }
 			
-			return true;
+            return true;
         },
 
         onSubmit : function() {
@@ -224,6 +308,17 @@
                 }
             });
         },
+        
+        _fixLayout : function() {
+            $('span.mceButton, span.mceSplitButton').removeClass('mceStart mceEnd');
+            
+            // fix for buttons before or after lists
+            $('span.mceListBox').parent('span.sortableRowItem').prev('span.sortableRowItem').children('span.mceButton, span.mceSplitButton').addClass('mceEnd');
+            $('span.mceListBox').parent('span.sortableRowItem').next('span.sortableRowItem').children('span.mceButton, span.mceSplitButton').addClass('mceStart');
+            
+            //$('span.mceListBox').parent('span.sortableRowItem').prev('span.sortableRowItem').children('span.mceSplitButton').addClass('mceEnd');
+            //$('span.mceListBox').parent('span.sortableRowItem').next('span.sortableRowItem').children('span.mceSplitButton').addClass('mceStart');
+        },
 
         createLayout : function() {
             var self = this;
@@ -232,43 +327,46 @@
             $("ul.sortableList").sortable({
                 connectWith	: 'ul.sortableList',
                 axis		: 'y',
-                tolerance	: 'intersect',
-                handle		: 'span.sortableHandle',
+                handle		: 'span.sortableRowHandle',
+                //items 		: 'span.sortableRowContainer',
                 update		: function(event, ui) {
                     self.setRows();
                     self.setPlugins();
                 },
                 start : function(event, ui) {
-                	$(ui.placeholder).width($(ui.item).width());
+                //$(ui.placeholder).width('100%');
                 },
                 placeholder	: 'sortableListItem ui-state-highlight'
             }).disableSelection();
             
-            $('span.sortableOption', 'ul.sortableList li').hover(function() {
-            	$(this).append('<span role="button"/>');
+            $('span.sortableOption', 'span.sortableLayout').hover(function() {
+                $(this).append('<span role="button"/>');
             }, function() {
-            	$(this).empty();
+                $(this).empty();
             }).click(function() {
-            	var $parent = $(this).parent();
-            	var $target = $('ul.sortableList', '#profileLayoutTable').not($parent.parent());
-            	$parent.hide().appendTo($target).show('slow');
+                var $parent = $(this).parent();
+                var $target = $('span.sortableLayout', '#profileLayoutTable').not($parent.parent());
+                $parent.hide().appendTo($target).show('slow');
             	
-            	$(this).empty();
+                $(this).empty();
             	
-            	self.setRows();
+                self.setRows();
                 self.setPlugins();
             });
 
-            $('ul.sortableRow').sortable({
-                connectWith	: 'ul.sortableRow',
-                tolerance	: 'intersect',
+            $('div.sortableRow').sortable({
+                connectWith	: 'div.sortableRow',
+                tolerance	: 'pointer',
                 update: function(event, ui) {
                     self.setRows();
                     self.setPlugins();
+                    
+                    self._fixLayout();
                 },
                 start : function(event, ui) {
-                	$(ui.placeholder).width($(ui.item).width());
+                    $(ui.placeholder).width($(ui.item).width());
                 },
+                forcePlaceholderSize : true,
                 placeholder	: 'sortableRowItem ui-state-highlight'
             }).disableSelection();
         },
@@ -276,17 +374,21 @@
         setRows : function() {
             var rows = [];
 
-            $('ul.sortableRow:has(li)', '#profileLayout').each( function() {
-                rows.push($.map($('li.sortableRowItem', $(this)), function(el) {
-                    if ($(el).hasClass('spacer')) {
-                        return 'spacer';
-                    }
+            $('div.sortableRow:has(span)', '#toolbar_container').each( function() {
+                rows.push($.map($('span.sortableRowItem', $(this)), function(el) {
                     return $(el).data('name');
                 }).join(','));
-
             });
 
             $('input[name="rows"]').val(rows.join(';'));
+        },
+        
+        setLayout : function() {    
+            var $spans = $('span.profileLayoutContainerCurrent > span').not('span.widthMarker');
+        	
+            $.each(['toolbar', 'editor', 'statusbar'], function() {
+                $('#paramseditor' + this + '_location').val($spans.index($('#' + this + '_container')));
+            });
         },
 
         /**
@@ -297,7 +399,7 @@
         setPlugins: function() {
             var self = this, plugins = [];
 
-            $('ul.sortableRow li.plugin', '#profileLayout').each( function() {
+            $('div.sortableRow lspan.plugin', '#toolbar_container').each( function() {
                 plugins.push($(this).data('name'));
             });
 
@@ -348,5 +450,5 @@
         }
 
     };
-    // End Groups
+// End Groups
 })(jQuery);
