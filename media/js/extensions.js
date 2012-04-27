@@ -110,7 +110,7 @@
                 },
                 start : function(event, ui) {
                 	$(ui.placeholder).width($(ui.item).width()).height($(ui.item).height());
-                },
+                }
             });
 
             return $container;
