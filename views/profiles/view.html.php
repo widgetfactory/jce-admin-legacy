@@ -42,7 +42,7 @@ class WFViewProfiles extends JView {
                 $filter_order = $app->getUserStateFromRequest("$option.$view.filter_order", 'filter_order', 'p.ordering', 'cmd');
                 $filter_order_Dir = $app->getUserStateFromRequest("$option.$view.filter_order_Dir", 'filter_order_Dir', '', 'word');
                 $filter_state = $app->getUserStateFromRequest("$option.$view.filter_state", 'filter_state', '', 'word');
-                $search = $app->getUserStateFromRequest("$option.$view.search", 'search', '', 'string');
+                $search = $app->getUserStateFromRequest("$option.$view.search", 'search', '', 'cmd');
                 $search = JString::strtolower($search);
 
                 $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'), 'int');
@@ -334,8 +334,6 @@ class WFViewProfiles extends JView {
 
                 $params = new WFParameter($row->params, '', 'editor');
 
-                // load default theme css
-                //$this->document->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/tiny_mce/themes/advanced/skins/default/ui.css');
                 // load other theme css
                 foreach ($model->getThemes() as $theme) {
                     $files = JFolder::files($theme, 'ui([\w\.]*)\.css$');
