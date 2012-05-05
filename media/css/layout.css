@@ -1,6 +1,6 @@
 /**
  * @package   	JCE
- * @copyright 	Copyright � 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -49,11 +49,10 @@ html {
     white-space: normal;
 }
 #profileLayoutTable span.profileLayoutContainerStatusBar {
-    /*border : 1px solid #ccc;*/
-    width: 600px;
-    /*padding : 0 0 0 3px;*/
-    /*background-color : #F0F0EE;*/
-    margin-bottom: 1px;
+    margin: 0 20px 1px 0;
+}
+#profileLayoutTable span.profileLayoutContainerStatusBar span.mceStatusbar {
+    padding : 0 3px 0 0;
 }
 #profileLayoutTable span.profileLayoutContainerStatusBar span.mceStatusbar > span {
     padding: 0 2px;
@@ -69,6 +68,7 @@ html {
 #profileLayoutTable span.profileLayoutContainerStatusBar a.mceResize {
     cursor: default;
     float: right;
+    margin: 0 -3px 0 0;
 }
 #jce span.widthMarker {
     border: 1px dashed #999;
