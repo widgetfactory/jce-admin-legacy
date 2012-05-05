@@ -96,7 +96,7 @@ class WFInstallerPlugin extends JObject {
 
         // JCE Plugin
         if (!empty($plugin)) {
-            if (version_compare(WFXMLHelper::getAttribute($manifest, 'version'), '2.0.0', '<')) {
+            if (version_compare($this->version, '2.0.0', '<')) {
                 $this->parent->abort(WFText::_('WF_INSTALLER_INCORRECT_VERSION'));
                 return false;
             }
