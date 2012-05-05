@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright � 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -15,7 +15,7 @@ jimport('joomla.application.component.model');
 
 class WFModel extends JModel {
 
-    function authorize($task) {
+    public function authorize($task) {
         $user = JFactory::getUser();
 
         // Joomla! 1.7+
@@ -51,7 +51,7 @@ class WFModel extends JModel {
      * Get the current version
      * @return Version
      */
-    function getVersion() {
+    public function getVersion() {
         // Get Component xml
         $xml = JApplicationHelper::parseXMLInstallFile(WF_ADMINISTRATOR . DS . 'jce.xml');
 
@@ -63,7 +63,7 @@ class WFModel extends JModel {
         return $version;
     }
 
-    function getStyles() {
+    public function getStyles() {
         $view = JRequest::getCmd('view');
 
         $params = JComponentHelper::getParams('com_jce');
@@ -93,7 +93,7 @@ class WFModel extends JModel {
         return $styles;
     }
 
-    function loadStyles() {
+    public function loadStyles() {
         $styles = $this->getStyles();
 
         foreach ($styles as $style) {
@@ -115,7 +115,7 @@ class WFModel extends JModel {
         return 'mceButton';
     }
 
-    function getIcon($plugin) {
+    public function getIcon($plugin) {
         if ($plugin->type == 'command') {
             $base = 'components/com_jce/editor/tiny_mce/themes/advanced/img/';
         } else {
@@ -128,7 +128,7 @@ class WFModel extends JModel {
 
         foreach ($icons as $icon) {
             if ($icon == '|' || $icon == 'spacer') {
-                $span .= '<span class="mceSeparator">|</span>';
+                $span .= '<span class="mceSeparator"></span>';
             } else {
                 $path = $base . '/' . $icon . '.png';
 
