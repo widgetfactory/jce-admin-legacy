@@ -35,7 +35,7 @@ defined('_JEXEC') or die('RESTRICTED');
 				</ul>
 				<?php echo $this->loadTemplate('editor');?>
 			</div>
-			<div id="tabs-plugins" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
+			<div id="tabs-plugins" class="defaultSkin ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
 				<ul>
 				<?php
 				// Build tabs
