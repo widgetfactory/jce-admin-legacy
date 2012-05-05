@@ -1,6 +1,6 @@
 /**
  * @package   	JCE
- * @copyright 	Copyright � 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -399,7 +399,7 @@
         setPlugins: function() {
             var self = this, plugins = [];
 
-            $('div.sortableRow lspan.plugin', '#toolbar_container').each( function() {
+            $('div.sortableRow span.plugin', '#toolbar_container').each( function() {
                 plugins.push($(this).data('name'));
             });
 
@@ -410,7 +410,7 @@
             // set plugins
             $('input[name="plugins"]').val(plugins.join(','));
 
-            self.setParams(plugins);
+            this.setParams(plugins);
         },
 
         setParams : function(plugins) {
