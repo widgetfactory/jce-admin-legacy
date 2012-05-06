@@ -631,7 +631,7 @@ class WFInstaller extends JObject {
 			$this->removeTable('#__wf_profiles');
 		}
 
-		$this->removeEditor();
+		$this->removePackages();
 	}
 
 	function _legacyCleanup() {
