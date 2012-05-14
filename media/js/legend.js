@@ -1,6 +1,6 @@
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -10,14 +10,23 @@
 (function($) {
     // Create Profiles object
     $.jce.Legend = {
-    	init : function() {
-    		var p = $('span.profileLayoutContainer', parent.window.document.getElementById('profileLayoutTable'));
-    		
-    		$('tr', '#jce').hover(function() {
-    			$('span.mce_' + $(this).attr('title'), p).addClass('focus');
-    		}, function() {
-    			$('span.mce_' + $(this).attr('title'), p).removeClass('focus');
-    		});
-    	}
-	};
+        init : function() {
+            var $p = $('span.profileLayoutContainer', parent.window.document.getElementById('profileLayoutTable'));
+            
+            $('tr', '#jce').hover(function() {
+                $('span[data-name="' + $(this).attr('title') + '"]', $p).addClass('focus');
+            }, function() {
+                $('span[data-name="' + $(this).attr('title') + '"]', $p).removeClass('focus');
+            });
+                
+            if (!$.support.leadingWhitespace) {
+                // fix for CSS3 selectors
+                $('.mceSplitButton .mceIcon').each(function() {                   
+                    $('<span/>').insertAfter(this);
+                });              
+            } else {
+                $('#jce').addClass('multiplebg');
+            }
+        }
+    };
 })(jQuery);

@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');	
 ?>
 <form action="index.php" method="post" name="adminForm">
-	<div id="jce">
+    <div id="jce">
 		<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 			<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
 				<li class="ui-state-default ui-corner-top ui-state-active tooltip" title="<?php echo JText :: _('WF_PROFILES_SETUP'). '::'. JText :: _('WF_PROFILES_SETUP_DESC');?>"><a href="#tabs-setup"><?php echo JText :: _('WF_PROFILES_SETUP');?></a></li>

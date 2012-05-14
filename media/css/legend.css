@@ -1,6 +1,6 @@
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -9,13 +9,7 @@
  */
 
 @import url("../../../../../components/com_jce/editor/tiny_mce/themes/advanced/skins/default/ui.css");
-#jce span.mceIcon, #jce span.mceSeparator {
-	float: left;
-}
-#jce span.mceSeparator {
-	display: block;
-	padding: 1px 0;
-}
+@import url("../../../../../components/com_jce/editor/tiny_mce/themes/advanced/skins/default/ui.admin.css");
 
 #jce span.mceIcon {
 	background-color: #F0F0EE !important;
@@ -25,4 +19,8 @@
 }
 #jce p.title {
 	font-weight: bold;
+}
+
+#jce span.defaultSkin {
+    display: inline-block;
 }

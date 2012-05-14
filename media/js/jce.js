@@ -8,6 +8,7 @@
  * other free or open source software licenses.
  */
 (function($) {
+
     $.jce = {
 
         options : {},
@@ -40,16 +41,31 @@
 
             // IE
             if (!$.support.cssFloat) {
+                $('#jce').addClass('ie'); 
                 // IE6
                 if (!window.XMLHttpRequest) {
+                    $('#jce').addClass('ie6');
+                    
                     $('input:text').addClass('ie_input_text');
 
                     $('ul.adminformlist > li, dl.adminformlist > dd').addClass('ie_adminformlist');
                     $('ul.adminformlist > li > label:first-child, ul.adminformlist > li > span:first-child, dl.adminformlist > dd > label:first-child, dl.adminformlist > dd > span:first-child').addClass('ie_adminformlist_child');
+                } else {
+                    if (!document.querySelector) {
+                        $('#jce').addClass('ie7');
+                    }
                 }
                 // IE6 / IE7
                 if (!document.querySelector) {
                     $('button').addClass('ie_button');
+                } else {
+                    // IE8
+                    if (!$.support.leadingWhitespace) {
+                        $('#jce').addClass('ie8');
+                    // IE9
+                    } else {
+                        $('#jce').addClass('ie9');
+                    }
                 }
             }
 

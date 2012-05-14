@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -34,7 +34,7 @@ defined('_JEXEC') or die('RESTRICTED');
 					
 						$icon = $this->model->getIcon($plugin);
 					?>
-					<tr title="<?php echo $plugin->icon;?>">
+					<tr title="<?php echo $plugin->name;?>">
 						<td width="50%"><p class="title"><?php echo WFText::_($plugin->title);?></p><p class="description"><?php echo WFText::_($plugin->description, '');?></p></td>
 						<td width="50%"><span class="defaultSkin" title="<?php echo WFText::_($plugin->title);?>"><?php echo $icon;?></span></td>
 					</tr>

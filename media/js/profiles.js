@@ -43,15 +43,6 @@
             var self = this;
             
             $.extend(true, this.options, options);
-            
-            if ($.browser.msie) {
-                $('#jce').addClass('ie');
-            }
-
-            // ie7 flag
-            if (!$.support.cssFloat && !!window.XMLHttpRequest && !document.querySelector) {
-                $('#jce').addClass('ie7');
-            }
 
             // Tabs
             $('#tabs').tabs();
@@ -219,8 +210,11 @@
             
             // Toolbar Alignment
             $('#paramseditortoolbar_align').change( function() {
+                
                 var v = $(this).val();
-                $('ul.sortableList', '#toolbar_container').removeClass('mceLeft mceCenter mceRight').addClass('mce' + v.charAt(0).toUpperCase() + v.substring(1));
+                $('ul.sortableList', '#toolbar_container').removeClass('mceLeft mceCenter mceRight').addClass('mce' + v.charAt(0).toUpperCase() + v.substring(1));    
+                
+                self._fixLayout();
             }).change();
             
             // Editor Path
@@ -232,9 +226,7 @@
             $('ul#profileAdditionalFeatures input:checkbox').click( function() {
                 self.setPlugins();
             });
-            
-            this._fixLayout();
-            
+
             // toolbar position
             $('#paramseditortoolbar_location').change(function() {
                 var $after = $('#editor_container');
@@ -313,11 +305,8 @@
             $('span.mceButton, span.mceSplitButton').removeClass('mceStart mceEnd');
             
             // fix for buttons before or after lists
-            $('span.mceListBox').parent('span.sortableRowItem').prev('span.sortableRowItem').children('span.mceButton, span.mceSplitButton').addClass('mceEnd');
-            $('span.mceListBox').parent('span.sortableRowItem').next('span.sortableRowItem').children('span.mceButton, span.mceSplitButton').addClass('mceStart');
-            
-            //$('span.mceListBox').parent('span.sortableRowItem').prev('span.sortableRowItem').children('span.mceSplitButton').addClass('mceEnd');
-            //$('span.mceListBox').parent('span.sortableRowItem').next('span.sortableRowItem').children('span.mceSplitButton').addClass('mceStart');
+            $('span.mceListBox').parent('span.sortableRowItem').prev('span.sortableRowItem').children('span.mceButton:last, span.mceSplitButton:last').addClass('mceEnd');
+            $('span.mceListBox').parent('span.sortableRowItem').next('span.sortableRowItem').children('span.mceButton:first, span.mceSplitButton:first').addClass('mceStart');
         },
 
         createLayout : function() {
@@ -327,25 +316,20 @@
             $("ul.sortableList").sortable({
                 connectWith	: 'ul.sortableList',
                 axis		: 'y',
-                handle		: 'span.sortableRowHandle',
-                //items 		: 'span.sortableRowContainer',
                 update		: function(event, ui) {
                     self.setRows();
                     self.setPlugins();
                 },
-                start : function(event, ui) {
-                //$(ui.placeholder).width('100%');
-                },
                 placeholder	: 'sortableListItem ui-state-highlight'
             }).disableSelection();
             
-            $('span.sortableOption', 'span.sortableLayout').hover(function() {
+            $('span.sortableOption').hover(function() {
                 $(this).append('<span role="button"/>');
             }, function() {
                 $(this).empty();
             }).click(function() {
                 var $parent = $(this).parent();
-                var $target = $('span.sortableLayout', '#profileLayoutTable').not($parent.parent());
+                var $target = $('ul.sortableList', '#profileLayoutTable').not($parent.parent());
                 $parent.hide().appendTo($target).show('slow');
             	
                 $(this).empty();
@@ -366,9 +350,20 @@
                 start : function(event, ui) {
                     $(ui.placeholder).width($(ui.item).width());
                 },
-                forcePlaceholderSize : true,
                 placeholder	: 'sortableRowItem ui-state-highlight'
             }).disableSelection();
+            
+            if (!$.support.leadingWhitespace) {
+                // fix for CSS3 selectors
+                
+                $('.mceSplitButton .mceIcon').not('.mceIconLayer').each(function() {                   
+                    $('<span/>').insertAfter(this);
+                });              
+            } else {
+                $('#jce').addClass('multiplebg');
+            }
+            
+            this._fixLayout();
         },
 
         setRows : function() {
