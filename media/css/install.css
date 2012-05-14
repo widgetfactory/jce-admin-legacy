@@ -1,0 +1,17 @@
+#jce ul.install {
+    margin : 0;
+    padding : 0;
+    list-style: none;
+}
+#jce ul.install p:first-child {
+    margin-top : 0;
+}
+#jce ul.install li.success {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAA/ElEQVR42r2WSw3EMAxEy6AQAqEQAqUQCmEhBMJCWCiBUAiBkPXBUqWx00kurvQuXcVvM3U+W+99CnmSkIE0O36meBFuoXvob4VJR4JdB/dFirBTkUoOoa4IgCocVmQl7SWeDIxibSjDuKoz4JpolEtozsx2T1TIv7LwNMoj0u6alqzLkorsbEhcGPdPOCFGmJWK4IPeXGK/KchMPS+2siIBDi8hdWwZXman6EUlT5e5NX2RX/Q7I1kSkXU1loxF55soYWEmITOyzYDrYkUyagbS3iDjErceXbAoIxKyYMkWBLKPlfAtKGRTDTsmQg6+kKM8+nISf90Ku0D+AZuTX+E9pD0pAAAAAElFTkSuQmCC);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    padding : 6px 30px;
+    color : black;
+    font-weight: normal;
+    min-height : 30px;
+}
