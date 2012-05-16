@@ -695,8 +695,12 @@ class WFModelEditor extends JModel {
                 $fonts[] = $font;
             } 
         }
+        
+        if (!empty($fonts)) {
+            return "/* @font-face and Google Font rules for JCE */" . "\n" . str_replace("\n\n", "\n", implode("\n", $fonts));
+        }
 
-        return "/* @font-face and Google Font rules for JCE */" . "\n" . str_replace("\n\n", "\n", implode("\n", $fonts));
+        return '';
     }
 
     function getURL($relative = false) {
