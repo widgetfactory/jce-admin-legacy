@@ -1,6 +1,6 @@
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -299,6 +299,11 @@
                                 t.updates = {};
 
                                 $('button#update-button').button('enable');
+                                
+                                // close
+                                window.setTimeout(function(){
+                                    window.parent.document.location.href="index.php?option=com_jce&view=cpanel";
+                                }, 1000);
                             }
 
                         }, 'json');
