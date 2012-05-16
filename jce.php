@@ -57,14 +57,12 @@ switch ($view) {
 		break;
 	default:
 		if ($view == 'cpanel') {
-			$view = 'manage';
+                    $view = 'manage';
 		}
 		// Authorise
 		$controller->authorize($view);
-		
-		$installer = WFInstaller::getInstance();
-		$installer->check();
-	
+                // check state of extension
+                $controller->check();
 		break;	
 }
 
