@@ -181,122 +181,7 @@ class WFInstall {
 
         // add tables path
         JTable::addIncludePath($admin . DS . 'tables');
-
-        // cleanup javascript and css files moved to site
-        if (version_compare($version, '2.0.10', '<')) {
-            $path = $admin . DS . 'media';
-
-            $scripts = array('colorpicker.js', 'help.js', 'html5.js', 'select.js', 'tips.js');
-
-            foreach ($scripts as $script) {
-                if (is_file($path . DS . 'js' . DS . $script)) {
-                    @JFile::delete($path . DS . 'js' . DS . $script);
-                }
-            }
-
-            if (is_dir($path . DS . 'js' . DS . 'jquery')) {
-                @JFolder::delete($path . DS . 'js' . DS . 'jquery');
-            }
-
-            $styles = array('help.css', 'select.css', 'tips.css');
-
-            foreach ($styles as $style) {
-                if (is_file($path . DS . 'css' . DS . $style)) {
-                    @JFile::delete($path . DS . 'css' . DS . $style);
-                }
-            }
-
-            // delete jquery
-            if (is_dir($path . DS . 'css' . DS . 'jquery')) {
-                @JFolder::delete($path . DS . 'css' . DS . 'jquery');
-            }
-
-            // remove popup controller
-            if (is_dir($site . DS . 'controller')) {
-                @JFolder::delete($site . DS . 'controller');
-            }
-        }
-
-        // delete error.php file
-        if (version_compare($version, '2.0.12', '<')) {
-            if (is_file($site . DS . 'editor' . DS . 'libraries' . DS . 'classes' . DS . 'error.php')) {
-                @JFile::delete($site . DS . 'editor' . DS . 'libraries' . DS . 'classes' . DS . 'error.php');
-            }
-        }
-
-        // remove old jQuery and jQuery UI versions
-        if (version_compare($version, '2.0.20', '<')) {
-            $path = $site . DS . 'editor' . DS . 'libraries' . DS . 'js' . DS . 'jquery';
-            $files = array('jquery-1.7.1.min.js', 'jquery-ui-1.8.17.custom.min.js', 'jquery-ui-layout.js');
-
-            foreach ($files as $file) {
-                if (is_file($path . DS . $file)) {
-                    @JFile::delete($path . DS . $file);
-                }
-            }
-        }
-
-        if (version_compare($version, '2.1', '<')) {
-            if (is_dir($admin . DS . 'plugin')) {
-                @JFolder::delete($admin . DS . 'plugin');
-            }
-
-            // Add Visualblocks plugin
-            $query = 'SELECT id FROM #__wf_profiles';
-            $db->setQuery($query);
-            $profiles = $db->loadObjectList();
-
-            $profile = JTable::getInstance('Profiles', 'WFTable');
-
-            if (!empty($profiles)) {
-                foreach ($profiles as $item) {
-                    $profile->load($item->id);
-                    
-                    if (strpos($profile->rows, 'visualblocks') === false) {
-                        $profile->rows = str_replace('visualchars', 'visualchars,visualblocks', $profile->rows);
-                    }
-                    if (strpos($profile->plugins, 'visualblocks') === false) {
-                        $profile->plugins = str_replace('visualchars', 'visualchars,visualblocks', $profile->plugins);
-                    }
-
-                    $profile->store();
-                }
-            }
-        }
-
-        if (version_compare($version, '2.1.1', '<')) {
-            @JFile::delete($admin . DS . 'classes' . DS . 'installer.php');
-            
-            // Add Visualblocks plugin
-            $query = 'SELECT id FROM #__wf_profiles';
-            $db->setQuery($query);
-            $profiles = $db->loadObjectList();
-
-            $profile = JTable::getInstance('Profiles', 'WFTable');
-
-            if (!empty($profiles)) {
-                foreach ($profiles as $item) {
-                    $profile->load($item->id);
-                    
-                    // add anchor to end of plugins list
-                    if (strpos($profile->plugins, 'anchor') === false && strpos($profile->rows, 'anchor') !== false) {
-                        $profile->rows = $profile->rows . 'anchor';
-                    }
-
-                    $profile->store();
-                }
-            }
-            
-            // delete old anchor stuff
-            $theme = $site . DS . 'editor' . DS . 'tiny_mce' . DS . 'themes' . DS . 'advanced';
-            
-            foreach(array('css/anchor.css', 'js/anchor.js', 'tmpl/anchor.php', 'skins/default/img/items.gif') as $item) {
-                if (JFile::exists($theme . DS . $item)) {
-                    @JFile::delete($theme . DS . $item);
-                }
-            }
-        }
-
+        
         // upgrade from 1.5.x to 2.0.0 (only in Joomla! 1.5)
         if (version_compare($version, '2.0.0', '<') && !defined('JPATH_PLATFORM')) {
             // check for groups table / data
@@ -357,7 +242,8 @@ class WFInstall {
                         // re-assign rows
                         $row->rows = implode(';', $rows);
 
-                        $names = array();
+                        $names = array('anchor');
+                        
                         // transfer plugin ids to names
                         foreach (explode(',', $group->plugins) as $id) {
                             if (isset($plugins[$id])) {
@@ -551,7 +437,124 @@ class WFInstall {
                 $files = JFolder::files($folder, '^' . basename($folder) . '\.com_jce([_a-z0-9]+)?\.(ini|xml)$', false, true);
                 @JFile::delete($files);
             }
+            
+            return true;
         }// end JCE 1.5 upgrade
+
+        // cleanup javascript and css files moved to site
+        if (version_compare($version, '2.0.10', '<')) {
+            $path = $admin . DS . 'media';
+
+            $scripts = array('colorpicker.js', 'help.js', 'html5.js', 'select.js', 'tips.js');
+
+            foreach ($scripts as $script) {
+                if (is_file($path . DS . 'js' . DS . $script)) {
+                    @JFile::delete($path . DS . 'js' . DS . $script);
+                }
+            }
+
+            if (is_dir($path . DS . 'js' . DS . 'jquery')) {
+                @JFolder::delete($path . DS . 'js' . DS . 'jquery');
+            }
+
+            $styles = array('help.css', 'select.css', 'tips.css');
+
+            foreach ($styles as $style) {
+                if (is_file($path . DS . 'css' . DS . $style)) {
+                    @JFile::delete($path . DS . 'css' . DS . $style);
+                }
+            }
+
+            // delete jquery
+            if (is_dir($path . DS . 'css' . DS . 'jquery')) {
+                @JFolder::delete($path . DS . 'css' . DS . 'jquery');
+            }
+
+            // remove popup controller
+            if (is_dir($site . DS . 'controller')) {
+                @JFolder::delete($site . DS . 'controller');
+            }
+        }
+
+        // delete error.php file
+        if (version_compare($version, '2.0.12', '<')) {
+            if (is_file($site . DS . 'editor' . DS . 'libraries' . DS . 'classes' . DS . 'error.php')) {
+                @JFile::delete($site . DS . 'editor' . DS . 'libraries' . DS . 'classes' . DS . 'error.php');
+            }
+        }
+
+        // remove old jQuery and jQuery UI versions
+        if (version_compare($version, '2.0.20', '<')) {
+            $path = $site . DS . 'editor' . DS . 'libraries' . DS . 'js' . DS . 'jquery';
+            $files = array('jquery-1.7.1.min.js', 'jquery-ui-1.8.17.custom.min.js', 'jquery-ui-layout.js');
+
+            foreach ($files as $file) {
+                if (is_file($path . DS . $file)) {
+                    @JFile::delete($path . DS . $file);
+                }
+            }
+        }
+
+        if (version_compare($version, '2.1', '<')) {
+            if (is_dir($admin . DS . 'plugin')) {
+                @JFolder::delete($admin . DS . 'plugin');
+            }
+
+            // Add Visualblocks plugin
+            $query = 'SELECT id FROM #__wf_profiles';
+            $db->setQuery($query);
+            $profiles = $db->loadObjectList();
+
+            $profile = JTable::getInstance('Profiles', 'WFTable');
+
+            if (!empty($profiles)) {
+                foreach ($profiles as $item) {
+                    $profile->load($item->id);
+                    
+                    if (strpos($profile->rows, 'visualblocks') === false) {
+                        $profile->rows = str_replace('visualchars', 'visualchars,visualblocks', $profile->rows);
+                    }
+                    if (strpos($profile->plugins, 'visualblocks') === false) {
+                        $profile->plugins = str_replace('visualchars', 'visualchars,visualblocks', $profile->plugins);
+                    }
+
+                    $profile->store();
+                }
+            }
+        }
+
+        if (version_compare($version, '2.1.1', '<')) {
+            @JFile::delete($admin . DS . 'classes' . DS . 'installer.php');
+            
+            // Add Visualblocks plugin
+            $query = 'SELECT id FROM #__wf_profiles';
+            $db->setQuery($query);
+            $profiles = $db->loadObjectList();
+
+            $profile = JTable::getInstance('Profiles', 'WFTable');
+
+            if (!empty($profiles)) {
+                foreach ($profiles as $item) {
+                    $profile->load($item->id);
+                    
+                    // add anchor to end of plugins list
+                    if (strpos($profile->rows, 'anchor') !== false) {
+                        $profile->plugins .= ',anchor';
+                    }
+
+                    $profile->store();
+                }
+            }
+            
+            // delete old anchor stuff
+            $theme = $site . DS . 'editor' . DS . 'tiny_mce' . DS . 'themes' . DS . 'advanced';
+            
+            foreach(array('css/anchor.css', 'js/anchor.js', 'tmpl/anchor.php', 'skins/default/img/items.gif') as $item) {
+                if (JFile::exists($theme . DS . $item)) {
+                    @JFile::delete($theme . DS . $item);
+                }
+            }
+        }
 
         return true;
     }
