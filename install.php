@@ -266,6 +266,35 @@ class WFInstall {
 
         if (version_compare($version, '2.1.1', '<')) {
             @JFile::delete($admin . DS . 'classes' . DS . 'installer.php');
+            
+            // Add Visualblocks plugin
+            $query = 'SELECT id FROM #__wf_profiles';
+            $db->setQuery($query);
+            $profiles = $db->loadObjectList();
+
+            $profile = JTable::getInstance('Profiles', 'WFTable');
+
+            if (!empty($profiles)) {
+                foreach ($profiles as $item) {
+                    $profile->load($item->id);
+                    
+                    // add anchor to end of plugins list
+                    if (strpos($profile->plugins, 'anchor') === false && strpos($profile->rows, 'anchor') !== false) {
+                        $profile->rows = $profile->rows . 'anchor';
+                    }
+
+                    $profile->store();
+                }
+            }
+            
+            // delete old anchor stuff
+            $theme = $site . DS . 'editor' . DS . 'tiny_mce' . DS . 'themes' . DS . 'advanced';
+            
+            foreach(array('css/anchor.css', 'js/anchor.js', 'tmpl/anchor.php', 'skins/default/img/items.gif') as $item) {
+                if (JFile::exists($theme . DS . $item)) {
+                    @JFile::delete($theme . DS . $item);
+                }
+            }
         }
 
         // upgrade from 1.5.x to 2.0.0 (only in Joomla! 1.5)

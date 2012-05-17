@@ -217,7 +217,7 @@
 		<row>2</row>
 		<editable>0</editable>
 	</command>
-	<command>
+	<!--command>
 		<title>WF_ANCHOR_TITLE</title>
 		<description>WF_ANCHOR_DESC</description>
 		<name>anchor</name>
@@ -225,7 +225,7 @@
 		<icon>anchor</icon>
 		<row>4</row>
 		<editable>0</editable>
-	</command>
+	</command-->
 	<!--command name="cleanup">
 	<title>WF_CLEANUP_TITLE</title>
 	<description>WF_CLEANUP_DESC</description>
