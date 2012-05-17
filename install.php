@@ -42,6 +42,13 @@ function com_uninstall() {
 class WFInstall {
 
     public static function install($installer) {
+        
+        // check PHP version
+        if (version_compare(PHP_VERSION, '5.2.10', '<')) {            
+            $installer->abort('JCE requires PHP 5.2.1 or later. Your server currently uses ' . PHP_VERSION);
+            return false;
+        }
+        
         require_once($installer->getPath('extension_administrator') . DS . 'includes' . DS . 'base.php');
         
         $manifest = $installer->get('manifest');
@@ -111,7 +118,7 @@ class WFInstall {
 
             $message .= '<h2>' . JText::_('WF_ADMIN_TITLE') . ' ' . $new_version . '</h2>';
             $message .= '<ul class="install">';
-            $message .= '<li class="success">' . JText::_($installer->message, $installer->message) . '<li>';
+            $message .= '<li class="success">' . JText::_('WF_ADMIN_DESC') . '<li>';
 
             // install packages (editor plugin, quickicon etc)
             $packages = dirname(__FILE__) . DS . 'packages';
@@ -130,6 +137,8 @@ class WFInstall {
             self::addIndexfiles();
         } else {
             $installer->abort();
+            
+            return false;
         }
     }
 
