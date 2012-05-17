@@ -417,9 +417,9 @@ class WFInstall {
                 }
             }
 
-            $folders = JFolder::folders(JPATH_ADMINISTRATOR . DS . 'language', '.', false, true, array('.svn', 'CVS', 'en-GB'));
-
             // remove old admin language files
+            $folders = JFolder::folders(JPATH_ADMINISTRATOR . DS . 'language', '.', false, true, array('.svn', 'CVS', 'en-GB'));
+            
             foreach ($folders as $folder) {
                 $name = basename($folder);
                 $files = array($name . '.com_jce.ini', $name . '.com_jce.menu.ini', $name . '.com_jce.xml');
@@ -429,15 +429,59 @@ class WFInstall {
                     }
                 }
             }
-
+            
+            // remove old site language files
             $folders = JFolder::folders(JPATH_SITE . DS . 'language', '.', false, true, array('.svn', 'CVS', 'en-GB'));
 
-            // remove old site language files
             foreach ($folders as $folder) {
                 $files = JFolder::files($folder, '^' . basename($folder) . '\.com_jce([_a-z0-9]+)?\.(ini|xml)$', false, true);
                 @JFile::delete($files);
             }
             
+            // remove legacy admin folders
+            $folders = array('cpanel', 'config', 'css', 'groups', 'plugins', 'img', 'installer', 'js');
+            foreach ($folders as $folder) {
+                if (is_dir($admin . DS . $folder)) {
+                    @JFolder::delete($admin . DS . $folder);
+                }
+            }
+            
+            // remove legacy admin files
+            $files = array('editor.php', 'helper.php', 'updater.php');
+            
+            foreach ($files as $file) {
+                if (is_file($admin . DS . $file)) {
+                    @JFile::delete($admin . DS . $file);
+                }
+            }
+            
+            // remove legacy admin folders
+            $folders = array('controller', 'css', 'js');
+            foreach ($folders as $folder) {
+                if (is_dir($site . DS . $folder)) {
+                    @JFolder::delete($site . DS . $folder);
+                }
+            }
+            
+            // remove legacy admin files
+            $files = array('popup.php');
+            
+            foreach ($files as $file) {
+                if (is_file($site . DS . $file)) {
+                    @JFile::delete($site . DS . $file);
+                }
+            }
+            
+            
+            if (!defined('JPATH_PLATFORM')) {
+                // remove old plugin folder
+                $path = JPATH_PLUGINS . DS . 'editors';
+
+                if (is_dir($path . DS . 'jce')) {
+                    @JFolder::delete($path . DS . 'jce');
+                }
+            }
+
             return true;
         }// end JCE 1.5 upgrade
 
@@ -554,6 +598,11 @@ class WFInstall {
                     @JFile::delete($theme . DS . $item);
                 }
             }
+            
+            // delete popup.php
+            if (is_file($site . DS . 'popup.php')) {
+                @JFile::delete($site . DS . 'popup.php');
+            } 
         }
 
         return true;
@@ -783,12 +832,6 @@ class WFInstall {
     }
 
     private static function legacyCleanup() {
-        $path = JPATH_PLUGINS . DS . 'editors';
-
-        if (is_dir($path . DS . 'jce')) {
-            @JFolder::delete($path . DS . 'jce');
-        }
-
         $db = JFactory::getDBO();
 
         // Drop tables
