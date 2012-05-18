@@ -44,7 +44,7 @@ class WFInstall {
     public static function install($installer) {
         
         // check PHP version
-        if (version_compare(PHP_VERSION, '5.2.10', '<')) {            
+        if (version_compare(PHP_VERSION, '5.2.1', '<')) {            
             $installer->abort('JCE requires PHP 5.2.1 or later. Your server currently uses ' . PHP_VERSION);
             return false;
         }
