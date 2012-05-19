@@ -106,8 +106,8 @@ class WFInstall {
 
         if ($state) {
             $language = JFactory::getLanguage();
-            $language->load('com_jce', JPATH_ADMINISTRATOR);
-            $language->load('com_jce.sys', JPATH_ADMINISTRATOR);
+            $language->load('com_jce', JPATH_ADMINISTRATOR, null, true);
+            $language->load('com_jce.sys', JPATH_ADMINISTRATOR, null, true);
 
             // legacy (JCE 1.5) cleanup
             if (!defined('JPATH_PLATFORM')) {
