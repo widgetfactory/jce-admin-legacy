@@ -35,7 +35,7 @@ class com_jceInstallerScript {
         return $this->install($parent);
     }
 
-    /*function preflight($type, $parent) {
+    function preflight($type, $parent) {
         $db = JFactory::getDBO();
         
         // remove admin menu emtries
@@ -43,21 +43,12 @@ class com_jceInstallerScript {
         $db->setQuery('DELETE FROM #__menu WHERE alias = "jce" AND menutype = "main"');
         
         $db = JFactory::getDBO();
-        $db->setQuery('DELETE FROM #__menu WHERE alias = "wf-menu-cpanel" AND menutype = "main"');
-        
-        $db = JFactory::getDBO();
-        $db->setQuery('DELETE FROM #__menu WHERE alias = "wf-menu-config" AND menutype = "main"');
-        
-        $db = JFactory::getDBO();
-        $db->setQuery('DELETE FROM #__menu WHERE alias = "wf-menu-profiles" AND menutype = "main"');
-        
-        $db = JFactory::getDBO();
-        $db->setQuery('DELETE FROM #__menu WHERE alias = "wf-menu-install" AND menutype = "main"');
+        $db->setQuery('DELETE FROM #__menu WHERE alias LIKE "wf-menu-%" AND menutype = "main"');
         
         $db->query();
         $db->setQuery('DELETE FROM #__assets WHERE title = "com_jce"');
         $db->query();
-    }*/
+    }
 }
 
 ?>
