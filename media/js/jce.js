@@ -85,6 +85,9 @@
 
             // Table striping
             $('div#jce tbody tr:odd').addClass('odd');
+            
+            // set dependant parameters
+            this._setDependants();
 
             // HTML5 style form elements
             this._formWidgets();
@@ -92,7 +95,7 @@
 
         createDialog : function(o) {
             var self = this;
-        	function _fixDialog(el, settings) {
+            function _fixDialog(el, settings) {
                 // opera bug?
                 if (parseFloat(el.style.height) == 0) {
                     var h = settings.height;
@@ -194,13 +197,13 @@
                     dialogClass	: 'ui-jce',
                     buttons : {
                         '$ok' : function() {
-                        	if (src) {
-                        		if (/function\([^\)]*\)\{/.test(src)) {
-	                                $.globalEval(src);
-	                            } else {
-	                                document.location.href = src;
-	                            }	
-                        	}
+                            if (src) {
+                                if (/function\([^\)]*\)\{/.test(src)) {
+                                    $.globalEval(src);
+                                } else {
+                                    document.location.href = src;
+                                }	
+                            }
                             $(this).dialog("close");
                         }
                     },
@@ -221,30 +224,30 @@
                     },
                     
                     close : function() {
-                    	 $(this).dialog('destroy');
+                        $(this).dialog('destroy');
                     }
 
                 });
                 
                 if (o.type == 'confirm') {
-                	$.extend(settings.buttons, {
-                		'$cancel' : function() {
+                    $.extend(settings.buttons, {
+                        '$cancel' : function() {
                             $(this).dialog("close");
                         }
-                	});
+                    });
                 }
             }
             
             // add id if set
             if (data.id) {
-            	$(div).attr('id', data.id);
+                $(div).attr('id', data.id);
             }
 
             $(div).css('overflow', 'hidden').attr('title', title).dialog($.extend(settings, data));
         },
         
         closeDialog : function(el) {
-        	$(el).dialog("close").remove();
+            $(el).dialog("close").remove();
         },
 
         /**
@@ -298,6 +301,28 @@
             $(':input[max]').max();
 
             $(':input[min]').min();
+        },
+        
+        _setDependants : function() {
+            $(':input[data-parent]').each(function() {
+                var el = this, data = $(this).data('parent');
+                
+                // hide the element by default
+                $(this).parent().hide();
+                
+                // get the parent selector and value
+                var s = /([\w]+)\[([\w,]+)\]/.exec(data);
+                
+                if (s) {
+                    var k = s[1], v = s[2].split(',');
+                        
+                    $('#params' + k).change(function() {
+                        
+                        var state = $.inArray(this.value, v) != -1;                        
+                        $(el).parent().toggle(state);
+                    }).change();
+                }
+            });
         }
     };    
 })(jQuery);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
@@ -8,7 +9,6 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('JPATH_BASE') or die('RESTRICTED');
 
 /**
@@ -18,40 +18,45 @@ defined('JPATH_BASE') or die('RESTRICTED');
  * @subpackage		Parameter
  * @since		1.5
  */
+class JElementTextarea extends JElement {
 
-class JElementTextarea extends JElement
-{
-	/**
-	* Element name
-	*
-	* @access	protected
-	* @var		string
-	*/
-	var	$_name = 'Textarea';
+    /**
+     * Element name
+     *
+     * @access	protected
+     * @var		string
+     */
+    var $_name = 'Textarea';
 
-	function fetchElement($name, $value, &$node, $control_name)
-	{
-		$attribs 	= ' ';
-		
-		$attributes = array(
-			'placeholder'	=> ''
-		);
-		
-		foreach ($attributes as $k => $v) {
-			$av = $node->attributes($k);
-			if ($av || $v) {
-				$v = !$av ? $v : $av;
-				$attribs .= ' '.$k.'="'.$v.'"';
-			}
-		}
-		
-		$rows = $node->attributes('rows');
-		$cols = $node->attributes('cols');
-		$class = ( $node->attributes('class') ? 'class="'.$node->attributes('class').'"' : 'class="text_area"' );
-		// convert <br /> tags so they are not visible when editing
-		$value = str_replace('<br />', "\n", $value);
+    function fetchElement($name, $value, &$node, $control_name) {
+        $attribs = ' ';
 
-		return '<textarea name="'.$control_name.'['.$name.']" cols="'.$cols.'" rows="'.$rows.'" '.$class.' id="'.$control_name.$name.'"'.$attribs.'>'.$value.'</textarea>';
-	}
+        $attributes = array(
+            'placeholder' => ''
+        );
+
+        foreach ($attributes as $k => $v) {
+            $av = $node->attributes($k);
+            if ($av || $v) {
+                $v = !$av ? $v : $av;
+                $attribs .= ' ' . $k . '="' . $v . '"';
+            }
+        }
+        
+        // pattern data attribute for editable select input box
+        if ($node->attributes('parent')) {
+            $attribs .= ' data-parent="' . $node->attributes('parent') . '"';
+        }
+
+        $rows = $node->attributes('rows');
+        $cols = $node->attributes('cols');
+        $class = ( $node->attributes('class') ? 'class="' . $node->attributes('class') . '"' : 'class="text_area"' );
+        // convert <br /> tags so they are not visible when editing
+        $value = str_replace('<br />', "\n", $value);
+
+        return '<textarea name="' . $control_name . '[' . $name . ']" cols="' . $cols . '" rows="' . $rows . '" ' . $class . ' id="' . $control_name . $name . '"' . $attribs . '>' . $value . '</textarea>';
+    }
+
 }
+
 ?>
