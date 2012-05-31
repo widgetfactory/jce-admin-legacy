@@ -311,15 +311,29 @@
                 $(this).parent().hide();
                 
                 // get the parent selector and value
-                var s = /([\w]+)\[([\w,]+)\]/.exec(data);
+                var s = /([\w\.]+)\[([\w,]+)\]/.exec(data);
                 
                 if (s) {
-                    var k = s[1], v = s[2].split(',');
-                        
-                    $('#params' + k).change(function() {
-                        
+                    var  k = s[1], v = s[2].split(',');
+ 
+                    // set parent onchange
+                    $('#params' + k.replace(/[^\w]+/g, '')).change(function() {
                         var state = $.inArray(this.value, v) != -1;                        
-                        $(el).parent().toggle(state);
+
+                        if (state) {
+                            $(el).parent().show();
+                        } else {
+                            $(el).parent().hide();
+                        }
+                        
+                        $(el).trigger('visibility:toggle', state);
+                    // set function when element is toggled itself    
+                    }).on('visibility:toggle', function(e, state) {
+                        if (state) {
+                            $(el).parent().show();
+                        } else {
+                            $(el).parent().hide();
+                        }
                     }).change();
                 }
             });
