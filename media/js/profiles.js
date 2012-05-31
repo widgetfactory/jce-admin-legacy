@@ -238,6 +238,7 @@
                 $('#toolbar_container').insertAfter($after);
             }).change();
             
+            // toolbar location
             $('#paramseditorstatusbar_location').change(function() {
                 var v = $(this).val();
                 // show statusbar by default
@@ -260,6 +261,27 @@
 
                 $('#statusbar_container').insertAfter($after);
             }).change();
+            
+            // resizing
+            $('#paramseditorresizing').change(function() {
+                var v = $(this).val();
+                // show statusbar by default
+                $('a.mceResize', '#statusbar_container').toggle(v == 1);
+            }).change();
+            
+            // toggle
+            $('#paramseditortoggle').change(function() {
+                var v = $(this).val();
+                // show statusbar by default
+                $('#editor_toggle').toggle(v == 1);
+            }).change();
+            
+            $('#paramseditortoggle_label').on('change keyup', function() {
+                if (this.value) {
+                   // show statusbar by default
+                    $('#editor_toggle').text(this.value); 
+                }
+            });
         },
         
         validate : function() {
