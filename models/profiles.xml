@@ -43,5 +43,20 @@
             <ordering>2</ordering>
             <params></params>
         </profile>
+        <profile>
+            <name>Blogger</name>
+            <description>Simple Blogging Profile</description>
+            <users></users>
+            <types></types>
+            <components></components>
+            <area>0</area>
+            <rows>bold,italic,strikethrough,bullist,numlist,blockquote,spacer,justifyleft,justifycenter,justifyright,spacer,link,unlink,imgmanager,article,spellchecker,fullscreen,kitchensink;formatselect,underline,justifyfull,forecolor,paste,removeformat,charmap,indent,outdent,undo,redo,help</rows>
+            <plugins>link,imgmanager,article,spellchecker,fullscreen,kitchensink,paste,contextmenu,inlinepopups</plugins>	
+            <published>0</published>
+            <ordering>3</ordering>
+            <params>
+                <param>{"editor":{"toggle":"0"}}</param>
+            </params>
+        </profile>
     </profiles>
 </profiles>
