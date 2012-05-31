@@ -34,7 +34,7 @@ html {
     margin-left: 10px;
 }
 #profileLayoutTable li:first-child span.profileLayoutContainer {
-    margin: 25px 0 0 10px;
+    margin: 35px 0 0 10px;
 }
 #profileLayoutTable span.profileLayoutContainerToolbar, #profileLayoutTable span.profileLayoutContainerEditor, #profileLayoutTable span.profileLayoutContainerStatusBar {
     display: block;
@@ -72,12 +72,20 @@ html {
     float: right;
     margin: 0 -3px 0 0;
 }
+#jce span#editor_toggle {
+    padding : 5px;
+    line-height: 20px;
+    -moz-user-select: none;  
+    -webkit-user-select: none;  
+    -ms-user-select: none; 
+    cursor: default;
+}
 #jce span.widthMarker {
     border: 1px dashed #999;
     border-bottom-width: 0;
     display: block;
     left: 0;
-    padding: 20px 1px 0 2px;
+    padding: 40px 1px 0 2px;
     position: absolute;
     text-align: center;
     top: -24px;
