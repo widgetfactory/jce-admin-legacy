@@ -13,7 +13,7 @@ defined('_JEXEC') or die('RESTRICTED');
 $position = 'mce' . ucfirst($this->profile->layout_params->get('toolbar_align', 'center'));
 
 // width and height
-$width = $this->profile->layout_params->get('editor_width', 600);
+$width  = $this->profile->layout_params->get('editor_width', 600);
 $height = $this->profile->layout_params->get('editor_height', 'auto');
 
 if (is_numeric($width)) {
@@ -48,6 +48,7 @@ if (strpos($theme, '.') === false) {
         <li>
             <label class="tooltip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR') . '::' . WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR'); ?></label>
             <span class="profileLayoutContainer profileLayoutContainerCurrent <?php echo $theme; ?>">
+                <span id="editor_toggle"><?php echo $this->profile->layout_params->get('toggle_label', '[Toggle Editor]');?></span>
                 <span class="widthMarker" style="width:<?php echo $width; ?>;"><span><?php echo $width; ?></span></span>
                 <!-- Toolbar -->
                 <span id="toolbar_container" class="profileLayoutContainerToolbar">
@@ -103,7 +104,7 @@ if (strpos($theme, '.') === false) {
 
                                 foreach ($this->plugins as $plugin) :
                                     if (!in_array($plugin->name, explode(',', implode(',', $this->rows)))) :
-                                        if ($plugin->icon && $plugin->row == $i) :
+                                        if ($plugin->icon && (int)$plugin->row == $i) :
                                             echo '<span class="sortableRowItem ' . $plugin->type . '" data-name="' . $plugin->name . '">' . $this->model->getIcon($plugin) . '</span>';
                                         endif;
                                     endif;
