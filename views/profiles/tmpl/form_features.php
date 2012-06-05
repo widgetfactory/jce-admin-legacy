@@ -16,11 +16,19 @@ $position = 'mce' . ucfirst($this->profile->layout_params->get('toolbar_align', 
 $width  = $this->profile->layout_params->get('editor_width', 600);
 $height = $this->profile->layout_params->get('editor_height', 'auto');
 
-if (is_numeric($width)) {
+if (is_numeric($width) || strpos('%', $width) === false) {
     $width .= 'px';
 }
-if (is_numeric($height)) {
+if (is_numeric($height) || strpos('%', $height) === false) {
     $height .= 'px';
+}
+
+if (strpos('%', $width) !== false) {
+    $height = '600px';
+}
+
+if (strpos('%', $height) !== false) {
+    $height = 'auto';
 }
 
 $theme = $this->profile->layout_params->get('toolbar_theme', 'default');

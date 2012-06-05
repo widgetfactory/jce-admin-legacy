@@ -158,32 +158,32 @@
             });
 
             $('#paramseditorwidth').change( function() {
-                var v = $(this).val() || 600;
+                var v = $(this).val() || 600, s = v + 'px';
                 
                 if (/%/.test(v)) {
-                    return;
+                    s = v, v = 600;
                 } else {
-                    v = parseInt(v);
-
-                    $('span.widthMarker span', '#profileLayoutTable').html(v + 'px');
-                    
-                    $('#editor_container').width(v);
-                    $('span.widthMarker, #statusbar_container span.mceStatusbar').width(v);
+                    v = parseInt(v), s = v + 'px';
                 }
+                
+                $('span.widthMarker span', '#profileLayoutTable').html(s);
+                    
+                $('#editor_container').width(v);
+                $('span.widthMarker, #statusbar_container span.mceStatusbar').width(v);
             });
             
             $('#paramseditorheight').change( function() {
                 var v = $(this).val() || 'auto';
                 
                 if (/%/.test(v)) {
-                    return;
+                    v = 'auto';
                 } else {
                     if ($.type(v) == 'number') {
                         v = parseInt(v);
                     }
-                    
-                    $('span.profileLayoutContainerEditor', '#profileLayoutTable').height(v)
                 }
+                
+                $('span.profileLayoutContainerEditor', '#profileLayoutTable').height(v);
             });
             
             // Toolbar Theme
@@ -278,7 +278,7 @@
             
             $('#paramseditortoggle_label').on('change keyup', function() {
                 if (this.value) {
-                   // show statusbar by default
+                    // show statusbar by default
                     $('#editor_toggle').text(this.value); 
                 }
             });
