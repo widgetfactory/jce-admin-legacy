@@ -604,6 +604,16 @@ class WFInstall {
                 @JFile::delete($site . DS . 'popup.php');
             } 
         }
+        
+        // remove old jQuery and jQuery UI versions
+        if (version_compare($version, '2.2.0', '<')) {
+            $path = $site . DS . 'editor' . DS . 'libraries' . DS . 'js' . DS . 'jquery';
+            $file = 'jquery-ui-1.8.20.custom.min.js';
+            
+            if (is_file($path . DS . $file)) {
+                @JFile::delete($path . DS . $file);
+            }
+        }
 
         return true;
     }
