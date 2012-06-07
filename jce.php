@@ -40,7 +40,7 @@ if (file_exists($controllerPath)) {
 
     $controllerClass = 'WFController'.ucfirst($view);
     $controller = new $controllerClass(array(
-    	'base_path' => dirname(__FILE__)
+    	'base_path' => WF_ADMINISTRATOR
     ));
 // load default controller
 } else {
