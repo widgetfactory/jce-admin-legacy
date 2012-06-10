@@ -138,5 +138,3 @@ class JElementText extends JElement {
     }
 
 }
-
-?>

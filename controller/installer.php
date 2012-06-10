@@ -98,4 +98,3 @@ class WFControllerInstaller extends WFController
         $view->display();
 	}
 }
-?>

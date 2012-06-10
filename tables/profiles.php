@@ -115,4 +115,3 @@ class WFTableProfiles extends JTable
 		parent::__construct('#__wf_profiles', 'id', $db);
 	}
 }
-?>

@@ -332,5 +332,3 @@ class WFModelUpdates extends WFModel {
     }
 
 }
-
-?>

@@ -20,5 +20,3 @@ class WFControllerCpanel extends WFController
         exit(json_encode(array('feeds' => $feeds)));
     }
 }
-
-?>

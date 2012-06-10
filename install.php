@@ -890,5 +890,3 @@ class WFInstall {
     }
 
 }
-
-?>

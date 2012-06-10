@@ -46,4 +46,4 @@ class WFViewUpdates extends JView
         parent::display($tpl);
     }
 }
-?>
+

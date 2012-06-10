@@ -82,4 +82,3 @@ class JElementBrowser extends JElement
 		return $html;
 	}
 }
-?>

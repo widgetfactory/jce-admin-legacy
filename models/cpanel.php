@@ -84,4 +84,3 @@ class WFModelCpanel extends WFModel {
     }
 
 }
-?>

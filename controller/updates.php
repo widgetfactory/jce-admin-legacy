@@ -49,4 +49,3 @@ class WFControllerUpdates extends WFController
 		exit($result);
 	}
 }
-?>

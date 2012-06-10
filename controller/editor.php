@@ -72,4 +72,3 @@ class WFControllerEditor extends JController
 
 	}
 }
-?>

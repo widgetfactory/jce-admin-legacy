@@ -78,4 +78,3 @@ class WFControllerMediabox extends WFController
 		}
 	}
 }
-?>

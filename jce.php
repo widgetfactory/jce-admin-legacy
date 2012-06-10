@@ -69,4 +69,3 @@ switch ($view) {
 // Perform the Request task
 $controller->execute($task);
 $controller->redirect();
-?>

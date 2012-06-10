@@ -899,5 +899,3 @@ class WFModelEditor extends JModel {
     }
 
 }
-
-?>

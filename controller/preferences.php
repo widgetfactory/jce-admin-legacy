@@ -110,4 +110,3 @@ class WFControllerPreferences extends WFController
 		$this->setRedirect('index.php?option=com_jce&view=preferences&tmpl=component&close=' . $close, WFText::_('WF_PREFERENCES_SAVED'));
 	}
 }
-?>

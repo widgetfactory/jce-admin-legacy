@@ -125,4 +125,3 @@ class WFModelHelp extends WFModel {
 	}
 
 }
-?>

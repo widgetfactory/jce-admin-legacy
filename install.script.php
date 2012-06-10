@@ -50,5 +50,3 @@ class com_jceInstallerScript {
         $db->query();
     }
 }
-
-?>

@@ -76,4 +76,3 @@ class WFControllerConfig extends WFController
 		}
 	}
 }
-?>

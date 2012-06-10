@@ -20,4 +20,3 @@ class WFControllerHelp extends WFController
 		parent::__construct($config);
 	}
 }
-?>

@@ -23,4 +23,3 @@ require_once(dirname(__FILE__) . '/model.php');
 class WFModelUsers extends WFModel
 {
 }
-?>

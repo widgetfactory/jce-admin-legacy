@@ -445,4 +445,3 @@ class WFControllerProfiles extends WFController
 		return $data;
 	}
 }
-?>

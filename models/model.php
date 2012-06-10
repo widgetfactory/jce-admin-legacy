@@ -162,5 +162,3 @@ class WFModel extends JModel {
     }
 
 }
-
-?>
