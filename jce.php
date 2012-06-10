@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 // load base classes
-require_once(dirname(__FILE__) . DS . 'includes' . DS . 'base.php');
+require_once(dirname(__FILE__) . '/includes/base.php');
 
 // get the view
 $view = JRequest::getCmd('view', 'cpanel');
@@ -30,10 +30,10 @@ jimport('joomla.application.component.helper');
 jimport('joomla.application.component.controller');
 
 // Require the base controller
-require_once (WF_ADMINISTRATOR . DS . 'controller.php');
+require_once (WF_ADMINISTRATOR . '/controller.php');
 
 // Load controller
-$controllerPath = WF_ADMINISTRATOR . DS . 'controller' . DS . $view . '.php';
+$controllerPath = WF_ADMINISTRATOR . '/controller/' . $view . '.php';
 
 if (file_exists($controllerPath)) {
     require_once ($controllerPath);

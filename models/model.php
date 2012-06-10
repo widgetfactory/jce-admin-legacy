@@ -144,7 +144,7 @@ class WFModel extends JModel {
     }
 
     public function getBrowserLink($element = null, $filter = '') {
-        require_once(JPATH_SITE . DS . 'components' . DS . 'com_jce' . DS . 'editor' . DS . 'libraries' . DS . 'classes' . DS . 'token.php');
+        require_once(JPATH_SITE . '/components/com_jce/editor/libraries/classes/token.php');
 
         $token = WFToken::getToken();
 

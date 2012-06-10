@@ -106,7 +106,7 @@ class WFController extends JController {
                     JHtml::core();
                 }
 
-                require_once(JPATH_ADMINISTRATOR . DS . 'includes' . DS . 'toolbar.php');
+                require_once(JPATH_ADMINISTRATOR . '/includes/toolbar.php');
 
                 JToolBarHelper::title(WFText::_('WF_ADMINISTRATION') . ' &rsaquo;&rsaquo; ' . WFText::_('WF_' . strtoupper($name)), 'logo.png');
 
@@ -157,7 +157,7 @@ class WFController extends JController {
             $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/' . $script . '?version=' . $model->getVersion());
         }
 
-        require_once(dirname(__FILE__) . DS . 'helpers' . DS . 'system.php');
+        require_once(dirname(__FILE__) . '/helpers/system.php');
 
         $app = JFactory::getApplication();
         $app->registerEvent('onAfterRender', 'WFSystemHelper');

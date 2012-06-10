@@ -105,7 +105,7 @@ class WFInstallerPlugin extends JObject {
         } else {
             // Non-JCE plugin type, probably JCE MediaBox or JCE Editor
             if ($type == 'plugin' && ($group == 'system' || $group == 'editors')) {
-                require_once(JPATH_LIBRARIES . DS . 'joomla' . DS . 'installer' . DS . 'adapters' . DS . 'plugin.php');
+                require_once(JPATH_LIBRARIES . '/joomla/installer/adapters/plugin.php');
 
                 $adapter = new JInstallerPlugin($this->parent, $db);
                 $this->parent->setAdapter('plugin', $adapter);
@@ -254,10 +254,10 @@ class WFInstallerPlugin extends JObject {
         $install = $this->get('install.script');
 
         if ($install) {
-            if (file_exists($this->parent->getPath('extension_root') . DS . $install)) {
+            if (file_exists($this->parent->getPath('extension_root') . '/' . $install)) {
                 ob_start();
                 ob_implicit_flush(false);
-                require_once($this->parent->getPath('extension_root') . DS . $install);
+                require_once($this->parent->getPath('extension_root') . '/' . $install);
                 if (function_exists('jce_install')) {
                     if (jce_install() === false) {
                         $this->parent->abort(WFText::_('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_CUSTOM_INSTALL_ERROR'));
@@ -366,10 +366,10 @@ class WFInstallerPlugin extends JObject {
 
             if ($uninstall) {
                 // Element exists, does the file exist?
-                if (is_file($this->parent->getPath('extension_root') . DS . $uninstall)) {
+                if (is_file($this->parent->getPath('extension_root') . '/' . $uninstall)) {
                     ob_start();
                     ob_implicit_flush(false);
-                    require_once($this->parent->getPath('extension_root') . DS . $uninstall);
+                    require_once($this->parent->getPath('extension_root') . '/' . $uninstall);
                     if (function_exists('com_uninstall')) {
                         if (com_uninstall() === false) {
                             JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_CUSTOM_UNINSTALL_ERROR'));

@@ -49,7 +49,7 @@ class WFInstall {
             return false;
         }
         
-        require_once($installer->getPath('extension_administrator') . DS . 'includes' . DS . 'base.php');
+        require_once($installer->getPath('extension_administrator') . '/includes/base.php');
         
         $manifest = $installer->get('manifest');
         
@@ -177,7 +177,7 @@ class WFInstall {
         $admin = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_jce';
         $site = JPATH_SITE . DS . 'components' . DS . 'com_jce';
 
-        require_once($admin . DS . 'helpers' . DS . 'parameter.php');
+        require_once($admin . '/helpers/parameter.php');
 
         // add tables path
         JTable::addIncludePath($admin . DS . 'tables');
@@ -424,7 +424,7 @@ class WFInstall {
                 $name = basename($folder);
                 $files = array($name . '.com_jce.ini', $name . '.com_jce.menu.ini', $name . '.com_jce.xml');
                 foreach ($files as $file) {
-                    if (is_file($folder . DS . $file)) {
+                    if (is_file($folder . '/' . $file)) {
                         @JFile::delete($folder . DS . $file);
                     }
                 }
@@ -441,7 +441,7 @@ class WFInstall {
             // remove legacy admin folders
             $folders = array('cpanel', 'config', 'css', 'groups', 'plugins', 'img', 'installer', 'js');
             foreach ($folders as $folder) {
-                if (is_dir($admin . DS . $folder)) {
+                if (is_dir($admin . '/' . $folder)) {
                     @JFolder::delete($admin . DS . $folder);
                 }
             }
@@ -450,7 +450,7 @@ class WFInstall {
             $files = array('editor.php', 'helper.php', 'updater.php');
             
             foreach ($files as $file) {
-                if (is_file($admin . DS . $file)) {
+                if (is_file($admin . '/' . $file)) {
                     @JFile::delete($admin . DS . $file);
                 }
             }
@@ -458,7 +458,7 @@ class WFInstall {
             // remove legacy admin folders
             $folders = array('controller', 'css', 'js');
             foreach ($folders as $folder) {
-                if (is_dir($site . DS . $folder)) {
+                if (is_dir($site . '/' . $folder)) {
                     @JFolder::delete($site . DS . $folder);
                 }
             }
@@ -467,7 +467,7 @@ class WFInstall {
             $files = array('popup.php');
             
             foreach ($files as $file) {
-                if (is_file($site . DS . $file)) {
+                if (is_file($site . '/' . $file)) {
                     @JFile::delete($site . DS . $file);
                 }
             }
@@ -477,7 +477,7 @@ class WFInstall {
                 // remove old plugin folder
                 $path = JPATH_PLUGINS . DS . 'editors';
 
-                if (is_dir($path . DS . 'jce')) {
+                if (is_dir($path . '/jce')) {
                     @JFolder::delete($path . DS . 'jce');
                 }
             }
@@ -492,37 +492,37 @@ class WFInstall {
             $scripts = array('colorpicker.js', 'help.js', 'html5.js', 'select.js', 'tips.js');
 
             foreach ($scripts as $script) {
-                if (is_file($path . DS . 'js' . DS . $script)) {
+                if (is_file($path . '/js/' . $script)) {
                     @JFile::delete($path . DS . 'js' . DS . $script);
                 }
             }
 
-            if (is_dir($path . DS . 'js' . DS . 'jquery')) {
+            if (is_dir($path . '/js/jquery')) {
                 @JFolder::delete($path . DS . 'js' . DS . 'jquery');
             }
 
             $styles = array('help.css', 'select.css', 'tips.css');
 
             foreach ($styles as $style) {
-                if (is_file($path . DS . 'css' . DS . $style)) {
+                if (is_file($path . '/css/' . $style)) {
                     @JFile::delete($path . DS . 'css' . DS . $style);
                 }
             }
 
             // delete jquery
-            if (is_dir($path . DS . 'css' . DS . 'jquery')) {
+            if (is_dir($path . '/css/jquery')) {
                 @JFolder::delete($path . DS . 'css' . DS . 'jquery');
             }
 
             // remove popup controller
-            if (is_dir($site . DS . 'controller')) {
+            if (is_dir($site . '/controller')) {
                 @JFolder::delete($site . DS . 'controller');
             }
         }
 
         // delete error.php file
         if (version_compare($version, '2.0.12', '<')) {
-            if (is_file($site . DS . 'editor' . DS . 'libraries' . DS . 'classes' . DS . 'error.php')) {
+            if (is_file($site . '/editor/libraries/classes/error.php')) {
                 @JFile::delete($site . DS . 'editor' . DS . 'libraries' . DS . 'classes' . DS . 'error.php');
             }
         }
@@ -533,14 +533,14 @@ class WFInstall {
             $files = array('jquery-1.7.1.min.js', 'jquery-ui-1.8.17.custom.min.js', 'jquery-ui-layout.js');
 
             foreach ($files as $file) {
-                if (is_file($path . DS . $file)) {
+                if (is_file($path . '/' . $file)) {
                     @JFile::delete($path . DS . $file);
                 }
             }
         }
 
         if (version_compare($version, '2.1', '<')) {
-            if (is_dir($admin . DS . 'plugin')) {
+            if (is_dir($admin . '/plugin')) {
                 @JFolder::delete($admin . DS . 'plugin');
             }
 
@@ -600,7 +600,7 @@ class WFInstall {
             }
             
             // delete popup.php
-            if (is_file($site . DS . 'popup.php')) {
+            if (is_file($site . '/popup.php')) {
                 @JFile::delete($site . DS . 'popup.php');
             } 
         }
@@ -610,7 +610,7 @@ class WFInstall {
             $path = $site . DS . 'editor' . DS . 'libraries' . DS . 'js' . DS . 'jquery';
             $file = 'jquery-ui-1.8.20.custom.min.js';
             
-            if (is_file($path . DS . $file)) {
+            if (is_file($path . '/' . $file)) {
                 @JFile::delete($path . DS . $file);
             }
         }

@@ -37,7 +37,7 @@ class WFControllerEditor extends JController
 
 						JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
 
-						require_once(WF_EDITOR_CLASSES . DS . 'editor.php');
+						require_once(WF_EDITOR_CLASSES . '/editor.php');
 
 						$model = JModel::getInstance('editor', 'WFModel');
 						$model->pack();
@@ -46,8 +46,8 @@ class WFControllerEditor extends JController
 				case 'theme':
 					$theme = JRequest::getWord('theme');
 
-					if ($theme && is_dir(WF_EDITOR_THEMES . DS . $theme)) {
-						require_once(WF_EDITOR_THEMES . DS . $theme .DS. 'theme.php');
+					if ($theme && is_dir(WF_EDITOR_THEMES . '/' . $theme)) {
+						require_once(WF_EDITOR_THEMES . '/' . $theme . '/theme.php');
 					} else {
 						JError::raiseError(500, WFText::_('Theme not found!'));
 					}
@@ -55,10 +55,10 @@ class WFControllerEditor extends JController
 					break;
 				case 'plugin':
 					$file = basename(JRequest::getCmd('file', $plugin));
-					$path = WF_EDITOR_PLUGINS . DS . $plugin;
+					$path = WF_EDITOR_PLUGINS . '/' . $plugin;
 
-					if (is_dir($path) && file_exists($path . DS . $file . '.php')) {
-						include_once($path . DS . $file . '.php');
+					if (is_dir($path) && file_exists($path . '/' . $file . '.php')) {
+						include_once($path . '/' . $file . '.php');
 					} else {
 						JError::raiseError(500, WFText::_('File ' . $file . ' not found!'));
 					}

@@ -15,7 +15,7 @@ jimport('joomla.installer.installer');
 jimport('joomla.installer.helper');
 
 // load base model
-require_once(dirname(__FILE__) . DS . 'model.php');
+require_once(dirname(__FILE__) . '/model.php');
 
 class WFModelInstaller extends WFModel
 {
@@ -52,7 +52,7 @@ class WFModelInstaller extends WFModel
         $installer = JInstaller::getInstance();
         
         // Try to load the adapter object
-        require_once(JPATH_COMPONENT . DS . 'adapters' . DS . strtolower($name) . '.php');
+        require_once(JPATH_COMPONENT . '/adapters/' . strtolower($name) . '.php');
         
         $class = 'WFInstaller' . ucfirst($name);
         

@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 // load base model
-require_once(dirname(__FILE__) . DS . 'model.php');
+require_once(dirname(__FILE__) . '/model.php');
 
 /**
  * Profiles Model
@@ -130,7 +130,7 @@ class WFModelProfiles extends WFModel {
         $plugins = $model->getPlugins();
         // only need plugins with xml files
         foreach ($plugins as $plugin => $properties) {
-            if (!is_file(WF_EDITOR_PLUGINS . DS . $plugin . DS . $plugin . '.xml')) {
+            if (!is_file(WF_EDITOR_PLUGINS . '/' . $plugin . '/' . $plugin . '.xml')) {
                 unset($plugins[$plugin]);
             }
         }
@@ -247,7 +247,7 @@ class WFModelProfiles extends WFModel {
             }
             // sqlsrv
         } else {
-            $file = dirname(dirname(__FILE__)) . DS . 'sql' . DS . $driver . '.sql';
+            $file = dirname(dirname(__FILE__)) . '/sql/' . $driver . '.sql';
             $error = null;
 
             if (is_file($file)) {

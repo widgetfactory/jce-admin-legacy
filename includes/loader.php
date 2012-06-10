@@ -39,14 +39,14 @@ abstract class WFLoader {
 
             switch ($key) {
                 case 'editor':
-                    $base = JPATH_SITE . DS . 'components' . DS . 'com_jce' . DS . 'editor';
+                    $base = JPATH_SITE . '/components/com_jce/editor';
                     break;
                 case 'admin':
                     $base = dirname(dirname(__FILE__));
                     break;
             }
 
-            $rs = require_once($base . DS . implode(DS, $parts) . '.php');
+            $rs = require_once($base . '/' . implode(DS, $parts) . '.php');
 
             $paths[$keyPath] = $rs;
         }
