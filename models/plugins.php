@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 // load base model
-require_once (dirname(__FILE__) . DS . 'model.php');
+require_once (dirname(__FILE__) . '/model.php');
 
 class WFModelPlugins extends WFModel {
 

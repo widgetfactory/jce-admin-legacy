@@ -15,7 +15,7 @@ class com_jceInstallerScript {
 
     public function install($parent) {
         if (!class_exists('WFInstall')) {
-            require_once(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_jce' . DS . 'install.php');
+            require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
         }
 
         $installer = method_exists($parent, 'getParent') ? $parent->getParent() : $parent->parent;
@@ -25,7 +25,7 @@ class com_jceInstallerScript {
 
     public function uninstall() {
         if (!class_exists('WFInstall')) {
-            require_once(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_jce' . DS . 'install.php');
+            require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
         }
 
         return WFInstall::uninstall();
@@ -50,5 +50,3 @@ class com_jceInstallerScript {
         $db->query();
     }
 }
-
-?>

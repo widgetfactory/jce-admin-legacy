@@ -43,4 +43,3 @@ class WFEditorHelper extends JPlugin
 		return true;
 	}	
 }
-?>

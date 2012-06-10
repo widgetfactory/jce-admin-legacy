@@ -81,4 +81,3 @@ class WFSystemHelper extends JPlugin
         return true;
     }
 }
-?>

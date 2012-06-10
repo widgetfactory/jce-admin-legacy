@@ -43,5 +43,3 @@ define('WF_EDITOR_LIBRARIES',  WF_EDITOR . DS . 'libraries');
 define('WF_EDITOR_CLASSES',    WF_EDITOR_LIBRARIES . DS . 'classes');
 // JCE Editor Extensions
 define('WF_EDITOR_EXTENSIONS', WF_EDITOR . DS . 'extensions');
-
-?>

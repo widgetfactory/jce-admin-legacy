@@ -58,5 +58,3 @@ class JElementTextarea extends JElement {
     }
 
 }
-
-?>

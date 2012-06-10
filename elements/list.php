@@ -115,4 +115,3 @@ class JElementList extends JElement {
 
 }
 
-?>

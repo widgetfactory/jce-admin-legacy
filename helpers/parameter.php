@@ -25,7 +25,7 @@ abstract class WFParameterHelper
 	
 	public static function getComponentParams($key = '', $path = '')
 	{
-		require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'parameter.php');		
+		require_once(JPATH_COMPONENT_ADMINISTRATOR . '/classes/parameter.php');		
 		$component = JComponentHelper::getComponent('com_jce');
 		
 		return new WFParameter($component->params, $path, $key);

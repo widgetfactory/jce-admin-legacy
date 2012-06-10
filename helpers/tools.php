@@ -142,4 +142,3 @@ abstract class WFToolsHelper {
 		return $options;
 	}
 }
-?>

@@ -21,4 +21,3 @@ abstract class WFErrorHandler {
 
 // suppress E_STRICT warnings
 set_error_handler(array('WFErrorHandler', 'suppressError'), E_ALL | E_STRICT);
-?>

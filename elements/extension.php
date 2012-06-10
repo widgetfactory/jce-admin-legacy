@@ -44,4 +44,3 @@ class JElementExtension extends JElement
 		return '<input type="text" name="'.$control.'" id="'.$control_name.$name.'" value="'.$value.'" '.$class.' data-default="' . $node->attributes('default') . '" />';
 	}
 }
-?>

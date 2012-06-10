@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright Â© 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -15,7 +15,7 @@ jimport('joomla.installer.installer');
 jimport('joomla.installer.helper');
 
 // load base model
-require_once(dirname(__FILE__) . DS . 'model.php');
+require_once(dirname(__FILE__) . '/model.php');
 
 class WFModelInstaller extends WFModel
 {
@@ -52,7 +52,7 @@ class WFModelInstaller extends WFModel
         $installer = JInstaller::getInstance();
         
         // Try to load the adapter object
-        require_once(JPATH_COMPONENT . DS . 'adapters' . DS . strtolower($name) . '.php');
+        require_once(JPATH_COMPONENT . '/adapters/' . strtolower($name) . '.php');
         
         $class = 'WFInstaller' . ucfirst($name);
         
