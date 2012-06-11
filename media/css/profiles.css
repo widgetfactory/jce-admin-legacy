@@ -152,3 +152,44 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-nav li {
 html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
 	margin: 0 13em 0 0;
 }
+
+#jce #tabs-setup ul#user-groups, #jce #tabs-setup ul#components {
+    border: 1px solid #EEEEEE;
+    height: 200px;
+    overflow: auto;
+    padding: 2px 5px;
+    white-space: nowrap;
+    word-wrap: normal;
+    margin : 0;
+    list-style : none;
+}
+
+#jce #tabs-setup ul#user-groups li label, 
+#jce #tabs-setup ul#components li label {
+    margin : 0 5px;
+}
+
+#jce #tabs-setup ul li span.list {
+    width : 300px;
+    display: inline-block;
+}
+
+#jce #users {
+    width : 100%;
+    padding: 2px 5px;
+}
+
+#jce #user-groups-all {
+    margin : 2px 1px;
+}
+#jce #user-groups-all + label {
+    margin : 0 5px;
+}
+
+#jce input[name="area[]"] {
+    margin : 2px;
+}
+
+#jce input[name="area[]"]  + label {
+    margin : 0 5px;
+}

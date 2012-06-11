@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -105,12 +105,12 @@ class WFControllerProfiles extends WFController
 		// get components
 		$components = JRequest::getVar( 'components', array(), 'post', 'array' );
 		// get usertypes
-		$types 		= JRequest::getVar( 'types', array(), 'post', 'array' );
+		$types 		= JRequest::getVar( 'usergroups', array(), 'post', 'array' );
 		// get users
 		$users 		= JRequest::getVar( 'users', array(), 'post', 'array' );
 
 		if (!$row->bind(JRequest::get('post'))) {
-			JError::raiseError(500, $row->getError() );
+			JError::raiseError(500, $row->getError() ); 
 		}
 		
 		$row->types 		= implode(',', $types);

@@ -46,26 +46,14 @@
 
             // Tabs
             $('#tabs').tabs();
-
-            // Buttons
-            $('button#user-group-add').button({
-                icons : {
-                    primary : 'icon-add'
-                }
-            }).click( function(e) {
-                e.preventDefault();
-                $('select#types').children().attr('selected', true);
-                return false;
+            
+            $('#user-groups-all').click(function() {                
+                $('input', '#user-groups').prop('checked', this.checked);
             });
-
-            $('button#user-group-remove').button({
-                icons : {
-                    primary : 'icon-remove'
-                }
-            }).click( function(e) {
-                e.preventDefault();
-                $('select#types').children(':selected').attr('selected', false);
-                return false;
+            
+            // Components select
+            $('input[name="components-select"]').click( function() {
+                $('input[type="checkbox"]', '#components').prop('disabled', (this.value == 'all')).filter(':checked').prop('checked', false);
             });
 
             // users list
@@ -153,9 +141,6 @@
                 });
             });
 
-            $('input[name="components-select"]').click( function() {
-                $('select#components').attr('disabled', (this.value == 'all')).children('option:selected').removeAttr('selected');
-            });
 
             $('#paramseditorwidth').change( function() {
                 var v = $(this).val() || 600, s = v + 'px';
