@@ -299,7 +299,7 @@ class WFModelEditor extends JModel {
         if (is_object($profile)) {
             $plugins = explode(',', $profile->plugins);
 
-            $plugins = array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'code', 'format', 'lists', 'tabfocus', 'wordcount'), $plugins));
+            $plugins = array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'core', 'code', 'format', 'lists', 'tabfocus', 'wordcount'), $plugins));
 
             $compress = $wf->getParam('editor.compress_javascript', 0);
 
