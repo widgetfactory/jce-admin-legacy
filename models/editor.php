@@ -197,7 +197,7 @@ class WFModelEditor extends JModel {
 
         if ($profile) {
             if ($wf->getParam('editor.callback_file')) {
-                $document->addScript(JURI::root(true) . '/' . $callbackFile);
+                $document->addScript(JURI::root(true) . '/' . $wf->getParam('editor.callback_file'));
             }
         }
     }
