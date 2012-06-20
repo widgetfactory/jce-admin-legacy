@@ -105,7 +105,7 @@ if (strpos($theme, '.') === false) {
                                 <?php if ($i == 5) :
                                     for ($x = 1; $x <= 10; $x++) :
                                 ?>
-                                    <span class="sortableRowItem spacer"><span class="mceSeparator">|</span></span>
+                                    <span class="sortableRowItem spacer" data-name="spacer"><span class="mceSeparator">|</span></span>
                                 <?php
                                     endfor;
                                 endif;
