@@ -238,7 +238,7 @@ class WFViewProfiles extends JView {
 
                 //$lists['components'] = JHTML::_('select.genericlist', $options, 'components[]', 'class="inputbox levels" size="10" multiple="multiple"' . $disabled, 'value', 'text', explode(',', $row->components));
 
-                $lists['components'] = '<ul id="components">';
+                $lists['components'] = '<ul id="components" class="checkbox-list">';
                 
                 foreach($options as $option) {
                     $checked = in_array($option->value, explode(',', $row->components)) ? ' checked="checked"' : '';
@@ -315,7 +315,7 @@ class WFViewProfiles extends JView {
                     }
                 }
 
-                $lists['usergroups'] = '<ul id="user-groups">';
+                $lists['usergroups'] = '<ul id="user-groups" class="checkbox-list">';
                 
                 foreach($options as $option) {
                     $checked = in_array($option->value, explode(',', $row->types)) ? ' checked="checked"' : '';

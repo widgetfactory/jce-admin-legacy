@@ -259,7 +259,7 @@ html[dir="rtl"] #jce span.sortableOption {
 }
 #jce a.dialog.legend {
     display: inline-block;
-    margin: 0 0 10px 0;
+    margin: 0 0 10px 8px;
 }
 /* IE7 */
 #jce.ie7 span.sortableHandle {

@@ -47,8 +47,8 @@
             // Tabs
             $('#tabs').tabs();
             
-            $('#user-groups-all').click(function() {                
-                $('input', '#user-groups').prop('checked', this.checked);
+            $('input.checkbox-list-toggle-all').click(function() {                
+                $('input', this.parentNode.parentNode).prop('checked', this.checked);
             });
             
             // Components select
@@ -57,13 +57,13 @@
             });
 
             // users list
-            $('button#users-add').button({
+            $('a#users-add').button({
                 icons : {
                     primary : 'icon-add'
                 }
             });
 
-            $('button#users-remove').button({
+            $('a#users-remove').button({
                 icons : {
                     primary : 'icon-remove'
                 }
@@ -73,7 +73,7 @@
                 return false;
             });
 
-            $('button#layout-legend').button({
+            $('a#layout-legend').button({
                 icons : {
                     primary : 'icon-legend'
                 }
@@ -168,7 +168,7 @@
                     }
                 }
                 
-                $('span.profileLayoutContainerEditor', '#profileLayoutTable').height(v);
+                //$('span.profileLayoutContainerEditor', '#profileLayoutTable').height(v);
             });
             
             // Toolbar Theme

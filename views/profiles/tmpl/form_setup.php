@@ -66,7 +66,7 @@ defined('_JEXEC') or die('RESTRICTED');
 <?php echo WFText::_('WF_PROFILES_GROUPS'); ?>
             </label>
             <span class="list">
-                <div style="margin:2px 5px;"><input id="user-groups-all" type="checkbox" /><label><?php echo WFText::_('WF_PROFILES_TOGGLE_ALL'); ?></label></div>
+                <div style="margin:2px 5px;"><input class="checkbox-list-toggle-all" type="checkbox" /><label><?php echo WFText::_('WF_PROFILES_TOGGLE_ALL'); ?></label></div>
 <?php echo $this->lists['usergroups']; ?>
             </span>
         </li>
@@ -77,10 +77,10 @@ defined('_JEXEC') or die('RESTRICTED');
             <span class="list">
 <?php echo $this->lists['users']; ?>
                 <div style="margin:5px 0 0;">
-                    <a class="dialog users" data-options="{'width':760, 'height':540, 'modal':true}" title="<?php echo WFText::_('WF_PROFILES_USERS_ADD'); ?>" href="index.php?option=com_jce&tmpl=component&view=users">
-                        <button id="users-add"><?php echo WFText::_('WF_PROFILES_USERS_ADD'); ?></button>
+                    <a class="dialog users" id="users-add" data-options="{'width':760, 'height':540, 'modal':true}" title="<?php echo WFText::_('WF_PROFILES_USERS_ADD'); ?>" href="index.php?option=com_jce&tmpl=component&view=users">
+                        <?php echo WFText::_('WF_PROFILES_USERS_ADD'); ?>
                     </a>
-                    <button id="users-remove"><?php echo WFText::_('WF_PROFILES_REMOVE_USERS'); ?></button>
+                    <a id="users-remove" href="javascript:;"><?php echo WFText::_('WF_PROFILES_REMOVE_USERS'); ?></a>
                 </div>
             </span>
         </li>
