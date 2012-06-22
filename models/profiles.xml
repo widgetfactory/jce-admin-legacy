@@ -43,7 +43,7 @@
             <ordering>2</ordering>
             <params></params>
         </profile>
-        <profile>
+        <profile name="Blogger">
             <name>Blogger</name>
             <description>Simple Blogging Profile</description>
             <users></users>

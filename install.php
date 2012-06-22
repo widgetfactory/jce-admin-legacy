@@ -614,7 +614,47 @@ class WFInstall {
                 @JFile::delete($path . DS . $file);
             }
         }
+        // Add "Blogger" profile and selete some stuff
+        if (version_compare($version, '2.2.1', '<')) {
+            $path = $site . DS . 'editor' . DS . 'extensions' . DS . 'browser';
+            $files = array('css/search.css', 'js/search.js', 'search.php');
+            
+            foreach($files as $file) {
+                if (is_file($path . DS . $file)) {
+                    @JFile::delete($path . DS . $file);
+                }
+            }
+            
+            // Blogger
+            $file = $admin . DS . 'models' . DS . 'profiles.xml';
 
+            $xml = WFXMLElement::getXML($file);
+
+            if ($xml) {
+                foreach ($xml->profiles->children() as $profile) {
+                    if ($profile->attributes()->name == 'Blogger') {
+                        $row = JTable::getInstance('profiles', 'WFTable');
+
+                        foreach ($profile->children() as $item) {
+                            switch ($item->name()) {
+                                case 'rows':
+                                    $row->rows = $item->data();
+                                    break;
+                                case 'plugins':
+                                    $row->plugins = $item->data();
+                                    break;
+                                default:
+                                    $key = $item->name();
+                                    $row->$key = $item->data();
+
+                                    break;
+                            }
+                        }
+                        $row->store();
+                    }
+                }
+            }
+        }    
         return true;
     }
 
