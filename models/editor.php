@@ -645,7 +645,7 @@ class WFModelEditor extends JModel {
 
     private static function importFontFace($file) {
         jimport('joomla.filesystem.file');
-        
+
         $content = '';
 
         if (is_file($file)) {
@@ -661,7 +661,7 @@ class WFModelEditor extends JModel {
             // @font-face
             if (strpos($content, '@font-face') !== false) {
                 $font = '';
-                
+
                 preg_match_all('#\@font-face\s*\{([^}]+)\}#', $content, $matches, PREG_SET_ORDER);
 
                 if ($matches) {
@@ -675,7 +675,7 @@ class WFModelEditor extends JModel {
                         $font .= preg_replace('#url\(([\'"]?)#', 'url($1' . $url, $match[0]);
                     }
                 }
-                
+
                 return $font;
             }
         }
@@ -688,14 +688,16 @@ class WFModelEditor extends JModel {
 
         foreach ((array) $files as $file) {
             $font = self::importFontFace($file);
-            
-            if (strpos($font, '@import') !== false) {
-                array_unshift($fonts, $font);
-            } else {
-                $fonts[] = $font;
-            } 
+
+            if ($font) {
+                if (strpos($font, '@import') !== false) {
+                    array_unshift($fonts, $font);
+                } else {
+                    $fonts[] = $font;
+                }
+            }
         }
-        
+
         if (!empty($fonts)) {
             return "/* @font-face and Google Font rules for JCE */" . "\n" . str_replace("\n\n", "\n", implode("\n", $fonts));
         }
