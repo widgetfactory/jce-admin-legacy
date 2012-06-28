@@ -17,10 +17,10 @@ foreach ($this->plugins as $plugin) :
 	$path     = WF_EDITOR_PLUGINS . DS . $plugin->name;
 	$manifest = $path . DS . $plugin->name . '.xml';
 	
-	if ($plugin->type == 'plugin' && $plugin->editable && file_exists($manifest)) :
+	if ($plugin->type == 'plugin' && $plugin->editable && is_file($manifest)) :
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		
+
 		$name   = trim($plugin->name);
 		$params = new WFParameter($this->profile->params, $manifest, $plugin->name);
 		
