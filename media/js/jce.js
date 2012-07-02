@@ -304,7 +304,7 @@
         },
         
         _setDependants : function() {
-            $(':input[data-parent]').each(function() {
+            $('[data-parent]').each(function() {
                 var el = this, data = $(this).data('parent');
                 
                 // hide the element by default
