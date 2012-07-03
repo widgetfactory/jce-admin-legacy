@@ -134,7 +134,7 @@ class WFInstall {
             $installer->set('message', $message);
 
             // post-install
-            self::addIndexfiles();
+            self::addIndexfiles(array(dirname(__FILE__), JPATH_SITE . DS . 'components' . DS . 'com_jce', JPATH_PLUGINS . DS . 'jce'));
         } else {
             $installer->abort();
             
@@ -749,6 +749,10 @@ class WFInstall {
                         $module->store();
                     }
                 }
+                
+                // add index files
+                self::addIndexfiles(array($installer->getPath('extension_root')));
+                
             } else {
                 $result .= '<li class="error">' . JText::_($installer->message, $installer->message) . '</li>';
             }
@@ -843,7 +847,7 @@ class WFInstall {
         }
     }
 
-    private static function addIndexfiles() {
+    private static function addIndexfiles($paths) {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
 
@@ -852,31 +856,15 @@ class WFInstall {
 
         if (is_file($file)) {
 
-            // admin component
-            $folders = JFolder::folders(dirname($file), '.', true, true);
+            foreach((array) $paths as $path) {
+                if (is_dir($path)) {
+                    // admin component
+                    $folders = JFolder::folders($path, '.', true, true);
 
-            foreach ($folders as $folder) {
-                JFile::copy($file, $folder . DS . basename($file));
-            }
-
-            // site component
-            $site = JPATH_SITE . DS . 'components' . DS . 'com_jce';
-
-            if (is_dir($site)) {
-
-                $folders = JFolder::folders($site, '.', true, true);
-
-                foreach ($folders as $folder) {
-                    JFile::copy($file, $folder . DS . basename($file));
+                    foreach ($folders as $folder) {
+                        JFile::copy($file, $folder . DS . basename($file));
+                    }
                 }
-            }
-
-            // plugin
-            $plugin = JPATH_PLUGINS . DS . 'jce';
-
-            // only needed for Joomla! 1.6+
-            if (is_dir($plugin)) {
-                JFile::copy($file, $plugin . DS . basename($file));
             }
         }
     }
