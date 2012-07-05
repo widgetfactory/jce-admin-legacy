@@ -219,9 +219,17 @@ class WFViewProfiles extends JView {
                 );
 
                 if (WF_JOOMLA15) {
-                    $query = "SELECT option AS value, name AS text" . " FROM #__components" . " WHERE parent = 0" . " AND enabled = 1" . " ORDER BY name";
+                    $query = "SELECT " . $db->Quote('option') . " AS value, name AS text" 
+                    . " FROM #__components" 
+                    . " WHERE parent = 0" 
+                    . " AND enabled = 1" 
+                    . " ORDER BY name";
                 } else {
-                    $query = "SELECT element AS value, name AS text" . " FROM #__extensions" . " WHERE type = " . $db->Quote('component') . " AND client_id = 1 AND enabled = 1" . " ORDER BY name";
+                    $query = "SELECT element AS value, name AS text" 
+                    . " FROM #__extensions" 
+                    . " WHERE type = " . $db->Quote('component') 
+                    . " AND client_id = 1 AND enabled = 1" 
+                    . " ORDER BY name";
                 }
                 $db->setQuery($query);
                 $components = $db->loadObjectList();
