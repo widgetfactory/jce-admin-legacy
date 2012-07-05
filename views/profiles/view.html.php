@@ -219,7 +219,7 @@ class WFViewProfiles extends JView {
                 );
 
                 if (WF_JOOMLA15) {
-                    $query = "SELECT " . $db->Quote('option') . " AS value, name AS text" 
+                    $query = "SELECT `option` AS value, name AS text" 
                     . " FROM #__components" 
                     . " WHERE parent = 0" 
                     . " AND enabled = 1" 
