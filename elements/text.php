@@ -61,7 +61,7 @@ class JElementText extends JElement {
         
         // pattern data attribute for editable select input box
         if ($node->attributes('parent')) {
-            $attributes['data-parent'] = $node->attributes('parent');
+            $attributes[] = 'data-parent="' . preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . $node->attributes('parent') . '"';
         }
 
         $html .= '<input';

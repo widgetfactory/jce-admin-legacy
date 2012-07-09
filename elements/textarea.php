@@ -45,7 +45,7 @@ class JElementTextarea extends JElement {
         
         // pattern data attribute for editable select input box
         if ($node->attributes('parent')) {
-            $attribs .= ' data-parent="' . $node->attributes('parent') . '"';
+            $attribs .= 'data-parent="' . preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . $node->attributes('parent') . '"';
         }
 
         $rows = $node->attributes('rows');
