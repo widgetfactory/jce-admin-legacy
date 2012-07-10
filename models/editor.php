@@ -163,6 +163,12 @@ class WFModelEditor extends JModel {
                 else if (is_bool($v)) {
                     $v = $v ? 'true' : 'false';
                 }
+                // stringified booleans
+                else if ($v == "true") {
+                    $v = 'true';
+                } else if ($v == "false") {
+                    $v = 'false';
+                }
                 // anything that is not solely an integer
                 else if (!is_numeric($v)) {
                     if (strpos($v, '"') === 0) {
