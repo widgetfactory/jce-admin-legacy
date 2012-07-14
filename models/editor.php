@@ -205,6 +205,10 @@ class WFModelEditor extends JModel {
             if ($wf->getParam('editor.callback_file')) {
                 $document->addScript(JURI::root(true) . '/' . $wf->getParam('editor.callback_file'));
             }
+            // add callback file if exists
+            if (is_file(JPATH_SITE . DS . 'media' . DS . 'jce' . DS . 'js' . DS . 'callback.js')) {
+                $document->addScript(JURI::root(true) . '/media/jce/js/callback.js');
+            }
         }
     }
 
