@@ -206,8 +206,13 @@ class WFModelEditor extends JModel {
                 $document->addScript(JURI::root(true) . '/' . $wf->getParam('editor.callback_file'));
             }
             // add callback file if exists
-            if (is_file(JPATH_SITE . DS . 'media' . DS . 'jce' . DS . 'js' . DS . 'callback.js')) {
-                $document->addScript(JURI::root(true) . '/media/jce/js/callback.js');
+            if (is_file(JPATH_SITE . DS . 'media' . DS . 'jce' . DS . 'js' . DS . 'editor.js')) {
+                $document->addScript(JURI::root(true) . '/media/jce/js/editor.js');
+            }
+            
+            // add custom editor.css if exists
+            if (is_file(JPATH_SITE . DS . 'media' . DS . 'jce' . DS . 'css' . DS . 'editor.css')) {
+                $document->addStyleSheet(JURI::root(true) . '/media/jce/css/editor.css');
             }
         }
     }
@@ -309,7 +314,7 @@ class WFModelEditor extends JModel {
         if (is_object($profile)) {
             $plugins = explode(',', $profile->plugins);
 
-            $plugins = array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'core', 'code', 'dragupload', 'format', 'lists', 'tabfocus', 'wordcount'), $plugins));
+            $plugins = array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'core', 'code', 'dragupload', 'format', 'lists', 'wordcount'), $plugins));
 
             $compress = $wf->getParam('editor.compress_javascript', 0);
 
