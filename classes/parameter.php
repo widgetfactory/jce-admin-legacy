@@ -151,9 +151,9 @@ class WFParameter extends JParameter
 			}	
 		}
 		
-		if (is_numeric($result)) {
+		/*if (is_numeric($result)) {
 			$result = intval($result);
-		}
+		}*/
 		
 		return $result;
 	}
