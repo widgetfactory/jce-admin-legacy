@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright ï¿½ 2009-2011 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -14,19 +14,19 @@ defined('_JEXEC') or die('RESTRICTED');
 ?>
 <div id="jce" class="ui-corner-all">
 	<ul id="cpanel">
-		<?php if ($this->model->authorize('config')) :?>
+		<?php if (WFModel::authorize('config')) :?>
 			<li class="cpanel-icon tooltip" title="<?php echo WFText::_( 'WF_CONFIG' ) . '::' . WFText::_( 'WF_CONFIG_DESC' );?>"><a href="index.php?option=com_jce&amp;view=config"><span class="config"></span><?php echo WFText::_( 'WF_CONFIG' );?></a></li>
 		<?php endif;?>
-		<?php if ($this->model->authorize('profiles')) :?>
+		<?php if (WFModel::authorize('profiles')) :?>
 			<li class="cpanel-icon tooltip" title="<?php echo WFText::_( 'WF_PROFILES' ) . '::' . WFText::_( 'WF_PROFILES_DESC' );?>"><a href="index.php?option=com_jce&amp;view=profiles"><span class="profiles"></span><?php echo WFText::_( 'WF_PROFILES' );?></a></li>
 		<?php endif;?>
-		<?php if ($this->model->authorize('installer')) :?>
+		<?php if (WFModel::authorize('installer')) :?>
 			<li class="cpanel-icon tooltip" title="<?php echo WFText::_( 'WF_INSTALL' ) . '::' . WFText::_( 'WF_INSTALLER_DESC' );?>"><a href="index.php?option=com_jce&amp;view=installer"><span class="install"></span><?php echo WFText::_( 'WF_INSTALL' );?></a></li>
 		<?php endif;?>
-		<?php if ($this->model->authorize('browser')) :?>
+		<?php if (WFModel::authorize('browser')) :?>
 			<li class="cpanel-icon tooltip" title="<?php echo WFText::_( 'WF_BROWSER_TITLE' ) . '::' . WFText::_( 'WF_CPANEL_BROWSER_DESC' );?>"><a href="<?php echo $this->model->getBrowserLink();?>" class="dialog browser" target="_blank" data-options="{'width':765,'height':480, 'modal':true}" title="<?php echo WFText::_( 'WF_BROWSER_TITLE' );?>"><span class="browser"></span><?php echo WFText::_( 'WF_BROWSER_TITLE' );?></a></li>
 		<?php endif;?>
-	<?php if (JPluginHelper::isEnabled('system', 'jcemediabox') && $this->model->authorize('mediabox')) :?>
+	<?php if (JPluginHelper::isEnabled('system', 'jcemediabox') && WFModel::authorize('mediabox')) :?>
 		<li class="cpanel-icon tooltip" title="<?php echo WFText::_( 'WF_MEDIABOX' ) . '::' . WFText::_( 'WF_MEDIABOX_DESC' );?>"><a href="index.php?option=com_jce&amp;view=mediabox"><span class="mediabox"></span><?php echo WFText::_( 'WF_MEDIABOX' );?></a></li>
 	<?php endif;?>		
 	</ul>
@@ -51,7 +51,7 @@ defined('_JEXEC') or die('RESTRICTED');
                     </span>
                     <?php echo $this->version;?>
                 </li>
-                <?php if ($this->params->get('feed', 0) || $this->model->authorize('preferences')) :?>
+                <?php if ($this->params->get('feed', 0) || WFModel::authorize('preferences')) :?>
 	                 <li>
 		                <span class="tooltip" title="<?php echo WFText::_( 'WF_CPANEL_FEED' ) .'::'.WFText::_( 'WF_CPANEL_FEED_DESC' );?>">
 		                    <?php echo WFText::_( 'WF_CPANEL_FEED' );?>

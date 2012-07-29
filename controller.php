@@ -32,7 +32,8 @@ class WFController extends JController {
 
     private function loadMenu() {
         $view = JRequest::getWord('view', 'cpanel');
-        $model = $this->getModel($view);
+        
+        wfimport('admin.models.model');
 
         JSubMenuHelper::addEntry(WFText::_('WF_CPANEL'), 'index.php?option=com_jce&view=cpanel', $view == 'cpanel');
 
@@ -47,7 +48,7 @@ class WFController extends JController {
         }
 
         foreach ($subMenus as $menu => $item) {
-            if ($model->authorize($item)) {
+            if (WFModel::authorize($item)) {
                 JSubMenuHelper::addEntry(WFText::_($menu), 'index.php?option=com_jce&view=' . $item, $view == $item);
             }
         }
@@ -260,13 +261,11 @@ class WFController extends JController {
     }
 
     public function authorize($task) {
-        $view = JRequest::getWord('view', 'cpanel');
+        wfimport('admin.models.model');
 
-        $model = $this->getModel($view);
+        if (WFModel::authorize($task) === false) {
 
-        if (!$model->authorize($task)) {
-
-            if ($model->authorize('manage')) {
+            if (WFModel::authorize('manage')) {
                 $this->setRedirect('index.php?option=com_jce', WFText::_('JERROR_ALERTNOAUTHOR'), 'error');
             } else {
                 $this->setRedirect('index.php', WFText::_('JERROR_ALERTNOAUTHOR'), 'error');

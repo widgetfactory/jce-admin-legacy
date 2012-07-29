@@ -15,16 +15,13 @@ jimport('joomla.application.component.model');
 
 class WFModel extends JModel {
 
-    public function authorize($task) {
+    public static function authorize($task) {
         $user = JFactory::getUser();
 
         // Joomla! 1.7+
         if (method_exists('JUser', 'getAuthorisedViewLevels')) {
-            $action = ($task == 'admin' || $task == 'manage') ? 'core.' . $task : 'jce.' . $task;
-
-            if (!$user->authorise($action, 'com_jce')) {
-                return false;
-            }
+            $action = ($task == 'admin' || $task == 'manage') ? 'core.' . $task : 'jce.' . $task;            
+            return $user->authorise($action, 'com_jce');
         } else {
             // get rules from parameters
             $component = JComponentHelper::getComponent('com_jce');

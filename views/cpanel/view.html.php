@@ -28,7 +28,7 @@ class WFViewCpanel extends JView {
         // get params definitions
         $params = new WFParameter($component->params, '', 'preferences');
 
-        $canUpdate = WFModelUpdates::canUpdate() && $model->authorize('installer');
+        $canUpdate = WFModelUpdates::canUpdate() && WFModel::authorize('installer');
 
         $options = array(
             'feed' => (int) $params->get('feed', 0),
@@ -44,17 +44,16 @@ class WFViewCpanel extends JView {
 
         $this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.CPanel.init(' . json_encode($options) . ')});');
 
-        if ($model->authorize('preferences')) {
+        if (WFModel::authorize('preferences')) {
             WFToolbarHelper::preferences();
         }
 
-        if ($model->authorize('installer')) {
+        if (WFModel::authorize('installer')) {
             WFToolbarHelper::updates($canUpdate);
         }
 
         WFToolbarHelper::help('cpanel.about');
 
-        $this->assignRef('icons', $icons);
         $this->assignRef('model', $model);
         $this->assignRef('installer', $installer);
         $this->assignRef('params', $params);

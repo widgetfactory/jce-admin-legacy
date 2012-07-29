@@ -39,7 +39,7 @@ class WFViewPreferences extends JView
         $params = new WFParameter($component->params, $xml, 'preferences');
         $params->addElementPath(JPATH_COMPONENT.DS.'elements');
         
-        if ($model->authorize('admin')) {
+        if (WFModel::authorize('admin')) {
         	$form = $model->getForm('permissions');
         } else {
         	$form = null;
