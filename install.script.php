@@ -37,16 +37,11 @@ class com_jceInstallerScript {
 
     function preflight($type, $parent) {
         $db = JFactory::getDBO();
-        
-        // remove admin menu emtries
-        $db = JFactory::getDBO();
-        $db->setQuery('DELETE FROM #__menu WHERE alias = "jce" AND menutype = "main"');
-        
-        $db = JFactory::getDBO();
-        $db->setQuery('DELETE FROM #__menu WHERE alias LIKE "wf-menu-%" AND menutype = "main"');
-        
+
+        $db->setQuery('DELETE FROM #__menu WHERE alias = ' . $db->Quote('jce') . ' AND menutype = ' . $db->Quote('main'));
         $db->query();
-        $db->setQuery('DELETE FROM #__assets WHERE title = "com_jce"');
+        
+        $db->setQuery('DELETE FROM #__menu WHERE alias LIKE ' . $db->Quote('wf-menu-%') . ' AND menutype = ' . $db->Quote('main'));
         $db->query();
     }
 }
