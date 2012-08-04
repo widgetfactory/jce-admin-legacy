@@ -5,7 +5,7 @@
         <title>WF_ARTICLE_TITLE</title>
         <description>WF_ARTICLE_DESC</description>
         <icon>readmore,pagebreak</icon>
-        <editable>0</editable>
+        <editable>1</editable>
         <row>4</row>
         <core>1</core>
     </plugin>
