@@ -46,7 +46,7 @@
 			
 			var re = '.(' + o.extensions.join('|') + ')$';
 			
-			$form = $('form[name="adminForm"]');
+			var $form = $('form[name="adminForm"]');
 
 			if (o.iframe) {
 				iframe = this.createIFrame();
@@ -154,7 +154,7 @@
 			}
 
 			$(this.element).change( function() {
-				file = self.getFileName($(this).val());
+				var file = self.getFileName($(this).val());
 
 				if (!new RegExp(re).test(file)) {
 					// reset input
