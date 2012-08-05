@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright © 2009-2011 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -17,11 +17,13 @@ class WFModel extends JModel {
 
     public static function authorize($task) {
         $user = JFactory::getUser();
-
+        
         // Joomla! 1.7+
         if (method_exists('JUser', 'getAuthorisedViewLevels')) {
-            $action = ($task == 'admin' || $task == 'manage') ? 'core.' . $task : 'jce.' . $task;            
-            return $user->authorise($action, 'com_jce');
+            $action = ($task == 'admin' || $task == 'manage') ? 'core.' . $task : 'jce.' . $task; 
+            if (!$user->authorise($action, 'com_jce')) {
+                return false;
+            }
         } else {
             // get rules from parameters
             $component = JComponentHelper::getComponent('com_jce');
