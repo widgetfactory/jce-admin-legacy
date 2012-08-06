@@ -56,10 +56,16 @@ switch ($view) {
     case 'popup':
         break;
     default:
+        $app = JFactory::getApplication();
+
+        if ($app->isAdmin() === false) {
+            $app->redirect('index.php', WFText::_('JERROR_ALERTNOAUTHOR'), 'error');
+        }
+
         if ($view == 'cpanel') {
             $view = 'manage';
         }
-        
+
         // Authorise
         $controller->authorize($view);
         // check state of extension

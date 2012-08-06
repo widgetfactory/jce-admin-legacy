@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -8,68 +9,67 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die('RESTRICTED');
 
 wfimport('admin.helpers.xml');
 wfimport('admin.helpers.extension');
 
-class WFControllerEditor extends JController
-{
-	function __construct($config = array())
-	{
-	}
+class WFControllerEditor extends JController {
 
-	function execute($task)
-	{
-		// Load language
-		$language = JFactory::getLanguage();
-		$language->load('com_jce', JPATH_ADMINISTRATOR);
+    function __construct($config = array()) {
+        
+    }
 
-		$layout = JRequest::getCmd('layout');
-		$plugin = JRequest::getCmd('plugin');
+    function execute($task) {
+        // Load language
+        $language = JFactory::getLanguage();
+        $language->load('com_jce', JPATH_ADMINISTRATOR);
 
-		if ($layout) {
-			switch ($layout) {
-				case 'editor':
-					if ($task == 'pack') {
-						jimport('joomla.application.component.model');
+        $layout = JRequest::getCmd('layout');
+        $plugin = JRequest::getCmd('plugin');
 
-						JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
+        if ($layout) {
+            switch ($layout) {
+                case 'editor':
+                    if ($task == 'pack') {
+                        jimport('joomla.application.component.model');
 
-						require_once(WF_EDITOR_CLASSES . DS . 'editor.php');
+                        JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
 
-						$model = JModel::getInstance('editor', 'WFModel');
-						$model->pack();
-					}	
-					break;
-				case 'theme':
-					$theme = JRequest::getWord('theme');
+                        require_once(WF_EDITOR_CLASSES . DS . 'editor.php');
 
-					if ($theme && is_dir(WF_EDITOR_THEMES . DS . $theme)) {
-						require_once(WF_EDITOR_THEMES . DS . $theme .DS. 'theme.php');
-					} else {
-						JError::raiseError(500, WFText::_('Theme not found!'));
-					}
+                        $model = JModel::getInstance('editor', 'WFModel');
+                        $model->pack();
+                    }
+                    break;
+                case 'theme':
+                    $theme = JRequest::getWord('theme');
 
-					break;
-				case 'plugin':
-					$file = basename(JRequest::getCmd('file', $plugin));
-					$path = WF_EDITOR_PLUGINS . DS . $plugin;
+                    if ($theme && is_dir(WF_EDITOR_THEMES . DS . $theme)) {
+                        require_once(WF_EDITOR_THEMES . DS . $theme . DS . 'theme.php');
+                    } else {
+                        JError::raiseError(500, WFText::_('Theme not found!'));
+                    }
 
-					if (is_dir($path) && file_exists($path . DS . $file . '.php')) {
-						include_once($path . DS . $file . '.php');
-					} else {
-						JError::raiseError(500, WFText::_('File ' . $file . ' not found!'));
-					}
+                    break;
+                case 'plugin':
+                    $file = basename(JRequest::getCmd('file', $plugin));
+                    $path = WF_EDITOR_PLUGINS . DS . $plugin;
 
-					break;
-			}
-			exit();
-		} else {
-			JError::raiseError(500, WFText::_('No Layout'));
-		}
+                    if (is_dir($path) && file_exists($path . DS . $file . '.php')) {
+                        include_once($path . DS . $file . '.php');
+                    } else {
+                        JError::raiseError(500, WFText::_('File ' . $file . ' not found!'));
+                    }
 
-	}
+                    break;
+            }
+            exit();
+        } else {
+            JError::raiseError(500, WFText::_('No Layout'));
+        }
+    }
+
 }
+
 ?>
