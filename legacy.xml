@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<extension version="1.6" type="component" method="upgrade">
+<install type="component" version="1.5.0" method="upgrade">
     <name>JCE</name>
     <author>Ryan Demmer</author>
     <creationDate>@@date@@</creationDate>
@@ -9,9 +9,8 @@
     <authorUrl>www.joomlacontenteditor.net</authorUrl>
     <version>@@version@@</version>
     <description>WF_ADMIN_DESC</description>
-    <!--installfile>install.php</installfile>
-    <uninstallfile>install.php</uninstallfile-->
-    
+    <installfile>install.php</installfile>
+    <uninstallfile>install.php</uninstallfile>
     <scriptfile>install.script.php</scriptfile>
 	
     <files folder="components/com_jce">
@@ -87,4 +86,4 @@
         <server type="extension" priority="1" name="JCE Editor Updates"><![CDATA[https://www.joomlacontenteditor.net/index.php?option=com_updates&view=update&format=xml&id=1]]>
         </server>
     </updateservers>
-</extension>
+</install>
