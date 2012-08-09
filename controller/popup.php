@@ -30,7 +30,7 @@ class WFControllerPopup extends JController
 	{		
 		$document = JFactory::getDocument();
 		
-		$this->addViewPath(JPATH_COMPONENT . DS . 'views');
+		$this->addViewPath(JPATH_COMPONENT . '/views');
 
 		$view = $this->getView('popup', $document->getType());
 		

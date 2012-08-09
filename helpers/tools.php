@@ -51,7 +51,7 @@ abstract class WFToolsHelper {
 				$template = self::getTemplates();
 				
 				foreach ($matches[1] as $match) {
-					$file = JPATH_SITE.DS.'templates'.DS.$template.DS.'css'.DS.$match;
+					$file = JPATH_SITE.'/templates/'.$template.'/css/'.$match;
 					
 					if ($file) {
 						self::parseColors($file);
@@ -78,7 +78,7 @@ abstract class WFToolsHelper {
 		
 		foreach($templates as $template) {
 			// Template CSS
-        	$path = JPATH_SITE . DS . 'templates' . DS . $template . DS . 'css';
+        	$path = JPATH_SITE . '/templates/' . $template . '/css';
 			// get the first path that exists
 			if (is_dir($path)) {
 				break;

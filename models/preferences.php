@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 // load base model
-require_once(dirname(__FILE__) . DS . 'model.php');
+require_once(dirname(__FILE__) . '/model.php');
 
 class WFModelPreferences extends WFModel {
 	
@@ -110,7 +110,7 @@ class WFModelPreferences extends WFModel {
 	 */
 	protected function getActions()
 	{
-		$file 		= JPATH_COMPONENT_ADMINISTRATOR . DS . 'access.xml';			
+		$file 		= JPATH_COMPONENT_ADMINISTRATOR . '/access.xml';			
 		$xml 		= WFXMLElement::getXML($file);
 		
 		$actions 	= array();

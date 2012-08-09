@@ -12,13 +12,13 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 // load base model
-require_once (dirname(__FILE__) . DS . 'model.php');
+require_once (dirname(__FILE__) . '/model.php');
 
 class WFModelPlugins extends WFModel {
 
     function getCommands() {
         //$xml  = JFactory::getXMLParser('Simple');
-        $file = dirname(__FILE__) . DS . 'commands.xml';
+        $file = dirname(__FILE__) . '/commands.xml';
         $xml = WFXMLElement::getXML($file);
 
         $commands = array();
@@ -52,7 +52,7 @@ class WFModelPlugins extends WFModel {
         $plugins = array();
 
         // get core xml
-        $xml = WFXMLElement::getXML(dirname(__FILE__) . DS . 'plugins.xml');
+        $xml = WFXMLElement::getXML(dirname(__FILE__) . '/plugins.xml');
 
         if ($xml) {
 
@@ -86,10 +86,10 @@ class WFModelPlugins extends WFModel {
 
         foreach ($folders as $folder) {
             $name = basename($folder);
-            $file = $folder . DS . $name . '.xml';
+            $file = $folder . '/' . $name . '.xml';
 
             if (is_file($file)) {
-                $xml = WFXMLElement::getXML($folder . DS . $name . '.xml');
+                $xml = WFXMLElement::getXML($folder . '/' . $name . '.xml');
 
                 if ($xml) {
                     $params = $xml->params;

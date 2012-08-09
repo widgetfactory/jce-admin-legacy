@@ -107,7 +107,7 @@ class WFController extends JController {
                     JHtml::core();
                 }
 
-                require_once(JPATH_ADMINISTRATOR . DS . 'includes' . DS . 'toolbar.php');
+                require_once(JPATH_ADMINISTRATOR . '/includes/toolbar.php');
 
                 JToolBarHelper::title(WFText::_('WF_ADMINISTRATION') . ' &rsaquo;&rsaquo; ' . WFText::_('WF_' . strtoupper($name)), 'logo.png');
 
@@ -136,8 +136,8 @@ class WFController extends JController {
 
                 $document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');
 
-                $view->addHelperPath(dirname(__FILE__) . DS . 'helpers');
-                $this->addModelPath(dirname(__FILE__) . DS . 'models');
+                $view->addHelperPath(dirname(__FILE__) . '/helpers');
+                $this->addModelPath(dirname(__FILE__) . '/models');
 
                 $view->loadHelper('toolbar');
                 $view->loadHelper('tools');
@@ -158,7 +158,7 @@ class WFController extends JController {
             $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/' . $script . '?version=' . $model->getVersion());
         }
 
-        require_once(dirname(__FILE__) . DS . 'helpers' . DS . 'system.php');
+        require_once(dirname(__FILE__) . '/helpers/system.php');
 
         $app = JFactory::getApplication();
         $app->registerEvent('onAfterRender', 'WFSystemHelper');
@@ -198,7 +198,7 @@ class WFController extends JController {
         }
 
         // add models path
-        JModel::addIncludePath(dirname(__FILE__) . DS . 'models');
+        JModel::addIncludePath(dirname(__FILE__) . '/models');
         $profiles = JModel::getInstance('profiles', 'WFModel');
 
         $state = $profiles->checkTable();
@@ -232,7 +232,7 @@ class WFController extends JController {
         switch ($type) {
             case 'tables' :
                 // add models path
-                JModel::addIncludePath(dirname(__FILE__) . DS . 'models');
+                JModel::addIncludePath(dirname(__FILE__) . '/models');
                 $profiles = JModel::getInstance('profiles', 'WFModel');
 
                 $profiles->installProfiles();
@@ -241,7 +241,7 @@ class WFController extends JController {
 
                 break;
             case 'editor' :
-                $source = dirname(__FILE__) . DS . 'packages' . DS . 'editors';
+                $source = dirname(__FILE__) . '/packages/editors';
 
                 if (is_dir($source)) {
                     jimport('joomla.installer.installer');

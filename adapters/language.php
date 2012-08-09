@@ -85,8 +85,8 @@ class WFInstallerLanguage extends JObject
         $folder = $this->get('tag');
 
         // Set the installation target paths
-        $this->parent->setPath('extension_site', JPATH_SITE . DS . "language" . DS . $folder);
-        $this->parent->setPath('extension_administrator', JPATH_ADMINISTRATOR . DS . "language" . DS . $folder);
+        $this->parent->setPath('extension_site', JPATH_SITE . '/' . "language" . '/' . $folder);
+        $this->parent->setPath('extension_administrator', JPATH_ADMINISTRATOR . '/' . "language" . '/' . $folder);
         
         // Set overwrite flag if not set by Manifest
         if (!$this->parent->getOverwrite()) {
@@ -106,7 +106,7 @@ class WFInstallerLanguage extends JObject
         }
         
     	// Copy tinymce files
-    	$this->parent->setPath('extension_site', JPATH_COMPONENT_SITE . DS . 'editor' . DS . 'tiny_mce');
+    	$this->parent->setPath('extension_site', JPATH_COMPONENT_SITE . '/editor/tiny_mce');
 
         if ($this->parent->parseFiles($this->get('tinymce')) === false) {
             $this->parent->abort();
@@ -116,7 +116,7 @@ class WFInstallerLanguage extends JObject
 		$this->addIndexfiles($this->parent->getPath('site'));
 
         // Set path back to site for manifest
-        $this->parent->setPath('extension_site', JPATH_SITE . DS . "language" . DS . $folder);
+        $this->parent->setPath('extension_site', JPATH_SITE . '/' . "language" . '/' . $folder);
         // Lastly, we will copy the manifest file to its appropriate place.
         if (!$this->parent->copyManifest(0)) {
             // Install failed, rollback changes
@@ -137,17 +137,17 @@ class WFInstallerLanguage extends JObject
 		jimport('joomla.filesystem.file');
 		
 		// get the base file
-		$file = WF_ADMINISTRATOR . DS . 'index.html';
+		$file = WF_ADMINISTRATOR . '/index.html';
 		
 		if (is_file($file) && is_dir($path)) {
 			
-			JFile::copy($file, $path . DS . basename($file));
+			JFile::copy($file, $path . '/' . basename($file));
 			
 			// admin component
 			$folders = JFolder::folders($path, '.', true, true);
 			
 			foreach ($folders as $folder) {
-				JFile::copy($file, $folder . DS . basename($file));
+				JFile::copy($file, $folder . '/' . basename($file));
 			}
 		}
 	}
@@ -168,7 +168,7 @@ class WFInstallerLanguage extends JObject
 		// Clean tag
 		$tag = trim($tag);
 		
-		$path = JPATH_SITE.DS.'language'.DS.$tag;
+		$path = JPATH_SITE.'/language/'.$tag;
 		
         if (!JFolder::exists($path)) {
             JError::raiseWarning(100, WFText::_('WF_INSTALLER_LANGUAGE_UNINSTALL').' : '.WFText::_('WF_INSTALLER_LANGUAGE_PATH_EMPTY'));
@@ -198,7 +198,7 @@ class WFInstallerLanguage extends JObject
                 return false;
             }
 
-            $this->parent->setPath('extension_site', JPATH_COMPONENT_SITE . DS . 'editor' . DS . 'tiny_mce');
+            $this->parent->setPath('extension_site', JPATH_COMPONENT_SITE . '/editor/tiny_mce');
             
             if (!$this->parent->removeFiles($this->get('tinymce'))) {
                 JError::raiseWarning(100, WFText::_('WF_INSTALLER_LANGUAGE_UNINSTALL').' : '.WFText::_('WF_INSTALL_DELETE_FILES_ERROR'));

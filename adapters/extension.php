@@ -90,7 +90,7 @@ class WFInstallerExtension extends JObject {
 		}
 		
 		if(!empty($folder)) {
-			$this->parent->setPath('extension_root', JPATH_COMPONENT_SITE . DS . 'editor' . DS . 'extensions' . DS . $folder);
+			$this->parent->setPath('extension_root', JPATH_COMPONENT_SITE . '/editor/extensions/' . $folder);
 		} else {
 			$this->parent->abort(WFText::_('WF_INSTALLER_EXTENSION_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_NO_EXTENSION_FOLDER'));
 		}
@@ -155,16 +155,16 @@ class WFInstallerExtension extends JObject {
 		jimport('joomla.filesystem.file');
 		
 		// get the base file
-		$file = WF_ADMINISTRATOR . DS . 'index.html';
+		$file = WF_ADMINISTRATOR . '/index.html';
 		$path = $this->parent->getPath('extension_root');
 		if(is_file($file) && is_dir($path)) {
 			
-			JFile::copy($file, $path . DS . basename($file));
+			JFile::copy($file, $path . '/' . basename($file));
 			
 			// admin component
 			$folders = JFolder::folders($path, '.', true, true);
 			foreach($folders as $folder) {
-				JFile::copy($file, $folder . DS . basename($file));
+				JFile::copy($file, $folder . '/' . basename($file));
 			}
 		}
 	}
@@ -204,11 +204,11 @@ class WFInstallerExtension extends JObject {
 		}
 		if($plugin) {
 			// Set the plugin root path
-			$this->parent->setPath('extension_root', JPATH_COMPONENT_SITE . DS . 'editor' . DS . 'tiny_mce' . DS . 'plugins' . DS . $plugin . DS . 'extensions' . DS . $folder);
+			$this->parent->setPath('extension_root', JPATH_COMPONENT_SITE . '/editor/tiny_mce/plugins/' . $plugin . '/extensions/' . $folder);
 		} else {
-			$this->parent->setPath('extension_root', JPATH_COMPONENT_SITE . DS . 'editor' . DS . 'extensions' . DS . $folder);
+			$this->parent->setPath('extension_root', JPATH_COMPONENT_SITE . '/editor/extensions/' . $folder);
 		}
-		$manifest = $this->parent->getPath('extension_root') . DS . $extension . '.xml';
+		$manifest = $this->parent->getPath('extension_root') . '/' . $extension . '.xml';
 		if(file_exists($manifest)) {
 			$xml = WFXMLHelper::getXML($manifest);
 			if(!$this->setManifest($xml)) {

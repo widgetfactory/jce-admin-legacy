@@ -52,7 +52,7 @@ class WFModel extends JModel {
      */
     public function getVersion() {
         // Get Component xml
-        $xml = JApplicationHelper::parseXMLInstallFile(WF_ADMINISTRATOR . DS . 'jce.xml');
+        $xml = JApplicationHelper::parseXMLInstallFile(WF_ADMINISTRATOR . '/jce.xml');
 
         // return cleaned version number or date
         $version = preg_replace('/[^0-9a-z]/i', '', $xml['version']);
@@ -67,12 +67,12 @@ class WFModel extends JModel {
 
         $params = JComponentHelper::getParams('com_jce');
         $theme = $params->get('theme', 'smoothness');
-        $path = JPATH_COMPONENT . DS . 'media' . DS . 'css';
+        $path = JPATH_COMPONENT . '/media/css';
 
         // Load styles
         $styles = array();
 
-        $files = JFolder::files($path . DS . $theme, '\.css');
+        $files = JFolder::files($path . '/' . $theme, '\.css');
         foreach ($files as $file) {
             $styles[] = $theme . '/' . $file;
         }
@@ -85,7 +85,7 @@ class WFModel extends JModel {
         if ($browser->getBrowser() == 'msie' && $browser->getMajor() < 8) {
             $styles[] = 'styles_ie.css';
         }
-        if (JFile::exists($path . DS . $view . '.css')) {
+        if (JFile::exists($path . '/' . $view . '.css')) {
             $styles[] = $view . '.css';
         }
 
@@ -131,7 +131,7 @@ class WFModel extends JModel {
             } else {
                 $path = $base . '/' . $icon . '.png';
 
-                if (JFile::exists(JPATH_SITE . DS . $path)) {
+                if (JFile::exists(JPATH_SITE . '/' . $path)) {
                     $img = '<img src="' . JURI::root(true) . '/' . $path . '" alt="' . WFText::_($plugin->title) . '" title="' . WFText::_($plugin->title) . '" />';
                 }
 
@@ -143,7 +143,7 @@ class WFModel extends JModel {
     }
 
     public function getBrowserLink($element = null, $filter = '') {
-        require_once(JPATH_SITE . DS . 'components' . DS . 'com_jce' . DS . 'editor' . DS . 'libraries' . DS . 'classes' . DS . 'token.php');
+        require_once(JPATH_SITE . '/components/com_jce/editor/libraries/classes/token.php');
 
         $token = WFToken::getToken();
 

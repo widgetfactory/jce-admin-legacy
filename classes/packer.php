@@ -182,7 +182,7 @@ class WFPacker extends JObject
 			$data = '';
 
 			foreach($matches[1] as $match) {
-				$data .= $this->getText(realpath($this->get('_cssbase') . DS . $match));
+				$data .= $this->getText(realpath($this->get('_cssbase') . '/' . $match));
 			}
 
 			return $data;
@@ -227,7 +227,7 @@ class WFPacker extends JObject
 
 	function processPaths($data)
 	{
-		$path = str_replace(JPATH_SITE, '', realpath($this->get('_imgbase') . DS . $data[1]));
+		$path = str_replace(JPATH_SITE, '', realpath($this->get('_imgbase') . '/' . $data[1]));
 
 		if($path) {
 			return "url('" . JURI::root(true) . str_replace(DS, '/', $path) . "')";

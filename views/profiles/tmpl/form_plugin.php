@@ -14,8 +14,8 @@ defined('_JEXEC') or die('RESTRICTED');
 $count = 0;
 
 foreach ($this->plugins as $plugin) :
-	$path     = WF_EDITOR_PLUGINS . DS . $plugin->name;
-	$manifest = $path . DS . $plugin->name . '.xml';
+	$path     = WF_EDITOR_PLUGINS . '/' . $plugin->name;
+	$manifest = $path . '/' . $plugin->name . '.xml';
 	
 	if ($plugin->type == 'plugin' && $plugin->editable && is_file($manifest)) :
 		jimport('joomla.filesystem.folder');
@@ -25,13 +25,13 @@ foreach ($this->plugins as $plugin) :
 		$params = new WFParameter($this->profile->params, $manifest, $plugin->name);
 		
 		// set element paths
-		$params->addElementPath(JPATH_COMPONENT . DS . 'elements');
-		$params->addElementPath(JPATH_COMPONENT_SITE . DS . 'elements');
-		$params->addElementPath(WF_EDITOR . DS . 'elements');
+		$params->addElementPath(JPATH_COMPONENT . '/elements');
+		$params->addElementPath(JPATH_COMPONENT_SITE . '/elements');
+		$params->addElementPath(WF_EDITOR . '/elements');
 		
 		// set plugin specific elements
-		if (JFolder::exists($path . DS . 'elements')) {
-			$params->addElementPath($path . DS . 'elements');
+		if (JFolder::exists($path . '/elements')) {
+			$params->addElementPath($path . '/elements');
 		}
 
 		$class  = in_array($plugin->name, explode(',', $this->profile->plugins)) ? '' : 'ui-tabs-hidden';
@@ -69,9 +69,9 @@ foreach ($this->plugins as $plugin) :
 						$params = new WFParameter($this->profile->params, $file, $key);
 				
 						// add element paths
-						$params->addElementPath(JPATH_COMPONENT . DS . 'elements');
-						$params->addElementPath(JPATH_COMPONENT_SITE . DS . 'elements');
-						$params->addElementPath(WF_EDITOR . DS . 'elements');
+						$params->addElementPath(JPATH_COMPONENT . '/elements');
+						$params->addElementPath(JPATH_COMPONENT_SITE . '/elements');
+						$params->addElementPath(WF_EDITOR . '/elements');
 
 						// render params
 						if (!$params->hasParent()) :

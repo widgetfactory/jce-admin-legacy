@@ -21,12 +21,12 @@ class WFViewMediabox extends JView
         $params = new JParameter($data);
         
     	if (WF_JOOMLA15) {
-        	$xml = JPATH_PLUGINS.DS.'system'.DS.'jcemediabox.xml';
+        	$xml = JPATH_PLUGINS.'/system/jcemediabox.xml';
         	$params->loadSetupFile($xml);
         	
         	return $params->getParams();
         } else {
-        	$xml = JPATH_PLUGINS.DS.'system'.DS.'jcemediabox'.DS.'jcemediabox.xml';
+        	$xml = JPATH_PLUGINS.'/system/jcemediabox/jcemediabox.xml';
         	
         	$parser = JFactory::getXMLParser('Simple');
 

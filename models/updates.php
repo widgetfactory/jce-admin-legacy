@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 // load base model
-require_once (dirname(__FILE__) . DS . 'model.php');
+require_once (dirname(__FILE__) . '/model.php');
 
 class WFModelUpdates extends WFModel {
 
@@ -36,11 +36,11 @@ class WFModelUpdates extends WFModel {
         $versions = array('joomla' => array(), 'jce' => array());
 
         // Get Component xml
-        $com_xml = JApplicationHelper::parseXMLInstallFile(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_jce' . DS . 'jce.xml');
+        $com_xml = JApplicationHelper::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_jce/jce.xml');
         // set component version
         $versions['joomla']['com_jce'] = $com_xml['version'];
         // get mediabox version
-        $mediabox_xml_file = WF_JOOMLA15 ? JPATH_PLUGINS . DS . 'system' . DS . 'jcemediabox.xml' : JPATH_PLUGINS . DS . 'system' . DS . 'jcemediabox' . DS . 'jcemediabox.xml';
+        $mediabox_xml_file = WF_JOOMLA15 ? JPATH_PLUGINS . '/system/jcemediabox.xml' : JPATH_PLUGINS . '/system/jcemediabox/jcemediabox.xml';
         // set mediabox version
         if (file_exists($mediabox_xml_file)) {
             $mediabox_xml = JApplicationHelper::parseXMLInstallFile($mediabox_xml_file);
@@ -57,7 +57,7 @@ class WFModelUpdates extends WFModel {
         foreach ($plugins as $plugin) {
             if ($plugin->core == 0) {
 
-                $file = WF_EDITOR_PLUGINS . DS . $plugin->name . DS . $plugin->name . '.xml';
+                $file = WF_EDITOR_PLUGINS . '/' . $plugin->name . '/' . $plugin->name . '.xml';
 
                 $xml = JApplicationHelper::parseXMLInstallFile($file);
                 $versions['jce']['jce_' . $plugin->name] = $xml['version'];
@@ -67,7 +67,7 @@ class WFModelUpdates extends WFModel {
         foreach ($extensions as $extension) {
             if ($extension->core == 0) {
 
-                $file = WF_EDITOR_EXTENSIONS . DS . $extension->folder . DS . $extension->extension . '.xml';
+                $file = WF_EDITOR_EXTENSIONS . '/' . $extension->folder . '/' . $extension->extension . '.xml';
 
                 $xml = JApplicationHelper::parseXMLInstallFile($file);
                 $versions['jce']['jce_' . $extension->folder . '_' . $extension->extension] = $xml['version'];
@@ -147,7 +147,7 @@ class WFModelUpdates extends WFModel {
             if ($data->name && $data->url && $data->hash) {
                 $tmp = $config->getValue('config.tmp_path');
                 // create path for package file
-                $path = $tmp . DS . basename($data->name);
+                $path = $tmp . '/' . basename($data->name);
                 // download file
                 if ($this->connect($data->url, null, $path)) {
                     if (JFile::exists($path) && @filesize($path) > 0) {
@@ -196,7 +196,7 @@ class WFModelUpdates extends WFModel {
         // check for vars
         if ($file && $hash && $method) {
             $tmp = $config->getValue('config.tmp_path');
-            $path = $tmp . DS . $file;
+            $path = $tmp . '/' . $file;
             // check if file exists
             if (JFile::exists($path)) {
                 // check hash
@@ -220,8 +220,8 @@ class WFModelUpdates extends WFModel {
                             $manifest = basename($installer->getPath('manifest'));
                             // delete update manifest if any eg: _iframes_155_156.xml
                             if ($type == 'patch' && preg_match('/^_[0-9a-z_\.-]+\.xml$/', $manifest)) {
-                                if (JFile::exists($path . DS . $manifest)) {
-                                    @JFile::delete($path . DS . $manifest);
+                                if (JFile::exists($path . '/' . $manifest)) {
+                                    @JFile::delete($path . '/' . $manifest);
                                 }
                             }
                             // installer message

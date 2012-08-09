@@ -11,7 +11,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 // load base model
-require_once(dirname(__FILE__) . DS . 'model.php');
+require_once(dirname(__FILE__) . '/model.php');
 
 class WFModelCpanel extends WFModel {
 
@@ -32,7 +32,7 @@ class WFModelCpanel extends WFModel {
 
     function getVersion() {
         // Get Component xml
-        $xml = JApplicationHelper::parseXMLInstallFile(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_jce' . DS . 'jce.xml');
+        $xml = JApplicationHelper::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_jce/jce.xml');
 
         return $xml['version'];
     }
@@ -55,10 +55,10 @@ class WFModelCpanel extends WFModel {
         // use this directly instead of JFactory::getXMLParserto avoid the feed data error
         jimport('simplepie.simplepie');
 
-        if (!is_writable(JPATH_BASE . DS . 'cache')) {
+        if (!is_writable(JPATH_BASE . '/cache')) {
             $options['cache_time'] = 0;
         }
-        $rss = new SimplePie($options['rssUrl'], JPATH_BASE . DS . 'cache', isset($options['cache_time']) ? $options['cache_time'] : 0);
+        $rss = new SimplePie($options['rssUrl'], JPATH_BASE . '/cache', isset($options['cache_time']) ? $options['cache_time'] : 0);
         $rss->force_feed(true);
         $rss->handle_content_type();
 

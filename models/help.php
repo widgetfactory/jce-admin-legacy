@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 // load base model
-require_once (dirname(__FILE__) . DS . 'model.php');
+require_once (dirname(__FILE__) . '/model.php');
 
 class WFModelHelp extends WFModel {
 	function getLanguage()
@@ -43,7 +43,7 @@ class WFModelHelp extends WFModel {
 
 					// if file attribute load file
 					if($file) {
-						$result .= $this->getTopics(WF_EDITOR . DS . $file);
+						$result .= $this->getTopics(WF_EDITOR . '/' . $file);
 					} else {
 						$result .= '<dd' . $class . ' id="' . $key . '">' . trim(WFText::_($title)) . '</dd>';
 					}
@@ -57,7 +57,7 @@ class WFModelHelp extends WFModel {
 							if($file = $subtopic->attributes()->file) {
 								$result .= '<dd class="subtopics">' . trim(WFText::_($subtopic->attributes()->title)) . '</dd>';
 								$result .= '<dl class="hidden">';
-								$result .= $this->getTopics(WF_EDITOR . DS . $file);
+								$result .= $this->getTopics(WF_EDITOR . '/' . $file);
 								$result .= '</dl>';
 							} else {
 								$id = $subtopic->attributes()->key ? ' id="' . $subtopic->attributes()->key . '"' : '';
@@ -99,16 +99,16 @@ class WFModelHelp extends WFModel {
 
 		$document->setTitle(WFText::_('WF_HELP') . ' : ' . WFText::_('WF_' . strtoupper($category) . '_TITLE'));
 
-		$file = WF_EDITOR_PLUGINS . DS . $category . DS . $category . ".xml";
+		$file = WF_EDITOR_PLUGINS . '/' . $category . '/' . $category . ".xml";
 
 		switch ($section) {
 			case 'admin' :
-				$file = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_jce' . DS . 'models' . DS . $category . '.xml';
+				$file = JPATH_ADMINISTRATOR . '/components/com_jce/models/' . $category . '.xml';
 				break;
 			case 'editor' :
-				$file = WF_EDITOR_PLUGINS . DS . $category . DS . $category . ".xml";
+				$file = WF_EDITOR_PLUGINS . '/' . $category . '/' . $category . ".xml";
 				if(!is_file($file)) {
-					$file = WF_EDITOR_LIBRARIES . DS . 'xml' . DS . 'help' . DS . 'editor.xml';
+					$file = WF_EDITOR_LIBRARIES . '/xml/help/editor.xml';
 				} else {
 					$language->load('com_jce_' . $category, JPATH_SITE);
 				}

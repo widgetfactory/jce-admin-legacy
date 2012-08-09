@@ -13,19 +13,19 @@ defined('_JEXEC') or die('RESTRICTED');
 
 // load constants
 
-require_once(dirname(__FILE__) . DS . 'constants.php');
+require_once(dirname(__FILE__) . '/constants.php');
 
 // low level error handler
 
-require_once(WF_ADMINISTRATOR . DS . 'classes' . DS . 'error.php');
+require_once(WF_ADMINISTRATOR . '/classes/error.php');
 
 // load loader
 
-require_once(dirname(__FILE__) . DS . 'loader.php');
+require_once(dirname(__FILE__) . '/loader.php');
 // load text
-require_once(WF_ADMINISTRATOR. DS . 'classes' . DS . 'text.php');
+require_once(WF_ADMINISTRATOR. '/classes/text.php');
 // load xml
-require_once(WF_ADMINISTRATOR . DS . 'classes' . DS . 'xml.php');
+require_once(WF_ADMINISTRATOR . '/classes/xml.php');
 // load parameter
-require_once(WF_ADMINISTRATOR . DS . 'classes' . DS . 'parameter.php');
+require_once(WF_ADMINISTRATOR . '/classes/parameter.php');
 ?>

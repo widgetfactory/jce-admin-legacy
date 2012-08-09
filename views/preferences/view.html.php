@@ -33,11 +33,11 @@ class WFViewPreferences extends JView
 		$this->document->addStyleSheet('templates/system/css/system.css');
  
  		$component 	= WFExtensionHelper::getComponent();
-        $xml 		= JPATH_COMPONENT.DS.'models'.DS.'preferences.xml';
+        $xml 		= JPATH_COMPONENT.'/models/preferences.xml';
         
         // get params definitions
         $params = new WFParameter($component->params, $xml, 'preferences');
-        $params->addElementPath(JPATH_COMPONENT.DS.'elements');
+        $params->addElementPath(JPATH_COMPONENT.'/elements');
         
         if (WFModel::authorize('admin')) {
         	$form = $model->getForm('permissions');

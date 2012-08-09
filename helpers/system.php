@@ -28,18 +28,18 @@ class WFSystemHelper extends JPlugin
         $params 	= new WFParameter($component->params);
         
         $theme  	= $params->get('preferences.theme', 'jce');
-        $site_path  = JPATH_COMPONENT_SITE . DS . 'editor' . DS . 'libraries' . DS . 'css';
-		$admin_path = JPATH_COMPONENT_ADMINISTRATOR . DS . 'media' . DS . 'css';
+        $site_path  = JPATH_COMPONENT_SITE . '/editor/libraries/css';
+		$admin_path = JPATH_COMPONENT_ADMINISTRATOR . '/media/css';
         
         // Load styles
         $styles = array();
         
-        if (!JFolder::exists($site_path  . DS . 'jquery' . DS . $theme)) {
+        if (!JFolder::exists($site_path  . '/jquery/' . $theme)) {
             $theme = 'jce';
         }
         
-        if (JFolder::exists($site_path . DS . 'jquery' .DS. $theme)) {
-            $files = JFolder::files($site_path . DS . 'jquery' .DS. $theme, '\.css');
+        if (JFolder::exists($site_path . '/jquery' .DS. $theme)) {
+            $files = JFolder::files($site_path . '/jquery' .DS. $theme, '\.css');
             
             foreach ($files as $file) {
                 $styles[] = 'components/com_jce/editor/libraries/css/jquery/' . $theme . '/' . $file;
@@ -51,7 +51,7 @@ class WFSystemHelper extends JPlugin
             'administrator/components/com_jce/media/css/global.css'
         ));
         
-        if (JFile::exists($admin_path . DS . $view . '.css')) {
+        if (JFile::exists($admin_path . '/' . $view . '.css')) {
             $styles[] = 'administrator/components/com_jce/media/css/' . $view . '.css';
         }
         

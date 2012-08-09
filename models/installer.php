@@ -15,7 +15,7 @@ jimport('joomla.installer.installer');
 jimport('joomla.installer.helper');
 
 // load base model
-require_once(dirname(__FILE__) . DS . 'model.php');
+require_once(dirname(__FILE__) . '/model.php');
 
 class WFModelInstaller extends WFModel {
 
@@ -48,7 +48,7 @@ class WFModelInstaller extends WFModel {
         $installer = JInstaller::getInstance();
 
         // Try to load the adapter object
-        require_once(JPATH_COMPONENT . DS . 'adapters' . DS . strtolower($name) . '.php');
+        require_once(JPATH_COMPONENT . '/adapters/' . strtolower($name) . '.php');
 
         $class = 'WFInstaller' . ucfirst($name);
 
@@ -104,7 +104,7 @@ class WFModelInstaller extends WFModel {
         // Cleanup the install files
         if (!is_file($package['packagefile'])) {
             $config = JFactory::getConfig();
-            $package['packagefile'] = $config->getValue('config.tmp_path') . DS . $package['packagefile'];
+            $package['packagefile'] = $config->getValue('config.tmp_path') . '/' . $package['packagefile'];
         }
         if (is_file($package['packagefile'])) {
             JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
@@ -125,7 +125,7 @@ class WFModelInstaller extends WFModel {
             // get extension data not returned by uninstall method
             $row->load($id);
             // get manifest
-            $manifest = WF_JOOMLA15 ? JPATH_PLUGINS . $row->folder . DS . $row->element . '.xml' : JPATH_PLUGINS . DS . $row->folder . DS . $row->element . DS . $row->element . '.xml';
+            $manifest = WF_JOOMLA15 ? JPATH_PLUGINS . $row->folder . '/' . $row->element . '.xml' : JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . '/' . $row->element . '.xml';
 
             if (file_exists($manifest)) {
                 $xml = JApplicationHelper::parseXMLInstallFile($manifest);
@@ -202,7 +202,7 @@ class WFModelInstaller extends WFModel {
                 return false;
             }
 
-            $dest = $config->getValue('config.tmp_path') . DS . $file['name'];
+            $dest = $config->getValue('config.tmp_path') . '/' . $file['name'];
             $src = $file['tmp_name'];
             // upload file
             JFile::upload($src, $dest);
@@ -309,7 +309,7 @@ class WFModelInstaller extends WFModel {
             $row = $rows[$i];
 
             // Get the plugin xml file
-            $file = JPATH_PLUGINS . DS . $row->folder . DS . $row->element . ".xml";
+            $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . ".xml";
 
             if (is_file($file)) {
                 $xml = WFXMLElement::getXML($file);
@@ -345,9 +345,9 @@ class WFModelInstaller extends WFModel {
         }
         $rows = array();
         foreach ($languages as $language) {
-            $files = JFolder::files($language->baseDir . DS . $language->folder, '\.(com_jce)\.xml$');
+            $files = JFolder::files($language->baseDir . '/' . $language->folder, '\.(com_jce)\.xml$');
             foreach ($files as $file) {
-                $data = JApplicationHelper::parseXMLInstallFile($language->baseDir . DS . $language->folder . DS . $file);
+                $data = JApplicationHelper::parseXMLInstallFile($language->baseDir . '/' . $language->folder . '/' . $file);
 
                 $row = new StdClass();
                 $row->language = $language->folder;

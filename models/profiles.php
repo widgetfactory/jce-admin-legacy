@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 // load base model
-require_once(dirname(__FILE__) . DS . 'model.php');
+require_once(dirname(__FILE__) . '/model.php');
 
 /**
  * Profiles Model
@@ -82,7 +82,7 @@ class WFModelProfiles extends WFModel {
         $extensions = array();
         $supported = '';
 
-        $manifest = WF_EDITOR_PLUGINS . DS . $plugin . DS . $plugin . '.xml';
+        $manifest = WF_EDITOR_PLUGINS . '/' . $plugin . '/' . $plugin . '.xml';
 
         if (is_file($manifest)) {
             $xml = WFXMLElement::getXML($manifest);
@@ -130,7 +130,7 @@ class WFModelProfiles extends WFModel {
         $plugins = $model->getPlugins();
         // only need plugins with xml files
         foreach ($plugins as $plugin => $properties) {
-            if (!is_file(WF_EDITOR_PLUGINS . DS . $plugin . DS . $plugin . '.xml')) {
+            if (!is_file(WF_EDITOR_PLUGINS . '/' . $plugin . '/' . $plugin . '.xml')) {
                 unset($plugins[$plugin]);
             }
         }
@@ -247,7 +247,7 @@ class WFModelProfiles extends WFModel {
             }
             // sqlsrv
         } else {
-            $file = dirname(dirname(__FILE__)) . DS . 'sql' . DS . $driver . '.sql';
+            $file = dirname(dirname(__FILE__)) . '/sql/' . $driver . '.sql';
             $error = null;
 
             if (is_file($file)) {
@@ -303,7 +303,7 @@ class WFModelProfiles extends WFModel {
 
             // No Profiles table data
             if (!$db->loadResult()) {
-                $xml = dirname(__FILE__) . DS . 'profiles.xml';
+                $xml = dirname(__FILE__) . '/profiles.xml';
 
                 if (is_file($xml)) {
                     if (!$this->processImport($xml)) {
@@ -338,7 +338,7 @@ class WFModelProfiles extends WFModel {
         $language = JFactory::getLanguage();
         $language->load('com_jce', JPATH_ADMINISTRATOR);
         
-        JTable::addIncludePath(dirname(dirname(__FILE__)) . DS . 'tables');
+        JTable::addIncludePath(dirname(dirname(__FILE__)) . '/tables');
 
         $xml = WFXMLElement::getXML($file);
 
@@ -446,7 +446,7 @@ class WFModelProfiles extends WFModel {
      */
     function getDefaultProfile() {
         $mainframe = JFactory::getApplication();
-        $file = JPATH_COMPONENT . DS . 'models' . DS . 'profiles.xml';
+        $file = JPATH_COMPONENT . '/models/profiles.xml';
 
         $xml = WFXMLElement::getXML($file);
 
@@ -483,12 +483,12 @@ class WFModelProfiles extends WFModel {
 
     function getEditorParams(&$row) {
         // get params definitions
-        $xml = WF_EDITOR_LIBRARIES . DS . 'xml' . DS . 'config' . DS . 'profiles.xml';
+        $xml = WF_EDITOR_LIBRARIES . '/xml/config/profiles.xml';
 
         // get editor params
         $params = new WFParameter($row->params, $xml, 'editor');
-        $params->addElementPath(JPATH_COMPONENT . DS . 'elements');
-        $params->addElementPath(WF_EDITOR . DS . 'elements');
+        $params->addElementPath(JPATH_COMPONENT . '/elements');
+        $params->addElementPath(WF_EDITOR . '/elements');
 
         $groups = $params->getGroups();
 
@@ -498,12 +498,12 @@ class WFModelProfiles extends WFModel {
 
     function getLayoutParams(&$row) {
         // get params definitions
-        $xml = WF_EDITOR_LIBRARIES . DS . 'xml' . DS . 'config' . DS . 'layout.xml';
+        $xml = WF_EDITOR_LIBRARIES . '/xml/config/layout.xml';
 
         // get editor params
         $params = new WFParameter($row->params, $xml, 'editor');
-        $params->addElementPath(JPATH_COMPONENT . DS . 'elements');
-        $params->addElementPath(WF_EDITOR . DS . 'elements');
+        $params->addElementPath(JPATH_COMPONENT . '/elements');
+        $params->addElementPath(WF_EDITOR . '/elements');
 
         $groups = $params->getGroups();
 
@@ -517,7 +517,7 @@ class WFModelProfiles extends WFModel {
 
     function getThemes() {
         jimport('joomla.filesystem.folder');
-        $path = WF_EDITOR_THEMES . DS . 'advanced' . DS . 'skins';
+        $path = WF_EDITOR_THEMES . '/advanced/skins';
 
         return JFolder::folders($path, '.', false, true);
     }
