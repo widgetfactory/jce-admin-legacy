@@ -10,7 +10,7 @@
  * other free or open source software licenses.
  */
 
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die;
 
 /**
  * Renders a radio element

@@ -11,18 +11,6 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-// Include the JLog class.
-jimport('joomla.log.log');
-
-// Add the logger.
-JLog::addLogger(
-     // Pass an array of configuration options
-    array(
-            // Set the name of the log file
-            'text_file' => 'deprecated.php'
-     )
-);
-
 // load base classes
 require_once(dirname(__FILE__) . '/includes/base.php');
 

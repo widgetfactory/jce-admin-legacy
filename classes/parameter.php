@@ -20,12 +20,12 @@ class WFParameter extends JRegistry {
     /**
      * @var    object  The params data object
      */
-    protected $_data    = null;
+    protected $_data = null;
     
     /**
      * @var    array  The params keys array
      */
-    protected $_key     = null;
+    protected $_key = null;
 
     /**
      * @var    object  The XML params element
@@ -39,7 +39,11 @@ class WFParameter extends JRegistry {
      */
     protected $_elements = array();
     
-    protected $_control     = 'params';
+    /**
+     * @var    string  Parameter control
+     * @since  2.2.5
+     */
+    protected $_control = 'params';
 
     /**
      * @var    array  Directories, where element types can be stored
