@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -8,40 +9,37 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('JPATH_BASE') or die('RESTRICTED');
 
 /**
  * Renders a text element
  *
- * @package 	Joomla.Framework
- * @subpackage		Parameter
- * @since		1.5
+ * @package 	JCE
  */
+class WFElementExtension extends WFElement {
 
-class JElementExtension extends JElement
-{
-	/**
-	* Element name
-	*
-	* @access	protected
-	* @var		string
-	*/
-	var	$_name = 'Extension';
+    /**
+     * Element name
+     *
+     * @access	protected
+     * @var		string
+     */
+    var $_name = 'Extension';
 
-	function fetchElement($name, $value, &$node, $control_name)
-	{		
-		/*
+    function fetchElement($name, $value, &$node, $control_name) {
+        /*
          * Required to avoid a cycle of encoding &
          * html_entity_decode was used in place of htmlspecialchars_decode because
          * htmlspecialchars_decode is not compatible with PHP 4
          */
         $value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES), ENT_QUOTES);
-		$class = ( $node->attributes('class') ? 'class="'.$node->attributes('class').' text_area"' : 'class="text_area"' );
-		
-		$control = $control_name.'['.$name.']';
+        $class = ( $node->attributes()->class ? 'class="' . $node->attributes()->class . ' text_area"' : 'class="text_area"' );
 
-		return '<input type="text" name="'.$control.'" id="'.$control_name.$name.'" value="'.$value.'" '.$class.' data-default="' . $node->attributes('default') . '" />';
-	}
+        $control = $control_name . '[' . $name . ']';
+
+        return '<input type="text" name="' . $control . '" id="' . $control_name . $name . '" value="' . $value . '" ' . $class . ' data-default="' . $node->attributes()->default . '" />';
+    }
+
 }
+
 ?>

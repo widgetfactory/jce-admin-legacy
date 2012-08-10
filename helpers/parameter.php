@@ -17,7 +17,7 @@ abstract class WFParameterHelper
 	 */
 	public static function toObject($data) 
 	{
-		$param = new JParameter('');
+		$param = new WFParameter('');
 		$param->bind($data);
 
 		return $param->toObject();

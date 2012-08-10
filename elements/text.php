@@ -3,6 +3,7 @@
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -14,11 +15,9 @@ defined('JPATH_BASE') or die('RESTRICTED');
 /**
  * Renders a text element
  *
- * @package 	Joomla.Framework
- * @subpackage		Parameter
- * @since		1.5
+ * @package 	JCE
  */
-class JElementText extends JElement {
+class WFElementText extends WFElement {
 
     /**
      * Element name
@@ -37,7 +36,7 @@ class JElementText extends JElement {
             }
         }
 
-        if (strpos($name, 'max_size') !== false || strpos($node->attributes('class'), 'upload_size') !== false) {
+        if (strpos($name, 'max_size') !== false || strpos($node->attributes()->class, 'upload_size') !== false) {
             $uploadsize = intval($this->getUploadValue());
             $attributes['max'] = $uploadsize;
         }
@@ -48,7 +47,7 @@ class JElementText extends JElement {
          * htmlspecialchars_decode is not compatible with PHP 4
          */
         $value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES), ENT_QUOTES);
-        $attributes['class'] = ( $node->attributes('class') ? $node->attributes('class') . ' text_area' : 'text_area' );
+        $attributes['class'] = ( $node->attributes()->class ? $node->attributes()->class . ' text_area' : 'text_area' );
 
         $control = $control_name . '[' . $name . ']';
 
@@ -61,7 +60,7 @@ class JElementText extends JElement {
         
         // pattern data attribute for editable select input box
         if ($node->attributes('parent')) {
-            $attributes['data-parent'] = preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . $node->attributes('parent');
+            $attributes['data-parent'] = preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . $node->attributes()->parent;
         }
 
         $html .= '<input';

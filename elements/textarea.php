@@ -3,6 +3,7 @@
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -14,11 +15,9 @@ defined('JPATH_BASE') or die('RESTRICTED');
 /**
  * Renders a textarea element
  *
- * @package 	Joomla.Framework
- * @subpackage		Parameter
- * @since		1.5
+ * @package 	JCE
  */
-class JElementTextarea extends JElement {
+class WFElementTextarea extends WFElement {
 
     /**
      * Element name
@@ -36,7 +35,7 @@ class JElementTextarea extends JElement {
         );
 
         foreach ($attributes as $k => $v) {
-            $av = $node->attributes($k);
+            $av = $node->attributes()->$k;
             if ($av || $v) {
                 $v = !$av ? $v : $av;
                 $attribs .= ' ' . $k . '="' . $v . '"';
@@ -44,13 +43,14 @@ class JElementTextarea extends JElement {
         }
         
         // pattern data attribute for editable select input box
-        if ($node->attributes('parent')) {
-            $attribs .= 'data-parent="' . preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . $node->attributes('parent') . '"';
+        if ($node->attributes()->parent) {
+            $attribs .= 'data-parent="' . preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . $node->attributes()->parent . '"';
         }
 
-        $rows = $node->attributes('rows');
-        $cols = $node->attributes('cols');
-        $class = ( $node->attributes('class') ? 'class="' . $node->attributes('class') . '"' : 'class="text_area"' );
+        $rows = $node->attributes()->rows;
+        $cols = $node->attributes()->cols;
+        
+        $class = ( $node->attributes()->class ? 'class="' . $node->attributes()->class . '"' : 'class="text_area"' );
         // convert <br /> tags so they are not visible when editing
         $value = str_replace('<br />', "\n", $value);
 

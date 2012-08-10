@@ -3,6 +3,7 @@
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -14,13 +15,13 @@ defined('JPATH_BASE') or die('RESTRICTED');
 /**
  * Renders a select element
  */
-class JElementList extends JElement {
+class WFElementList extends WFElement {
 
     /**
      * Element type
      *
      * @access	protected
-     * @var		string
+     * @var	string
      */
     var $_name = 'List';
 
@@ -33,16 +34,16 @@ class JElementList extends JElement {
         $options = array();
         $values = array();
 
-        if ($class = $node->attributes('class')) {
+        if ($class = $node->attributes()->class) {
             $attribs[] = 'class="' . $class . '"';
         } else {
             $attribs[] = 'class="inputbox"';
         }
 
         foreach ($node->children() as $option) {
-            $val = $option->attributes('value');
-            $text = $option->data();
-            $disabled = $option->attributes('disabled') ? true : false;
+            $val        = $option->attributes()->value;
+            $text       = $option->data();
+            $disabled   = $option->attributes()->disabled ? true : false;
 
             $text = strpos($text, 'WF_') === false ? $text : WFText::_($text);
 
@@ -66,8 +67,8 @@ class JElementList extends JElement {
         if (is_array($value)) {
             $diff = array_diff($values, $value);
             foreach ($node->children() as $option) {
-                $val = $option->attributes('value');
-                $text = $option->data();
+                $val    = $option->attributes()->value;                
+                $text   = (string)$option->data();
 
                 $text = strpos($text, 'WF_') === false ? $text : WFText::_($text);
 
@@ -79,31 +80,31 @@ class JElementList extends JElement {
 
         // revert to default values
         if ($value === '') {
-            $value = $node->attributes('defaults');
+            $value = $node->attributes()->defaults;
         }
 
         // editable lists
         if (strpos($class, 'editable') !== false) {
             // pattern data attribute for editable select input box
-            if ($node->attributes('pattern')) {
-                $attribs[] = 'data-pattern="' . $node->attributes('pattern') . '"';
+            if ($node->attributes()->pattern) {
+                $attribs[] = 'data-pattern="' . $node->attributes()->pattern . '"';
             }
 
             $value = strpos($value, 'WF_') === false ? $value : WFText::_($value);
 
             // editable lists - add value to list
-            if (!in_array($value, $values) && !$node->attributes('multiple')) {
+            if (!in_array($value, $values) && !$node->attributes()->multiple) {
                 $options[] = JHTML::_('select.option', $value, $value);
             }
         }
         
         // pattern data attribute for editable select input box
-        if ($node->attributes('parent')) {
-            $attribs[] = 'data-parent="' . preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . $node->attributes('parent') . '"';
+        if ($node->attributes()->parent) {
+            $attribs[] = 'data-parent="' . preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . $node->attributes()->parent . '"';
         }
 
         // multiple lists
-        if ($node->attributes('multiple')) {
+        if ($node->attributes()->multiple) {
             $attribs[] = 'multiple="multiple"';
             $ctrl .= '[]';
 

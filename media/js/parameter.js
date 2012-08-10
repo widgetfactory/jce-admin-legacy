@@ -8,21 +8,21 @@
  * other free or open source software licenses.
  */
 (function($) {
-	$.jce.Parameter = {
-		add : function(element, classname) {
-			$(document).ready(function($) {
-				var div = 'div.' + classname;		
+    $.jce.Parameter = {
+        add : function(element, classname) {
+            $(document).ready(function($) {
+                var div = 'div.' + classname;
 				
-				$(div, $(element).parent()).hide();//.find(':input').attr('disabled', 'disabled');				
-				$(div + '[data-type="'+ $(element).val() +'"]', $(element).parent()).show().find(':input').removeAttr('disabled');
+                $(div, $(element).parent()).hide();//.find(':input').attr('disabled', 'disabled');				
+                $(div + '[data-type="'+ $(element).val() +'"]', $(element).parent()).show().find(':input').removeAttr('disabled');
 				
-				$(element).change(function() {
-					// hide filesystem parameter containers
-					$(div, $(this).parent()).hide();//.find(':input').attr('disabled', 'disabled');
-					$(div + '[data-type="'+ $(this).val() +'"]', $(this).parent()).show().find(':input').removeAttr('disabled');
-				});
+                $(element).change(function() {
+                    // hide filesystem parameter containers
+                    $(div, $(this).parent()).hide();//.find(':input').attr('disabled', 'disabled');
+                    $(div + '[data-type="'+ $(this).val() +'"]', $(this).parent()).show().find(':input').removeAttr('disabled');
+                });
 				
-			});
-		}
-	};
+            });
+        }
+    };
 })(jQuery);

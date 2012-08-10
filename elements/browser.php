@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -8,78 +9,75 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('JPATH_BASE') or die('RESTRICTED');
 
 /**
- * Renders a text element
+ * Renders a browser element
  *
- * @package 	Joomla.Framework
- * @subpackage		Parameter
- * @since		1.5
+ * @package 	JCE
  */
+class WFElementBrowser extends WFElement {
 
-class JElementBrowser extends JElement
-{
-	/**
-	* Element name
-	*
-	* @access	protected
-	* @var		string
-	*/
-	var	$_name = 'Browser';
+    /**
+     * Element name
+     *
+     * @access	protected
+     * @var		string
+     */
+    var $_name = 'Browser';
 
-	function fetchElement($name, $value, &$node, $control_name)
-	{
-		$attributes = array();
+    function fetchElement($name, $value, &$node, $control_name) {
+        $attributes = array();
 
-		foreach ($node->attributes() as $k => $v) {	
-			if ($v != '') {
-				$attributes[$k] = $v;
-			}
-		}
-		
-		/*
+        foreach ($node->attributes() as $k => $v) {
+            if ($v != '') {
+                $attributes[$k] = $v;
+            }
+        }
+
+        /*
          * Required to avoid a cycle of encoding &
          * html_entity_decode was used in place of htmlspecialchars_decode because
          * htmlspecialchars_decode is not compatible with PHP 4
          */
-        $value 					= htmlspecialchars(html_entity_decode($value, ENT_QUOTES), ENT_QUOTES);
-		$attributes['class'] 	= ( $node->attributes('class') ? $node->attributes('class') . ' text_area' : 'text_area' );
-		
-		$control 				= $control_name.'['.$name.']';
-		
-		$html = '';
-		
-		$attributes['value'] 	= $value;
-		$attributes['type'] 	= 'text';
-		$attributes['name'] 	= $control;
-		$attributes['id'] 		= preg_replace('#[^a-z0-9_-]#i', '', $control_name.$name);
-		
-		$filter					= isset($attributes['data-filter']) ? $attributes['data-filter'] : '';
-		
-		$html .= '<input';
-		
-		foreach ($attributes as $k => $v) {
-			if (!in_array($k, array('default', 'label', 'description'))) {
-				$html .= ' ' . $k . ' = "' . $v . '"';
-			}	
-		}
+        $value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES), ENT_QUOTES);
+        $attributes['class'] = ( $node->attributes()->class ? $node->attributes()->class . ' text_area' : 'text_area' );
 
-		$html .= ' />';
-		
-		$options = array(
-			'width' 	=> 765,
-			'height'	=> 480,
-			'modal' 	=> true,
-			'id'		=> $attributes['id'] . '_browser'
-		);
+        $control = $control_name . '[' . $name . ']';
 
-		$model = JModel::getInstance('WFModel');
-		
-		$html .= '<a href="' . $model->getBrowserLink($attributes['id'], $filter) . '" class="dialog browser" target="_blank" data-options=\'' . json_encode($options) . '\' title="' . WFText::_( 'WF_BROWSER_TITLE' ) . '"><span class="browser"></span></a>';
-		
-		return $html;
-	}
+        $html = '';
+
+        $attributes['value'] = $value;
+        $attributes['type'] = 'text';
+        $attributes['name'] = $control;
+        $attributes['id'] = preg_replace('#[^a-z0-9_-]#i', '', $control_name . $name);
+
+        $filter = isset($attributes['data-filter']) ? $attributes['data-filter'] : '';
+
+        $html .= '<input';
+
+        foreach ($attributes as $k => $v) {
+            if (!in_array($k, array('default', 'label', 'description'))) {
+                $html .= ' ' . $k . ' = "' . $v . '"';
+            }
+        }
+
+        $html .= ' />';
+
+        $options = array(
+            'width' => 765,
+            'height' => 480,
+            'modal' => true,
+            'id' => $attributes['id'] . '_browser'
+        );
+
+        $model = JModel::getInstance('WFModel');
+
+        $html .= '<a href="' . $model->getBrowserLink($attributes['id'], $filter) . '" class="dialog browser" target="_blank" data-options=\'' . json_encode($options) . '\' title="' . WFText::_('WF_BROWSER_TITLE') . '"><span class="browser"></span></a>';
+
+        return $html;
+    }
+
 }
+
 ?>
