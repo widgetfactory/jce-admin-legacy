@@ -15,57 +15,55 @@ defined('_JEXEC') or die('RESTRICTED');
 // Register the element class with the loader.
 JLoader::register('WFElement', dirname(__FILE__) . '/element.php');
 
-class WFParameter extends JRegistry {
-    
+class WFParameter {
+
     /**
      * @var    object  The params data object
      */
-    protected $_data = null;
-    
+    protected $data = null;
+
     /**
      * @var    array  The params keys array
      */
-    protected $_key = null;
+    protected $key = null;
 
     /**
      * @var    object  The XML params element
      * @since  2.2.5
      */
-    protected $_xml = null;
+    protected $xml = null;
 
     /**
      * @var    array  Loaded elements
      * @since  2.2.5
      */
-    protected $_elements = array();
-    
+    protected $elements = array();
+
     /**
      * @var    string  Parameter control
      * @since  2.2.5
      */
-    protected $_control = 'params';
+    protected $control = 'params';
 
     /**
      * @var    array  Directories, where element types can be stored
      * @since  2.2.5
      */
-    protected $_elementPath = array();
+    protected $elementPath = array();
 
     function __construct($data = null, $path = '', $keys = null, $config = array()) {
-        parent::__construct('_default');
-        
+        //parent::__construct('_default');
+
         if (array_key_exists('control', $config)) {
-            $this->_control = $config['control'];
+            $this->control = $config['control'];
         }
 
         // Set base path.
         $this->addElementPath(dirname(dirname(__FILE__)) . '/elements');
-        // add joomla paths
-        $this->addElementPath(JPATH_LIBRARIES . '/html/parameter/element');
 
-        /*if ($data = trim($data)) {
-            $this->loadString($data);
-        }*/
+        /* if ($data = trim($data)) {
+          $this->loadString($data);
+          } */
 
         if ($path) {
             $this->loadSetupFile($path);
@@ -73,7 +71,7 @@ class WFParameter extends JRegistry {
 
         //$this->_raw = $data;
 
-        $this->_data = new StdClass();
+        $this->data = new StdClass();
 
         if ($data) {
             if (!is_object($data)) {
@@ -85,14 +83,14 @@ class WFParameter extends JRegistry {
                     $keys = explode('.', $keys);
                 }
 
-                $this->_key = $keys;
+                $this->key = $keys;
 
                 foreach ($keys as $key) {
                     $data = isset($data->$key) ? $data->$key : $data;
                 }
             }
 
-            $this->bindData($this->_data, $data);
+            $this->bindData($this->data, $data);
         }
     }
 
@@ -108,34 +106,33 @@ class WFParameter extends JRegistry {
         $result = false;
 
         if ($path) {
-            /*$xml = JFactory::getXMLParser('Simple');
+            /* $xml = JFactory::getXMLParser('Simple');
 
-            if ($xml->loadFile($path)) {
-                if ($params = $xml->document->params) {
-                    foreach ($params as $param) {
-                        $this->setXML($param);
-                        $result = true;
-                    }
-                }
-            }*/
-            
-            $controls = explode(':', $this->_control);
+              if ($xml->loadFile($path)) {
+              if ($params = $xml->document->params) {
+              foreach ($params as $param) {
+              $this->setXML($param);
+              $result = true;
+              }
+              }
+              } */
 
-            if ($xml = WFXMLElement::getXML($path)) {                
+            $controls = explode(':', $this->control);
+
+            if ($xml = WFXMLElement::getXML($path)) {
                 $params = $xml;
-                
-                foreach($controls as $control) {
-                   $params = $params->$control;
-               }
-                
+
+                foreach ($controls as $control) {
+                    $params = $params->$control;
+                }
+
                 //if ($params = $xml->$control) {
-                    foreach ($params as $param) {
-                        $this->setXML($param);
-                        $result = true;
-                    }
+                foreach ($params as $param) {
+                    $this->setXML($param);
+                    $result = true;
+                }
                 //}
             }
-            
         } else {
             $result = true;
         }
@@ -153,14 +150,14 @@ class WFParameter extends JRegistry {
      * @since   2.2.5
      */
     public function setXML(&$xml) {
-        if (is_object($xml)) {                        
-            if ($group = (string)$xml->attributes()->group) { 
-                $this->_xml[$group]     = $xml;
+        if (is_object($xml)) {
+            if ($group = (string) $xml->attributes()->group) {
+                $this->xml[$group] = $xml;
             } else {
-                $this->_xml['_default'] = $xml;
+                $this->xml['_default'] = $xml;
             }
 
-            if ($dir = (string)$xml->attributes()->addpath) {
+            if ($dir = (string) $xml->attributes()->addpath) {
                 $this->addElementPath(JPATH_ROOT . $dir);
             }
         }
@@ -198,7 +195,7 @@ class WFParameter extends JRegistry {
             }
 
             // Add to the top of the search dirs.
-            array_unshift($this->_elementPath, $dir);
+            array_unshift($this->elementPath, $dir);
         }
     }
 
@@ -214,15 +211,15 @@ class WFParameter extends JRegistry {
     public function loadElement($type, $new = false) {
         $signature = md5($type);
 
-        if ((isset($this->_elements[$signature]) && !($this->_elements[$signature] instanceof __PHP_Incomplete_Class)) && $new === false) {
-            return $this->_elements[$signature];
+        if ((isset($this->elements[$signature]) && !($this->elements[$signature] instanceof __PHP_Incomplete_Class)) && $new === false) {
+            return $this->elements[$signature];
         }
 
         $elementClass = 'WFElement' . $type;
-        
+
         if (!class_exists($elementClass)) {
-            if (isset($this->_elementPath)) {
-                $dirs = $this->_elementPath;
+            if (isset($this->elementPath)) {
+                $dirs = $this->elementPath;
             } else {
                 $dirs = array();
             }
@@ -243,9 +240,27 @@ class WFParameter extends JRegistry {
             return $false;
         }
 
-        $this->_elements[$signature] = new $elementClass($this);
+        $this->elements[$signature] = new $elementClass($this);
 
-        return $this->_elements[$signature];
+        return $this->elements[$signature];
+    }
+
+    /**
+     * Bind data to the parameter.
+     *
+     * @param   mixed   $data   An array or object.
+     * @param   string  $group  An optional group that the data should bind to. The default group is used if not supplied.
+     *
+     * @return  boolean  True if the data was successfully bound, false otherwise.
+     */
+    public function bind($data) {
+        if (is_array($data)) {
+            return $this->bindData($this->data, $data);
+        } else if (is_object($data)) {
+            return $this->bindData($this->data, $data);
+        } else {
+            return $this->bindData($this->data, json_decode($data));
+        }
     }
 
     /**
@@ -257,7 +272,7 @@ class WFParameter extends JRegistry {
      * @return	void
      * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
      */
-    public function bindData(&$parent, $data) {
+    protected function bindData(&$parent, $data) {
         // Ensure the input data is an array.
         if (is_object($data)) {
             $data = get_object_vars($data);
@@ -285,10 +300,10 @@ class WFParameter extends JRegistry {
      * @since   2.2.5
      */
     public function getNumParams($group = '_default') {
-        if (!isset($this->_xml[$group]) || !count($this->_xml[$group]->children())) {
+        if (!isset($this->xml[$group]) || !count($this->xml[$group]->children())) {
             return false;
         } else {
-            return count($this->_xml[$group]->children());
+            return count($this->xml[$group]->children());
         }
     }
 
@@ -300,13 +315,13 @@ class WFParameter extends JRegistry {
      * @since   2.2.5
      */
     public function getGroups() {
-        if (!is_array($this->_xml)) {
+        if (!is_array($this->xml)) {
 
             return false;
         }
 
         $results = array();
-        foreach ($this->_xml as $name => $group) {
+        foreach ($this->xml as $name => $group) {
             $results[$name] = $this->getNumParams($name);
         }
         return $results;
@@ -322,13 +337,13 @@ class WFParameter extends JRegistry {
         }
 
         foreach ($groups as $group => $num) {
-            if (!isset($this->_xml[$group])) {
+            if (!isset($this->xml[$group])) {
                 return null;
             }
 
             $data = new StdClass();
 
-            foreach ($this->_xml[$group]->children() as $param) {
+            foreach ($this->xml[$group]->children() as $param) {
                 $key = $param->attributes()->name;
                 $value = $this->get($key, $param->attributes()->default);
 
@@ -365,7 +380,7 @@ class WFParameter extends JRegistry {
         $nodes = is_array($path) ? $path : explode('.', $path);
 
         // Initialize the current node to be the registry root.
-        $node = $this->_data;
+        $node = $this->data;
         $found = false;
         // Traverse the registry to find the correct node for the result.
         foreach ($nodes as $n) {
@@ -403,14 +418,14 @@ class WFParameter extends JRegistry {
      * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
      */
     public function getParams($name = 'params', $group = '_default') {
-        if (!isset($this->_xml[$group])) {
+        if (!isset($this->xml[$group])) {
             return false;
         }
-        
-        $results    = array();
-        $parent     = $this->_xml[$group]->attributes()->parent;
 
-        foreach ($this->_xml[$group]->children() as $param) {            
+        $results = array();
+        $parent = $this->xml[$group]->attributes()->parent;
+
+        foreach ($this->xml[$group]->children() as $param) {
             $results[] = $this->getParam($param, $name, $group, $parent);
 
             // get sub-parameters
@@ -425,7 +440,7 @@ class WFParameter extends JRegistry {
 
                 foreach ($files as $file) {
                     $key = $keys[0] . '.' . basename($file, '.xml');
-                    $results[] = new WFParameter($this->_data, $file, $key);
+                    $results[] = new WFParameter($this->data, $file, $key);
                 }
             }
         }
@@ -492,12 +507,12 @@ class WFParameter extends JRegistry {
                     $class = '';
                     $parent = '';
 
-                    $xml = $item->_xml[$group];
+                    $xml = $item->xml[$group];
 
                     if ($xml->attributes()->parent) {
-                        $parent     = '[' . $xml->attributes()->parent . '][' . $group . ']';
-                        $class      = ' class="' . $xml->attributes()->parent . '"';
-                        $label      = $xml->attributes()->parent . '_' . $group;
+                        $parent = '[' . $xml->attributes()->parent . '][' . $group . ']';
+                        $class = ' class="' . $xml->attributes()->parent . '"';
+                        $label = $xml->attributes()->parent . '_' . $group;
                     }
 
                     $html .= '<div data-type="' . $group . '"' . $class . '>';
@@ -523,7 +538,7 @@ class WFParameter extends JRegistry {
      * Check if a parent attribute is set. If it is, this parameter groups is included by the parent
      */
     public function hasParent() {
-        foreach ($this->_xml as $name => $group) {
+        foreach ($this->xml as $name => $group) {
             if ($group->attributes()->parent) {
                 return true;
             }
@@ -567,7 +582,7 @@ class WFParameter extends JRegistry {
      * Convert an associate array to an object
      * @param array Associative array
      */
-    public static function array_to_object($array) {
+    private static function array_to_object($array) {
         $object = new StdClass();
 
         foreach ($array as $key => $value) {
@@ -576,5 +591,17 @@ class WFParameter extends JRegistry {
 
         return $object;
     }
-
+    
+    /**
+     * Get Parameter data
+     * @param   boolean $toString Return as JSON string
+     * @return  object or string
+     */
+    public function getData($toString = false) {
+        if ($toString) {
+            return json_encode($this->data);
+        }
+        
+        return $this->data;
+    }
 }
