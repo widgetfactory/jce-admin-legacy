@@ -368,9 +368,9 @@ class WFModelProfiles extends WFModel {
                 }
 
                 foreach ($profile->children() as $item) {
-                    switch ($item->name()) {
+                    switch ((string) $item->getName()) {
                         case 'name':
-                            $name = $item->data();
+                            $name = (string) $item;
                             // only if name set and table name not set
                             if ($name && !$row->name) {
                                 // check for name
@@ -390,40 +390,40 @@ class WFModelProfiles extends WFModel {
 
                             break;
                         case 'description':
-                            $row->description = WFText::_($item->data());
+                            $row->description = WFText::_((string) $item);
 
                             break;
                         case 'types':
-                            if (!$item->data()) {
-                                $area = $profile->area[0]->data();
+                            if (!(string) $item) {
+                                $area = (string) $profile->area[0];
 
                                 $groups = $this->getUserGroups($area);
-                                $data = implode(',', array_unique($groups));
+                                $data 	= implode(',', array_unique($groups));
                             } else {
-                                $data = $item->data();
+                                $data = (string) $item;
                             }
                             $row->types = $data;
                             break;
                         case 'params':
                             $params = array();
                             foreach ($item->children() as $param) {
-                                $params[] = $param->data();
+                                $params[] = (string) $param;
                             }
                             $row->params = implode("\n", $params);
 
                             break;
                         case 'rows':
 
-                            $row->rows = $item->data();
+                            $row->rows = (string) $item;
 
                             break;
                         case 'plugins':
-                            $row->plugins = $item->data();
+                            $row->plugins = (string) $item;
 
                             break;
                         default:
-                            $key = $item->name();
-                            $row->$key = $item->data();
+                            $key 		= (string) $item->getName();
+                            $row->$key 	= (string) $item;
 
                             break;
                     }
@@ -456,16 +456,16 @@ class WFModelProfiles extends WFModel {
                     $row = JTable::getInstance('profiles', 'WFTable');
 
                     foreach ($profile->children() as $item) {
-                        switch ($item->name()) {
+                        switch ((string) $item->getName()) {
                             case 'rows':
-                                $row->rows = $item->data();
+                                $row->rows = (string) $item;
                                 break;
                             case 'plugins':
-                                $row->plugins = $item->data();
+                                $row->plugins = (string) $item;
                                 break;
                             default:
-                                $key = $item->name();
-                                $row->$key = $item->data();
+                                $key 		= (string) $item->getName();
+                                $row->$key 	= (string) $item;
 
                                 break;
                         }

@@ -119,7 +119,7 @@ class WFModelPreferences extends WFModel {
 			// Iterate over the children and add to the actions.
 			foreach ($xml->section->children() as $element)
 			{
-				if ($element->name() == 'action') {
+				if ((string) $element->getName() == 'action') {
 					$actions[] = (object) array(
 						'name'			=> (string) $element['name'],
 						'title'			=> (string) $element['title'],

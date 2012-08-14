@@ -42,7 +42,7 @@ class WFElementList extends WFElement {
 
         foreach ($node->children() as $option) {
             $val        = (string) $option->attributes()->value;
-            $text       = WFText::_($option->data());
+            $text       = WFText::_((string) $option);
             $disabled   = (string) $option->attributes()->disabled ? true : false;
 
             $text = strpos($text, 'WF_') === false ? $text : WFText::_($text);
@@ -68,7 +68,7 @@ class WFElementList extends WFElement {
             $diff = array_diff($values, $value);
             foreach ($node->children() as $option) {
                 $val    = (string) $option->attributes()->value;                
-                $text   = (string) $option->data();
+                $text   = (string) $option;
 
                 $text = strpos($text, 'WF_') === false ? $text : WFText::_($text);
 

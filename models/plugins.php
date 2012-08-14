@@ -33,8 +33,8 @@ class WFModelPlugins extends WFModel {
                     $commands[$name] = new StdClass();
 
                     foreach ($command->children() as $item) {
-                        $key = $item->name();
-                        $value = $item->data();
+                        $key 	= $item->getName();
+                        $value 	= (string) $item;
                         $commands[$name]->$key = $value;
                     }
 
@@ -63,8 +63,8 @@ class WFModelPlugins extends WFModel {
                     $plugins[$name] = new StdClass();
 
                     foreach ($plugin->children() as $item) {
-                        $key    = $item->name();
-                        $value  = $item->data();
+                        $key    = (string) $item->getName();
+                        $value  = (string) $item;
 
                         $plugins[$name]->$key = $value;
                     }
@@ -99,8 +99,8 @@ class WFModelPlugins extends WFModel {
 
                         $plugins[$name]->name = $name;
 
-                        $plugins[$name]->title = (string) $xml->name;
-                        $plugins[$name]->icon = (string) $xml->icon;
+                        $plugins[$name]->title 	= (string) $xml->name;
+                        $plugins[$name]->icon 	= (string) $xml->icon;
 
                         $editable = (int) $xml->attributes()->editable;
                         $plugins[$name]->editable = $editable ? $editable : ($params && count($params->children()) ? 1 : 0);
