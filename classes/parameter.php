@@ -344,8 +344,8 @@ class WFParameter {
             $data = new StdClass();
 
             foreach ($this->xml[$group]->children() as $param) {
-                $key = $param->attributes()->name;
-                $value = $this->get($key, $param->attributes()->default);
+                $key    = (string) $param->attributes()->name;
+                $value  = $this->get($key, (string) $param->attributes()->default);
 
                 $data->$key = $value;
             }
@@ -422,21 +422,22 @@ class WFParameter {
             return false;
         }
 
-        $results = array();
-        $parent = $this->xml[$group]->attributes()->parent;
+        $results    = array();
+        $parent     = (string) $this->xml[$group]->attributes()->parent;
 
         foreach ($this->xml[$group]->children() as $param) {
             $results[] = $this->getParam($param, $name, $group, $parent);
 
+            $parameters = (string) $param->attributes()->parameters;
             // get sub-parameters
-            if ($param->attributes()->parameters) {
+            if ($parameters) {
                 jimport('joomla.filesystem.folder');
 
                 // load manifest files for extensions
-                $files = JFolder::files(JPATH_SITE . DS . $param->attributes()->parameters, '\.xml$', false, true);
+                $files = JFolder::files(JPATH_SITE . DS . $parameters, '\.xml$', false, true);
 
                 // get the base key for the parameter
-                $keys = explode('.', $param->attributes()->name);
+                $keys = explode('.', (string) $param->attributes()->name);
 
                 foreach ($files as $file) {
                     $key = $keys[0] . '.' . basename($file, '.xml');
@@ -458,33 +459,32 @@ class WFParameter {
      */
     public function getParam(&$node, $control_name = 'params', $group = '_default', $parent = '') {
         //get the type of the parameter
-        $type = $node->attributes()->type;
+        $type = (string) $node->attributes()->type;
 
         $element = $this->loadElement($type);
 
         // error happened
         if ($element === false) {
-            $result = array();
-            $result[0] = $node->attributes()->name;
-            $result[1] = WFText::_('Element not defined for type') . ' = ' . $type;
-            $result[5] = $result[0];
+            $result     = array();
+            $result[0]  = (string) $node->attributes()->name;
+            $result[1]  = WFText::_('Element not defined for type') . ' = ' . $type;
+            $result[5]  = $result[0];
             return $result;
         }
 
-        $key = $node->attributes()->name;
+        $key = (string) $node->attributes()->name;
 
-        if ($node->attributes()->group) {
-            $key = $node->attributes()->group . '.' . $node->attributes()->name;
+        if ((string) $node->attributes()->group) {
+            $key = (string) $node->attributes()->group . '.' . $key;
         }
 
         // get value
-        $value = $this->get($key, $node->attributes()->default);
+        $value = $this->get($key, (string)$node->attributes()->default);
 
         // get value if value is object or has parent
-        if (is_object($value) || $parent) {
+        if (is_object($value) || $parent) {            
             $group = $parent ? $parent . '.' . $group : $group;
-
-            $value = $this->get($group . '.' . $node->attributes()->name, $node->attributes()->default);
+            $value = $this->get($group . '.' . (string) $node->attributes()->name, (string) $node->attributes()->default);
         }
 
         return $element->render($node, $value, $control_name);
@@ -503,16 +503,16 @@ class WFParameter {
             if ($item instanceof WFParameter) {
 
                 foreach ($item->getGroups() as $group => $num) {
-                    $label = $group;
-                    $class = '';
+                    $label  = $group;
+                    $class  = '';
                     $parent = '';
 
                     $xml = $item->xml[$group];
 
-                    if ($xml->attributes()->parent) {
-                        $parent = '[' . $xml->attributes()->parent . '][' . $group . ']';
-                        $class = ' class="' . $xml->attributes()->parent . '"';
-                        $label = $xml->attributes()->parent . '_' . $group;
+                    if ((string) $xml->attributes()->parent) {
+                        $parent = '[' . (string) $xml->attributes()->parent . '][' . $group . ']';
+                        $class  = ' class="' . (string) $xml->attributes()->parent . '"';
+                        $label  = (string) $xml->attributes()->parent . '_' . $group;
                     }
 
                     $html .= '<div data-type="' . $group . '"' . $class . '>';
@@ -539,7 +539,7 @@ class WFParameter {
      */
     public function hasParent() {
         foreach ($this->xml as $name => $group) {
-            if ($group->attributes()->parent) {
+            if ((string) $group->attributes()->parent) {
                 return true;
             }
         }
