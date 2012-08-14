@@ -53,4 +53,28 @@ abstract class WFXMLHelper {
         return WFXMLElement::getXML($file);
     }
 
+    public static function parseInstallManifest($file) {
+        $xml = WFXMLElement::getXML($file);
+        
+        if (!$xml) {
+            return false;
+        }
+        
+        if ($xml->getName() != 'install' && $xml->getName() != 'extension') {
+            return false;
+        }
+        
+        $data = array(
+            'version'       => (string) $xml->version,
+            'name'          => (string) $xml->name,
+            'copyright'     => (string) $xml->copyright,
+            'authorEmail'   => (string) $xml->authorEmail,
+            'authorUrl'     => (string) $xml->authorUrl,
+            'description'   => (string) $xml->description,
+            'author'        => (string) $xml->author
+        );
+        
+        return $data;
+    }
+
 }
