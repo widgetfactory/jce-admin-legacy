@@ -49,6 +49,24 @@ class WFInstall {
             return false;
         }
         
+        // check JSON is installed
+        if (extension_loaded('json') === false) {
+            $installer->abort('JCE requires the PHP JSON extension');
+            return false;
+        }
+        
+        // check SimpleXML
+        if (function_exists('simplexml_load_string') === false || function_exists('simplexml_load_file') === false) {
+            $installer->abort('JCE requires the PHP SimpleXML functions simplexml_load_string and simplexml_load_file');
+            return false;
+        }
+        
+        // check SimpleXMLElement
+        if (class_exists('SimpleXMLElement') === false) {
+            $installer->abort('JCE requires the PHP SimpleXMLElement class');
+            return false;
+        }
+        
         require_once($installer->getPath('extension_administrator') . '/includes/base.php');
         
         $manifest = $installer->get('manifest');
