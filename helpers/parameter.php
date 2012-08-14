@@ -20,7 +20,7 @@ abstract class WFParameterHelper
 		$param = new WFParameter('');
 		$param->bind($data);
 
-		return $param->toObject();
+		return $param->getData();
 	}
 	
 	public static function getComponentParams($key = '', $path = '')
