@@ -220,14 +220,15 @@ class WFModelEditor extends JModel {
      * @return Version
      */
     function getVersion() {
-        // Get Component xml
-        $xml = JApplicationHelper::parseXMLInstallFile(WF_ADMINISTRATOR . '/jce.xml');
+        $xml = WFXMLHelper::parseInstallManifest(JPATH_ADMINISTRATOR . '/components/com_jce/jce.xml');
 
         // return cleaned version number or date
         $version = preg_replace('/[^0-9a-z]/i', '', $xml['version']);
+        
         if (!$version) {
             return date('Y-m-d', strtotime('today'));
         }
+        
         return $version;
     }
 

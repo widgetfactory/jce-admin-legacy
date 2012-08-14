@@ -31,8 +31,7 @@ class WFModelCpanel extends WFModel {
     }
 
     function getVersion() {
-        // Get Component xml
-        $xml = JApplicationHelper::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_jce/jce.xml');
+        $xml = WFXMLHelper::parseInstallManifest(JPATH_ADMINISTRATOR . '/components/com_jce/jce.xml');
 
         return $xml['version'];
     }

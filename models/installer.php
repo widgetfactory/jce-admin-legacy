@@ -128,7 +128,7 @@ class WFModelInstaller extends WFModel {
             $manifest = WF_JOOMLA15 ? JPATH_PLUGINS . $row->folder . '/' . $row->element . '.xml' : JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . '/' . $row->element . '.xml';
 
             if (file_exists($manifest)) {
-                $xml = JApplicationHelper::parseXMLInstallFile($manifest);
+                $xml = WFXMLHelper::parseInstallManifest($manifest);
 
                 if ($xml) {
                     $installer->set('name', $xml['name']);
@@ -307,9 +307,12 @@ class WFModelInstaller extends WFModel {
         $numRows = count($rows);
         for ($i = 0; $i < $numRows; $i++) {
             $row = $rows[$i];
-
-            // Get the plugin xml file
-            $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . ".xml";
+            
+            $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . '/' . $row->element . ".xml";
+            
+            if (WF_JOOMLA15) {
+                $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . ".xml";
+            }
 
             if (is_file($file)) {
                 $xml = WFXMLElement::getXML($file);
@@ -347,7 +350,7 @@ class WFModelInstaller extends WFModel {
         foreach ($languages as $language) {
             $files = JFolder::files($language->baseDir . '/' . $language->folder, '\.(com_jce)\.xml$');
             foreach ($files as $file) {
-                $data = JApplicationHelper::parseXMLInstallFile($language->baseDir . '/' . $language->folder . '/' . $file);
+                $data = WFXMLHelper::parseInstallManifest($language->baseDir . '/' . $language->folder . '/' . $file);
 
                 $row = new StdClass();
                 $row->language = $language->folder;

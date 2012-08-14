@@ -36,14 +36,15 @@ class WFModelUpdates extends WFModel {
         $versions = array('joomla' => array(), 'jce' => array());
 
         // Get Component xml
-        $com_xml = JApplicationHelper::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_jce/jce.xml');
+        $com_xml = WFXMLHelper::parseInstallManifest(JPATH_ADMINISTRATOR . '/components/com_jce/jce.xml');
+
         // set component version
         $versions['joomla']['com_jce'] = $com_xml['version'];
         // get mediabox version
         $mediabox_xml_file = WF_JOOMLA15 ? JPATH_PLUGINS . '/system/jcemediabox.xml' : JPATH_PLUGINS . '/system/jcemediabox/jcemediabox.xml';
         // set mediabox version
         if (file_exists($mediabox_xml_file)) {
-            $mediabox_xml = JApplicationHelper::parseXMLInstallFile($mediabox_xml_file);
+            $mediabox_xml = WFXMLHelper::parseInstallManifest($mediabox_xml_file);
             $versions['joomla']['plg_jcemediabox'] = $mediabox_xml['version'];
         }
 
@@ -59,7 +60,7 @@ class WFModelUpdates extends WFModel {
 
                 $file = WF_EDITOR_PLUGINS . '/' . $plugin->name . '/' . $plugin->name . '.xml';
 
-                $xml = JApplicationHelper::parseXMLInstallFile($file);
+                $xml = WFXMLHelper::parseInstallManifest($file);
                 $versions['jce']['jce_' . $plugin->name] = $xml['version'];
             }
         }
@@ -69,7 +70,7 @@ class WFModelUpdates extends WFModel {
 
                 $file = WF_EDITOR_EXTENSIONS . '/' . $extension->folder . '/' . $extension->extension . '.xml';
 
-                $xml = JApplicationHelper::parseXMLInstallFile($file);
+                $xml = WFXMLHelper::parseInstallManifest($file);
                 $versions['jce']['jce_' . $extension->folder . '_' . $extension->extension] = $xml['version'];
             }
         }
