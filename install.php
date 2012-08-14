@@ -636,16 +636,16 @@ class WFInstall {
                         $row = JTable::getInstance('profiles', 'WFTable');
 
                         foreach ($profile->children() as $item) {
-                            switch ($item->name()) {
+                            switch ((string) $item->getName()) {
                                 case 'rows':
-                                    $row->rows = $item->data();
+                                    $row->rows = (string) $item;
                                     break;
                                 case 'plugins':
-                                    $row->plugins = $item->data();
+                                    $row->plugins = (string) $item;
                                     break;
                                 default:
-                                    $key = $item->name();
-                                    $row->$key = $item->data();
+                                    $key 		= (string) $item->getName();
+                                    $row->$key 	= (string) $item;
 
                                     break;
                             }
