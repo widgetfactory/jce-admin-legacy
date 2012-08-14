@@ -68,9 +68,9 @@ class WFElement extends JObject
 	 */
 	public function render(&$xmlElement, $value, $control_name = 'params')
 	{
-		$name = $xmlElement->attributes()->name;
-		$label = $xmlElement->attributes()->label;
-		$descr = $xmlElement->attributes()->description;
+		$name   = (string) $xmlElement->attributes()->name;
+		$label  = (string) $xmlElement->attributes()->label;
+		$descr  = (string) $xmlElement->attributes()->description;
 
 		//make sure we have a valid label
 		$label = $label ? $label : $name;
