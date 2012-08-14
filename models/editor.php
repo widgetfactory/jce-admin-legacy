@@ -160,17 +160,15 @@ class WFModelEditor extends JModel {
                     $v = preg_replace('@^#(.*)#$@', '/$1/', $v);
                 }
                 // boolean
-                else if (is_bool($v)) {
+                else if (is_bool($v) === true) {                    
                     $v = $v ? 'true' : 'false';
                 }
                 // stringified booleans
-                else if ($v == "true") {
-                    $v = 'true';
-                } else if ($v == "false") {
-                    $v = 'false';
+                else if ($v === "true" || $v === "false") {
+                    $v = $v === "true" ?'true' : 'false';
                 }
                 // anything that is not solely an integer
-                else if (!is_numeric($v)) {
+                else if (!is_numeric($v)) {                    
                     if (strpos($v, '"') === 0) {
                         $v = '"' . trim($v, '"') . '"';
                     } else {
