@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -8,64 +9,48 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die('RESTRICTED');
 
-abstract class WFXMLHelper
-{
-	public static function getElement($xml, $name, $default = '')
-    {
-    	if ($xml instanceof JSimpleXML) {
-    	//if (is_a($xml, 'JSimpleXML')) {
-    		$element = $xml->document->getElementByPath($name);
-        	return $element ? $element->data() : $default;
-    	} else {
-    		return (string)$xml->$name;
-    	}
-    }
-    
-    public static function getElements($xml, $name)
-    {
-    	if ($xml instanceof JSimpleXML) {
-    	//if (is_a($xml, 'JSimpleXML')) {
-	        $element = $xml->document->getElementByPath($name);	
-			
-	        if (is_a($element, 'JSimpleXMLElement') && count($element->children())) {
-	        	return $element;
-	        }
+abstract class WFXMLHelper {
+
+    public static function getElement($xml, $name, $default = '') {
+        if ($xml instanceof JSimpleXML) {
+            //if (is_a($xml, 'JSimpleXML')) {
+            $element = $xml->document->getElementByPath($name);
+            return $element ? $element->data() : $default;
         } else {
-        	return $xml->$name;
+            return (string) $xml->$name;
+        }
+    }
+
+    public static function getElements($xml, $name) {
+        if ($xml instanceof JSimpleXML) {
+            //if (is_a($xml, 'JSimpleXML')) {
+            $element = $xml->document->getElementByPath($name);
+
+            if (is_a($element, 'JSimpleXMLElement') && count($element->children())) {
+                return $element;
+            }
+        } else {
+            return $xml->$name;
         }
 
         return array();
     }
-    
-    public static function getAttribute($xml, $name, $default = '')
-    {
-    	//if (is_a($xml, 'JSimpleXML')) {
-    	if ($xml instanceof JSimpleXML) {
-    		$value = (string) $xml->document->attributes($name);
-    	} else {
-    		$value = (string)$xml->attributes()->$name;
-    	}
-    	
-    	return $value ? $value : $default;
-    }
-    
-    public static function getXML($file)
-    {
-    	// use JSimpleXML 	
-    	if (!method_exists('JFactory', 'getXML')) {
-    		$xml = JFactory::getXMLParser('Simple');
-		
-			if (!$xml->loadFile($file)) {
-				unset($xml);
-				return false;
-			}
-    	} else {
-    		$xml = WFXMLElement::getXML($file);
-    	}
 
-		return $xml;
+    public static function getAttribute($xml, $name, $default = '') {
+        //if (is_a($xml, 'JSimpleXML')) {
+        if ($xml instanceof JSimpleXML) {
+            $value = (string) $xml->document->attributes($name);
+        } else {
+            $value = (string) $xml->attributes()->$name;
+        }
+
+        return $value ? $value : $default;
     }
+
+    public static function getXML($file) {
+        return WFXMLElement::getXML($file);
+    }
+
 }
