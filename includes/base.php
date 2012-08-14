@@ -28,4 +28,8 @@ require_once(WF_ADMINISTRATOR. '/classes/text.php');
 require_once(WF_ADMINISTRATOR . '/classes/xml.php');
 // load parameter
 require_once(WF_ADMINISTRATOR . '/classes/parameter.php');
+
+// load xml helper
+require_once(WF_ADMINISTRATOR . '/helpers/xml.php');
+
 ?>
