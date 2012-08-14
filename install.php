@@ -654,7 +654,18 @@ class WFInstall {
                     }
                 }
             }
-        }    
+        }
+        
+        // remove k2links from previous version (accidentally installed)
+        if (version_compare($version, '2.2.1', '>') && version_compare($version, '2.2.5', '<')) {
+            $path = $site . '/editor/extensions/links';
+            
+            if (is_file($path . '/k2links.php') && is_file($path . '/k2links.xml') && !is_dir($path . '/k2links')) {
+                @JFile::delete($path . '/k2links.php');
+                @JFile::delete($path . '/k2links.xml');
+            }
+            
+        }
         return true;
     }
 
