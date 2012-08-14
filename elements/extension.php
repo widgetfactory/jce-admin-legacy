@@ -33,11 +33,11 @@ class WFElementExtension extends WFElement {
          * htmlspecialchars_decode is not compatible with PHP 4
          */
         $value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES), ENT_QUOTES);
-        $class = ( $node->attributes()->class ? 'class="' . $node->attributes()->class . ' text_area"' : 'class="text_area"' );
+        $class = ((string) $node->attributes()->class ? 'class="' . (string) $node->attributes()->class . ' text_area"' : 'class="text_area"' );
 
         $control = $control_name . '[' . $name . ']';
 
-        return '<input type="text" name="' . $control . '" id="' . $control_name . $name . '" value="' . $value . '" ' . $class . ' data-default="' . $node->attributes()->default . '" />';
+        return '<input type="text" name="' . $control . '" id="' . $control_name . $name . '" value="' . $value . '" ' . $class . ' data-default="' . (string) $node->attributes()->default . '" />';
     }
 
 }

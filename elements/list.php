@@ -34,16 +34,16 @@ class WFElementList extends WFElement {
         $options = array();
         $values = array();
 
-        if ($class = $node->attributes()->class) {
+        if ($class = (string) $node->attributes()->class) {
             $attribs[] = 'class="' . $class . '"';
         } else {
             $attribs[] = 'class="inputbox"';
         }
 
         foreach ($node->children() as $option) {
-            $val        = $option->attributes()->value;
-            $text       = $option->data();
-            $disabled   = $option->attributes()->disabled ? true : false;
+            $val        = (string) $option->attributes()->value;
+            $text       = WFText::_($option->data());
+            $disabled   = (string) $option->attributes()->disabled ? true : false;
 
             $text = strpos($text, 'WF_') === false ? $text : WFText::_($text);
 
@@ -67,8 +67,8 @@ class WFElementList extends WFElement {
         if (is_array($value)) {
             $diff = array_diff($values, $value);
             foreach ($node->children() as $option) {
-                $val    = $option->attributes()->value;                
-                $text   = (string)$option->data();
+                $val    = (string) $option->attributes()->value;                
+                $text   = (string) $option->data();
 
                 $text = strpos($text, 'WF_') === false ? $text : WFText::_($text);
 
@@ -80,31 +80,31 @@ class WFElementList extends WFElement {
 
         // revert to default values
         if ($value === '') {
-            $value = $node->attributes()->defaults;
+            $value = (string) $node->attributes()->defaults;
         }
 
         // editable lists
         if (strpos($class, 'editable') !== false) {
             // pattern data attribute for editable select input box
-            if ($node->attributes()->pattern) {
-                $attribs[] = 'data-pattern="' . $node->attributes()->pattern . '"';
+            if ((string) $node->attributes()->pattern) {
+                $attribs[] = 'data-pattern="' . (string) $node->attributes()->pattern . '"';
             }
 
             $value = strpos($value, 'WF_') === false ? $value : WFText::_($value);
 
             // editable lists - add value to list
-            if (!in_array($value, $values) && !$node->attributes()->multiple) {
+            if (!in_array($value, $values) && !(string) $node->attributes()->multiple) {
                 $options[] = JHTML::_('select.option', $value, $value);
             }
         }
         
         // pattern data attribute for editable select input box
-        if ($node->attributes()->parent) {
-            $attribs[] = 'data-parent="' . preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . $node->attributes()->parent . '"';
+        if ((string) $node->attributes()->parent) {
+            $attribs[] = 'data-parent="' . preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . (string) $node->attributes()->parent . '"';
         }
 
         // multiple lists
-        if ($node->attributes()->multiple) {
+        if ((string) $node->attributes()->multiple) {
             $attribs[] = 'multiple="multiple"';
             $ctrl .= '[]';
 

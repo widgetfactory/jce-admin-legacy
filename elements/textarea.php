@@ -35,7 +35,7 @@ class WFElementTextarea extends WFElement {
         );
 
         foreach ($attributes as $k => $v) {
-            $av = $node->attributes()->$k;
+            $av = (string) $node->attributes()->$k;
             if ($av || $v) {
                 $v = !$av ? $v : $av;
                 $attribs .= ' ' . $k . '="' . $v . '"';
@@ -43,14 +43,14 @@ class WFElementTextarea extends WFElement {
         }
         
         // pattern data attribute for editable select input box
-        if ($node->attributes()->parent) {
-            $attribs .= 'data-parent="' . preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . $node->attributes()->parent . '"';
+        if ((string) $node->attributes()->parent) {
+            $attribs .= 'data-parent="' . preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . (string) $node->attributes()->parent . '"';
         }
 
-        $rows = $node->attributes()->rows;
-        $cols = $node->attributes()->cols;
+        $rows = (string) $node->attributes()->rows;
+        $cols = (string) $node->attributes()->cols;
         
-        $class = ( $node->attributes()->class ? 'class="' . $node->attributes()->class . '"' : 'class="text_area"' );
+        $class = ((string) $node->attributes()->class ? 'class="' . (string) $node->attributes()->class . '"' : 'class="text_area"' );
         // convert <br /> tags so they are not visible when editing
         $value = str_replace('<br />', "\n", $value);
 

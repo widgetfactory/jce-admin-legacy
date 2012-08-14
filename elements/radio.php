@@ -39,8 +39,8 @@ class WFElementRadio extends WFElement
 		$options = array();
 		foreach ($node->children() as $option)
 		{
-			$val = $option->attributes()->value;
-			$text = $option->data();
+			$val    = (string) $option->attributes()->value;
+			$text   = $option->data();
 			$options[] = JHtml::_('select.option', $val, $text);
 		}
 

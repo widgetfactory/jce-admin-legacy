@@ -31,7 +31,7 @@ class WFElementBrowser extends WFElement {
 
         foreach ($node->attributes() as $k => $v) {
             if ($v != '') {
-                $attributes[$k] = $v;
+                $attributes[$k] = (string) $v;
             }
         }
 
@@ -41,7 +41,7 @@ class WFElementBrowser extends WFElement {
          * htmlspecialchars_decode is not compatible with PHP 4
          */
         $value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES), ENT_QUOTES);
-        $attributes['class'] = ( $node->attributes()->class ? $node->attributes()->class . ' text_area' : 'text_area' );
+        $attributes['class'] = ((string) $node->attributes()->class ? (string) $node->attributes()->class . ' text_area' : 'text_area' );
 
         $control = $control_name . '[' . $name . ']';
 

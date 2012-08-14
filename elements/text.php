@@ -32,11 +32,13 @@ class WFElementText extends WFElement {
 
         foreach ($node->attributes() as $k => $v) {
             if ($v != '') {
-                $attributes[$k] = $v;
+                $attributes[$k] = (string) $v;
             }
         }
+        
+        $class = (string) $node->attributes()->class; 
 
-        if (strpos($name, 'max_size') !== false || strpos($node->attributes()->class, 'upload_size') !== false) {
+        if (strpos($name, 'max_size') !== false || strpos($class, 'upload_size') !== false) {
             $uploadsize = intval($this->getUploadValue());
             $attributes['max'] = $uploadsize;
         }
@@ -47,7 +49,7 @@ class WFElementText extends WFElement {
          * htmlspecialchars_decode is not compatible with PHP 4
          */
         $value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES), ENT_QUOTES);
-        $attributes['class'] = ( $node->attributes()->class ? $node->attributes()->class . ' text_area' : 'text_area' );
+        $attributes['class'] = ($class ? $class . ' text_area' : 'text_area' );
 
         $control = $control_name . '[' . $name . ']';
 
@@ -59,8 +61,8 @@ class WFElementText extends WFElement {
         $attributes['id'] = preg_replace('#[^a-z0-9_-]#i', '', $control_name . $name);
         
         // pattern data attribute for editable select input box
-        if ($node->attributes('parent')) {
-            $attributes['data-parent'] = preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . $node->attributes()->parent;
+        if ((string) $node->attributes()->parent) {
+            $attributes['data-parent'] = preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . (string) $node->attributes()->parent;
         }
 
         $html .= '<input';

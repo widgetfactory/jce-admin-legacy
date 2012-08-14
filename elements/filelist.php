@@ -40,20 +40,20 @@ class WFElementFilelist extends WFElement
 		jimport('joomla.filesystem.file');
 
 		// path to images directory
-		$path = JPATH_ROOT . '/' . $node->attributes()->directory;
-		$filter = $node->attributes()->filter;
-		$exclude = $node->attributes()->exclude;
-		$stripExt = $node->attributes()->stripext;
+		$path       = JPATH_ROOT . '/' . (string) $node->attributes()->directory;
+		$filter     = (string) $node->attributes()->filter;
+		$exclude    = (string) $node->attributes()->exclude;
+		$stripExt   = (string) $node->attributes()->stripext;
 		$files = JFolder::files($path, $filter);
 
 		$options = array();
 
-		if (!$node->attributes()->hide_none)
+		if (!(string) $node->attributes()->hide_none)
 		{
 			$options[] = JHtml::_('select.option', '-1', JText::_('JOPTION_DO_NOT_USE'));
 		}
 
-		if (!$node->attributes()->hide_default)
+		if (!(string) $node->attributes()->hide_default)
 		{
 			$options[] = JHtml::_('select.option', '', JText::_('JOPTION_USE_DEFAULT'));
 		}
