@@ -59,7 +59,7 @@ switch ($view) {
         $app = JFactory::getApplication();
 
         if ($app->isAdmin() === false) {
-            $app->redirect('index.php', WFText::_('RESTRICTED ACCESS'), 'error');
+            $app->redirect('index.php', WFText::_('ALERTNOTAUTH'), 'error');
         }
 
         if ($view == 'cpanel') {
