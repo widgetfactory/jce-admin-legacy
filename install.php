@@ -70,14 +70,12 @@ class WFInstall {
         $language->load('com_jce.sys', JPATH_ADMINISTRATOR, null, true);
 
         $requirements = array();
-        
-        define('FAKE_PHP_VERSION', '5.2.1');
 
         // check PHP version
-        if (version_compare(FAKE_PHP_VERSION, '5.2.4', '<')) {
+        if (version_compare(PHP_VERSION, '5.2.4', '<')) {
             $requirements[] = array(
                 'name' => 'PHP Version',
-                'info' => 'JCE Requires PHP version 5.2.4 or later. Your version is : ' . FAKE_PHP_VERSION
+                'info' => 'JCE Requires PHP version 5.2.4 or later. Your version is : ' . PHP_VERSION
             );
         }
 
