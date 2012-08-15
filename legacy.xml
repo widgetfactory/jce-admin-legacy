@@ -11,7 +11,6 @@
     <description>WF_ADMIN_DESC</description>
     <installfile>install.php</installfile>
     <uninstallfile>install.php</uninstallfile>
-    <scriptfile>install.script.php</scriptfile>
 	
     <files folder="components/com_jce">
         <folder>editor</folder>
@@ -31,12 +30,10 @@
         <language tag="en-GB">en-GB.com_jce.xml</language>
     </languages>
 	
-	<!-- SQL query files to execute on installation -->
+	<!-- SQL query files to execute on installation (MySQL only) -->
     <install>
         <sql>
             <file charset="utf8" driver="mysqli">sql/mysql.sql</file>
-            <file charset="utf8" driver="sqlsrv">sql/sqlsrv.sql</file>
-            <file charset="utf8" driver="sqlazure">sql/sqlsrv.sql</file>
         </sql>
     </install>
 	
@@ -68,22 +65,15 @@
             <file>config.xml</file>
             <file>index.html</file>
             <file>install.php</file>
-            <file>install.script.php</file>
             <file>jce.php</file>
+            <file>jce.xml</file>
             <file>licence.txt</file>
         </files>
 		
         <languages folder="administrator/language/en-GB">
             <language tag="en-GB">en-GB.com_jce.ini</language>
             <language tag="en-GB">en-GB.com_jce.menu.ini</language>
-            <language tag="en-GB">en-GB.com_jce.sys.ini</language>
             <language tag="en-GB">en-GB.plg_editors_jce.ini</language>
-            <language tag="en-GB">en-GB.plg_editors_jce.sys.ini</language>
-        </languages>
-		
+        </languages>		
     </administration>
-    <updateservers>
-        <server type="extension" priority="1" name="JCE Editor Updates"><![CDATA[https://www.joomlacontenteditor.net/index.php?option=com_updates&view=update&format=xml&id=1]]>
-        </server>
-    </updateservers>
 </install>
