@@ -265,9 +265,9 @@ class WFController extends JController {
 
         if (WFModel::authorize($task) === false) {
             if (WFModel::authorize('manage')) {
-                $this->setRedirect('index.php?option=com_jce', WFText::_('JERROR_ALERTNOAUTHOR'), 'error');
+                $this->setRedirect('index.php?option=com_jce', WFText::_('RESTRICTED ACCESS'), 'error');
             } else {
-                $this->setRedirect('index.php', WFText::_('JERROR_ALERTNOAUTHOR'), 'error');
+                $this->setRedirect('index.php', WFText::_('RESTRICTED ACCESS'), 'error');
             }
             return false;
         }
