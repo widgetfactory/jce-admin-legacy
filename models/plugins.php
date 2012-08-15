@@ -63,7 +63,7 @@ class WFModelPlugins extends WFModel {
                     $plugins[$name] = new StdClass();
 
                     foreach ($plugin->children() as $item) {
-                        $key    = (string) $item->getName();
+                        $key    = $item->getName();
                         $value  = (string) $item;
 
                         $plugins[$name]->$key = $value;

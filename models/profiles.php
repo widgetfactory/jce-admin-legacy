@@ -368,7 +368,7 @@ class WFModelProfiles extends WFModel {
                 }
 
                 foreach ($profile->children() as $item) {
-                    switch ((string) $item->getName()) {
+                    switch ($item->getName()) {
                         case 'name':
                             $name = (string) $item;
                             // only if name set and table name not set
@@ -422,7 +422,7 @@ class WFModelProfiles extends WFModel {
 
                             break;
                         default:
-                            $key 		= (string) $item->getName();
+                            $key 		= $item->getName();
                             $row->$key 	= (string) $item;
 
                             break;
@@ -456,7 +456,7 @@ class WFModelProfiles extends WFModel {
                     $row = JTable::getInstance('profiles', 'WFTable');
 
                     foreach ($profile->children() as $item) {
-                        switch ((string) $item->getName()) {
+                        switch ($item->getName()) {
                             case 'rows':
                                 $row->rows = (string) $item;
                                 break;
@@ -464,7 +464,7 @@ class WFModelProfiles extends WFModel {
                                 $row->plugins = (string) $item;
                                 break;
                             default:
-                                $key 		= (string) $item->getName();
+                                $key 		= $item->getName();
                                 $row->$key 	= (string) $item;
 
                                 break;
