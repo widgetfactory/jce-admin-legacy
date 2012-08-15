@@ -20,3 +20,8 @@
 #jce ul.install li.error {
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAA5klEQVR42sWWQRHEIAxF6wAJlVAJSFkJlYIEJCClEpCAhOw/5MAkZEL3kO3Mu3Tm5zefFDiIaAs8J8iCc1e/U7yADsigg+KZWgaJxfSSApJrxCYXeAD9AmsvbaRNhhWPWiM71iHNZFzPQnBvDMoNxqKztDIqzldp/DTKZMTTZZhwp20SyY9rIJlmPI1WN7cRZ51MqoqJY9RdsZFY0D4Va4AElSFBg8ast4qtyHVz8XUnOLJ4mVmgI7KpQqNqOkbCzDX5v9EnLLqwYQgZ77AfNmwLCtlUw46JkIMv5CiPvpzEX7fCLpBfzJ0lkTq3HI0AAAAASUVORK5CYII=);
 }
+
+#jce ul.install li.error a {
+    font-weight : bold;
+    text-decoration : underline;
+}
