@@ -42,7 +42,9 @@ function com_uninstall() {
 class WFInstall {
 
     private static function cleanupInstall() {
-        if (!is_dir(JPATH_ADMINISTRATOR . '/components/com_jce')) {
+        $path = JPATH_ADMINISTRATOR . '/components/com_jce';
+        
+        if (!is_file($path . '/jce.php')) {
             self::removePackages();
             
             $db = JFactory::getDBO();
@@ -55,9 +57,17 @@ class WFInstall {
                 $db->setQuery('DELETE FROM #__menu WHERE alias LIKE ' . $db->Quote('wf-menu-%') . ' AND menutype = ' . $db->Quote('main'));
                 $db->query();
             } else {
-                $db->setQuery('DELETE FROM #__components WHERE ' . $db->Quote('option') . ' = ' . $db->Quote('com_jce'));
+                $db->setQuery('DELETE FROM #__components WHERE `option` = ' . $db->Quote('com_jce'));
                 $db->query();
             }
+        }
+        
+        if (is_file($path . '/install.script.php')) {
+            jimport('joomla.filesystem.folder');
+            jimport('joomla.filesystem.file');
+            
+            JFile::delete($path . '/install.script.php');
+            JFolder::delete($path);
         }
     }
 
@@ -99,7 +109,7 @@ class WFInstall {
             $message = '<div id="jce"><style type="text/css" scoped="scoped">' . file_get_contents(dirname(__FILE__) . '/media/css/install.css') . '</style>';
 
             $message .= '<h2>' . JText::_('WF_ADMIN_TITLE') . ' - Install Failed</h2>';
-            $message .= '<h3>JCE could not be installed as this site does not meet <a href="http://www.joomlacontenteditor.net/support/documentation/56-editor/106-requirements" target="_blank">technical requirements<a/> (see below)</h3>';
+            $message .= '<h3>JCE could not be installed as this site does not meet <a href="http://www.joomlacontenteditor.net/support/documentation/56-editor/106-requirements" target="_blank">technical requirements</a> (see below)</h3>';
             $message .= '<ul class="install">';
 
             foreach ($requirements as $requirement) {
@@ -111,9 +121,10 @@ class WFInstall {
 
             $installer->set('message', $message);
 
-            self::cleanupInstall();
-
             $installer->abort();
+            
+            self::cleanupInstall();
+            
             return false;
         }
 
