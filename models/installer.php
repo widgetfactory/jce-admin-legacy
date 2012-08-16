@@ -30,11 +30,11 @@ class WFModelInstaller extends WFModel {
      * Overridden constructor
      * @access  protected
      */
-    function __construct() {
+    public function __construct() {
         parent::__construct();
     }
 
-    function cancel() {
+    public function cancel() {
         $this->setRedirect(JRoute::_('index.php?option=com_jce&client=' . $client, false));
     }
 
@@ -43,7 +43,7 @@ class WFModelInstaller extends WFModel {
      * @param string $name adapter name eg: plugin.
      * @return $adapter instance
      */
-    function getAdapter($name) {
+    private function getAdapter($name) {
         // get installer instance
         $installer = JInstaller::getInstance();
 
@@ -62,11 +62,11 @@ class WFModelInstaller extends WFModel {
         return $adapter;
     }
 
-    function install($package = null) {
+    public function install($package = null) {
         $mainframe = JFactory::getApplication();
 
         if (!$package) {
-            $package = $this->_getPackage();
+            $package = $this->getPackage();
         }
 
         // Was the package unpacked?
@@ -80,6 +80,12 @@ class WFModelInstaller extends WFModel {
 
         // Set Adapter
         $type = $package['type'];
+        
+        if (!$type) {
+            $this->setState('message', 'WF_INSTALLER_NO_PACKAGE');
+            return false;
+        }
+
         $adapter = $this->getAdapter($type);
         $installer->setAdapter($type, $adapter);
 
@@ -112,7 +118,7 @@ class WFModelInstaller extends WFModel {
         return $result;
     }
 
-    function remove($id, $type) {
+    public function remove($id, $type) {
         $mainframe = JFactory::getApplication();
 
         $installer = JInstaller::getInstance();
@@ -162,7 +168,7 @@ class WFModelInstaller extends WFModel {
      * Get the install package or folder
      * @return Array $package
      */
-    function _getPackage() {
+    private function getPackage() {
         $config = JFactory::getConfig();
         jimport('joomla.filesystem.file');
 
@@ -245,7 +251,7 @@ class WFModelInstaller extends WFModel {
         return $package;
     }
 
-    function getExtensions() {
+    public function getExtensions() {
         $db = JFactory::getDBO();
 
         $model = JModel::getInstance('plugins', 'WFModel');
@@ -256,7 +262,7 @@ class WFModelInstaller extends WFModel {
         return $extensions;
     }
 
-    function getPlugins() {
+    public function getPlugins() {
         $model = JModel::getInstance('plugins', 'WFModel');
 
         // get an array of all installed plugins in plugins folder
@@ -280,7 +286,7 @@ class WFModelInstaller extends WFModel {
      * Get additional plugins such as JCE MediaBox etc.
      * @return 
      */
-    function getRelated() {
+    public function getRelated() {
         // Get a database connector
         $db = JFactory::getDBO();
 
@@ -335,7 +341,7 @@ class WFModelInstaller extends WFModel {
         return $rows;
     }
 
-    function getLanguages() {
+    public function getLanguages() {
         // Get the site languages
         $base = JLanguage::getLanguagePath(JPATH_SITE);
         $dirs = JFolder::folders($base);
