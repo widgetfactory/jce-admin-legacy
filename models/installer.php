@@ -26,14 +26,6 @@ class WFModelInstaller extends WFModel {
     var $_url = null;
     var $_result = array();
 
-    /**
-     * Overridden constructor
-     * @access  protected
-     */
-    public function __construct() {
-        parent::__construct();
-    }
-
     public function cancel() {
         $this->setRedirect(JRoute::_('index.php?option=com_jce&client=' . $client, false));
     }
