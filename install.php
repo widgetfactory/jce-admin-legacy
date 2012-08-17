@@ -136,7 +136,7 @@ class WFInstall {
         if ($manifest) {
             $new_version = $manifest->version;
         } else {
-            $manifest = WFXMLHelper::parseInstallManifest($installer->getPath('source') . '/jce.xml');
+            $manifest = JApplicationHelper::parseXMLInstallFile($installer->getPath('source') . '/jce.xml');
             $new_version = $manifest['version'];
         }
 
@@ -149,7 +149,7 @@ class WFInstall {
         $xml_file = $installer->getPath('extension_administrator') . '/jce.xml';
 
         if (is_file($xml_file)) {
-            $xml = WFXMLHelper::parseInstallManifest($xml_file);
+            $xml = JApplicationHelper::parseXMLInstallFile($xml_file);
 
             if (preg_match('/([0-9\.]+)(beta|rc|dev|alpha)?([0-9]+?)/i', $xml['version'])) {
                 // component version is less than current
