@@ -86,3 +86,11 @@ html[dir="rtl"] #jce label[for="import"] {
 #jce input.upload_text.placeholder {
     color: #888;
 }
+
+#jce span.upload_button_container > span {
+    left : 5px;
+}
+
+html[dir="rtl"] #jce span.upload_button_container > span {
+    right : 2px;
+}

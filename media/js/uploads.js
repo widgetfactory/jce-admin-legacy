@@ -29,9 +29,9 @@
 		 * @param {Object} options Options object
 		 */
 		_init: function() {
-			var self = this;
-			
-			// Safari needs to wait for the window to finish loading...!!!
+			var self = this;                        
+                        
+                        // Safari needs to wait for the window to finish loading...!!!
 			if ($.browser.webkit && /Safari/.test(navigator.userAgent)) {
 				$(window).load(function() {
 					self._createUploader();
@@ -139,8 +139,6 @@
 
 				// add input wrapper
 				$('<span style="position:absolute;overflow:hidden;display:inline-block;"></span>').css({
-					'top' 		: $button.css('margin-top'),
-					'left'		: $button.css('margin-left'),
 					'width' 	: $button.outerWidth(),
 					'height' 	: $button.outerHeight()
 				}).insertBefore(this.element).append(this.element);
