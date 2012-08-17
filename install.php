@@ -43,12 +43,12 @@ class WFInstall {
 
     private static function cleanupInstall() {
         $path = JPATH_ADMINISTRATOR . '/components/com_jce';
-        
+
         if (!is_file($path . '/jce.php')) {
             self::removePackages();
-            
+
             $db = JFactory::getDBO();
-            
+
             // cleanup menus
             if (defined('JPATH_PLATFORM')) {
                 $db->setQuery('DELETE FROM #__menu WHERE alias = ' . $db->Quote('jce') . ' AND menutype = ' . $db->Quote('main'));
@@ -61,18 +61,18 @@ class WFInstall {
                 $db->query();
             }
         }
-        
+
         if (is_file($path . '/install.script.php')) {
             jimport('joomla.filesystem.folder');
             jimport('joomla.filesystem.file');
-            
+
             JFile::delete($path . '/install.script.php');
             JFolder::delete($path);
         }
     }
 
     public static function install($installer) {
-        error_reporting(E_ERROR|E_WARNING);
+        error_reporting(E_ERROR | E_WARNING);
 
         // load languages
         $language = JFactory::getLanguage();
@@ -122,9 +122,9 @@ class WFInstall {
             $installer->set('message', $message);
 
             $installer->abort();
-            
+
             self::cleanupInstall();
-            
+
             return false;
         }
 
@@ -699,32 +699,37 @@ class WFInstall {
                 }
             }
 
-            // Blogger
-            $file = $admin . '/models/profiles.xml';
+            $query = 'SELECT id FROM #__wf_profiles WHERE name = ' . $db->Quote('Blogger');
+            $id = $db->loadResult();
 
-            $xml = WFXMLElement::getXML($file);
+            if (!$id) {
+                // Blogger
+                $file = $admin . '/models/profiles.xml';
 
-            if ($xml) {
-                foreach ($xml->profiles->children() as $profile) {
-                    if ($profile->attributes()->name == 'Blogger') {
-                        $row = JTable::getInstance('profiles', 'WFTable');
+                $xml = WFXMLElement::getXML($file);
 
-                        foreach ($profile->children() as $item) {
-                            switch ($item->getName()) {
-                                case 'rows':
-                                    $row->rows = (string) $item;
-                                    break;
-                                case 'plugins':
-                                    $row->plugins = (string) $item;
-                                    break;
-                                default:
-                                    $key = $item->getName();
-                                    $row->$key = (string) $item;
+                if ($xml) {
+                    foreach ($xml->profiles->children() as $profile) {
+                        if ($profile->attributes()->name == 'Blogger') {
+                            $row = JTable::getInstance('profiles', 'WFTable');
 
-                                    break;
+                            foreach ($profile->children() as $item) {
+                                switch ($item->getName()) {
+                                    case 'rows':
+                                        $row->rows = (string) $item;
+                                        break;
+                                    case 'plugins':
+                                        $row->plugins = (string) $item;
+                                        break;
+                                    default:
+                                        $key = $item->getName();
+                                        $row->$key = (string) $item;
+
+                                        break;
+                                }
                             }
+                            $row->store();
                         }
-                        $row->store();
                     }
                 }
             }
