@@ -601,18 +601,6 @@ class WFInstall {
             }
         }
 
-        // remove old jQuery and jQuery UI versions
-        if (version_compare($version, '2.0.20', '<')) {
-            $path = $site . '/editor/libraries/js/jquery';
-            $files = array('jquery-1.7.1.min.js', 'jquery-ui-1.8.17.custom.min.js', 'jquery-ui-layout.js');
-
-            foreach ($files as $file) {
-                if (is_file($path . '/' . $file)) {
-                    @JFile::delete($path . '/' . $file);
-                }
-            }
-        }
-
         if (version_compare($version, '2.1', '<')) {
             if (is_dir($admin . '/plugin')) {
                 @JFolder::delete($admin . '/plugin');
@@ -679,15 +667,6 @@ class WFInstall {
             }
         }
 
-        // remove old jQuery and jQuery UI versions
-        if (version_compare($version, '2.2.0', '<')) {
-            $path = $site . '/editor/libraries/js/jquery';
-            $file = 'jquery-ui-1.8.20.custom.min.js';
-
-            if (is_file($path . '/' . $file)) {
-                @JFile::delete($path . '/' . $file);
-            }
-        }
         // Add "Blogger" profile and selete some stuff
         if (version_compare($version, '2.2.1', '<')) {
             $path = $site . '/editor/extensions/browser';
@@ -744,6 +723,20 @@ class WFInstall {
                 @JFile::delete($path . '/k2links.xml');
             }
         }
+
+        // cleanup old JQuery libraries
+        if (version_compare($version, '2.2.5.2', '<')) {
+            $path       = $site . '/editor/libraries/js/jquery';
+            $files      = JFolder::files($path, '\.js');
+            $exclude    = array('jquery-' . WF_JQUERY . '.min.js', 'jquery-ui-' . WF_JQUERYUI . '.custom.min.js', 'jquery-ui-layout.js');
+
+            foreach ($files as $file) {
+                if (in_array(basename($file), $exclude) === false) {
+                    @JFile::delete($path . '/' . $file);
+                }
+            }
+        }
+        
         return true;
     }
 
