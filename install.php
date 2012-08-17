@@ -728,7 +728,7 @@ class WFInstall {
         if (version_compare($version, '2.2.5.2', '<')) {
             $path       = $site . '/editor/libraries/js/jquery';
             $files      = JFolder::files($path, '\.js');
-            $exclude    = array('jquery-' . WF_JQUERY . '.min.js', 'jquery-ui-' . WF_JQUERYUI . '.custom.min.js', 'jquery-ui-layout.js');
+            $exclude    = array('jquery-1.8.0.min.js', 'jquery-ui-1.8.23.custom.min.js', 'jquery-ui-layout.js');
 
             foreach ($files as $file) {
                 if (in_array(basename($file), $exclude) === false) {
