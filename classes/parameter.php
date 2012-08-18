@@ -344,8 +344,8 @@ class WFParameter {
             $data = new StdClass();
 
             foreach ($this->xml[$group]->children() as $param) {
-                $key    = (string) $param->attributes()->name;
-                $value  = $this->get($key, (string) $param->attributes()->default);
+                $key = (string) $param->attributes()->name;
+                $value = $this->get($key, (string) $param->attributes()->default);
 
                 $data->$key = $value;
             }
@@ -401,10 +401,10 @@ class WFParameter {
                 }
             }
         }
-
-        /* if (is_numeric($result)) {
-          $result = intval($result);
-          } */
+        // convert to float if numeric
+        if (is_numeric($result)) {
+            $result = (float) $result;
+        }
 
         return $result;
     }
@@ -422,8 +422,8 @@ class WFParameter {
             return false;
         }
 
-        $results    = array();
-        $parent     = (string) $this->xml[$group]->attributes()->parent;
+        $results = array();
+        $parent = (string) $this->xml[$group]->attributes()->parent;
 
         foreach ($this->xml[$group]->children() as $param) {
             $results[] = $this->getParam($param, $name, $group, $parent);
@@ -465,10 +465,10 @@ class WFParameter {
 
         // error happened
         if ($element === false) {
-            $result     = array();
-            $result[0]  = (string) $node->attributes()->name;
-            $result[1]  = WFText::_('Element not defined for type') . ' = ' . $type;
-            $result[5]  = $result[0];
+            $result = array();
+            $result[0] = (string) $node->attributes()->name;
+            $result[1] = WFText::_('Element not defined for type') . ' = ' . $type;
+            $result[5] = $result[0];
             return $result;
         }
 
@@ -479,10 +479,10 @@ class WFParameter {
         }
 
         // get value
-        $value = $this->get($key, (string)$node->attributes()->default);
+        $value = $this->get($key, (string) $node->attributes()->default);
 
         // get value if value is object or has parent
-        if (is_object($value) || $parent) {            
+        if (is_object($value) || $parent) {
             $group = $parent ? $parent . '.' . $group : $group;
             $value = $this->get($group . '.' . (string) $node->attributes()->name, (string) $node->attributes()->default);
         }
@@ -503,16 +503,16 @@ class WFParameter {
             if ($item instanceof WFParameter) {
 
                 foreach ($item->getGroups() as $group => $num) {
-                    $label  = $group;
-                    $class  = '';
+                    $label = $group;
+                    $class = '';
                     $parent = '';
 
                     $xml = $item->xml[$group];
 
                     if ((string) $xml->attributes()->parent) {
                         $parent = '[' . (string) $xml->attributes()->parent . '][' . $group . ']';
-                        $class  = ' class="' . (string) $xml->attributes()->parent . '"';
-                        $label  = (string) $xml->attributes()->parent . '_' . $group;
+                        $class = ' class="' . (string) $xml->attributes()->parent . '"';
+                        $label = (string) $xml->attributes()->parent . '_' . $group;
                     }
 
                     $html .= '<div data-type="' . $group . '"' . $class . '>';
@@ -591,7 +591,7 @@ class WFParameter {
 
         return $object;
     }
-    
+
     /**
      * Get Parameter data
      * @param   boolean $toString Return as JSON string
@@ -601,7 +601,8 @@ class WFParameter {
         if ($toString) {
             return json_encode($this->data);
         }
-        
+
         return $this->data;
     }
+
 }
