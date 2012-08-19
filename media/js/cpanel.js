@@ -18,7 +18,7 @@
                     $('ul.newsfeed').removeClass('loading').empty();
 
                     $.each(r.feeds, function(k, n) {
-                        $('ul.newsfeed').append('<li><a href="' + n.link + '" title="' + n.title + '">' + n.title + '</a></li>');
+                        $('ul.newsfeed').append('<li><a href="' + n.link + '" target="_blank" title="' + n.title + '">' + n.title + '</a></li>');
                     });
 
                 });
