@@ -38,8 +38,8 @@ class WFSystemHelper extends JPlugin
             $theme = 'jce';
         }
         
-        if (JFolder::exists($site_path . '/jquery' .DS. $theme)) {
-            $files = JFolder::files($site_path . '/jquery' .DS. $theme, '\.css');
+        if (JFolder::exists($site_path . '/jquery/' . $theme)) {
+            $files = JFolder::files($site_path . '/jquery/' . $theme, '\.css');
             
             foreach ($files as $file) {
                 $styles[] = 'components/com_jce/editor/libraries/css/jquery/' . $theme . '/' . $file;
