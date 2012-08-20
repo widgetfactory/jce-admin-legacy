@@ -11,7 +11,7 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.application.component.view');
+wfimport('admin.classes.view');
 jimport('joomla.client.helper');
 
 /**
@@ -20,7 +20,7 @@ jimport('joomla.client.helper');
  * @package		JCE
  * @since		1.6
  */
-class WFViewInstaller extends JView
+class WFViewInstaller extends WFView
 {
 	function display($tpl=null)
 	{

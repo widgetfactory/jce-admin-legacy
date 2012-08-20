@@ -11,9 +11,9 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.application.component.view');
+wfimport('admin.classes.view');
 
-class WFViewUpdates extends JView
+class WFViewUpdates extends WFView
 {
     function display($tpl = null)
     {
