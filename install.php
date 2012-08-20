@@ -742,7 +742,7 @@ class WFInstall {
 
     private static function createProfilesTable() {
         // add models path
-        JModel::addIncludePath(dirname(__FILE__) . '/models');
+        WFModelBase::addIncludePath(dirname(__FILE__) . '/models');
 
         $profiles = WFModelBase::getInstance('profiles', 'WFModel');
 
@@ -751,7 +751,7 @@ class WFInstall {
 
     private static function installProfiles() {
         // add models path
-        JModel::addIncludePath(dirname(__FILE__) . '/models');
+        WFModelBase::addIncludePath(dirname(__FILE__) . '/models');
 
         $profiles = WFModelBase::getInstance('profiles', 'WFModel');
 
