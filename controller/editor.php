@@ -11,15 +11,11 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
+wfimport('admin.classes.controller');
 wfimport('admin.helpers.xml');
 wfimport('admin.helpers.extension');
 
-class WFControllerEditor extends JController {
-
-    function __construct($config = array()) {
-        
-    }
-
+class WFControllerEditor extends WFControllerBase {
     function execute($task) {
         // Load language
         $language = JFactory::getLanguage();
@@ -38,7 +34,7 @@ class WFControllerEditor extends JController {
 
                         require_once(WF_EDITOR_CLASSES . '/editor.php');
 
-                        $model = JModel::getInstance('editor', 'WFModel');
+                        $model = WFModelBase::getInstance('editor', 'WFModel');
                         $model->pack();
                     }
                     break;
