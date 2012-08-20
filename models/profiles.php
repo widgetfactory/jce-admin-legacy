@@ -76,7 +76,7 @@ class WFModelProfiles extends WFModel {
      * @return 
      */
     function getExtensions($plugin) {
-        $model = JModel::getInstance('plugins', 'WFModel');
+        $model = WFModelBase::getInstance('plugins', 'WFModel');
 
         $types = array();
         $extensions = array();
@@ -119,7 +119,7 @@ class WFModelProfiles extends WFModel {
     }
 
     function getPlugins($plugins = false) {
-        $model = JModel::getInstance('plugins', 'WFModel');
+        $model = WFModelBase::getInstance('plugins', 'WFModel');
 
         $commands = array();
 

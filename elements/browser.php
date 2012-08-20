@@ -71,7 +71,7 @@ class WFElementBrowser extends WFElement {
             'id' => $attributes['id'] . '_browser'
         );
 
-        $model = JModel::getInstance('WFModel');
+        $model = WFModelBase::getInstance('WFModel');
 
         $html .= '<a href="' . $model->getBrowserLink($attributes['id'], $filter) . '" class="dialog browser" target="_blank" data-options=\'' . json_encode($options) . '\' title="' . WFText::_('WF_BROWSER_TITLE') . '"><span class="browser"></span></a>';
 

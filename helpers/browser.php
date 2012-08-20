@@ -15,9 +15,9 @@ abstract class WFBrowserHelper
 {
 	public static function getBrowserLink($element = null, $filter = '')
 	{
-		require_once(dirname(dirname(__FILE__)) .DS . 'models' .DS. 'model.php');	
+		require_once(dirname(dirname(__FILE__)) . '/models/model.php');	
 						
-		$model = JModel::getInstance('WFModel');		
+		$model = WFModelBase::getInstance('WFModel');		
 		return $model->getBrowserLink($element, $filter);
 	}
 }	

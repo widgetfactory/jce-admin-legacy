@@ -46,7 +46,7 @@ abstract class WFLoader {
                     break;
             }
 
-            $rs = require_once($base . '/' . implode(DS, $parts) . '.php');
+            $rs = require_once($base . '/' . implode('/', $parts) . '.php');
 
             $paths[$keyPath] = $rs;
         }

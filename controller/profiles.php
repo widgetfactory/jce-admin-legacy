@@ -412,7 +412,7 @@ class WFControllerProfiles extends WFController
 				if ($file['error'] || $file['size'] < 1) {
 					$mainframe->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_FAILED'), 'error');
 				} else {
-					$dest = $tmp.DS.$file['name'];
+					$dest = $tmp. '/' .$file['name'];
 					if (JFile::upload($file['tmp_name'], $dest)) {
 						if (JFile::exists($dest)) {
 							$model->processImport($dest);

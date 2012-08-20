@@ -246,7 +246,7 @@ class WFModelInstaller extends WFModel {
     public function getExtensions() {
         $db = JFactory::getDBO();
 
-        $model = JModel::getInstance('plugins', 'WFModel');
+        $model = WFModelBase::getInstance('plugins', 'WFModel');
 
         // get an array of all installed plugins in plugins folder
         $extensions = $model->getExtensions();
@@ -255,7 +255,7 @@ class WFModelInstaller extends WFModel {
     }
 
     public function getPlugins() {
-        $model = JModel::getInstance('plugins', 'WFModel');
+        $model = WFModelBase::getInstance('plugins', 'WFModel');
 
         // get an array of all installed plugins in plugins folder
         $plugins = $model->getPlugins();
