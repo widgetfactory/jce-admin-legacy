@@ -224,7 +224,7 @@ class WFParameter {
                 $dirs = array();
             }
 
-            $file = JFilterInput::getInstance()->clean(str_replace('_', DS, $type) . '.php', 'path');
+            $file = JFilterInput::getInstance()->clean(str_replace('_', '/', $type) . '.php', 'path');
 
             jimport('joomla.filesystem.path');
             if ($elementFile = JPath::find($dirs, $file)) {
@@ -434,7 +434,7 @@ class WFParameter {
                 jimport('joomla.filesystem.folder');
 
                 // load manifest files for extensions
-                $files = JFolder::files(JPATH_SITE . DS . $parameters, '\.xml$', false, true);
+                $files = JFolder::files(JPATH_SITE . '/' . $parameters, '\.xml$', false, true);
 
                 // get the base key for the parameter
                 $keys = explode('.', (string) $param->attributes()->name);

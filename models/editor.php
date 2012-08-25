@@ -679,7 +679,7 @@ class WFModelEditor extends JModel {
                 preg_match_all('#\@font-face\s*\{([^}]+)\}#', $content, $matches, PREG_SET_ORDER);
 
                 if ($matches) {
-                    $url = str_replace(DS, '/', str_replace(JPATH_SITE, JURI::root(true), dirname($file)));
+                    $url = str_replace('\\', '/', str_replace(JPATH_SITE, JURI::root(true), dirname($file)));
 
                     if ($url) {
                         $url .= '/';

@@ -27,7 +27,7 @@ class WFViewHelp extends JView
 		
 		$component 	= JComponentHelper::getComponent('com_jce');
 		
-		require_once(WF_ADMINISTRATOR .DS. 'classes' .DS. 'parameter.php');
+		require_once(WF_ADMINISTRATOR . '/classes/parameter.php');
 		
 		$params 	= new WFParameter($component->params);
         $url  		= $params->get('preferences.help.url', 'http://www.joomlacontenteditor.net');
