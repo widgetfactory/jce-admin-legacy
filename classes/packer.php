@@ -230,7 +230,7 @@ class WFPacker extends JObject
 		$path = str_replace(JPATH_SITE, '', realpath($this->get('_imgbase') . '/' . $data[1]));
 
 		if($path) {
-			return "url('" . JURI::root(true) . str_replace('\\', '/', $path) . "')";
+			return "url('" . JURI::root(true) . str_replace(DS, '/', $path) . "')";
 		}
 
 		return "url('" . $data[1] . "')";

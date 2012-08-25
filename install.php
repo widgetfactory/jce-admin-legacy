@@ -744,7 +744,7 @@ class WFInstall {
         // add models path
         JModel::addIncludePath(dirname(__FILE__) . '/models');
 
-        $profiles = WFModelBase::getInstance('profiles', 'WFModel');
+        $profiles = JModel::getInstance('profiles', 'WFModel');
 
         return $profiles->createProfilesTable();
     }
@@ -753,7 +753,7 @@ class WFInstall {
         // add models path
         JModel::addIncludePath(dirname(__FILE__) . '/models');
 
-        $profiles = WFModelBase::getInstance('profiles', 'WFModel');
+        $profiles = JModel::getInstance('profiles', 'WFModel');
 
         return $profiles->installProfiles();
     }

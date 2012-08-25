@@ -48,7 +48,7 @@ class WFModelUpdates extends WFModel {
             $versions['joomla']['plg_jcemediabox'] = $mediabox_xml['version'];
         }
 
-        $model = WFModelBase::getInstance('plugins', 'WFModel');
+        $model = JModel::getInstance('plugins', 'WFModel');
 
         // get all plugins
         $plugins = $model->getPlugins();
@@ -209,7 +209,7 @@ class WFModelUpdates extends WFModel {
                         // set installer adapter
                         if ($method == 'jce') {
                             // create jce plugin adapter
-                            $model = WFModelBase::getInstance('installer', 'WFModel');
+                            $model = JModel::getInstance('installer', 'WFModel');
                             $installer->setAdapter($extract['type'], $model->getAdapter($extract['type']));
                         }
 

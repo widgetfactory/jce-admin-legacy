@@ -176,7 +176,7 @@ class WFInstallerLanguage extends JObject
         }
 
         // Because JCE languages don't have their own folders we cannot use the standard method of finding an installation manifest
-        $manifest = $path . '/' . $tag . '.com_jce.xml';
+        $manifest = $path.DS.$tag.'.com_jce.xml';
         
         if (file_exists($manifest)) {
         	$xml = WFXMLHelper::getXML($manifest);
@@ -187,7 +187,7 @@ class WFInstallerLanguage extends JObject
 
             // Set the installation target paths
             $this->parent->setPath('extension_site', $path);
-            $this->parent->setPath('extension_administrator', JPATH_ADMINISTRATOR. "/language/" .$tag);
+            $this->parent->setPath('extension_administrator', JPATH_ADMINISTRATOR.DS."language".DS.$tag);
 
             if (!$this->parent->removeFiles($this->get('site'))) {
                 JError::raiseWarning(100, WFText::_('WF_INSTALLER_LANGUAGE_UNINSTALL').' : '.WFText::_('WF_INSTALL_DELETE_FILES_ERROR'));
