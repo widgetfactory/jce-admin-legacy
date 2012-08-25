@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -9,79 +10,66 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die;
 
 /**
  * Renders a filelist element
  */
-class WFElementFilelist extends WFElement
-{
-	/**
-	 * Element name
-	 *
-	 * @var    string
-	 */
-	protected $_name = 'Filelist';
+class WFElementFilelist extends WFElement {
 
-	/**
-	 * Fetch a filelist element
-	 *
-	 * @param   string       $name          Element name
-	 * @param   string       $value         Element value
-	 * @param   JXMLElement  &$node         JXMLElement node object containing the settings for the element
-	 * @param   string       $control_name  Control name
-	 *
-	 * @return  string
-	 */
-	public function fetchElement($name, $value, &$node, $control_name)
-	{
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.file');
+    /**
+     * Element name
+     *
+     * @var    string
+     */
+    protected $_name = 'Filelist';
 
-		// path to images directory
-		$path       = JPATH_ROOT . '/' . (string) $node->attributes()->directory;
-		$filter     = (string) $node->attributes()->filter;
-		$exclude    = (string) $node->attributes()->exclude;
-		$stripExt   = (string) $node->attributes()->stripext;
-		$files = JFolder::files($path, $filter);
+    /**
+     * Fetch a filelist element
+     *
+     * @param   string       $name          Element name
+     * @param   string       $value         Element value
+     * @param   JXMLElement  &$node         JXMLElement node object containing the settings for the element
+     * @param   string       $control_name  Control name
+     *
+     * @return  string
+     */
+    public function fetchElement($name, $value, &$node, $control_name) {
+        jimport('joomla.filesystem.folder');
+        jimport('joomla.filesystem.file');
 
-		$options = array();
+        // path to images directory
+        $path = JPATH_ROOT . '/' . (string) $node->attributes()->directory;
+        $filter = (string) $node->attributes()->filter;
+        $exclude = (string) $node->attributes()->exclude;
+        $stripExt = (string) $node->attributes()->stripext;
+        $files = JFolder::files($path, $filter);
 
-		if (!(string) $node->attributes()->hide_none)
-		{
-			$options[] = JHtml::_('select.option', '-1', JText::_('JOPTION_DO_NOT_USE'));
-		}
+        $options = array();
 
-		if (!(string) $node->attributes()->hide_default)
-		{
-			$options[] = JHtml::_('select.option', '', JText::_('JOPTION_USE_DEFAULT'));
-		}
+        if (!(string) $node->attributes()->hide_none) {
+            $options[] = JHtml::_('select.option', '-1', JText::_('JOPTION_DO_NOT_USE'));
+        }
 
-		if (is_array($files))
-		{
-			foreach ($files as $file)
-			{
-				if ($exclude)
-				{
-					if (preg_match(chr(1) . $exclude . chr(1), $file))
-					{
-						continue;
-					}
-				}
-				if ($stripExt)
-				{
-					$file = JFile::stripExt($file);
-				}
-				$options[] = JHtml::_('select.option', $file, $file);
-			}
-		}
+        if (!(string) $node->attributes()->hide_default) {
+            $options[] = JHtml::_('select.option', '', JText::_('JOPTION_USE_DEFAULT'));
+        }
 
-		return JHtml::_(
-			'select.genericlist',
-			$options,
-			$control_name . '[' . $name . ']',
-			array('id' => 'param' . $name, 'list.attr' => 'class="inputbox"', 'list.select' => $value)
-		);
-	}
+        if (is_array($files)) {
+            foreach ($files as $file) {
+                if ($exclude) {
+                    if (preg_match(chr(1) . $exclude . chr(1), $file)) {
+                        continue;
+                    }
+                }
+                if ($stripExt) {
+                    $file = JFile::stripExt($file);
+                }
+                $options[] = JHtml::_('select.option', $file, $file);
+            }
+        }
+
+        return JHtml::_('select.genericlist', $options, $control_name . '[' . $name . ']', array('id' => 'param' . $name, 'list.attr' => 'class="inputbox"', 'list.select' => (string)$value));
+    }
+
 }
