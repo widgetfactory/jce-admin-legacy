@@ -11,7 +11,7 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 
-wfimport('admin.classes.view');
+jimport('joomla.application.component.view');
 
 
 /**
@@ -20,7 +20,7 @@ wfimport('admin.classes.view');
  * @package		JCE
  * @since		1.5
  */
-class WFViewPreferences extends WFView
+class WFViewPreferences extends JView
 {
     function display($tpl = null)
     {        

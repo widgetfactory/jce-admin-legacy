@@ -11,7 +11,7 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 
-wfimport('admin.classes.view');
+jimport('joomla.application.component.view');
 
 /**
  * Legend View
@@ -19,7 +19,7 @@ wfimport('admin.classes.view');
  * @package		JCE
  * @since		1.6
  */
-class WFViewLegend extends WFView
+class WFViewLegend extends JView
 {
 	function display($tpl = null)
 	{
@@ -28,7 +28,7 @@ class WFViewLegend extends WFView
 				
 		$db	= JFactory::getDBO();
     
-    	$model = WFModelBase::getInstance('plugins', 'WFModel');
+    	$model = JModel::getInstance('plugins', 'WFModel');
 
     	$plugins  = $model->getPlugins();
     	$commands = $model->getCommands(); 
