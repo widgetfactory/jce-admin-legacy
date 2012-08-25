@@ -559,6 +559,7 @@ class WFInstall {
 
             return true;
         }// end JCE 1.5 upgrade
+
         // cleanup javascript and css files moved to site
         if (version_compare($version, '2.0.10', '<')) {
             $path = $admin . '/media';
@@ -594,13 +595,14 @@ class WFInstall {
             }
         }
 
-        // delete error.php file
+        // 2.0.12
         if (version_compare($version, '2.0.12', '<')) {
             if (is_file($site . '/editor/libraries/classes/error.php')) {
                 @JFile::delete($site . '/editor/libraries/classes/error.php');
             }
         }
-
+        
+        // 2.1
         if (version_compare($version, '2.1', '<')) {
             if (is_dir($admin . '/plugin')) {
                 @JFolder::delete($admin . '/plugin');
@@ -629,6 +631,7 @@ class WFInstall {
             }
         }
 
+        // 2.1.1
         if (version_compare($version, '2.1.1', '<')) {
             @JFile::delete($admin . '/classes/installer.php');
 
@@ -667,7 +670,7 @@ class WFInstall {
             }
         }
 
-        // Add "Blogger" profile and selete some stuff
+        // 2.2.1
         if (version_compare($version, '2.2.1', '<')) {
             $path = $site . '/editor/extensions/browser';
             $files = array('css/search.css', 'js/search.js', 'search.php');
@@ -714,7 +717,7 @@ class WFInstall {
             }
         }
 
-        // remove k2links from previous version (accidentally installed)
+        // 2.2.1 to 2.2.5
         if (version_compare($version, '2.2.1', '>') && version_compare($version, '2.2.5', '<')) {
             $path = $site . '/editor/extensions/links';
 
@@ -724,7 +727,7 @@ class WFInstall {
             }
         }
 
-        // cleanup old JQuery libraries
+        // 2.2.6
         if (version_compare($version, '2.2.6', '<')) {
             $path       = $site . '/editor/libraries/js/jquery';
             $files      = JFolder::files($path, '\.js');
@@ -735,6 +738,17 @@ class WFInstall {
                     @JFile::delete($path . '/' . $file);
                 }
             }
+        }
+        
+        // 2.2.7
+        if (version_compare($version, '2.2.7', '<')) {
+            $query = 'ALTER TABLE #__wf_profiles CHANGE `description` `description` TEXT';
+            $db->setQuery($query);
+            $db->query();
+            
+            $query = 'ALTER TABLE #__wf_profiles CHANGE `types` `types` TEXT';
+            $db->setQuery($query);
+            $db->query();
         }
         
         return true;

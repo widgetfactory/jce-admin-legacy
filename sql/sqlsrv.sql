@@ -3,9 +3,9 @@ BEGIN
 CREATE TABLE [#__wf_profiles](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[name] [nvarchar](250) NOT NULL,
-	[description] [nvarchar](250) NOT NULL,
+	[description] [text] NOT NULL,
 	[users] [text] NOT NULL,
-	[types] [nvarchar](250) NOT NULL,
+	[types] [text] NOT NULL,
 	[components] [nvarchar](max) NOT NULL,
 	[area] [smallint] NOT NULL,
 	[rows] [nvarchar](max) NOT NULL,
