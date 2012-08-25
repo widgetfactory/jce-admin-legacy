@@ -198,7 +198,7 @@ class WFController extends WFControllerBase {
         }
 
         // add models path
-        WFModelBase::addIncludePath(dirname(__FILE__) . '/models');
+        JModel::addIncludePath(dirname(__FILE__) . '/models');
         $profiles = WFModelBase::getInstance('profiles', 'WFModel');
 
         $state = $profiles->checkTable();
@@ -232,7 +232,7 @@ class WFController extends WFControllerBase {
         switch ($type) {
             case 'tables' :
                 // add models path
-                WFModelBase::addIncludePath(dirname(__FILE__) . '/models');
+                JModel::addIncludePath(dirname(__FILE__) . '/models');
                 $profiles = WFModelBase::getInstance('profiles', 'WFModel');
 
                 $profiles->installProfiles();
