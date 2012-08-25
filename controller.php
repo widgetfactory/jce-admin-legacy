@@ -11,9 +11,9 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-wfimport('admin.classes.controller');
+jimport('joomla.application.component.controller');
 
-class WFController extends WFControllerBase {
+class WFController extends JController {
 
     /**
      * Custom Constructor
@@ -199,7 +199,7 @@ class WFController extends WFControllerBase {
 
         // add models path
         JModel::addIncludePath(dirname(__FILE__) . '/models');
-        $profiles = WFModelBase::getInstance('profiles', 'WFModel');
+        $profiles = JModel::getInstance('profiles', 'WFModel');
 
         $state = $profiles->checkTable();
 
@@ -233,7 +233,7 @@ class WFController extends WFControllerBase {
             case 'tables' :
                 // add models path
                 JModel::addIncludePath(dirname(__FILE__) . '/models');
-                $profiles = WFModelBase::getInstance('profiles', 'WFModel');
+                $profiles = JModel::getInstance('profiles', 'WFModel');
 
                 $profiles->installProfiles();
                 
