@@ -11,15 +11,13 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-wfimport('admin.classes.model');
 wfimport('admin.classes.text');
 wfimport('admin.helpers.xml');
 wfimport('admin.helpers.extension');
-
 wfimport('editor.libraries.classes.token');
 wfimport('editor.libraries.classes.editor');
 
-class WFModelEditor extends WFModelBase {
+class WFModelEditor extends JModel {
 
     public function buildEditor() {
         // get document
@@ -259,9 +257,8 @@ class WFModelEditor extends WFModelBase {
      * @param string  The number of rows
      * @return The row array
      */
-    private function getToolbar($toolbar) {          
-        wfimport('admin.models.plugins');
-        $model = new WFModelPlugins();
+    private function getToolbar($toolbar) {
+        $model = JModel::getInstance('plugins', 'WFModel');
 
         $db = JFactory::getDBO();
 
@@ -682,7 +679,7 @@ class WFModelEditor extends WFModelBase {
                 preg_match_all('#\@font-face\s*\{([^}]+)\}#', $content, $matches, PREG_SET_ORDER);
 
                 if ($matches) {
-                    $url = str_replace('\\', '/', str_replace(JPATH_SITE, JURI::root(true), dirname($file)));
+                    $url = str_replace(DS, '/', str_replace(JPATH_SITE, JURI::root(true), dirname($file)));
 
                     if ($url) {
                         $url .= '/';

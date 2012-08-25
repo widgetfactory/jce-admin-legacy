@@ -11,9 +11,9 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-wfimport('admin.classes.model');
+jimport('joomla.application.component.model');
 
-class WFModel extends WFModelBase {
+class WFModel extends JModel {
 
     public static function authorize($task) {
         $user = JFactory::getUser();
