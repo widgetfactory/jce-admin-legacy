@@ -35,7 +35,7 @@ class WFModelInstaller extends WFModel {
      * @param string $name adapter name eg: plugin.
      * @return $adapter instance
      */
-    private function getAdapter($name) {
+    public function getAdapter($name) {
         // get installer instance
         $installer = JInstaller::getInstance();
 
