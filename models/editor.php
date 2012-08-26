@@ -258,7 +258,8 @@ class WFModelEditor extends JModel {
      * @return The row array
      */
     private function getToolbar($toolbar) {
-        $model = JModel::getInstance('plugins', 'WFModel');
+        wfimport('admin.models.plugins');
+        $model = new WFModelPlugins();
 
         $db = JFactory::getDBO();
 
