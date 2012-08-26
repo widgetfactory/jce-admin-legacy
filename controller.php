@@ -21,9 +21,6 @@ class WFController extends JController {
     public function __construct($default = array()) {
         parent::__construct($default);
 
-        $this->registerTask('apply', 'save');
-        $this->registerTask('unpublish', 'publish');
-
         // load helpers
         wfimport('admin.helpers.parameter');
         wfimport('admin.helpers.extension');
