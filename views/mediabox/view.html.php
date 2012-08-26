@@ -30,7 +30,7 @@ class WFViewMediabox extends JView {
             $array  = array();
 
             foreach ($params->getGroups() as $group => $num) {
-                $groups[] = $params->getParams('fields', $group);
+                $groups[] = $params->getParams('params', $group);
             }
 
             foreach ($groups as $group) {
@@ -48,42 +48,6 @@ class WFViewMediabox extends JView {
 
             return $params->getParams();
         }
-
-        /* if (WF_JOOMLA15) {
-
-
-          // Use JForm
-          } else {
-          $xml = JPATH_PLUGINS . '/system/jcemediabox/jcemediabox.xml';
-
-          $form = JForm::getInstance('plg_jcemediabox.plugins', 'jcemediabox', array('control' => 'params'), false);
-          return $form->getFieldset('params');
-
-          /* $parser = JFactory::getXMLParser('Simple');
-
-          if ($parser->loadFile($xml)) {
-          if ($fieldsets = $parser->document->getElementByPath('config')->getElementByPath('fields')->children()) {
-          foreach ($fieldsets as $fieldset) {
-          $params->setXML($fieldset);
-          }
-          }
-          }
-
-          $params = new WFParameter($data, $xml);
-
-          $groups = array();
-          $array  = array();
-
-          foreach ($params->getGroups() as $group => $num) {
-          $groups[] = $params->getParams('params', $group);
-          }
-
-          foreach ($groups as $group) {
-          $array = array_merge($array, $group);
-          }
-
-          return $array;
-          } */
     }
 
     function display($tpl = null) {
