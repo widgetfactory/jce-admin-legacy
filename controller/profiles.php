@@ -19,16 +19,16 @@ class WFControllerProfiles extends WFController
 	function __construct( $default = array())
 	{
 		parent::__construct();
-
-		$this->registerTask('apply', 		'save');
-		$this->registerTask('unpublish', 	'publish');
+                
+                $this->registerTask('apply',            'save');
+                $this->registerTask('unpublish',        'publish');
 		$this->registerTask('enable', 		'publish');
 		$this->registerTask('disable', 		'publish');
 		$this->registerTask('orderup', 		'order');
 		$this->registerTask('orderdown', 	'order');
 	}
 
-	function remove()
+	public function remove()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or die( 'RESTRICTED' );
@@ -56,7 +56,7 @@ class WFControllerProfiles extends WFController
 		$this->setRedirect( 'index.php?option=com_jce&view=profiles', $msg );
 	}
 
-	function copy()
+	public function copy()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or die( 'RESTRICTED' );
@@ -93,7 +93,7 @@ class WFControllerProfiles extends WFController
 		$this->setRedirect( 'index.php?option=com_jce&view=profiles', $msg );
 	}
 
-	function save()
+	public function save()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or die( 'RESTRICTED' );
@@ -161,7 +161,7 @@ class WFControllerProfiles extends WFController
 	 * Generic publish method
 	 * @return
 	 */
-	function publish()
+	public function publish()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or die ('Invalid Token');
@@ -209,7 +209,7 @@ class WFControllerProfiles extends WFController
 		$this->setRedirect('index.php?option=com_jce&view=profiles');
 	}
 
-	function order()
+	public function order()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
@@ -229,7 +229,7 @@ class WFControllerProfiles extends WFController
 		$this->setRedirect( 'index.php?option=com_jce&view=profiles' );
 	}
 
-	function saveorder( )
+	public function saveorder( )
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'RESTRICTED' );
@@ -282,7 +282,7 @@ class WFControllerProfiles extends WFController
 		$this->setRedirect( 'index.php?option=com_jce&view=profiles', $msg );
 	}
 
-	function cancelEdit()
+	public function cancelEdit()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or die('RESTRICTED');
@@ -298,7 +298,7 @@ class WFControllerProfiles extends WFController
 
 	}
 
-	function export()
+	public function export()
 	{
 		$mainframe  = JFactory::getApplication();
 		$db 		= JFactory::getDBO();
@@ -384,7 +384,7 @@ class WFControllerProfiles extends WFController
 	 * @param object $xml
 	 * @return boolean
 	 */
-	function import()
+	public function import()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or die('RESTRICTED');
@@ -434,7 +434,7 @@ class WFControllerProfiles extends WFController
 	 * @param object $param
 	 * @return CDATA encoded parameter or parameter
 	 */
-	function encodeData($data)
+	private function encodeData($data)
 	{
 		if (preg_match('/[<>&]/', $data)) {
 			$data = '<![CDATA['.$data.']]>';

@@ -26,11 +26,11 @@ class WFControllerConfig extends WFController
 	function __construct( $default = array())
 	{		
 		parent::__construct();
-		
-		$this->registerTask( 'apply', 'save' );
+                
+                $this->registerTask('apply', 'save');
 	}
 
-	function save()
+	public function save()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or die('RESTRICTED');
