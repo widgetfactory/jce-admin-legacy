@@ -36,7 +36,7 @@ class WFXMLElement extends SimpleXMLElement {
             // There was an error
             JError::raiseWarning(100, JText::_('ERROR_XML_LOAD'));
 
-            if ($isFile) {
+            if (is_file($data)) {
                 JError::raiseWarning(100, $data);
             }
 
