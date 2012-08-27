@@ -204,7 +204,13 @@ class WFViewProfiles extends JView {
                 $row->area = (isset($row->area)) ? $row->area : 0;
 
                 // build the html select list for ordering
-                $query = 'SELECT ordering AS value, name AS text' . ' FROM #__wf_profiles' . ' WHERE published = 1' . ' AND ordering > -10000' . ' AND ordering < 10000' . ' ORDER BY ordering';
+                $query = 'SELECT ordering AS value, name AS text' 
+                . ' FROM #__wf_profiles' 
+                . ' WHERE published = 1' 
+                . ' AND ordering > -10000' 
+                . ' AND ordering < 10000' 
+                . ' ORDER BY ordering';
+                
                 $order = JHTML::_('list.genericordering', $query);
                 $lists['ordering'] = JHTML::_('select.genericlist', $order, 'ordering', 'class="inputbox" size="1"', 'value', 'text', intval($row->ordering));
                 $lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $row->published);
@@ -212,10 +218,26 @@ class WFViewProfiles extends JView {
                 $exclude = array(
                     'com_admin',
                     'com_cache',
+                    'com_checkin',
+                    'com_config',
+                    'com_cpanel',
+                    'com_finder',
+                    'com_installer',
+                    'com_languages',
                     'com_jce',
+                    'com_login',
+                    'com_menus',
+                    'com_media',
+                    'com_messages',
+                    'com_newsfeeds',
+                    'com_plugins',
+                    'com_redirect',
+                    'com_templates',
+                    'com_users',
                     'com_wrapper',
                     'com_search',
-                    'com_user'
+                    'com_user',
+                    'com_updates'
                 );
 
                 if (WF_JOOMLA15) {
@@ -239,6 +261,8 @@ class WFViewProfiles extends JView {
                 for ($i = 0; $i < count($components); $i++) {                    
                     if (!in_array($components[$i]->value, $exclude)) {
                         $options[] = $components[$i];
+                        // load system language file
+                        $language->load($components[$i]->value . '.sys', JPATH_ADMINISTRATOR);
                     }
                 }
 
@@ -250,7 +274,7 @@ class WFViewProfiles extends JView {
                 
                 foreach($options as $option) {
                     $checked = in_array($option->value, explode(',', $row->components)) ? ' checked="checked"' : '';
-                    $lists['components'] .= '<li><input type="checkbox" name="components[]" value="' . $option->value . '"' . $checked . $disabled . ' /><label>' . $option->text . '</label></li>';
+                    $lists['components'] .= '<li><input type="checkbox" name="components[]" value="' . $option->value . '"' . $checked . $disabled . ' /><label>' . JText::_($option->text) . '</label></li>';
                 }
                 
                 $lists['components'] .= '</ul>';
