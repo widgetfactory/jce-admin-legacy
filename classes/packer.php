@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -8,233 +9,224 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die('RESTRICTED');
 
-class WFPacker extends JObject 
-{
-	var $files = array();
+class WFPacker extends JObject {
 
-	var $type = 'javascript';
+    protected $files    = array();
+    protected $type     = 'javascript';
+    protected $text     = '';
+    protected $start    = '';
+    protected $end      = '';
 
-	var $start = '';
+    /**
+     * Constructor activating the default information of the class
+     *
+     * @access	protected
+     */
+    function __construct($config = array()) {
+        $this->setProperties($config);
+    }
 
-	var $end = '';
+    function setFiles($files = array()) {
+        $this->files = $files;
+    }
 
-	/**
-	 * Constructor activating the default information of the class
-	 *
-	 * @access	protected
-	 */
-	function __construct($config = array())
-	{
-		$this->setProperties($config);
-	}
+    function getFiles() {
+        return $this->files;
+    }
 
-	function setFiles($files = array())
-	{
-		$this->files = $files;
-	}
+    function setText($text = '') {
+        $this->text = $text;
+    }
 
-	function getFiles()
-	{
-		return $this->files;
-	}
+    function setContentStart($start = '') {
+        $this->start = $start;
+    }
 
-	function setContentStart($start ='')
-	{
-		$this->start = $start;
-	}
+    function getContentStart() {
+        return $this->start;
+    }
 
-	function getContentStart()
-	{
-		return $this->start;
-	}
+    function setContentEnd($end = '') {
+        $this->end = $end;
+    }
 
-	function setContentEnd($end ='')
-	{
-		$this->end = $end;
-	}
+    function getContentEnd() {
+        return $this->end;
+    }
 
-	function getContentEnd()
-	{
-		return $this->end;
-	}
+    function setType($type) {
+        $this->type = $type;
+    }
 
-	function setType($type)
-	{
-		$this->type = $type;
-	}
+    function getType() {
+        return $this->type;
+    }
 
-	function getType()
-	{
-		return $this->type;
-	}
-	
-	/**
-	 * Get encoding
-	 * @copyright Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.
-	 */
-	private function _getEncoding()
-	{		
-		// Check if it supports gzip
-		$encodings 	= (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) ? strtolower($_SERVER['HTTP_ACCEPT_ENCODING']) : "";
-		$encoding 	= preg_match( '/\b(x-gzip|gzip)\b/', $encodings, $match) ? $match[1] : "";
-		
-		// Is northon antivirus header
-		if (isset($_SERVER['---------------'])) {
-			$encoding = "x-gzip";
-		}
-		
-		return $encoding;
-	}
+    /**
+     * Get encoding
+     * @copyright Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.
+     */
+    private function _getEncoding() {
+        // Check if it supports gzip
+        $encodings = (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) ? strtolower($_SERVER['HTTP_ACCEPT_ENCODING']) : "";
+        $encoding = preg_match('/\b(x-gzip|gzip)\b/', $encodings, $match) ? $match[1] : "";
 
-	function pack($minify = true, $gzip = false)
-	{
-		$type = $this->getType();
+        // Is northon antivirus header
+        if (isset($_SERVER['---------------'])) {
+            $encoding = "x-gzip";
+        }
 
-		// Headers
-		if ($type == 'javascript') {
-			header("Content-type: application/x-javascript; charset: UTF-8");
-		}
-		
-		if ($type == 'css') {
-			header("Content-type: text/css; charset: UTF-8");
-		}
-		
-		header("Vary: Accept-Encoding");
-		
-		// expires after 7 days
-		$expires = 60 * 60 * 24 * 7;
-		
-		header("Cache-Control: maxage=".$expires);
+        return $encoding;
+    }
 
-		// Handle proxies
-		header("Expires: " . gmdate ("D, d M Y H:i:s", time() + $expires) . " GMT");
+    function pack($minify = true, $gzip = false) {
+        $type = $this->getType();
 
-		$files = $this->getFiles();
-		
-		$encoding = self::_getEncoding();
+        // Headers
+        if ($type == 'javascript') {
+            header("Content-type: application/x-javascript; charset: UTF-8");
+        }
 
-		$zlib 	= extension_loaded('zlib') && ini_get('zlib.output_compression');
-		$gzip 	= $gzip && !empty($encoding) && $zlib && function_exists('gzencode');
+        if ($type == 'css') {
+            header("Content-type: text/css; charset: UTF-8");
+        }
 
-		$content = $this->getContentStart();
+        header("Vary: Accept-Encoding");
 
-		foreach($files as $file) {
-			$content .= $this->getText($file);
-		}
+        // expires after 7 days
+        $expires = 60 * 60 * 24 * 7;
 
-		$content .= $this->getContentEnd();
-		
-		// pack javascript
-		if($minify) {
-			if($this->getType() == 'javascript') {
-				$content = $this->jsmin($content);
-			}
+        header("Cache-Control: maxage=" . $expires);
 
-			if($this->getType() == 'css') {
-				$content = $this->cssmin($content);
-			}
-		}
+        // Handle proxies
+        header("Expires: " . gmdate("D, d M Y H:i:s", time() + $expires) . " GMT");
 
-		// Generate GZIP'd content
-		if($gzip) {
-			header("Content-Encoding: " . $encoding);
-			$content = gzencode($content, 9, FORCE_GZIP);
-		}
-		
-		// stream to client
-		die($content);
-	}
+        $files = $this->getFiles();
 
-	function jsmin($data) 
-	{		
-		return $data;
-	}
-	
-	/**
-	 * Simple CSS Minifier
-	 * @param $data Data string to minify
-	 */
-	function cssmin($data)
-	{
-		$data = str_replace('\r\n', '\n', $data);
+        $encoding = self::_getEncoding();
 
-		$data = preg_replace('#\s+#', ' ', $data);
-		$data = preg_replace('#/\*.*?\*/#s', '', $data);
-		$data = preg_replace('#\s?([:\{\};,])\s?#', '$1', $data);
+        $zlib = extension_loaded('zlib') && ini_get('zlib.output_compression');
+        $gzip = $gzip && !empty($encoding) && $zlib && function_exists('gzencode');
 
-		$data = str_replace(';}', '}', $data);
+        $content = $this->getContentStart();
+        
+        if (empty($files)) {
+            $content .= $this->getText();
+        } else {
+            foreach ($files as $file) {
+                $content .= $this->getText($file);
+            }
+        }
 
-		return  trim($data);
-	}
+        $content .= $this->getContentEnd();
 
-	/**
-	 * Import CSS from a file
-	 * @param file File path where data comes from
-	 * @param $data Data from file
-	 */
-	function importCss($data)
-	{
-		if(preg_match_all('#@import url\([\'"]?([^\'"\)]+)[\'"]?\);#i', $data, $matches)) {
+        // pack javascript
+        if ($minify) {
+            if ($this->getType() == 'javascript') {
+                $content = $this->jsmin($content);
+            }
 
-			$data = '';
+            if ($this->getType() == 'css') {
+                $content = $this->cssmin($content);
+            }
+        }
 
-			foreach($matches[1] as $match) {
-				$data .= $this->getText(realpath($this->get('_cssbase') . '/' . $match));
-			}
+        // Generate GZIP'd content
+        if ($gzip) {
+            header("Content-Encoding: " . $encoding);
+            $content = gzencode($content, 9, FORCE_GZIP);
+        }
 
-			return $data;
-		}
+        // stream to client
+        die($content);
+    }
 
-		return '';
-	}
+    function jsmin($data) {
+        return $data;
+    }
 
-	function getText($file)
-	{
-		if($file && is_file($file)) {
+    /**
+     * Simple CSS Minifier
+     * @param $data Data string to minify
+     */
+    function cssmin($data) {
+        $data = str_replace('\r\n', '\n', $data);
 
-			if($text = file_get_contents($file)) {
-				// process css files
-				if($this->getType() == 'css') {
+        $data = preg_replace('#\s+#', ' ', $data);
+        $data = preg_replace('#/\*.*?\*/#s', '', $data);
+        $data = preg_replace('#\s?([:\{\};,])\s?#', '$1', $data);
 
-					if(strpos($text, '@import') !== false) {
-						// store the base path of the current file
-						$this->set('_cssbase', dirname($file));
+        $data = str_replace(';}', '}', $data);
 
-						// process import rules
-						$text = $this->importCss($text) . preg_replace('#@import url\([\'"]?([^\'"\)]+)[\'"]?\);#i', '', $text);
-					}
+        return trim($data);
+    }
 
-					// store the base path of the current file
-					$this->set('_imgbase', dirname($file));
+    /**
+     * Import CSS from a file
+     * @param file File path where data comes from
+     * @param $data Data from file
+     */
+    function importCss($data) {
+        if (preg_match_all('#@import url\([\'"]?([^\'"\)]+)[\'"]?\);#i', $data, $matches)) {
 
-					// process urls
-					$text = preg_replace_callback('#url\s?\([\'"]?([^\'"\))]+)[\'"]?\)#', array('WFPacker', 'processPaths'), $text);
-				}
-				// make sure text ends in a semi-colon;
-				if ($this->getType() == 'javascript') {
-					$text = rtrim(trim($text), ';') . ';';
-				}
+            $data = '';
 
-				return $text;
-			}
-		}
+            foreach ($matches[1] as $match) {
+                $data .= $this->getText(realpath($this->get('_cssbase') . '/' . $match));
+            }
 
-		return '';
-	}
+            return $data;
+        }
 
-	function processPaths($data)
-	{
-		$path = str_replace(JPATH_SITE, '', realpath($this->get('_imgbase') . '/' . $data[1]));
+        return '';
+    }
 
-		if($path) {
-			return "url('" . JURI::root(true) . str_replace('\\', '/', $path) . "')";
-		}
+    function getText($file = null) {
 
-		return "url('" . $data[1] . "')";
-	}
+        if ($file && is_file($file)) {
+
+            if ($text = file_get_contents($file)) {
+                // process css files
+                if ($this->getType() == 'css') {
+
+                    if (strpos($text, '@import') !== false) {
+                        // store the base path of the current file
+                        $this->set('_cssbase', dirname($file));
+
+                        // process import rules
+                        $text = $this->importCss($text) . preg_replace('#@import url\([\'"]?([^\'"\)]+)[\'"]?\);#i', '', $text);
+                    }
+
+                    // store the base path of the current file
+                    $this->set('_imgbase', dirname($file));
+
+                    // process urls
+                    $text = preg_replace_callback('#url\s?\([\'"]?([^\'"\))]+)[\'"]?\)#', array('WFPacker', 'processPaths'), $text);
+                }
+                // make sure text ends in a semi-colon;
+                if ($this->getType() == 'javascript') {
+                    $text = rtrim(trim($text), ';') . ';';
+                }
+
+                return $text;
+            }
+        }
+
+        return $this->text;
+    }
+
+    function processPaths($data) {
+        $path = str_replace(JPATH_SITE, '', realpath($this->get('_imgbase') . '/' . $data[1]));
+
+        if ($path) {
+            return "url('" . JURI::root(true) . str_replace('\\', '/', $path) . "')";
+        }
+
+        return "url('" . $data[1] . "')";
+    }
 
 }
+
 ?>
