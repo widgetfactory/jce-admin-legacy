@@ -16,10 +16,6 @@ wfimport('admin.helpers.extension');
 
 class WFControllerEditor extends JController {
 
-    function __construct($config = array()) {
-        
-    }
-
     function execute($task) {
         // Load language
         $language = JFactory::getLanguage();
@@ -31,7 +27,7 @@ class WFControllerEditor extends JController {
         if ($layout) {
             switch ($layout) {
                 case 'editor':
-                    if ($task == 'pack') {
+                    if ($task == 'pack' || $task == 'loadlanguage') {
                         jimport('joomla.application.component.model');
 
                         JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
@@ -39,8 +35,12 @@ class WFControllerEditor extends JController {
                         require_once(WF_EDITOR_CLASSES . '/editor.php');
 
                         $model = JModel::getInstance('editor', 'WFModel');
-                        $model->pack();
+                        
+                        if (method_exists($model, $task)) {
+                            $model->$task();
+                        }   
                     }
+                    
                     break;
                 case 'theme':
                     $theme = JRequest::getWord('theme');
