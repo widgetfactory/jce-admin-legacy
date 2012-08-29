@@ -86,7 +86,7 @@ class WFPacker extends JObject {
 
         // Headers
         if ($type == 'javascript') {
-            header("Content-type: application/x-javascript; charset: UTF-8");
+            header("Content-type: application/javascript; charset: UTF-8");
         }
 
         if ($type == 'css') {
