@@ -26,8 +26,8 @@ class WFControllerEditor extends JController {
 
         if ($layout) {
             switch ($layout) {
-                case 'editor':
-                    if ($task == 'pack' || $task == 'loadlanguage') {
+                case 'editor':                    
+                    if ($task == 'pack' || $task == 'loadlanguages') {
                         jimport('joomla.application.component.model');
 
                         JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
@@ -36,9 +36,13 @@ class WFControllerEditor extends JController {
 
                         $model = JModel::getInstance('editor', 'WFModel');
                         
-                        if (method_exists($model, $task)) {
-                            $model->$task();
-                        }   
+                        if ($task == 'loadlanguages') {
+                            if (method_exists($model, 'loadLanguages')) {
+                                $model->loadLanguages(array(), array(), '(^dlg$|_dlg$)', true);
+                            }
+                        } else {
+                            $model->pack();
+                        } 
                     }
                     
                     break;
@@ -48,25 +52,31 @@ class WFControllerEditor extends JController {
                     if ($theme && is_dir(WF_EDITOR_THEMES . '/' . $theme)) {
                         require_once(WF_EDITOR_THEMES . '/' . $theme . '/theme.php');
                     } else {
-                        JError::raiseError(500, WFText::_('Theme not found!'));
+                        throw new InvalidArgumentException('Theme not found!');
                     }
 
                     break;
                 case 'plugin':
                     $file = basename(JRequest::getCmd('file', $plugin));
-                    $path = WF_EDITOR_PLUGINS . '/' . $plugin;
+                    
+                    // external plugin folder
+                    $path = JPATH_PLUGINS . '/jce/' . $plugin;
+                
+                    if (!is_dir($path)) {
+                        $path = WF_EDITOR_PLUGINS . '/' . $plugin;
+                    }
 
                     if (is_dir($path) && file_exists($path . '/' . $file . '.php')) {
                         include_once($path . '/' . $file . '.php');
                     } else {
-                        JError::raiseError(500, WFText::_('File ' . $file . ' not found!'));
+                        throw new InvalidArgumentException('File ' . $file . ' not found!');
                     }
 
                     break;
             }
             exit();
         } else {
-            JError::raiseError(500, WFText::_('No Layout'));
+            throw new InvalidArgumentException('No Layout');
         }
     }
 
