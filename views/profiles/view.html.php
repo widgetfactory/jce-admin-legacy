@@ -172,6 +172,14 @@ class WFViewProfiles extends JView {
 
                 $language->load('plg_editors_jce', JPATH_ADMINISTRATOR);
                 $plugins = $model->getPlugins();
+                
+                // load plugin languages
+                foreach($plugins as $plugin) {
+                    if ($plugin->core == 0) {
+                        // Load Language for plugin
+                        $language->load('com_jce_' . $plugin->name, JPATH_SITE);
+                    }
+                }
 
                 // load the row from the db table
                 if ($cid[0]) {
