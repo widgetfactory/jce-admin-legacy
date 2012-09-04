@@ -106,32 +106,21 @@ class WFParameter {
         $result = false;
 
         if ($path) {
-            /* $xml = JFactory::getXMLParser('Simple');
-
-              if ($xml->loadFile($path)) {
-              if ($params = $xml->document->params) {
-              foreach ($params as $param) {
-              $this->setXML($param);
-              $result = true;
-              }
-              }
-              } */
 
             $controls = explode(':', $this->control);
 
             if ($xml = WFXMLElement::getXML($path)) {
                 $params = $xml;
 
+                // move through tree
                 foreach ($controls as $control) {
                     $params = $params->$control;
                 }
 
-                //if ($params = $xml->$control) {
                 foreach ($params as $param) {
                     $this->setXML($param);
                     $result = true;
                 }
-                //}
             }
         } else {
             $result = true;
