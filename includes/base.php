@@ -17,7 +17,7 @@ require_once(dirname(__FILE__) . '/constants.php');
 
 // low level error handler
 
-require_once(WF_ADMINISTRATOR . '/classes/error.php');
+//require_once(WF_ADMINISTRATOR . '/classes/error.php');
 
 // load loader
 

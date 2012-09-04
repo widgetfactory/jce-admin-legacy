@@ -11,6 +11,7 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
+wfimport('admin.classes.error');
 wfimport('admin.helpers.xml');
 wfimport('admin.helpers.extension');
 
