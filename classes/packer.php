@@ -83,6 +83,8 @@ class WFPacker extends JObject {
 
     function pack($minify = true, $gzip = false) {
         $type = $this->getType();
+        
+        ob_start();
 
         // Headers
         if ($type == 'javascript') {
@@ -140,7 +142,9 @@ class WFPacker extends JObject {
         }
 
         // stream to client
-        die($content);
+        echo $content;
+        
+        exit(ob_get_clean());
     }
 
     function jsmin($data) {
