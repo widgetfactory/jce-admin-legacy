@@ -118,20 +118,19 @@ class WFModelProfiles extends WFModel {
         return $extensions;
     }
 
-    function getPlugins($plugins = false) {
+    function getPlugins($plugins = array()) {
         $model = JModel::getInstance('plugins', 'WFModel');
 
         $commands = array();
 
-        if (!$plugins) {
+        if (empty($plugins)) {
             $commands = $model->getCommands();
         }
 
-        $plugins = $model->getPlugins();
         // only need plugins with xml files
-        foreach ($plugins as $plugin => $properties) {
-            if (!is_file(WF_EDITOR_PLUGINS . '/' . $plugin . '/' . $plugin . '.xml')) {
-                unset($plugins[$plugin]);
+        foreach ($model->getPlugins() as $plugin => $properties) {            
+            if (is_file(JPATH_SITE . $properties->path . '/' . $plugin . '.xml')) {
+                $plugins[$plugin] = $properties;
             }
         }
 
@@ -559,5 +558,51 @@ class WFModelProfiles extends WFModel {
         $db->setQuery($query);
 
         return $db->loadResult();
+    }
+    
+    private function getIconType($icon) {
+        // TODO - Enhance this later to get the type from xml
+
+        if (in_array($icon, array('styleselect', 'formatselect', 'fontselect', 'fontsizeselect'))) {
+            return 'mceListBox';
+        }
+
+        if (in_array($icon, array('paste', 'numlist', 'bullist', 'forecolor', 'backcolor', 'spellchecker', 'textcase'))) {
+            return 'mceSplitButton';
+        }
+
+        return 'mceButton';
+    }
+    
+    public function getIcon($plugin) {
+        if ($plugin->type == 'command') {
+            $base = 'components/com_jce/editor/tiny_mce/themes/advanced/img';
+        } else {
+            if (isset($plugin->path)) {
+                $base = $plugin->path . '/img/';
+            } else {
+                $base = 'components/com_jce/editor/tiny_mce/plugins/' . $plugin->name . '/img';
+            }
+        }
+
+        $span = '';
+        $img = '';
+        $icons = explode(',', $plugin->icon);
+
+        foreach ($icons as $icon) {
+            if ($icon == '|' || $icon == 'spacer') {
+                $span .= '<span class="mceSeparator"></span>';
+            } else {
+                $path = $base . $icon . '.png';
+
+                if (JFile::exists(JPATH_SITE . '/' . $path)) {
+                    $img = '<img src="' . JURI::root(true) . $path . '" alt="' . WFText::_($plugin->title) . '" />';
+                }
+
+                $span .= '<span title="' . WFText::_($plugin->title) . '::' . WFText::_($plugin->description) . '" class="tooltip tooltip-cancel-ondrag ' . self::getIconType($icon) . '"><span class="mceIcon mce_' . preg_replace('/[^a-z0-9_-]/i', '', $icon) . '">' . $img . '</span></span>';
+            }
+        }
+
+        return $span;
     }
 }
