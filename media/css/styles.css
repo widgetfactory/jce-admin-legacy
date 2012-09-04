@@ -65,7 +65,7 @@
     font-size: 1.1em;
     font-weight: bold;
     border: 0 none;
-    margin: auto;
+    margin: auto 0;
     padding: 0 5px;
     width: auto;
 }
