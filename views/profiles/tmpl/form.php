@@ -40,7 +40,7 @@ defined('_JEXEC') or die('RESTRICTED');
 				<?php
 				// Build tabs
 				foreach ($this->plugins as $plugin) :
-					if ($plugin->editable && file_exists(WF_EDITOR_PLUGINS.'/'.$plugin->name.'/'.$plugin->name.'.xml')) :
+                                    if ($plugin->editable && is_file(JPATH_SITE . '/' .$plugin->path . '/' . $plugin->name.'.xml')) :
 						if ($plugin->core == 0) {
 							// Load Language for plugin
 							$language = JFactory::getLanguage();
