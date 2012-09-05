@@ -270,7 +270,7 @@
         <row>4</row>
         <core>1</core>
     </plugin>
-    <plugin>
+    <plugin name="kitchensink">
         <title>WF_KITCHENSINK_TITLE</title>
         <description>WF_KITCHENSINK_DESC</description>
         <name>kitchensink</name>
