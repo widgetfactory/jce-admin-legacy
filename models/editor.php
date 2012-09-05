@@ -56,13 +56,13 @@ class WFModelEditor extends JModel {
 
             // Theme and skins
             $theme = array(
-                'toolbar_location' => array('top', 'top', 'string'),
-                'toolbar_align' => array('left', 'left', 'string'),
-                'statusbar_location' => array('bottom', 'bottom', 'string'),
-                'path' => array(1, 1, 'boolean'),
-                'resizing' => array(1, 0, 'boolean'),
-                'resize_horizontal' => array(1, 1, 'boolean'),
-                'resizing_use_cookie' => array(1, 1, 'boolean')
+                'toolbar_location'      => array('top', 'top', 'string'),
+                'toolbar_align'         => array('left', 'left', 'string'),
+                'statusbar_location'    => array('bottom', 'bottom', 'string'),
+                'path'                  => array(1, 1, 'boolean'),
+                'resizing'              => array(1, 0, 'boolean'),
+                'resize_horizontal'     => array(1, 1, 'boolean'),
+                'resizing_use_cookie'   => array(1, 1, 'boolean')
             );
 
             foreach ($theme as $k => $v) {
@@ -121,7 +121,7 @@ class WFModelEditor extends JModel {
         } else {
             $document->addScript($this->getURL(true) . '/tiny_mce/tiny_mce.js?version=' . $version);
 
-            if (WF_INI_LANG) {
+            if (array_key_exists('language_load', $settings)) {
                 // language
                 $document->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=loadlanguages&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
             }
@@ -151,6 +151,9 @@ class WFModelEditor extends JModel {
 
         // pass compresison states to settings
         $settings['compress'] = json_encode($compress);
+
+        // check for language files
+        $this->checkLanguages($settings);
 
         $output = "";
         $i = 1;
@@ -224,6 +227,42 @@ class WFModelEditor extends JModel {
     }
 
     /**
+     * Check the current language pack exists and is complete
+     * @param array $settings Settings array
+     * @return void
+     */
+    private function checkLanguages(&$settings) {
+        $plugins = array();
+        $language = $settings['language'];
+
+        // only if languages are loaded and not english
+        if (array_key_exists('language_load', $settings) === false && $language != 'en') {
+            jimport('joomla.filesystem.file');
+
+            // check main languages and reset to english
+            if (!JFile::exists(WF_EDITOR . '/tiny_mce/langs/' . $language . '.js') || !JFile::exists(WF_EDITOR_THEMES . '/advanced/langs/' . $language . '.js')) {
+                $settings['language'] = 'en';
+
+                return;
+            }
+
+            foreach ((array) $settings['plugins'] as $plugin) {
+                $path = WF_EDITOR_PLUGINS . '/' . $plugin;
+
+                if ($plugin[0] == '-') {
+                    $path = JPATH_PLUGINS . '/jce/' . substr($plugin, 1);
+                }
+
+                if (JFile::exists($path . '/langs/en.js') && !JFile::exists($path . '/langs/' . $language . '.js')) {
+                    $plugins[] = $plugin;
+                }
+            }
+        }
+
+        $settings['skip_plugin_languages'] = $plugins;
+    }
+
+    /**
      * Get the current version
      * @return Version
      */
@@ -254,12 +293,16 @@ class WFModelEditor extends JModel {
         $settings = array(
             'token' => WFToken::getToken(),
             'base_url' => JURI::root(),
-            'language' => WF_INI_LANG ? false : $wf->getLanguage(),
+            'language' => $wf->getLanguage(),
             //'language_load'		=> false,
             'directionality' => $language->isRTL() ? 'rtl' : 'ltr',
             'theme' => 'none',
             'plugins' => ''
         );
+
+        if (WF_INI_LANG || $wf->getParam('editor.compress_javascript', 0)) {
+            $settings['language_load'] = false;
+        }
 
         return $settings;
     }
@@ -321,57 +364,37 @@ class WFModelEditor extends JModel {
 
         jimport('joomla.filesystem.file');
 
-        $plugins = array();
+        $return     = array();
+        $profile    = $wf->getProfile();
 
-        $profile = $wf->getProfile();
+        if (is_object($profile)) {
+            $plugins    = explode(',', $profile->plugins);
+            $plugins    = array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'core', 'code', 'dragupload', 'format', 'lists', 'wordcount'), $plugins));
+            $external   = array();
 
-        if (is_object($profile)) {            
-            $plugins = explode(',', $profile->plugins);
-            $plugins = array_values(array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'core', 'code', 'dragupload', 'format', 'lists', 'wordcount', 'iframe'), $plugins)));
-
-            $compress = $wf->getParam('editor.compress_javascript', 0);
-
-            for ($i = 0; $i < count($plugins); $i++) {                
-                $plugin = $plugins[$i];
-                
-                $path   = WF_EDITOR_PLUGINS . '/' . $plugin;
-
-                // check for external plugin
-                $external = JPluginHelper::getPlugin('jce', $plugin);
-                
-                if (!empty($external)) {
-                    $path = JPATH_PLUGINS . '/jce/' . $plugin;
+            // check for external plugin
+            foreach (JPluginHelper::getPlugin('jce') as $item) {
+                if (in_array($item->name, $plugins)) {
+                    $external[] = $item->name;
                 }
+            }
 
-                $language = $wf->getLanguage();
+            foreach($plugins as $plugin) {
+                $path = WF_EDITOR_PLUGINS . '/' . $plugin;
 
-                // not properly installed or not a tinymce plugin
-                if (!JFolder::exists($path) || !JFile::exists($path . '/editor_plugin.js')) {
-                    $this->removeKeys($plugins, $plugin);
-                }
-
-                if (!$compress && !WF_INI_LANG) {
-                    if ($language != 'en') {
-                        // new language file
-                        $new = $path . '/langs/' . $language . '.js';
-                        // existing english file
-                        $en = $path . '/langs/en.js';
-
-                        if (JFile::exists($en) && !JFile::exists($new)) {
-                            // remove plugin and throw error
-                            $this->removeKeys($plugins, $plugin);
-                            JError::raiseNotice('SOME_ERROR_CODE', sprintf(WFText::_('PLUGIN NOT LOADED : LANGUAGE FILE MISSING'), 'components/com_jce/editor/tiny_mce/plugins/' . $plugin . '/langs/' . $language . '.js') . ' - ' . ucfirst($plugin));
-                        }
-                    }
+                if (in_array($plugin, $external)) {
+                    $path   = JPATH_PLUGINS . '/jce/' . $plugin;
+                    $plugin = '-' . $plugin;
                 }
                 
-                if (!empty($external)) {
-                    $plugins[$i] = '-' . $plugin;
+                // check plugin is correctly installed and is a tinymce plugin
+                if (JFile::exists($path . '/editor_plugin.js')) {                    
+                    $return[] = $plugin;
                 }
             }
         }
 
-        return $plugins;
+        return $return;
     }
 
     /**
@@ -952,8 +975,8 @@ class WFModelEditor extends JModel {
 
             if ($ini && is_array($ini)) {
                 // filter keys by regular expression
-                if ($filter) {                    
-                    foreach(array_keys($ini) as $key) {
+                if ($filter) {
+                    foreach (array_keys($ini) as $key) {
                         if (preg_match('#' . $filter . '#', $key)) {
                             unset($ini[$key]);
                         }
@@ -1066,7 +1089,7 @@ class WFModelEditor extends JModel {
             $output = 'tinyMCE.addI18n({"' . $wf->getLanguage() . '":{';
             $output .= rtrim(trim($data), ',');
             $output .= '}});';
-            
+
             ob_start();
 
             header("Content-type: application/javascript; charset: UTF-8");
@@ -1081,7 +1104,7 @@ class WFModelEditor extends JModel {
             header("Expires: " . gmdate("D, d M Y H:i:s", time() + $expires) . " GMT");
 
             echo $output;
-            
+
             exit(ob_get_clean());
         }
         exit();
