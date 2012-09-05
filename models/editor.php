@@ -17,7 +17,9 @@ wfimport('admin.helpers.extension');
 wfimport('editor.libraries.classes.token');
 wfimport('editor.libraries.classes.editor');
 
-define('WF_INI_LANG', 0);
+if (!defined('WF_INI_LANG')) {
+    define('WF_INI_LANG', 0);
+}
 
 class WFModelEditor extends JModel {
 
@@ -974,7 +976,6 @@ class WFModelEditor extends JModel {
 
             foreach ($data as $key => $strings) {
 
-                //if (strpos($key, 'dlg') === false) {
                 if (is_array($strings)) {
                     $output .= '"' . strtolower($key) . '":{';
 
