@@ -17,7 +17,7 @@ wfimport('admin.helpers.extension');
 wfimport('editor.libraries.classes.token');
 wfimport('editor.libraries.classes.editor');
 
-define('WF_INI_LANG', 1);
+define('WF_INI_LANG', 0);
 
 class WFModelEditor extends JModel {
 
@@ -126,8 +126,6 @@ class WFModelEditor extends JModel {
 
             // Editor
             $document->addScript($this->getURL(true) . '/libraries/js/editor.js?version=' . $version);
-            // languages TODO
-            //$document->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=pack&type=language&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
         }
         // set compression
         if ($compress['css']) {
@@ -227,7 +225,7 @@ class WFModelEditor extends JModel {
      * Get the current version
      * @return Version
      */
-    function getVersion() {
+    private function getVersion() {
         $xml = WFXMLHelper::parseInstallManifest(JPATH_ADMINISTRATOR . '/components/com_jce/jce.xml');
 
         // return cleaned version number or date
@@ -380,7 +378,7 @@ class WFModelEditor extends JModel {
      * @access      public
      * @param array   $settings passed by reference
      */
-    function getPluginConfig(&$settings) {
+    private function getPluginConfig(&$settings) {
         $plugins = $settings['plugins'];
 
         if ($plugins && is_array($plugins)) {
@@ -407,7 +405,7 @@ class WFModelEditor extends JModel {
      * @access      public
      * @param array   $settings passed by reference
      */
-    function getPluginStyles($settings) {
+    private function getPluginStyles($settings) {
         $plugins = $settings['plugins'];
 
         if ($plugins && is_array($plugins)) {
@@ -435,7 +433,7 @@ class WFModelEditor extends JModel {
      * @param arrau $array Array to edit
      * @param array $keys Keys to remove
      */
-    function removeKeys(&$array, $keys) {
+    public function removeKeys(&$array, $keys) {
         if (!is_array($keys)) {
             $keys = array($keys);
         }
@@ -450,7 +448,7 @@ class WFModelEditor extends JModel {
      * @param string  The array
      * @param string  The keys to add
      */
-    function addKeys(&$array, $keys) {
+    public function addKeys(&$array, $keys) {
         if (!is_array($keys)) {
             $keys = array($keys);
         }
@@ -464,7 +462,7 @@ class WFModelEditor extends JModel {
      * @param string $add Font family to add
      * @param string $remove Font family to remove
      */
-    function getEditorFonts() {
+    public function getEditorFonts() {
         $wf = WFEditor::getInstance();
 
         $add = explode(';', $wf->getParam('editor.theme_advanced_fonts_add', ''));
@@ -500,7 +498,7 @@ class WFModelEditor extends JModel {
      *
      * @access public
      */
-    function getSiteTemplates() {
+    private function getSiteTemplates() {
         $db = JFactory::getDBO();
         $app = JFactory::getApplication();
         $id = 0;
@@ -542,7 +540,7 @@ class WFModelEditor extends JModel {
         return $assigned;
     }
 
-    function getStyleSheets($absolute = false) {
+    private function getStyleSheets($absolute = false) {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
 
@@ -747,7 +745,7 @@ class WFModelEditor extends JModel {
         return '';
     }
 
-    function getURL($relative = false) {
+    private function getURL($relative = false) {
         if ($relative) {
             return JURI::root(true) . '/components/com_jce/editor';
         }
