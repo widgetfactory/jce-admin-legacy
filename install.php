@@ -749,6 +749,19 @@ class WFInstall {
             $query = 'ALTER TABLE #__wf_profiles CHANGE `types` `types` TEXT';
             $db->setQuery($query);
             $db->query();
+            
+            $path = $site . '/editor/tiny_mce';
+            
+            // delete old template language file
+            if (JFile::exists($path . '/themes/advanced/langs/en_dlg.js')) {
+                @JFile::delete($path . '/themes/advanced/langs/en_dlg.js');
+            }
+            // remove old plugin lang folders
+            foreach(array('article', 'imgmanager', 'link', 'searchreplace', 'style', 'table', 'xhtmlxtras') as $plugin) {
+                if (JFolder::exists($path . '/plugins/' . $plugin)) {
+                    @JFolder::delete($path . '/plugins/' . $plugin . '/langs');
+                }
+            }
         }
         
         return true;
