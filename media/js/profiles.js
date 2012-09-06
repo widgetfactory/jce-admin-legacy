@@ -267,6 +267,14 @@
                     $('#editor_toggle').text(this.value); 
                 }
             });
+            
+            $('#users').click(function(e) {
+                var n = e.target;
+                
+                if ($(n).is('span.users-list-delete')) {
+                    $(n).parent().parent().remove();
+                }
+            });
         },
         
         validate : function() {

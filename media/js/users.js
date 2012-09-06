@@ -11,7 +11,7 @@
     $.jce.Users = {
         select : function() {
             var u = [], v, s, o, h;
-            s = window.parent.document.getElementById('users').options;
+            s = window.parent.document.getElementById('users');
 
             $('input:checkbox:checked').each( function() {
                 v = $(this).val();
@@ -22,21 +22,27 @@
                     if ($.jce.Users.check(s, v)) {
                         return;
                     }
-
-                    o = new Option(h, v);
-                    s[s.length] = o;
+                    
+                    var li = document.createElement('li');
+                    
+                    s.appendChild(li);
+                    
+                    li.innerHTML = '<input type="hidden" name="users[]" value="' + v + '" /><label><span class="users-list-delete"></span>' + h + '</label>';
                 }
             });
 
         },
 
-        check : function(s, v) {
-            var a = [];
-            $.each(s, function(i, n) {
-                a.push(n.value);
+        check : function(s, v) {            
+            $.each(s.childNodes, function(i, n) {
+                var input = n.firstChild;
+                
+                if (input.value === v) {
+                    return true;
+                }
             });
 
-            return a.indexOf(v) != -1;
+            return false;
         }
 
     };

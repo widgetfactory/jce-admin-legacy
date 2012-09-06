@@ -158,11 +158,6 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     display: inline-block;
 }
 
-#jce #users {
-    width : 100%;
-    padding: 2px 5px;
-}
-
 #jce input.checkbox-list-toggle-all {
     margin : 2px 6px;
 }
@@ -193,6 +188,48 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     list-style : none;
     min-width : 200px;
 }
+
+#jce ul.users-list {
+    border: 1px solid #EEEEEE;
+    height: 200px;
+    overflow: auto;
+    padding: 2px 5px;
+    white-space: nowrap;
+    word-wrap: normal;
+    margin : 0;
+    list-style : none;
+    min-width : 200px;
+}
+
+#jce ul.users-list li {
+    margin : 5px 0 0 0;
+}
+
+#jce ul.users-list span.users-list-delete {
+    width : 20px;
+    height : 20px;
+    display: inline-block;
+    background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -180px;
+    vertical-align: middle;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
 #jce ul.checkbox-list li label {
     margin : 0 5px;
+}
+
+#jce ul.users-list li label {
+    border : 1px solid #eee;
+    display: inline-block;
+    padding: 5px 0;
+    width: 100%;
+    -ms-user-select : none;
+    -moz-user-select : none;
+    -webkit-user-select: none;
+    user-select : none;
+}
+
+#jce #users-add {
+    float : right;
 }
