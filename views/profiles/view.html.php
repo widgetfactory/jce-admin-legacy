@@ -378,7 +378,15 @@ class WFViewProfiles extends JView {
                         }
                     }
                 }
-                $lists['users'] = JHTML::_('select.genericlist', $options, 'users[]', 'class="inputbox users" size="10" multiple="multiple"', 'value', 'text', '');
+                $lists['users'] = '<ul id="users" class="users-list">';
+                
+                foreach($options as $option) {
+                    $lists['users'] .= '<li><input type="hidden" name="users[]" value="' . $option->value . '" /><label><span class="users-list-delete"></span>' . $option->text . '</label></li>';
+                }
+                
+                $lists['users'] .= '</ul>';
+
+                //JHTML::_('select.genericlist', $options, 'users[]', 'class="inputbox users" size="10" multiple="multiple"', 'value', 'text', '');
 
 
                 $rows = $model->getRowArray($row->rows);

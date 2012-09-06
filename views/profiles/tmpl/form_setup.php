@@ -80,7 +80,7 @@ defined('_JEXEC') or die('RESTRICTED');
                     <a class="dialog users" id="users-add" data-options="{'width':760, 'height':540, 'modal':true}" title="<?php echo WFText::_('WF_PROFILES_USERS_ADD'); ?>" href="index.php?option=com_jce&tmpl=component&view=users">
                         <?php echo WFText::_('WF_PROFILES_USERS_ADD'); ?>
                     </a>
-                    <a id="users-remove" href="javascript:;"><?php echo WFText::_('WF_PROFILES_REMOVE_USERS'); ?></a>
+                    <!--a id="users-remove" href="javascript:;"><?php echo WFText::_('WF_PROFILES_REMOVE_USERS'); ?></a-->
                 </div>
             </span>
         </li>
