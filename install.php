@@ -742,11 +742,18 @@ class WFInstall {
         
         // 2.2.7
         if (version_compare($version, '2.2.7', '<')) {
+            // Change description field to TEXT
             $query = 'ALTER TABLE #__wf_profiles CHANGE `description` `description` TEXT';
             $db->setQuery($query);
             $db->query();
             
+            // Change types field to TEXT
             $query = 'ALTER TABLE #__wf_profiles CHANGE `types` `types` TEXT';
+            $db->setQuery($query);
+            $db->query();
+            
+            // Add device field
+            $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCHAR(255) AFTER `area`';
             $db->setQuery($query);
             $db->query();
             

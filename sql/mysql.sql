@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `#__wf_profiles` (
 	`types` text NOT NULL,
 	`components` text NOT NULL,
 	`area` tinyint(3) NOT NULL,
+        `device` varchar(255) NOT NULL,
 	`rows` text NOT NULL,
 	`plugins` text NOT NULL,
 	`published` tinyint(3) NOT NULL,
