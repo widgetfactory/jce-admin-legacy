@@ -777,7 +777,16 @@ class WFInstall {
         // 2.2.7
         if (version_compare($version, '2.2.7', '<')) {
             $path = $site . '/editor/tiny_mce';
-
+            
+            // remove "Legend"            
+            if (JFile::exists($admin . '/models/legend.php')) {
+                @JFile::delete($admin . '/models/legend.php');
+            }
+            
+            if (JFolder::exists($admin . '/views/legend')) {
+                @JFolder::delete($admin . '/views/legend');
+            }
+            
             // delete old template language file
             if (JFile::exists($path . '/themes/advanced/langs/en_dlg.js')) {
                 @JFile::delete($path . '/themes/advanced/langs/en_dlg.js');
