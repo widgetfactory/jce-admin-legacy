@@ -155,8 +155,10 @@ class WFInstall {
         if (defined('JPATH_PLATFORM')) {
             $xml_file = $installer->getPath('extension_administrator') . '/jce.xml';
             // check for an xml file
-            if ($xml = JApplicationHelper::parseXMLInstallFile($xml_file)) {
-                $current_version = $xml['version'];
+            if (is_file($xml_file)) {
+                if ($xml = JApplicationHelper::parseXMLInstallFile($xml_file)) {
+                    $current_version = $xml['version'];
+                }
             }
         } else {
             if (basename($installer->getPath('manifest')) == 'legacy.xml') {
@@ -1064,7 +1066,7 @@ class WFInstall {
         $db = JFactory::getDBO();
         $db->setQuery('DESCRIBE ' . $table);
         $fields = $db->loadResultArray();
-
+        
         return in_array($column, (array) $fields);
     }
 
