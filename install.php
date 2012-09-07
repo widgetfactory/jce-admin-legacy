@@ -130,14 +130,21 @@ class WFInstall {
 
         require_once($installer->getPath('extension_administrator') . '/includes/base.php');
 
-        $manifest = $installer->get('manifest');
+        // get manifest
+        $manifest = $installer->getManifest();
+        $new_version = (string) $manifest->version;
 
-        // get the version we're installing
-        if ($manifest) {
-            $new_version = $manifest->version;
-        } else {
-            $manifest = JApplicationHelper::parseXMLInstallFile($installer->getPath('source') . '/jce.xml');
-            $new_version = $manifest['version'];
+        // Joomla! 1.5
+        if (!defined('JPATH_PLATFORM') && !$new_version) {
+            $new_version = (string) $manifest->document->getElementByPath('version')->data();
+        }
+
+        // get version from xml file
+        if (!$manifest) {
+            $manifest = JApplicationHelper::parseXMLInstallFile($installer->getPath('manifest'));
+            if (is_array($manifest)) {
+                $new_version = $manifest['version'];
+            }
         }
 
         $state = false;
@@ -145,33 +152,30 @@ class WFInstall {
         // the current version
         $current_version = $new_version;
 
-        // get the current version 
-        $xml_file = $installer->getPath('extension_administrator') . '/jce.xml';
-
-        if (is_file($xml_file)) {
-            $xml = JApplicationHelper::parseXMLInstallFile($xml_file);
-
-            if (preg_match('/([0-9\.]+)(beta|rc|dev|alpha)?([0-9]+?)/i', $xml['version'])) {
-                // component version is less than current
-                if (version_compare($xml['version'], $new_version, '<')) {
-                    $current_version = $xml['version'];
-                }
-                // invalid component version, check for groups table
-            } else {
-                // check for old tables
-                if (self::checkTable('#__jce_groups')) {
-                    $current_version = '1.5.0';
-                }
-
-                // check for old tables
-                if (self::checkTable('#__jce_profiles')) {
-                    $current_version = '2.0.0beta1';
-                }
+        if (defined('JPATH_PLATFORM')) {
+            $xml_file = $installer->getPath('extension_administrator') . '/jce.xml';
+            // check for an xml file
+            if ($xml = JApplicationHelper::parseXMLInstallFile($xml_file)) {
+                $current_version = $xml['version'];
             }
         } else {
-            // check for old tables
-            if (self::checkTable('#__jce_groups')) {
-                $current_version = '1.5.0';
+            if (basename($installer->getPath('manifest')) == 'legacy.xml') {
+                $xml_file = JPATH_PLUGINS . '/editors/jce.xml';
+
+                // check for an xml file
+                if ($xml = JApplicationHelper::parseXMLInstallFile($xml_file)) {
+                    $current_version = $xml['version'];
+                } else {
+                    // check for old tables
+                    if (self::checkTable('#__jce_groups')) {
+                        $current_version = '1.5.0';
+                    }
+
+                    // check for old tables
+                    if (self::checkTable('#__jce_profiles')) {
+                        $current_version = '2.0.0beta1';
+                    }
+                }
             }
         }
 
@@ -181,6 +185,25 @@ class WFInstall {
         } else {
             // install plugins first
             $state = self::installProfiles();
+        }
+
+        if (self::checkTableColumn('#__wf_profiles', 'device') === false) {
+            $db = JFactory::getDBO();
+
+            // Change description field to TEXT
+            $query = 'ALTER TABLE #__wf_profiles CHANGE `description` `description` TEXT';
+            $db->setQuery($query);
+            $db->query();
+
+            // Change types field to TEXT
+            $query = 'ALTER TABLE #__wf_profiles CHANGE `types` `types` TEXT';
+            $db->setQuery($query);
+            $db->query();
+
+            // Add device field
+            $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCHAR(255) AFTER `area`';
+            $db->setQuery($query);
+            $db->query();
         }
 
         if ($state) {
@@ -238,328 +261,339 @@ class WFInstall {
         self::removePackages();
     }
 
+    // Upgrade from JCE 1.5.x
+    private static function upgradeLegacy() {
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDBO();
+
+        $admin  = JPATH_ADMINISTRATOR . '/components/com_jce';
+        $site   = JPATH_SITE . '/components/com_jce';
+
+        require_once($admin . '/helpers/parameter.php');
+
+        // check for groups table / data
+        if (self::checkTable('#__jce_groups') && self::checkTableContents('#__jce_groups')) {
+            jimport('joomla.plugin.helper');
+
+            // get plugin
+            $plugin = JPluginHelper::getPlugin('editors', 'jce');
+            // get JCE component
+            $table = JTable::getInstance('component');
+            $table->loadByOption('com_jce');
+            // process params to JSON string
+            $params = WFParameterHelper::toObject($table->params);
+            // set params
+            $table->params = json_encode(array('editor' => $params));
+            // store
+            $table->store();
+            // get all groups data
+            $query = 'SELECT * FROM #__jce_groups';
+            $db->setQuery($query);
+            $groups = $db->loadObjectList();
+
+            // get all plugin data
+            $query = 'SELECT id, name, icon FROM #__jce_plugins';
+            $db->setQuery($query);
+            $plugins = $db->loadAssocList('id');
+
+            $map = array('advlink' => 'link', 'advcode' => 'source', 'tablecontrols' => 'table', 'styleprops' => 'style');
+
+            if (self::createProfilesTable()) {
+                foreach ($groups as $group) {
+                    $row = JTable::getInstance('profiles', 'WFTable');
+
+                    $rows = array();
+
+                    // transfer row ids to names
+                    foreach (explode(';', $group->rows) as $item) {
+                        $icons = array();
+                        foreach (explode(',', $item) as $id) {
+                            // spacer
+                            if ($id == '00') {
+                                $icon = 'spacer';
+                            } else {
+                                if (isset($plugins[$id])) {
+                                    $icon = $plugins[$id]['icon'];
+
+                                    // map old icon names to new
+                                    if (isset($map[$icon])) {
+                                        $icon = $map[$icon];
+                                    }
+                                }
+                            }
+                            $icons[] = $icon;
+                        }
+
+                        $rows[] = str_replace(array('cite,abbr,acronym,del,ins,attribs', 'search,replace', 'ltr,rtl', 'readmore,pagebreak', 'cut,copy,paste'), array('xhtmlxtras', 'searchreplace', 'directionality', 'article', 'paste'), implode(',', $icons));
+                    }
+                    // re-assign rows
+                    $row->rows = implode(';', $rows);
+
+                    $names = array('anchor');
+
+                    // transfer plugin ids to names
+                    foreach (explode(',', $group->plugins) as $id) {
+                        if (isset($plugins[$id])) {
+                            $name = $plugins[$id]['name'];
+
+                            // map old icon names to new
+                            if (isset($map[$name])) {
+                                $name = $map[$name];
+                            }
+
+                            $names[] = $name;
+                        }
+                    }
+                    // re-assign plugins
+                    $row->plugins = implode(',', $names);
+
+                    // convert params to JSON
+                    $params = WFParameterHelper::toObject($group->params);
+                    $data = new StdClass();
+
+                    foreach ($params as $key => $value) {
+                        $parts = explode('_', $key);
+
+                        $node = array_shift($parts);
+
+                        // special consideration for imgmanager_ext!!
+                        if (strpos($key, 'imgmanager_ext_') !== false) {
+                            $node = $node . '_' . array_shift($parts);
+                        }
+
+                        // convert some nodes
+                        if (isset($map[$node])) {
+                            $node = $map[$node];
+                        }
+
+                        $key = implode('_', $parts);
+
+                        if ($value !== '') {
+                            if (!isset($data->$node) || !is_object($data->$node)) {
+                                $data->$node = new StdClass();
+                            }
+                            // convert Link parameters
+                            if ($node == 'link' && $key != 'target') {
+                                $sub = $key;
+                                $key = 'links';
+
+                                if (!isset($data->$node->$key)) {
+                                    $data->$node->$key = new StdClass();
+                                }
+
+                                if (preg_match('#^(content|contacts|static|weblinks|menu)$#', $sub)) {
+                                    if (!isset($data->$node->$key->joomlalinks)) {
+                                        $data->$node->$key->joomlalinks = new StdClass();
+                                        $data->$node->$key->joomlalinks->enable = 1;
+                                    }
+                                    $data->$node->$key->joomlalinks->$sub = $value;
+                                } else {
+                                    $data->$node->$key->$sub = new StdClass();
+                                    $data->$node->$key->$sub->enable = 1;
+                                }
+                            } else {
+                                $data->$node->$key = $value;
+                            }
+                        }
+                    }
+                    // re-assign params
+                    $row->params = json_encode($data);
+
+                    // re-assign other values
+                    $row->name = $group->name;
+                    $row->description = $group->description;
+                    $row->users = $group->users;
+                    $row->types = $group->types;
+                    $row->components = $group->components;
+                    $row->published = $group->published;
+                    $row->ordering = $group->ordering;
+
+                    // add area data
+                    if ($row->name == 'Default') {
+                        $row->area = 0;
+                    }
+
+                    if ($row->name == 'Front End') {
+                        $row->area = 1;
+                    }
+
+                    if (self::checkTable('#__wf_profiles')) {
+                        $name = $row->name;
+
+                        // check for existing profile
+                        $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
+                        $db->setQuery($query);
+                        // create name copy if exists
+                        while ($db->loadResult()) {
+                            $name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
+
+                            $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
+
+                            $db->setQuery($query);
+                        }
+                        // set name
+                        $row->name = $name;
+                    }
+
+                    if (!$row->store()) {
+                        $app->enqueueMessage('Conversion of group data failed : ' . $row->name, 'error');
+                    } else {
+                        $app->enqueueMessage('Conversion of group data successful : ' . $row->name);
+                    }
+
+                    unset($row);
+                }
+
+                // Drop tables
+                $query = 'DROP TABLE IF EXISTS #__jce_groups';
+                $db->setQuery($query);
+                $db->query();
+
+                // If profiles table empty due to error, install profiles data
+                if (!self::checkTableContents('#__wf_profiles')) {
+                    self::installProfiles();
+                }
+            } else {
+                return false;
+            }
+            // Install profiles
+        } else {
+            self::installProfiles();
+        }
+
+        // Drop tables
+        $query = 'DROP TABLE IF EXISTS #__jce_plugins';
+        $db->setQuery($query);
+        $db->query();
+
+        // Drop tables
+        $query = 'DROP TABLE IF EXISTS #__jce_extensions';
+        $db->setQuery($query);
+        $db->query();
+
+        // Remove Plugins menu item
+        $query = 'DELETE FROM #__components' . ' WHERE admin_menu_link = ' . $db->Quote('option=com_jce&type=plugins');
+
+        $db->setQuery($query);
+        $db->query();
+
+        // Update Component Name
+        $query = 'UPDATE #__components' . ' SET name = ' . $db->Quote('COM_JCE') . ' WHERE ' . $db->Quote('option') . '=' . $db->Quote('com_jce') . ' AND parent = 0';
+
+        $db->setQuery($query);
+        $db->query();
+
+        // Fix links for other views and edit names
+        $menus = array('install' => 'installer', 'group' => 'profiles', 'groups' => 'profiles', 'config' => 'config');
+
+        $row = JTable::getInstance('component');
+
+        foreach ($menus as $k => $v) {
+            $query = 'SELECT id FROM #__components' . ' WHERE admin_menu_link = ' . $db->Quote('option=com_jce&type=' . $k);
+            $db->setQuery($query);
+            $id = $db->loadObject();
+
+            if ($id) {
+                $row->load($id);
+                $row->name = $v;
+                $row->admin_menu_link = 'option=com_jce&view=' . $v;
+
+                if (!$row->store()) {
+                    $mainframe->enqueueMessage('Unable to update Component Links for view : ' . strtoupper($v), 'error');
+                }
+            }
+        }
+
+        // remove old admin language files
+        $folders = JFolder::folders(JPATH_ADMINISTRATOR . '/language', '.', false, true, array('.svn', 'CVS', 'en-GB'));
+
+        foreach ($folders as $folder) {
+            $name = basename($folder);
+            $files = array($name . '.com_jce.ini', $name . '.com_jce.menu.ini', $name . '.com_jce.xml');
+            foreach ($files as $file) {
+                if (is_file($folder . '/' . $file)) {
+                    @JFile::delete($folder . '/' . $file);
+                }
+            }
+        }
+
+        // remove old site language files
+        $folders = JFolder::folders(JPATH_SITE . '/language', '.', false, true, array('.svn', 'CVS', 'en-GB'));
+
+        foreach ($folders as $folder) {
+            $files = JFolder::files($folder, '^' . basename($folder) . '\.com_jce([_a-z0-9]+)?\.(ini|xml)$', false, true);
+            @JFile::delete($files);
+        }
+
+        // remove legacy admin folders
+        $folders = array('cpanel', 'config', 'css', 'groups', 'plugins', 'img', 'installer', 'js');
+        foreach ($folders as $folder) {
+            if (is_dir($admin . '/' . $folder)) {
+                @JFolder::delete($admin . '/' . $folder);
+            }
+        }
+
+        // remove legacy admin files
+        $files = array('editor.php', 'helper.php', 'updater.php');
+
+        foreach ($files as $file) {
+            if (is_file($admin . '/' . $file)) {
+                @JFile::delete($admin . '/' . $file);
+            }
+        }
+
+        // remove legacy admin folders
+        $folders = array('controller', 'css', 'js');
+        foreach ($folders as $folder) {
+            if (is_dir($site . '/' . $folder)) {
+                @JFolder::delete($site . '/' . $folder);
+            }
+        }
+
+        // remove legacy admin files
+        $files = array('popup.php');
+
+        foreach ($files as $file) {
+            if (is_file($site . '/' . $file)) {
+                @JFile::delete($site . '/' . $file);
+            }
+        }
+
+
+        if (!defined('JPATH_PLATFORM')) {
+            // remove old plugin folder
+            $path = JPATH_PLUGINS . '/editors';
+
+            if (is_dir($path . '/jce')) {
+                @JFolder::delete($path . '/jce');
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Upgrade database tables and remove legacy folders
      * @return Boolean
      */
     private static function upgrade($version) {
-        $app = JFactory::getApplication();
-        $db = JFactory::getDBO();
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDBO();
 
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
 
-        $admin = JPATH_ADMINISTRATOR . '/components/com_jce';
-        $site = JPATH_SITE . '/components/com_jce';
-
-        require_once($admin . '/helpers/parameter.php');
+        $admin  = JPATH_ADMINISTRATOR . '/components/com_jce';
+        $site   = JPATH_SITE . '/components/com_jce';
 
         // add tables path
         JTable::addIncludePath($admin . '/tables');
 
         // upgrade from 1.5.x to 2.0.0 (only in Joomla! 1.5)
         if (version_compare($version, '2.0.0', '<') && !defined('JPATH_PLATFORM')) {
-            // check for groups table / data
-            if (self::checkTable('#__jce_groups') && self::checkTableContents('#__jce_groups')) {
-                jimport('joomla.plugin.helper');
-
-                // get plugin
-                $plugin = JPluginHelper::getPlugin('editors', 'jce');
-                // get JCE component
-                $table = JTable::getInstance('component');
-                $table->loadByOption('com_jce');
-                // process params to JSON string
-                $params = WFParameterHelper::toObject($table->params);
-                // set params
-                $table->params = json_encode(array('editor' => $params));
-                // store
-                $table->store();
-                // get all groups data
-                $query = 'SELECT * FROM #__jce_groups';
-                $db->setQuery($query);
-                $groups = $db->loadObjectList();
-
-                // get all plugin data
-                $query = 'SELECT id, name, icon FROM #__jce_plugins';
-                $db->setQuery($query);
-                $plugins = $db->loadAssocList('id');
-
-                $map = array('advlink' => 'link', 'advcode' => 'source', 'tablecontrols' => 'table', 'styleprops' => 'style');
-
-                if (self::createProfilesTable()) {
-                    foreach ($groups as $group) {
-                        $row = JTable::getInstance('profiles', 'WFTable');
-
-                        $rows = array();
-
-                        // transfer row ids to names
-                        foreach (explode(';', $group->rows) as $item) {
-                            $icons = array();
-                            foreach (explode(',', $item) as $id) {
-                                // spacer
-                                if ($id == '00') {
-                                    $icon = 'spacer';
-                                } else {
-                                    if (isset($plugins[$id])) {
-                                        $icon = $plugins[$id]['icon'];
-
-                                        // map old icon names to new
-                                        if (isset($map[$icon])) {
-                                            $icon = $map[$icon];
-                                        }
-                                    }
-                                }
-                                $icons[] = $icon;
-                            }
-
-                            $rows[] = str_replace(array('cite,abbr,acronym,del,ins,attribs', 'search,replace', 'ltr,rtl', 'readmore,pagebreak', 'cut,copy,paste'), array('xhtmlxtras', 'searchreplace', 'directionality', 'article', 'paste'), implode(',', $icons));
-                        }
-                        // re-assign rows
-                        $row->rows = implode(';', $rows);
-
-                        $names = array('anchor');
-
-                        // transfer plugin ids to names
-                        foreach (explode(',', $group->plugins) as $id) {
-                            if (isset($plugins[$id])) {
-                                $name = $plugins[$id]['name'];
-
-                                // map old icon names to new
-                                if (isset($map[$name])) {
-                                    $name = $map[$name];
-                                }
-
-                                $names[] = $name;
-                            }
-                        }
-                        // re-assign plugins
-                        $row->plugins = implode(',', $names);
-
-                        // convert params to JSON
-                        $params = WFParameterHelper::toObject($group->params);
-                        $data = new StdClass();
-
-                        foreach ($params as $key => $value) {
-                            $parts = explode('_', $key);
-
-                            $node = array_shift($parts);
-
-                            // special consideration for imgmanager_ext!!
-                            if (strpos($key, 'imgmanager_ext_') !== false) {
-                                $node = $node . '_' . array_shift($parts);
-                            }
-
-                            // convert some nodes
-                            if (isset($map[$node])) {
-                                $node = $map[$node];
-                            }
-
-                            $key = implode('_', $parts);
-
-                            if ($value !== '') {
-                                if (!isset($data->$node) || !is_object($data->$node)) {
-                                    $data->$node = new StdClass();
-                                }
-                                // convert Link parameters
-                                if ($node == 'link' && $key != 'target') {
-                                    $sub = $key;
-                                    $key = 'links';
-
-                                    if (!isset($data->$node->$key)) {
-                                        $data->$node->$key = new StdClass();
-                                    }
-
-                                    if (preg_match('#^(content|contacts|static|weblinks|menu)$#', $sub)) {
-                                        if (!isset($data->$node->$key->joomlalinks)) {
-                                            $data->$node->$key->joomlalinks = new StdClass();
-                                            $data->$node->$key->joomlalinks->enable = 1;
-                                        }
-                                        $data->$node->$key->joomlalinks->$sub = $value;
-                                    } else {
-                                        $data->$node->$key->$sub = new StdClass();
-                                        $data->$node->$key->$sub->enable = 1;
-                                    }
-                                } else {
-                                    $data->$node->$key = $value;
-                                }
-                            }
-                        }
-                        // re-assign params
-                        $row->params = json_encode($data);
-
-                        // re-assign other values
-                        $row->name = $group->name;
-                        $row->description = $group->description;
-                        $row->users = $group->users;
-                        $row->types = $group->types;
-                        $row->components = $group->components;
-                        $row->published = $group->published;
-                        $row->ordering = $group->ordering;
-
-                        // add area data
-                        if ($row->name == 'Default') {
-                            $row->area = 0;
-                        }
-
-                        if ($row->name == 'Front End') {
-                            $row->area = 1;
-                        }
-
-                        if (self::checkTable('#__wf_profiles')) {
-                            $name = $row->name;
-
-                            // check for existing profile
-                            $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
-                            $db->setQuery($query);
-                            // create name copy if exists
-                            while ($db->loadResult()) {
-                                $name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
-
-                                $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
-
-                                $db->setQuery($query);
-                            }
-                            // set name
-                            $row->name = $name;
-                        }
-
-                        if (!$row->store()) {
-                            $app->enqueueMessage('Conversion of group data failed : ' . $row->name, 'error');
-                        } else {
-                            $app->enqueueMessage('Conversion of group data successful : ' . $row->name);
-                        }
-
-                        unset($row);
-                    }
-
-                    // Drop tables
-                    $query = 'DROP TABLE IF EXISTS #__jce_groups';
-                    $db->setQuery($query);
-                    $db->query();
-
-                    // If profiles table empty due to error, install profiles data
-                    if (!self::checkTableContents('#__wf_profiles')) {
-                        self::installProfiles();
-                    }
-                } else {
-                    return false;
-                }
-                // Install profiles
-            } else {
-                self::installProfiles();
-            }
-
-            // Drop tables
-            $query = 'DROP TABLE IF EXISTS #__jce_plugins';
-            $db->setQuery($query);
-            $db->query();
-
-            // Drop tables
-            $query = 'DROP TABLE IF EXISTS #__jce_extensions';
-            $db->setQuery($query);
-            $db->query();
-
-            // Remove Plugins menu item
-            $query = 'DELETE FROM #__components' . ' WHERE admin_menu_link = ' . $db->Quote('option=com_jce&type=plugins');
-
-            $db->setQuery($query);
-            $db->query();
-
-            // Update Component Name
-            $query = 'UPDATE #__components' . ' SET name = ' . $db->Quote('COM_JCE') . ' WHERE ' . $db->Quote('option') . '=' . $db->Quote('com_jce') . ' AND parent = 0';
-
-            $db->setQuery($query);
-            $db->query();
-
-            // Fix links for other views and edit names
-            $menus = array('install' => 'installer', 'group' => 'profiles', 'groups' => 'profiles', 'config' => 'config');
-
-            $row = JTable::getInstance('component');
-
-            foreach ($menus as $k => $v) {
-                $query = 'SELECT id FROM #__components' . ' WHERE admin_menu_link = ' . $db->Quote('option=com_jce&type=' . $k);
-                $db->setQuery($query);
-                $id = $db->loadObject();
-
-                if ($id) {
-                    $row->load($id);
-                    $row->name = $v;
-                    $row->admin_menu_link = 'option=com_jce&view=' . $v;
-
-                    if (!$row->store()) {
-                        $mainframe->enqueueMessage('Unable to update Component Links for view : ' . strtoupper($v), 'error');
-                    }
-                }
-            }
-
-            // remove old admin language files
-            $folders = JFolder::folders(JPATH_ADMINISTRATOR . '/language', '.', false, true, array('.svn', 'CVS', 'en-GB'));
-
-            foreach ($folders as $folder) {
-                $name = basename($folder);
-                $files = array($name . '.com_jce.ini', $name . '.com_jce.menu.ini', $name . '.com_jce.xml');
-                foreach ($files as $file) {
-                    if (is_file($folder . '/' . $file)) {
-                        @JFile::delete($folder . '/' . $file);
-                    }
-                }
-            }
-
-            // remove old site language files
-            $folders = JFolder::folders(JPATH_SITE . '/language', '.', false, true, array('.svn', 'CVS', 'en-GB'));
-
-            foreach ($folders as $folder) {
-                $files = JFolder::files($folder, '^' . basename($folder) . '\.com_jce([_a-z0-9]+)?\.(ini|xml)$', false, true);
-                @JFile::delete($files);
-            }
-
-            // remove legacy admin folders
-            $folders = array('cpanel', 'config', 'css', 'groups', 'plugins', 'img', 'installer', 'js');
-            foreach ($folders as $folder) {
-                if (is_dir($admin . '/' . $folder)) {
-                    @JFolder::delete($admin . '/' . $folder);
-                }
-            }
-
-            // remove legacy admin files
-            $files = array('editor.php', 'helper.php', 'updater.php');
-
-            foreach ($files as $file) {
-                if (is_file($admin . '/' . $file)) {
-                    @JFile::delete($admin . '/' . $file);
-                }
-            }
-
-            // remove legacy admin folders
-            $folders = array('controller', 'css', 'js');
-            foreach ($folders as $folder) {
-                if (is_dir($site . '/' . $folder)) {
-                    @JFolder::delete($site . '/' . $folder);
-                }
-            }
-
-            // remove legacy admin files
-            $files = array('popup.php');
-
-            foreach ($files as $file) {
-                if (is_file($site . '/' . $file)) {
-                    @JFile::delete($site . '/' . $file);
-                }
-            }
-
-
-            if (!defined('JPATH_PLATFORM')) {
-                // remove old plugin folder
-                $path = JPATH_PLUGINS . '/editors';
-
-                if (is_dir($path . '/jce')) {
-                    @JFolder::delete($path . '/jce');
-                }
-            }
-
-            return true;
+            return self::upgradeLegacy();
         }// end JCE 1.5 upgrade
-
+        
         // cleanup javascript and css files moved to site
         if (version_compare($version, '2.0.10', '<')) {
             $path = $admin . '/media';
@@ -601,7 +635,7 @@ class WFInstall {
                 @JFile::delete($site . '/editor/libraries/classes/error.php');
             }
         }
-        
+
         // 2.1
         if (version_compare($version, '2.1', '<')) {
             if (is_dir($admin . '/plugin')) {
@@ -729,9 +763,9 @@ class WFInstall {
 
         // 2.2.6
         if (version_compare($version, '2.2.6', '<')) {
-            $path       = $site . '/editor/libraries/js/jquery';
-            $files      = JFolder::files($path, '\.js');
-            $exclude    = array('jquery-1.7.2.min.js', 'jquery-ui-1.8.21.custom.min.js', 'jquery-ui-layout.js');
+            $path = $site . '/editor/libraries/js/jquery';
+            $files = JFolder::files($path, '\.js');
+            $exclude = array('jquery-1.7.2.min.js', 'jquery-ui-1.8.21.custom.min.js', 'jquery-ui-layout.js');
 
             foreach ($files as $file) {
                 if (in_array(basename($file), $exclude) === false) {
@@ -739,38 +773,23 @@ class WFInstall {
                 }
             }
         }
-        
+
         // 2.2.7
         if (version_compare($version, '2.2.7', '<')) {
-            // Change description field to TEXT
-            $query = 'ALTER TABLE #__wf_profiles CHANGE `description` `description` TEXT';
-            $db->setQuery($query);
-            $db->query();
-            
-            // Change types field to TEXT
-            $query = 'ALTER TABLE #__wf_profiles CHANGE `types` `types` TEXT';
-            $db->setQuery($query);
-            $db->query();
-            
-            // Add device field
-            $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCHAR(255) AFTER `area`';
-            $db->setQuery($query);
-            $db->query();
-            
             $path = $site . '/editor/tiny_mce';
-            
+
             // delete old template language file
             if (JFile::exists($path . '/themes/advanced/langs/en_dlg.js')) {
                 @JFile::delete($path . '/themes/advanced/langs/en_dlg.js');
             }
             // remove old plugin lang folders
-            foreach(array('article', 'imgmanager', 'link', 'searchreplace', 'style', 'table', 'xhtmlxtras') as $plugin) {
+            foreach (array('article', 'imgmanager', 'link', 'searchreplace', 'style', 'table', 'xhtmlxtras') as $plugin) {
                 if (JFolder::exists($path . '/plugins/' . $plugin)) {
                     @JFolder::delete($path . '/plugins/' . $plugin . '/langs');
                 }
             }
         }
-        
+
         return true;
     }
 
@@ -1030,6 +1049,14 @@ class WFInstall {
         $db->setQuery($query);
 
         return $db->loadResult();
+    }
+
+    private static function checkTableColumn($table, $column) {
+        $db = JFactory::getDBO();
+        $db->setQuery('DESCRIBE ' . $table);
+        $fields = $db->loadResultArray();
+
+        return in_array($column, (array) $fields);
     }
 
 }
