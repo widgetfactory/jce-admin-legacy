@@ -11,9 +11,9 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.application.component.controller');
+wfimport('admin.classes.controller');
 
-class WFController extends JController {
+class WFController extends WFControllerBase {
 
     /**
      * Custom Constructor

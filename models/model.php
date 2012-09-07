@@ -11,7 +11,7 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.application.component.model');
+wfimport('admin.classes.model');
 
 class WFModel extends JModel {
 

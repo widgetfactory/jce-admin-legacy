@@ -11,9 +11,9 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.application.component.view');
+wfimport('admin.classes.view');
 
-class WFViewMediabox extends JView {
+class WFViewMediabox extends WFViewBase {
 
     function getParams($data) {
 
