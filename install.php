@@ -39,7 +39,7 @@ function com_uninstall() {
     return true;
 }
 
-class WFInstall {
+abstract class WFInstall {
 
     private static function cleanupInstall() {
         $path = JPATH_ADMINISTRATOR . '/components/com_jce';
@@ -127,8 +127,6 @@ class WFInstall {
 
             return false;
         }
-
-        require_once($installer->getPath('extension_administrator') . '/includes/base.php');
 
         // get manifest
         $manifest = $installer->getManifest();
@@ -246,12 +244,9 @@ class WFInstall {
         $db = JFactory::getDBO();
 
         // remove Profiles table if its empty
-        $query = 'SELECT COUNT(id) FROM #__wf_profiles';
-        $db->setQuery($query);
-
-        if (!$db->loadResult()) {
+        if ((int) self::checkTableContents('#__wf_profiles') == 0) {
             if (method_exists($db, 'dropTable')) {
-                $db->dropTable('#__wf_profiles');
+                $db->dropTable('#__wf_profiles', true);
             } else {
                 $query = 'DROP TABLE IF EXISTS #__wf_profiles';
                 $db->setQuery($query);
@@ -263,16 +258,35 @@ class WFInstall {
         self::removePackages();
     }
 
+    private static function paramsToObject($data) {
+        $registry = new JRegistry();
+        $registry->loadIni($data);
+        return $registry->toObject();
+    }
+
+    private static function loadXMLFile($file) {
+        $xml = null;
+
+        // Disable libxml errors and allow to fetch error information as needed
+        libxml_use_internal_errors(true);
+
+        if (is_file($file)) {
+            // Try to load the xml file
+            $xml = simplexml_load_file($file);
+        }
+
+        return $xml;
+    }
+
     // Upgrade from JCE 1.5.x
     private static function upgradeLegacy() {
-        $app    = JFactory::getApplication();
-        $db     = JFactory::getDBO();
+        $app = JFactory::getApplication();
+        $db = JFactory::getDBO();
 
-        $admin  = JPATH_ADMINISTRATOR . '/components/com_jce';
-        $site   = JPATH_SITE . '/components/com_jce';
+        $admin = JPATH_ADMINISTRATOR . '/components/com_jce';
+        $site = JPATH_SITE . '/components/com_jce';
 
-        require_once($admin . '/helpers/parameter.php');
-
+        //require_once($admin . '/helpers/parameter.php');
         // check for groups table / data
         if (self::checkTable('#__jce_groups') && self::checkTableContents('#__jce_groups')) {
             jimport('joomla.plugin.helper');
@@ -283,7 +297,7 @@ class WFInstall {
             $table = JTable::getInstance('component');
             $table->loadByOption('com_jce');
             // process params to JSON string
-            $params = WFParameterHelper::toObject($table->params);
+            $params = self::paramsToObject($table->params);
             // set params
             $table->params = json_encode(array('editor' => $params));
             // store
@@ -350,7 +364,7 @@ class WFInstall {
                     $row->plugins = implode(',', $names);
 
                     // convert params to JSON
-                    $params = WFParameterHelper::toObject($group->params);
+                    $params = self::paramsToObject($group->params);
                     $data = new StdClass();
 
                     foreach ($params as $key => $value) {
@@ -446,14 +460,12 @@ class WFInstall {
                     unset($row);
                 }
 
-                // Drop tables
-                $query = 'DROP TABLE IF EXISTS #__jce_groups';
-                $db->setQuery($query);
-                $db->query();
-
                 // If profiles table empty due to error, install profiles data
                 if (!self::checkTableContents('#__wf_profiles')) {
                     self::installProfiles();
+                } else {
+                    // add Blogger profile
+                    self::installProfile('Blogger');
                 }
             } else {
                 return false;
@@ -462,16 +474,6 @@ class WFInstall {
         } else {
             self::installProfiles();
         }
-
-        // Drop tables
-        $query = 'DROP TABLE IF EXISTS #__jce_plugins';
-        $db->setQuery($query);
-        $db->query();
-
-        // Drop tables
-        $query = 'DROP TABLE IF EXISTS #__jce_extensions';
-        $db->setQuery($query);
-        $db->query();
 
         // Remove Plugins menu item
         $query = 'DELETE FROM #__components' . ' WHERE admin_menu_link = ' . $db->Quote('option=com_jce&type=plugins');
@@ -574,19 +576,59 @@ class WFInstall {
         return true;
     }
 
+    private static function installProfile($name) {
+        $db = JFactory::getDBO();
+
+        $query = 'SELECT COUNT(id) FROM #__wf_profiles WHERE name = ' . $db->Quote($name);
+        $db->setQuery($query);
+        $id = (int) $db->loadResult();
+        
+        if (!$id) {
+            // Blogger
+            $file = JPATH_ADMINISTRATOR . '/components/com_jce/models/profiles.xml';
+
+            $xml = self::loadXMLFile($file);
+
+            if ($xml) {
+                foreach ($xml->profiles->children() as $profile) {
+                    if ($profile->attributes()->name == 'Blogger') {
+                        $row = JTable::getInstance('profiles', 'WFTable');
+
+                        foreach ($profile->children() as $item) {
+                            switch ($item->getName()) {
+                                case 'rows':
+                                    $row->rows = (string) $item;
+                                    break;
+                                case 'plugins':
+                                    $row->plugins = (string) $item;
+                                    break;
+                                default:
+                                    $key = $item->getName();
+                                    $row->$key = (string) $item;
+
+                                    break;
+                            }
+                        }
+                        $row->store();
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Upgrade database tables and remove legacy folders
      * @return Boolean
      */
     private static function upgrade($version) {
-        $app    = JFactory::getApplication();
-        $db     = JFactory::getDBO();
+        $app = JFactory::getApplication();
+        $db = JFactory::getDBO();
 
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
 
-        $admin  = JPATH_ADMINISTRATOR . '/components/com_jce';
-        $site   = JPATH_SITE . '/components/com_jce';
+        $admin = JPATH_ADMINISTRATOR . '/components/com_jce';
+        $site = JPATH_SITE . '/components/com_jce';
 
         // add tables path
         JTable::addIncludePath($admin . '/tables');
@@ -595,55 +637,76 @@ class WFInstall {
         if (version_compare($version, '2.0.0', '<') && !defined('JPATH_PLATFORM')) {
             return self::upgradeLegacy();
         }// end JCE 1.5 upgrade
-        
-        // cleanup javascript and css files moved to site
-        if (version_compare($version, '2.0.10', '<')) {
-            $path = $admin . '/media';
 
-            $scripts = array('colorpicker.js', 'help.js', 'html5.js', 'select.js', 'tips.js');
+        // Remove folders
+        $folders = array(
+            // Remove JQuery folders from admin
+            $admin . '/media/css/jquery',
+            $admin . '/media/js/jquery',
+            // remove plugin package folder
+            $admin . '/plugin',
+            // remove legend view
+            $admin . '/views/legend',
+            // remove controller from site
+            $site . '/controller',
+            // Remove plugin language files (incorporated into main language file)
+            $site . '/editor/tiny_mce/plugins/article/langs',
+            $site . '/editor/tiny_mce/plugins/imgmanager/langs',
+            $site . '/editor/tiny_mce/plugins/link/langs',
+            $site . '/editor/tiny_mce/plugins/searchreplace/langs',
+            $site . '/editor/tiny_mce/plugins/style/langs',
+            $site . '/editor/tiny_mce/plugins/table/langs',
+            $site . '/editor/tiny_mce/plugins/xhtmlxtras/langs'
+        );
 
-            foreach ($scripts as $script) {
-                if (is_file($path . '/js/' . $script)) {
-                    @JFile::delete($path . '/js/' . $script);
-                }
-            }
-
-            if (is_dir($path . '/js/jquery')) {
-                @JFolder::delete($path . '/js/jquery');
-            }
-
-            $styles = array('help.css', 'select.css', 'tips.css');
-
-            foreach ($styles as $style) {
-                if (is_file($path . '/css/' . $style)) {
-                    @JFile::delete($path . '/css/' . $style);
-                }
-            }
-
-            // delete jquery
-            if (is_dir($path . '/css/jquery')) {
-                @JFolder::delete($path . '/css/jquery');
-            }
-
-            // remove popup controller
-            if (is_dir($site . '/controller')) {
-                @JFolder::delete($site . '/controller');
+        foreach ($folders as $folder) {
+            if (JFolder::exists($folder)) {
+                @JFolder::delete($folder);
             }
         }
 
-        // 2.0.12
-        if (version_compare($version, '2.0.12', '<')) {
-            if (is_file($site . '/editor/libraries/classes/error.php')) {
-                @JFile::delete($site . '/editor/libraries/classes/error.php');
+        // Remove files
+        $files = array(
+            // remove javascript files from admin (moved to site)
+            $admin . '/media/js/colorpicker.js',
+            $admin . '/media/js/help.js',
+            $admin . '/media/js/html5.js',
+            $admin . '/media/js/select.js',
+            $admin . '/media/js/tips.js',
+            // remove css files from admin (moved to site)
+            $admin . '/media/css/help.css',
+            $admin . '/media/css/select.css',
+            $admin . '/media/css/tips.css',
+            // remove installer class
+            $admin . '/classes/installer.php',
+            // remove legend model
+            $admin . '/models/legend.php',
+            // remove error class from site (moved to admin)
+            $site . '/editor/libraries/classes/error.php',
+            // remove popup file
+            $site . '/popup.php',
+            // remove anchor from theme (moved to plugins)
+            $site . '/editor/tiny_mce/themes/advanced/css/anchor.css',
+            $site . '/editor/tiny_mce/themes/advanced/css/js/anchor.js',
+            $site . '/editor/tiny_mce/themes/advanced/css/tmpl/anchor.php',
+            // remove redundant file
+            $site . '/editor/tiny_mce/themes/advanced/css/skins/default/img/items.gif',
+            // remove search files from file browser (renamed to filter)
+            $site . '/editor/extensions/browser/css/search.css',
+            $site . '/editor/extensions/browser/js/search.js',
+            $site . '/editor/extensions/browser/search.php',
+            // remove dilg language file from theme (incorporated into main dlg file)
+            $site . '/editor/tiny_mce/themes/advanced/langs/en_dlg.js'
+        );
+
+        foreach ($files as $file) {
+            if (JFile::exists($file)) {
+                @JFile::delete($file);
             }
         }
 
-        // 2.1
+        // 2.1 - Add visualblocks plugin
         if (version_compare($version, '2.1', '<')) {
-            if (is_dir($admin . '/plugin')) {
-                @JFolder::delete($admin . '/plugin');
-            }
-
             // Add Visualblocks plugin
             $query = 'SELECT id FROM #__wf_profiles';
             $db->setQuery($query);
@@ -667,11 +730,8 @@ class WFInstall {
             }
         }
 
-        // 2.1.1
-        if (version_compare($version, '2.1.1', '<')) {
-            @JFile::delete($admin . '/classes/installer.php');
-
-            // Add Visualblocks plugin
+        // 2.1.1 - Add anchor plugin
+        if (version_compare($version, '2.1.1', '<')) { 
             $query = 'SELECT id FROM #__wf_profiles';
             $db->setQuery($query);
             $profiles = $db->loadObjectList();
@@ -690,70 +750,14 @@ class WFInstall {
                     $profile->store();
                 }
             }
-
-            // delete old anchor stuff
-            $theme = $site . '/editor/tiny_mce/themes/advanced';
-
-            foreach (array('css/anchor.css', 'js/anchor.js', 'tmpl/anchor.php', 'skins/default/img/items.gif') as $item) {
-                if (JFile::exists($theme . '/' . $item)) {
-                    @JFile::delete($theme . '/' . $item);
-                }
-            }
-
-            // delete popup.php
-            if (is_file($site . '/popup.php')) {
-                @JFile::delete($site . '/popup.php');
-            }
         }
 
-        // 2.2.1
+        // 2.2.1 - Add "Blogger" profile
         if (version_compare($version, '2.2.1', '<')) {
-            $path = $site . '/editor/extensions/browser';
-            $files = array('css/search.css', 'js/search.js', 'search.php');
-
-            foreach ($files as $file) {
-                if (is_file($path . '/' . $file)) {
-                    @JFile::delete($path . '/' . $file);
-                }
-            }
-
-            $query = 'SELECT id FROM #__wf_profiles WHERE name = ' . $db->Quote('Blogger');
-            $id = $db->loadResult();
-
-            if (!$id) {
-                // Blogger
-                $file = $admin . '/models/profiles.xml';
-
-                $xml = WFXMLElement::getXML($file);
-
-                if ($xml) {
-                    foreach ($xml->profiles->children() as $profile) {
-                        if ($profile->attributes()->name == 'Blogger') {
-                            $row = JTable::getInstance('profiles', 'WFTable');
-
-                            foreach ($profile->children() as $item) {
-                                switch ($item->getName()) {
-                                    case 'rows':
-                                        $row->rows = (string) $item;
-                                        break;
-                                    case 'plugins':
-                                        $row->plugins = (string) $item;
-                                        break;
-                                    default:
-                                        $key = $item->getName();
-                                        $row->$key = (string) $item;
-
-                                        break;
-                                }
-                            }
-                            $row->store();
-                        }
-                    }
-                }
-            }
+            self::installProfile('Blogger');
         }
 
-        // 2.2.1 to 2.2.5
+        // 2.2.1 to 2.2.5 - Remove K2Links partial install
         if (version_compare($version, '2.2.1', '>') && version_compare($version, '2.2.5', '<')) {
             $path = $site . '/editor/extensions/links';
 
@@ -763,41 +767,14 @@ class WFInstall {
             }
         }
 
-        // 2.2.6
-        if (version_compare($version, '2.2.6', '<')) {
-            $path = $site . '/editor/libraries/js/jquery';
-            $files = JFolder::files($path, '\.js');
-            $exclude = array('jquery-1.7.2.min.js', 'jquery-ui-1.8.21.custom.min.js', 'jquery-ui-layout.js');
+        // Cleanup JQuery
+        $path       = $site . '/editor/libraries/js/jquery';
+        $files      = JFolder::files($path, '\.js');
+        $exclude    = array('jquery-1.7.2.min.js', 'jquery-ui-1.8.21.custom.min.js', 'jquery-ui-layout.js');
 
-            foreach ($files as $file) {
-                if (in_array(basename($file), $exclude) === false) {
-                    @JFile::delete($path . '/' . $file);
-                }
-            }
-        }
-
-        // 2.2.7
-        if (version_compare($version, '2.2.7', '<')) {
-            $path = $site . '/editor/tiny_mce';
-            
-            // remove "Legend"            
-            if (JFile::exists($admin . '/models/legend.php')) {
-                @JFile::delete($admin . '/models/legend.php');
-            }
-            
-            if (JFolder::exists($admin . '/views/legend')) {
-                @JFolder::delete($admin . '/views/legend');
-            }
-            
-            // delete old template language file
-            if (JFile::exists($path . '/themes/advanced/langs/en_dlg.js')) {
-                @JFile::delete($path . '/themes/advanced/langs/en_dlg.js');
-            }
-            // remove old plugin lang folders
-            foreach (array('article', 'imgmanager', 'link', 'searchreplace', 'style', 'table', 'xhtmlxtras') as $plugin) {
-                if (JFolder::exists($path . '/plugins/' . $plugin)) {
-                    @JFolder::delete($path . '/plugins/' . $plugin . '/langs');
-                }
+        foreach ($files as $file) {
+            if (in_array(basename($file), $exclude) === false) {
+                @JFile::delete($path . '/' . $file);
             }
         }
 
@@ -805,21 +782,29 @@ class WFInstall {
     }
 
     private static function createProfilesTable() {
-        // add models path
-        JModel::addIncludePath(dirname(__FILE__) . '/models');
+        include_once (dirname(__FILE__) . '/includes/base.php');
+        include_once (dirname(__FILE__) . '/models/profiles.php');
+        
+        $profiles = new WFModelProfiles();
+        
+        if (method_exists($profiles, 'createProfilesTable')) {
+            return $profiles->createProfilesTable();
+        }
 
-        $profiles = JModel::getInstance('profiles', 'WFModel');
-
-        return $profiles->createProfilesTable();
+        return false;
     }
 
     private static function installProfiles() {
-        // add models path
-        JModel::addIncludePath(dirname(__FILE__) . '/models');
+        include_once (dirname(__FILE__) . '/includes/base.php');
+        include_once (dirname(__FILE__) . '/models/profiles.php');
 
-        $profiles = JModel::getInstance('profiles', 'WFModel');
+        $profiles = new WFModelProfiles();
+        
+        if (method_exists($profiles, 'installProfiles')) {
+            return $profiles->createProfilesTable();
+        }
 
-        return $profiles->installProfiles();
+        return false;
     }
 
     /**
@@ -1017,13 +1002,15 @@ class WFInstall {
     private static function legacyCleanup() {
         $db = JFactory::getDBO();
 
-        // Drop tables
         $query = 'DROP TABLE IF EXISTS #__jce_groups';
         $db->setQuery($query);
         $db->query();
 
-        // Drop tables
         $query = 'DROP TABLE IF EXISTS #__jce_plugins';
+        $db->setQuery($query);
+        $db->query();
+        
+        $query = 'DROP TABLE IF EXISTS #__jce_extensions';
         $db->setQuery($query);
         $db->query();
     }
@@ -1064,9 +1051,10 @@ class WFInstall {
 
     private static function checkTableColumn($table, $column) {
         $db = JFactory::getDBO();
+        
         $db->setQuery('DESCRIBE ' . $table);
         $fields = $db->loadResultArray();
-        
+
         return in_array($column, (array) $fields);
     }
 

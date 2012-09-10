@@ -14,9 +14,7 @@ defined('_JEXEC') or die('RESTRICTED');
 class com_jceInstallerScript {
 
     public function install($parent) {
-        if (!class_exists('WFInstall')) {
-            require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
-        }
+        require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
 
         $installer = method_exists($parent, 'getParent') ? $parent->getParent() : $parent->parent;
 
@@ -24,9 +22,7 @@ class com_jceInstallerScript {
     }
 
     public function uninstall() {
-        if (!class_exists('WFInstall')) {
-            require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
-        }
+        require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
 
         return WFInstall::uninstall();
     }
