@@ -801,7 +801,7 @@ abstract class WFInstall {
         $profiles = new WFModelProfiles();
         
         if (method_exists($profiles, 'installProfiles')) {
-            return $profiles->createProfilesTable();
+            return $profiles->installProfiles();
         }
 
         return false;
