@@ -21,6 +21,8 @@ if (!defined('WF_INI_LANG')) {
     define('WF_INI_LANG', 0);
 }
 
+jimport('joomla.application.component.model');
+
 class WFModelEditor extends JModel {
 
     public function buildEditor() {
