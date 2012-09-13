@@ -168,6 +168,7 @@ class WFViewProfiles extends JView {
 
                 // Load Language
                 $language = JFactory::getLanguage();
+                $language->load('com_jce', JPATH_ADMINISTRATOR);
                 $language->load('com_jce', JPATH_SITE);
 
                 $language->load('plg_editors_jce', JPATH_ADMINISTRATOR);
