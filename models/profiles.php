@@ -584,6 +584,8 @@ class WFModelProfiles extends WFModel {
                 $base = 'components/com_jce/editor/tiny_mce/plugins/' . $plugin->name . '/img';
             }
         }
+        // convert backslashes
+        $base = preg_replace('#[/\\\\]+#', '/', $base);
 
         $span = '';
         $img = '';
