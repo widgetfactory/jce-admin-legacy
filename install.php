@@ -11,34 +11,6 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-/**
- * Installer function
- * @return
- */
-function com_install() {
-
-    if (!defined('JPATH_PLATFORM')) {
-        $installer = JInstaller::getInstance();
-        return WFInstall::install($installer);
-    }
-
-    return true;
-}
-
-/**
- * Uninstall function
- * @return
- */
-function com_uninstall() {
-
-    if (!defined('JPATH_PLATFORM')) {
-        $installer = JInstaller::getInstance();
-        return WFInstall::uninstall();
-    }
-
-    return true;
-}
-
 abstract class WFInstall {
 
     private static function cleanupInstall() {

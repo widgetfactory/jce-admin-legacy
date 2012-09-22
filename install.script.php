@@ -11,19 +11,17 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-class com_jceInstallerScript {
+require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
+
+abstract class com_jceInstallerScript {
 
     public function install($parent) {
-        require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
-
         $installer = method_exists($parent, 'getParent') ? $parent->getParent() : $parent->parent;
 
         return WFInstall::install($installer);
     }
 
     public function uninstall() {
-        require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
-
         return WFInstall::uninstall();
     }
 
@@ -31,15 +29,47 @@ class com_jceInstallerScript {
         return $this->install($parent);
     }
 
-    function preflight($type, $parent) {
-        $db = JFactory::getDBO();
+    public function preflight($type, $parent) {
+        // only on install
+        if ($type == 'install') {
+            $db = JFactory::getDBO();
 
-        $db->setQuery('DELETE FROM #__menu WHERE alias = ' . $db->Quote('jce') . ' AND menutype = ' . $db->Quote('main'));
-        $db->query();
+            $db->setQuery('DELETE FROM #__menu WHERE alias = ' . $db->Quote('jce') . ' AND menutype = ' . $db->Quote('main'));
+            $db->query();
+
+            $db->setQuery('DELETE FROM #__menu WHERE alias LIKE ' . $db->Quote('wf-menu-%') . ' AND menutype = ' . $db->Quote('main'));
+            $db->query();
+        }
         
-        $db->setQuery('DELETE FROM #__menu WHERE alias LIKE ' . $db->Quote('wf-menu-%') . ' AND menutype = ' . $db->Quote('main'));
-        $db->query();
+        return true;
     }
+}
+
+/**
+ * Installer function
+ * @return
+ */
+function com_install() {
+
+    if (!defined('JPATH_PLATFORM')) {
+        $installer = JInstaller::getInstance();
+        return WFInstall::install($installer);
+    }
+
+    return true;
+}
+
+/**
+ * Uninstall function
+ * @return
+ */
+function com_uninstall() {
+
+    if (!defined('JPATH_PLATFORM')) {
+        return WFInstall::uninstall();
+    }
+
+    return true;
 }
 
 ?>
