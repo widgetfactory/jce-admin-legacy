@@ -9,8 +9,8 @@
     <authorUrl>www.joomlacontenteditor.net</authorUrl>
     <version>@@version@@</version>
     <description>WF_ADMIN_DESC</description>
-    <installfile>install.php</installfile>
-    <uninstallfile>install.php</uninstallfile>
+    <installfile>install.script.php</installfile>
+    <uninstallfile>install.script.php</uninstallfile>
 	
     <files folder="components/com_jce">
         <folder>editor</folder>
@@ -66,6 +66,7 @@
             <file>config.xml</file>
             <file>index.html</file>
             <file>install.php</file>
+            <file>install.script.php</file>
             <file>jce.php</file>
             <file>jce.xml</file>
             <file>licence.txt</file>

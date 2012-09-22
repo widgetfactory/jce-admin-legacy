@@ -68,6 +68,7 @@
             <file>config.xml</file>
             <file>index.html</file>
             <file>install.php</file>
+            <file>install.script.php</file>
             <file>jce.php</file>
             <file>licence.txt</file>
         </files>
