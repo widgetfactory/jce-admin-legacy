@@ -62,8 +62,14 @@ class WFControllerEditor extends JController {
                     
                     // external plugin folder
                     $path = JPATH_PLUGINS . '/jce/' . $plugin;
-                
-                    if (!is_dir($path)) {
+                    
+                    // check external path first
+                    if (is_dir($path)) {
+                        // check enabled
+                        if (JPluginHelper::isEnabled('jce', $plugin) === false) {
+                            $path = WF_EDITOR_PLUGINS . '/' . $plugin;
+                        }
+                    } else {
                         $path = WF_EDITOR_PLUGINS . '/' . $plugin;
                     }
 
