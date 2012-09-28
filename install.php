@@ -284,7 +284,7 @@ abstract class WFInstall {
             $db->setQuery($query);
             $plugins = $db->loadAssocList('id');
 
-            $map = array('advlink' => 'link', 'advcode' => 'source', 'tablecontrols' => 'table', 'styleprops' => 'style');
+            $map = array('advlink' => 'link', 'advcode' => 'source', 'paste' => 'clipboard', 'tablecontrols' => 'table', 'styleprops' => 'style');
 
             if (self::createProfilesTable()) {
                 foreach ($groups as $group) {
@@ -304,15 +304,17 @@ abstract class WFInstall {
                                     $icon = $plugins[$id]['icon'];
 
                                     // map old icon names to new
-                                    if (isset($map[$icon])) {
+                                    if (array_key_exists($icon, $map)) {
                                         $icon = $map[$icon];
                                     }
                                 }
                             }
                             $icons[] = $icon;
                         }
+                        
+                        $rows[] = str_replace(array('clipboard', 'table'), array('cut,copy,paste', 'table_insert,delete_table,|,row_props,cell_props,|,row_before,row_after,delete_row,|,col_before,col_after,delete_col,|,split_cells,merge_cells'), implode(',', $icons));
 
-                        $rows[] = str_replace(array('cite,abbr,acronym,del,ins,attribs', 'search,replace', 'ltr,rtl', 'readmore,pagebreak', 'cut,copy,paste'), array('xhtmlxtras', 'searchreplace', 'directionality', 'article', 'paste'), implode(',', $icons));
+                        //$rows[] = str_replace(array('cite,abbr,acronym,del,ins,attribs', 'search,replace', 'ltr,rtl', 'readmore,pagebreak', 'cut,copy,paste'), array('xhtmlxtras', 'searchreplace', 'directionality', 'article', 'paste'), implode(',', $icons));
                     }
                     // re-assign rows
                     $row->rows = implode(';', $rows);
@@ -325,7 +327,7 @@ abstract class WFInstall {
                             $name = $plugins[$id]['name'];
 
                             // map old icon names to new
-                            if (isset($map[$name])) {
+                            if (array_key_exists($name, $map)) {
                                 $name = $map[$name];
                             }
 
@@ -628,7 +630,9 @@ abstract class WFInstall {
             $site . '/editor/tiny_mce/plugins/searchreplace/langs',
             $site . '/editor/tiny_mce/plugins/style/langs',
             $site . '/editor/tiny_mce/plugins/table/langs',
-            $site . '/editor/tiny_mce/plugins/xhtmlxtras/langs'
+            $site . '/editor/tiny_mce/plugins/xhtmlxtras/langs',
+            // remove paste folder
+            $site . '/editor/tiny_mce/plugins/paste'
         );
 
         foreach ($folders as $folder) {
@@ -645,6 +649,8 @@ abstract class WFInstall {
             $admin . '/media/js/html5.js',
             $admin . '/media/js/select.js',
             $admin . '/media/js/tips.js',
+            // remove legend.js
+            $admin . '/media/js/legend.js',
             // remove css files from admin (moved to site)
             $admin . '/media/css/help.css',
             $admin . '/media/css/select.css',
@@ -736,6 +742,46 @@ abstract class WFInstall {
             if (is_file($path . '/k2links.php') && is_file($path . '/k2links.xml') && !is_dir($path . '/k2links')) {
                 @JFile::delete($path . '/k2links.php');
                 @JFile::delete($path . '/k2links.xml');
+            }
+        }
+        
+        // replace some profile row items
+        if (version_compare($version, '2.2.8', '<')) {
+            $query = 'SELECT id FROM #__wf_profiles';
+            $db->setQuery($query);
+            $profiles = $db->loadObjectList();
+
+            $profile = JTable::getInstance('Profiles', 'WFTable');
+
+            if (!empty($profiles)) {
+                foreach ($profiles as $item) {
+                    $profile->load($item->id);
+
+                    $profile->rows      = str_replace('paste', 'clipboard', $profile->rows);
+                    $profile->plugins   = str_replace('paste', 'clipboard', $profile->rows);
+                    
+                    $data = json_decode($profile->params, true);
+                    
+                    // swap paste data to 'clipboard'
+                    if (array_key_exists('paste', $data)) {                        
+                        $params = array();
+                        
+                        // add 'paste_' prefix
+                        foreach($data['paste'] as $k => $v) {
+                            $params['paste_' . $k] = $v;
+                        }
+                        
+                        // remove paste parameters
+                        unset($data['paste']);
+                        
+                        // assign new params to clipboard
+                        $data['clipboard'] = $params;
+                    }
+                    
+                    $profile->params = json_encode($data);
+
+                    $profile->store();
+                }
             }
         }
 
