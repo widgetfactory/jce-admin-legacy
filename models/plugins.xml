@@ -54,6 +54,15 @@
         <row>0</row>
         <core>1</core>
     </plugin>
+    <plugin name="clipboard">
+        <name>clipboard</name>
+        <title>WF_CLIPBOARD_TITLE</title>
+        <description>WF_CLIPBOARD_DESC</description>
+        <icon>cut,copy,paste</icon>
+        <editable>1</editable>
+        <row>2</row>
+        <core>1</core>
+    </plugin>
     <plugin name="code">
         <name>code</name>
         <title>WF_CODE_TITLE</title>
@@ -151,15 +160,6 @@
         <icon>nonbreaking</icon>
         <editable>0</editable>
         <row>4</row>
-        <core>1</core>
-    </plugin>
-    <plugin name="paste">
-        <name>paste</name>
-        <title>WF_PASTE_TITLE</title>
-        <description>WF_PASTE_DESC</description>
-        <icon>cut,copy,paste</icon>
-        <editable>1</editable>
-        <row>2</row>
         <core>1</core>
     </plugin>
     <plugin name="preview">
@@ -266,7 +266,7 @@
         <title>WF_XHTMLXTRAS_TITLE</title>
         <description>WF_XHTMLXTRAS_DESC</description>
         <icon>cite,abbr,acronym,del,ins,attribs</icon>
-        <editable>0</editable>
+        <editable>1</editable>
         <row>4</row>
         <core>1</core>
     </plugin>
