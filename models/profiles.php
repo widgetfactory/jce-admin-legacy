@@ -214,6 +214,7 @@ class WFModelProfiles extends WFModel {
             case 'mysqli' :
                 $driver = 'mysql';
                 break;
+            case 'sqlsrv':
             case 'sqlazure' :
                 $driver = 'sqlsrv';
                 break;
@@ -601,7 +602,7 @@ class WFModelProfiles extends WFModel {
                     $img = '<img src="' . JURI::root(true) . $path . '" alt="' . WFText::_($plugin->title) . '" />';
                 }
 
-                $span .= '<span title="' . WFText::_($plugin->title) . '::' . WFText::_($plugin->description) . '" class="tooltip tooltip-cancel-ondrag ' . self::getIconType($icon) . '"><span class="mceIcon mce_' . preg_replace('/[^a-z0-9_-]/i', '', $icon) . '">' . $img . '</span></span>';
+                $span .= '<span data-button="' . preg_replace('/[^\w]/i', '', $icon) . '" class="' . self::getIconType($icon) . '"><span class="mceIcon mce_' . preg_replace('/[^\w]/i', '', $icon) . '">' . $img . '</span></span>';
             }
         }
 

@@ -66,6 +66,9 @@ class WFModelEditor extends JModel {
                 'resize_horizontal'     => array(1, 1, 'boolean'),
                 'resizing_use_cookie'   => array(1, 1, 'boolean')
             );
+            
+            // set rows key to apss to plugin config
+            $settings['rows'] = $profile->rows;
 
             foreach ($theme as $k => $v) {
                 $settings['theme_advanced_' . $k] = $wf->getParam('editor.' . $k, $v[0], $v[1], $v[2]);
@@ -319,33 +322,70 @@ class WFModelEditor extends JModel {
     private function getToolbar($toolbar) {
         wfimport('admin.models.plugins');
         $model = new WFModelPlugins();
+        
+        $wf = WFEditor::getInstance();
 
         $db = JFactory::getDBO();
 
         $rows = array('theme_advanced_buttons1' => '', 'theme_advanced_buttons2' => '', 'theme_advanced_buttons3' => '');
 
-        $plugins = $model->getPlugins();
-        $commands = $model->getCommands();
+        $plugins    = $model->getPlugins();
+        $commands   = $model->getCommands();
 
         $icons = array_merge($commands, $plugins);
         $lists = explode(';', $toolbar);
+        
+        // backwards compatability map
+        $map = array(
+            'paste'     => 'clipboard',
+            'spacer'    => '|'
+        );
 
         $x = 0;
         for ($i = 1; $i <= count($lists); $i++) {
-            $items = array();
+            $buttons    = array();
+            $items      = explode(',', $lists[$x]);
 
-            foreach (explode(',', $lists[$x]) as $item) {
-                if ($item == 'spacer') {
-                    $items[] = '|';
-                } else {
-                    if (isset($icons[$item])) {
-                        $items[] = $icons[$item]->icon;
+            foreach ($items as $item) {
+                // set the plugin/command name
+                $name = $item;
+                
+                // map legacy values etc.
+                if (array_key_exists($item, $map)) {
+                    $item = $map[$item];
+                }
+
+                // get buttons
+                if (array_key_exists($item, $icons)) {
+                    $item = $icons[$item]->icon;
+                }
+                
+                // check for custom plugin buttons
+                if (array_key_exists($name, $plugins)) {
+                    $custom = $wf->getParam($name . '.buttons');
+                    
+                    if ($custom) {                   
+                        $a = array();
+                        
+                        foreach(explode(',', $item) as $s) {
+                            if (in_array($s, (array) $custom) || $s === "|") {
+                                $a[] = $s;
+                            }
+                        }
+                        $item = implode(',', $a);
+                        // remove leading or trailing |
+                        $item = trim($item, '|');
                     }
                 }
+                
+                // remove double |
+                $item = preg_replace('#(\|,)+#', '|,', $item);
+                 
+                $buttons[] = $item;
             }
 
-            if (!empty($items)) {
-                $rows['theme_advanced_buttons' . $i] = implode(',', $items);
+            if (!empty($buttons)) {
+                $rows['theme_advanced_buttons' . $i] = implode(',', $buttons);
             }
 
             $x++;
@@ -369,7 +409,7 @@ class WFModelEditor extends JModel {
         $return     = array();
         $profile    = $wf->getProfile();
 
-        if (is_object($profile)) {
+        if (is_object($profile)) {            
             $plugins    = explode(',', $profile->plugins);
             $plugins    = array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'core', 'code', 'dragupload', 'format', 'lists', 'wordcount'), $plugins));
             $external   = array();

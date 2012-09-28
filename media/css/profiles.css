@@ -233,3 +233,32 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
 #jce #users-add {
     float : right;
 }
+
+/* Button Checklist */
+/*#jce div.buttonlist li {
+    border : 0 none;
+    position: relative;
+    display : inline;
+    margin-left : 10px;
+}
+#jce div.buttonlist li span.checkbox {
+    left: -10px;
+    position: absolute;
+    top: -10px;
+    z-index: 10;
+}*/
+
+
+#jce div.buttonlist li span.mceIcon {
+    cursor: default;
+}
+
+#jce div.buttonlist li span.mceButton, #jce div.buttonlist li span.mceSplitButton {
+    margin : 0 10px 0 0;
+}
+
+#jce ul.adminformlist li div.buttonlist {
+    display: inline-block;
+    margin: 5px 0 0;
+    vertical-align: middle;
+}

@@ -72,7 +72,7 @@ if (strpos($theme, '.') === false) {
                                                 <?php endif; ?>
                                                 <?php foreach ($this->plugins as $plugin) : ?>
                                                     <?php if ($plugin->icon && $plugin->name == $icon) : ?>
-                                                        <span data-name="<?php echo $plugin->name; ?>" class="sortableRowItem <?php echo $plugin->type; ?>"><?php echo $this->model->getIcon($plugin); ?></span>
+                                                        <span data-name="<?php echo $plugin->name; ?>" class="sortableRowItem <?php echo $plugin->type; ?> tooltip tooltip-cancel-ondrag" title="<?php echo WFText::_($plugin->title);?>::<?php echo WFText::_($plugin->description);?>"><?php echo $this->model->getIcon($plugin); ?></span>
                                                     <?php
                                                     endif;
                                                 endforeach;
@@ -113,7 +113,7 @@ if (strpos($theme, '.') === false) {
                                 foreach ($this->plugins as $plugin) :
                                     if (!in_array($plugin->name, explode(',', implode(',', $this->rows)))) :
                                         if ($plugin->icon && (int)$plugin->row == $i) :
-                                            echo '<span class="sortableRowItem ' . $plugin->type . '" data-name="' . $plugin->name . '">' . $this->model->getIcon($plugin) . '</span>';
+                                            echo '<span class="sortableRowItem ' . $plugin->type . ' tooltip tooltip-cancel-ondrag" data-name="' . $plugin->name . '" title="' . WFText::_($plugin->title) . '::' . WFText::_($plugin->description) . '">' . $this->model->getIcon($plugin) . '</span>';
                                         endif;
                                     endif;
                                 endforeach;
