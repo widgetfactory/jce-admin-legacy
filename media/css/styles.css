@@ -286,7 +286,7 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
     background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -760px;
 }
 #jce span.checkbox.disabled {
-    opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30);
+    opacity:0.5; -ms-filter:'alpha(opacity=50)'; filter:alpha(opacity=50);
 }
 #jce div.loader {
     background: #FFFFFF url("../../../../../components/com_jce/editor/tiny_mce/themes/advanced/skins/default/img/progress.gif") no-repeat center center;
