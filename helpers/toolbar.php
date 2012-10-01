@@ -125,11 +125,17 @@ abstract class WFToolbarHelper {
     }
 
     public static function editListx($task = 'edit') {
-        return JToolbarHelper::editListx($task);
+        if (method_exists('JToolbarHelper', 'editListx')) {
+            return JToolbarHelper::editListx($task);
+        }
+        return JToolbarHelper::editList($task);
     }
 
     public static function addNewx($task = 'add') {
-        return JToolbarHelper::addNewx($task);
+        if (method_exists('JToolbarHelper', 'addNewx')) {
+            return JToolbarHelper::addNewx($task);
+        }
+        return JToolbarHelper::addNew($task);
     }
 
     public static function custom($task = '', $icon = '', $iconOver = '', $alt = '', $listSelect = true, $x = false) {
