@@ -29,7 +29,7 @@ class WFController extends WFControllerBase {
 
     private function loadMenu() {
         $view = JRequest::getWord('view', 'cpanel');
-        
+
         wfimport('admin.models.model');
 
         JSubMenuHelper::addEntry(WFText::_('WF_CPANEL'), 'index.php?option=com_jce&view=cpanel', $view == 'cpanel');
@@ -46,7 +46,11 @@ class WFController extends WFControllerBase {
 
         foreach ($subMenus as $menu => $item) {
             if (WFModel::authorize($item)) {
-                JSubMenuHelper::addEntry(WFText::_($menu), 'index.php?option=com_jce&view=' . $item, $view == $item);
+                if ($item == 'installer') {
+                    JSubMenuHelper::addEntry(WFText::_($menu), 'index.php?option=com_installer');
+                } else {
+                    JSubMenuHelper::addEntry(WFText::_($menu), 'index.php?option=com_jce&view=' . $item, $view == $item);
+                }
             }
         }
     }
@@ -76,26 +80,32 @@ class WFController extends WFControllerBase {
                 'base_path' => dirname(__FILE__)
             );
         }
+        
+        $model = $this->getModel($name);
 
         $view = parent::getView($name, $type, $prefix, $config);
 
         $document = JFactory::getDocument();
-        $document->setTitle(WFText::_('WF_ADMINISTRATION') . ' :: ' . WFText::_('WF_' . strtoupper($name)));
+        if (defined('JPATH_PLATFORM') && is_dir(JPATH_SITE . '/media/jui')) {
+            JHtml::_('jquery.ui');
+        } else {
+            // jquery versions
+            $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
+            $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
 
-        $model = $this->getModel($name);
-
-        // jquery versions
-        $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
-        $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
-
-        // jQuery noConflict
-        $document->addScriptDeclaration('jQuery.noConflict();');
+            // jQuery noConflict
+            $document->addScriptDeclaration('jQuery.noConflict();');
+        }
 
         $scripts = array();
 
         switch ($name) {
             case 'help':
-                $scripts[] = 'help.js';
+                if (JPATH_PLATFORM) {
+                    JHtml::script('components/com_jce/editor/libraries/js/help.js');
+                } else {
+                    JHtml::script('help.js', 'components/com_jce/editor/libraries/js/', false);
+                }
 
                 break;
             default:
@@ -111,13 +121,25 @@ class WFController extends WFControllerBase {
                 $params = WFParameterHelper::getComponentParams();
                 $theme = $params->get('preferences.theme', 'jce');
 
-                $scripts = array_merge(array(
-                    'tips.js',
-                    'html5.js'
-                        ));
+                /* $scripts = array_merge(array(
+                  'tips.js',
+                  'html5.js'
+                  )); */
 
                 // Load admin scripts
-                $document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js?version=' . $model->getVersion());
+                //$document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js?version=' . $model->getVersion());
+
+                if (JPATH_PLATFORM) {
+                    JHtml::script('components/com_jce/editor/libraries/js/tips.js');
+                    JHtml::script('components/com_jce/editor/libraries/js/html5.js');
+
+                    JHtml::script('administrator/components/com_jce/media/js/jce.js');
+                } else {
+                    JHtml::script('tips.js', 'components/com_jce/editor/libraries/js/', false);
+                    JHtml::script('html5.js', 'components/com_jce/editor/libraries/js/', false);
+
+                    JHtml::script('jce.js', 'administrator/components/com_jce/media/js/', false);
+                }
 
                 $options = array(
                     'labels' => array(
@@ -151,9 +173,9 @@ class WFController extends WFControllerBase {
         }
 
         // Load site scripts
-        foreach ($scripts as $script) {
+        /*foreach ($scripts as $script) {
             $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/' . $script . '?version=' . $model->getVersion());
-        }
+        }*/
 
         require_once(dirname(__FILE__) . '/helpers/system.php');
 
@@ -194,9 +216,8 @@ class WFController extends WFControllerBase {
             return;
         }
 
-        // add models path
-        JModel::addIncludePath(dirname(__FILE__) . '/models');
-        $profiles = JModel::getInstance('profiles', 'WFModel');
+        wfimport('admin.models.profiles');
+        $profiles = new WFModelProfiles();
 
         $state = $profiles->checkTable();
 
@@ -233,7 +254,7 @@ class WFController extends WFControllerBase {
                 $profiles = JModel::getInstance('profiles', 'WFModel');
 
                 $profiles->installProfiles();
-                
+
                 $this->setRedirect(JRoute::_('index.php?option=com_jce&view=cpanel', false));
 
                 break;
@@ -271,7 +292,7 @@ class WFController extends WFControllerBase {
 
         return true;
     }
-    
+
     private static function _redirect($msg = '', $state = '') {
         $app = JFactory::getApplication();
 
