@@ -1106,7 +1106,7 @@ abstract class WFInstall {
 
         // use built in function
         if (method_exists($db, 'getTableColumns')) {
-            return in_array($column, (array) $db->getTableColumns($table));
+            return array_key_exists($column, (array) $db->getTableColumns($table));
         }
 
         $db->setQuery('DESCRIBE ' . $table);
