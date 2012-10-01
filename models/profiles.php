@@ -21,45 +21,12 @@ require_once(dirname(__FILE__) . '/model.php');
  * @subpackage Components
  */
 class WFModelProfiles extends WFModel {
-
-    /**
-     * Get a profile by id
-     * @param object $id
-     * @return 
-     */
-    function getUserProfileFromId($id) {
-        $db = JFactory::getDBO();
-
-        $query = 'SELECT *' . ' FROM #__wf_profiles' . ' WHERE ' . $id . ' IN (users)';
-        $db->setQuery($query);
-        return $db->loadObject();
-    }
-
-    /**
-     * Get a profile assigned to a user type
-     * @param object $type
-     * @return 
-     */
-    function getUserProfileFromType($type) {
-        $db = JFactory::getDBO();
-
-        if (!is_int($type)) {
-            $query = 'SELECT id' . ' FROM #__core_acl_aro_groups' . ' WHERE name = ' . $db->Quote($type);
-            $db->setQuery($query);
-            $id = $db->loadResult();
-        }
-
-        $query = 'SELECT *' . ' FROM #__wf_profiles' . ' WHERE ' . $type . ' IN (types)';
-        $db->setQuery($query);
-        return $db->loadObject();
-    }
-
     /**
      * Convert row string into array
      * @param object $rows
      * @return 
      */
-    function getRowArray($rows) {
+    public function getRowArray($rows) {
         $out = array();
         $rows = explode(';', $rows);
         $i = 1;
@@ -75,7 +42,7 @@ class WFModelProfiles extends WFModel {
      * @param object $plugin
      * @return 
      */
-    function getExtensions($plugin) {
+    public function getExtensions($plugin) {
         $model = JModel::getInstance('plugins', 'WFModel');
 
         $types = array();
@@ -118,7 +85,7 @@ class WFModelProfiles extends WFModel {
         return $extensions;
     }
 
-    function getPlugins($plugins = array()) {
+    public function getPlugins($plugins = array()) {
         $model = JModel::getInstance('plugins', 'WFModel');
 
         $commands = array();
@@ -137,7 +104,7 @@ class WFModelProfiles extends WFModel {
         return array_merge($commands, $plugins);
     }
 
-    function getUserGroups($area) {
+    public function getUserGroups($area) {
         $db = JFactory::getDBO();
 
         if (WF_JOOMLA15) {
