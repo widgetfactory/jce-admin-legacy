@@ -12,7 +12,7 @@
 defined( '_JEXEC' ) or die('RESTRICTED');
 
 
-class WFControllerPopup extends JController
+class WFControllerPopup extends WFControllerBase
 {
 	/**
 	 * Constructor

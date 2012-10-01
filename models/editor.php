@@ -11,6 +11,7 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
+wfimport('admin.classes.model');
 wfimport('admin.classes.text');
 wfimport('admin.helpers.xml');
 wfimport('admin.helpers.extension');
@@ -23,7 +24,7 @@ if (!defined('WF_INI_LANG')) {
 
 jimport('joomla.application.component.model');
 
-class WFModelEditor extends JModel {
+class WFModelEditor extends WFModelBase {
 
     /**
      * Array of linked scripts
@@ -95,6 +96,8 @@ class WFModelEditor extends JModel {
         $profile = $wf->getProfile();
 
         if ($profile) {
+            jimport('joomla.filesystem.folder');
+
             // get jqueryui theme
             $dialog_theme = $wf->getParam('editor.dialog_theme', 'jce');
             $dialog_theme_css = JFolder::files(WF_EDITOR_LIBRARIES . '/css/jquery/' . $dialog_theme, '\.css$');

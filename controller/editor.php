@@ -11,11 +11,12 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
+wfimport('admin.classes.controller');
 wfimport('admin.classes.error');
 wfimport('admin.helpers.xml');
 wfimport('admin.helpers.extension');
 
-class WFControllerEditor extends JController {
+class WFControllerEditor extends WFControllerBase {
 
     function execute($task) {
         // Load language
@@ -27,7 +28,7 @@ class WFControllerEditor extends JController {
 
         if ($layout) {
             switch ($layout) {
-                case 'editor':                    
+                case 'editor':
                     if ($task == 'pack' || $task == 'loadlanguages') {
                         jimport('joomla.application.component.model');
 
@@ -35,17 +36,18 @@ class WFControllerEditor extends JController {
 
                         require_once(WF_EDITOR_CLASSES . '/editor.php');
 
-                        $model = JModel::getInstance('editor', 'WFModel');
-                        
+                        wfimport('admin.models.editor');
+                        $model = new WFModelEditor();
+
                         if ($task == 'loadlanguages') {
                             if (method_exists($model, 'loadLanguages')) {
                                 $model->loadLanguages(array(), array(), '(^dlg$|_dlg$)', true);
                             }
                         } else {
                             $model->pack();
-                        } 
+                        }
                     }
-                    
+
                     break;
                 case 'theme':
                     $theme = JRequest::getWord('theme');
@@ -59,10 +61,10 @@ class WFControllerEditor extends JController {
                     break;
                 case 'plugin':
                     $file = basename(JRequest::getCmd('file', $plugin));
-                    
+
                     // external plugin folder
                     $path = JPATH_PLUGINS . '/jce/' . $plugin;
-                    
+
                     // check external path first
                     if (is_dir($path)) {
                         // check enabled
