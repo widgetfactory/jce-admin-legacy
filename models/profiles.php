@@ -21,6 +21,7 @@ require_once(dirname(__FILE__) . '/model.php');
  * @subpackage Components
  */
 class WFModelProfiles extends WFModel {
+
     /**
      * Convert row string into array
      * @param object $rows
@@ -95,7 +96,7 @@ class WFModelProfiles extends WFModel {
         }
 
         // only need plugins with xml files
-        foreach ($model->getPlugins() as $plugin => $properties) {            
+        foreach ($model->getPlugins() as $plugin => $properties) {
             if (is_file(JPATH_SITE . $properties->path . '/' . $plugin . '.xml')) {
                 $plugins[$plugin] = $properties;
             }
@@ -120,8 +121,15 @@ class WFModelProfiles extends WFModel {
             );
         } else {
             jimport('joomla.access.access');
-
-            $query = 'SELECT id FROM #__usergroups';
+            
+            $query = $db->getQuery(true);
+            
+            if (is_object($query)) {
+                $query->select('id')->from('#__usergroups');
+            } else {
+                $query = 'SELECT id FROM #__usergroups';
+            }
+            
             $db->setQuery($query);
             $groups = $db->loadResultArray();
 
@@ -163,7 +171,7 @@ class WFModelProfiles extends WFModel {
 
         return array();
     }
-    
+
     /**
      * Create the Profiles table
      * @return boolean
@@ -252,20 +260,19 @@ class WFModelProfiles extends WFModel {
         $mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR') . !is_null($error) ? ' - ' . $error : '', 'error');
         return false;
     }
-    
+
     /**
      * Install Profiles
      * @return boolean
      * @param object $install[optional]
      */
     public function installProfiles() {
-        $app    = JFactory::getApplication();
-        $db     = JFactory::getDBO();
+        $app = JFactory::getApplication();
+        $db = JFactory::getDBO();
 
         if ($this->createProfilesTable()) {
-            $query = 'SELECT COUNT(id) FROM #__wf_profiles';
-            $db->setQuery($query);
-
+            self::buildCountQuery();
+            
             $profiles = array('Default' => false, 'Front End' => false);
 
             // No Profiles table data
@@ -275,20 +282,43 @@ class WFModelProfiles extends WFModel {
                 if (is_file($xml)) {
                     if (!$this->processImport($xml)) {
                         $app->enqueueMessage(WFText::_('WF_INSTALL_PROFILES_ERROR'), 'error');
-                        
+
                         return false;
                     }
                 } else {
                     $app->enqueueMessage(WFText::_('WF_INSTALL_PROFILES_NOFILE_ERROR'), 'error');
-                    
+
                     return false;
                 }
             }
-            
-           return true;
+
+            return true;
         }
 
         return false;
+    }
+
+    private static function buildCountQuery($name = '') {
+        $db = JFactory::getDBO();
+
+        $query = $db->getQuery(true);
+
+        // check for name
+        if (is_object($query)) {
+            $query->select('COUNT(id)')->from('#__wf_profiles');
+            
+            if ($name) {
+                $query->where('name = ' . $db->quoteName($name));
+            }
+        } else {
+            $query = 'SELECT COUNT(id) FROM #__wf_profiles';
+            
+            if ($name) {
+               $query .= ' WHERE name = ' . $db->Quote($name);
+            }
+        }
+        
+        $db->setQuery($query);
     }
 
     /**
@@ -298,13 +328,13 @@ class WFModelProfiles extends WFModel {
      * @return 
      */
     public function processImport($file) {
-        $app    = JFactory::getApplication();
-        $db     = JFactory::getDBO();
-        $view   = JRequest::getCmd('view');
+        $app = JFactory::getApplication();
+        $db = JFactory::getDBO();
+        $view = JRequest::getCmd('view');
 
         $language = JFactory::getLanguage();
         $language->load('com_jce', JPATH_ADMINISTRATOR);
-        
+
         JTable::addIncludePath(dirname(dirname(__FILE__)) . '/tables');
 
         $xml = WFXMLElement::getXML($file);
@@ -319,16 +349,12 @@ class WFModelProfiles extends WFModel {
 
                 // backwards compatability
                 if ($name) {
-                    // check for name
-                    $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
-                    $db->setQuery($query);
+                    self::buildCountQuery($name);
                     // create name copy if exists
                     while ($db->loadResult()) {
                         $name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
 
-                        $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
-
-                        $db->setQuery($query);
+                        self::buildCountQuery($name);
                     }
                     // set name
                     $row->name = $name;
@@ -340,16 +366,13 @@ class WFModelProfiles extends WFModel {
                             $name = (string) $item;
                             // only if name set and table name not set
                             if ($name && !$row->name) {
-                                // check for name
-                                $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
-                                $db->setQuery($query);
+                                self::buildCountQuery($name);
+                                
                                 // create name copy if exists
                                 while ($db->loadResult()) {
                                     $name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
 
-                                    $query = 'SELECT id FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote($name);
-
-                                    $db->setQuery($query);
+                                    self::buildCountQuery($name);
                                 }
                                 // set name
                                 $row->name = $name;
@@ -365,7 +388,7 @@ class WFModelProfiles extends WFModel {
                                 $area = (string) $profile->area[0];
 
                                 $groups = $this->getUserGroups($area);
-                                $data 	= implode(',', array_unique($groups));
+                                $data = implode(',', array_unique($groups));
                             } else {
                                 $data = (string) $item;
                             }
@@ -389,8 +412,8 @@ class WFModelProfiles extends WFModel {
 
                             break;
                         default:
-                            $key 		= $item->getName();
-                            $row->$key 	= (string) $item;
+                            $key = $item->getName();
+                            $row->$key = (string) $item;
 
                             break;
                     }
@@ -431,8 +454,8 @@ class WFModelProfiles extends WFModel {
                                 $row->plugins = (string) $item;
                                 break;
                             default:
-                                $key 		= $item->getName();
-                                $row->$key 	= (string) $item;
+                                $key = $item->getName();
+                                $row->$key = (string) $item;
 
                                 break;
                         }
@@ -488,7 +511,7 @@ class WFModelProfiles extends WFModel {
 
         return JFolder::folders($path, '.', false, true);
     }
-    
+
     /**
      * Check whether a table exists
      * @return boolean
@@ -509,25 +532,24 @@ class WFModelProfiles extends WFModel {
         }
 
         // try with query
-        $query = 'SELECT COUNT(id) FROM #__wf_profiles';
-        $db->setQuery($query);
+        self::buildCountQuery();
 
         return $db->query();
     }
 
     /**
      * Check table contents
-     * @return boolean
+     * @return integer
      * @param string $table Table name
      */
-    public static function checkTableContents() {        
+    public static function checkTableContents() {
         $db = JFactory::getDBO();
-        $query = 'SELECT COUNT(id) FROM #__wf_profiles';
-        $db->setQuery($query);
+        
+        self::buildCountQuery();
 
         return $db->loadResult();
     }
-    
+
     private function getIconType($icon) {
         // TODO - Enhance this later to get the type from xml
 
@@ -541,7 +563,7 @@ class WFModelProfiles extends WFModel {
 
         return 'mceButton';
     }
-    
+
     public function getIcon($plugin) {
         if ($plugin->type == 'command') {
             $base = 'components/com_jce/editor/tiny_mce/themes/advanced/img';
@@ -575,4 +597,5 @@ class WFModelProfiles extends WFModel {
 
         return $span;
     }
+
 }

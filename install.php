@@ -311,7 +311,7 @@ abstract class WFInstall {
                             }
                             $icons[] = $icon;
                         }
-                        
+
                         $rows[] = str_replace(array('clipboard', 'table'), array('cut,copy,paste', 'table_insert,delete_table,|,row_props,cell_props,|,row_before,row_after,delete_row,|,col_before,col_after,delete_col,|,split_cells,merge_cells'), implode(',', $icons));
 
                         //$rows[] = str_replace(array('cite,abbr,acronym,del,ins,attribs', 'search,replace', 'ltr,rtl', 'readmore,pagebreak', 'cut,copy,paste'), array('xhtmlxtras', 'searchreplace', 'directionality', 'article', 'paste'), implode(',', $icons));
@@ -552,11 +552,18 @@ abstract class WFInstall {
 
     private static function installProfile($name) {
         $db = JFactory::getDBO();
+        
+        $query = $db->getQuery(true);
+        
+        if (is_object($query)) {
+            $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->quoteName($name));
+        } else {
+            $query = 'SELECT COUNT(id) FROM #__wf_profiles WHERE name = ' . $db->Quote($name);
+        }
 
-        $query = 'SELECT COUNT(id) FROM #__wf_profiles WHERE name = ' . $db->Quote($name);
         $db->setQuery($query);
         $id = (int) $db->loadResult();
-        
+
         if (!$id) {
             // Blogger
             $file = JPATH_ADMINISTRATOR . '/components/com_jce/models/profiles.xml';
@@ -611,7 +618,6 @@ abstract class WFInstall {
         if (version_compare($version, '2.0.0', '<') && !defined('JPATH_PLATFORM')) {
             return self::upgradeLegacy();
         }// end JCE 1.5 upgrade
-
         // Remove folders
         $folders = array(
             // Remove JQuery folders from admin
@@ -685,12 +691,8 @@ abstract class WFInstall {
 
         // 2.1 - Add visualblocks plugin
         if (version_compare($version, '2.1', '<')) {
-            // Add Visualblocks plugin
-            $query = 'SELECT id FROM #__wf_profiles';
-            $db->setQuery($query);
-            $profiles = $db->loadObjectList();
-
-            $profile = JTable::getInstance('Profiles', 'WFTable');
+            $profiles   = self::getProfiles();
+            $profile    = JTable::getInstance('Profiles', 'WFTable');
 
             if (!empty($profiles)) {
                 foreach ($profiles as $item) {
@@ -709,12 +711,9 @@ abstract class WFInstall {
         }
 
         // 2.1.1 - Add anchor plugin
-        if (version_compare($version, '2.1.1', '<')) { 
-            $query = 'SELECT id FROM #__wf_profiles';
-            $db->setQuery($query);
-            $profiles = $db->loadObjectList();
-
-            $profile = JTable::getInstance('Profiles', 'WFTable');
+        if (version_compare($version, '2.1.1', '<')) {
+            $profiles   = self::getProfiles();
+            $profile    = JTable::getInstance('Profiles', 'WFTable');
 
             if (!empty($profiles)) {
                 foreach ($profiles as $item) {
@@ -744,40 +743,37 @@ abstract class WFInstall {
                 @JFile::delete($path . '/k2links.xml');
             }
         }
-        
+
         // replace some profile row items
         if (version_compare($version, '2.2.8', '<')) {
-            $query = 'SELECT id FROM #__wf_profiles';
-            $db->setQuery($query);
-            $profiles = $db->loadObjectList();
-
-            $profile = JTable::getInstance('Profiles', 'WFTable');
+            $profiles   = self::getProfiles();
+            $profile    = JTable::getInstance('Profiles', 'WFTable');
 
             if (!empty($profiles)) {
                 foreach ($profiles as $item) {
                     $profile->load($item->id);
 
-                    $profile->rows      = str_replace('paste', 'clipboard', $profile->rows);
-                    $profile->plugins   = str_replace('paste', 'clipboard', $profile->rows);
-                    
+                    $profile->rows = str_replace('paste', 'clipboard', $profile->rows);
+                    $profile->plugins = str_replace('paste', 'clipboard', $profile->rows);
+
                     $data = json_decode($profile->params, true);
-                    
+
                     // swap paste data to 'clipboard'
-                    if (array_key_exists('paste', $data)) {                        
+                    if (array_key_exists('paste', $data)) {
                         $params = array();
-                        
+
                         // add 'paste_' prefix
-                        foreach($data['paste'] as $k => $v) {
+                        foreach ($data['paste'] as $k => $v) {
                             $params['paste_' . $k] = $v;
                         }
-                        
+
                         // remove paste parameters
                         unset($data['paste']);
-                        
+
                         // assign new params to clipboard
                         $data['clipboard'] = $params;
                     }
-                    
+
                     $profile->params = json_encode($data);
 
                     $profile->store();
@@ -786,9 +782,9 @@ abstract class WFInstall {
         }
 
         // Cleanup JQuery
-        $path       = $site . '/editor/libraries/js/jquery';
-        $files      = JFolder::files($path, '\.js');
-        $exclude    = array('jquery-1.7.2.min.js', 'jquery-ui-1.8.21.custom.min.js', 'jquery-ui-layout.js');
+        $path = $site . '/editor/libraries/js/jquery';
+        $files = JFolder::files($path, '\.js');
+        $exclude = array('jquery-1.7.2.min.js', 'jquery-ui-1.8.21.custom.min.js', 'jquery-ui-layout.js');
 
         foreach ($files as $file) {
             if (in_array(basename($file), $exclude) === false) {
@@ -799,12 +795,25 @@ abstract class WFInstall {
         return true;
     }
 
+    private static function getProfiles() {
+        $db = JFactory::getDBO();
+        
+        if (is_object($query)) {
+            $query->select('id')->from('#__wf_profiles');
+        } else {
+            $query = 'SELECT id FROM #__wf_profiles';
+        }
+
+        $db->setQuery($query);
+        return $db->loadObjectList();
+    }
+
     private static function createProfilesTable() {
         include_once (dirname(__FILE__) . '/includes/base.php');
         include_once (dirname(__FILE__) . '/models/profiles.php');
-        
+
         $profiles = new WFModelProfiles();
-        
+
         if (method_exists($profiles, 'createProfilesTable')) {
             return $profiles->createProfilesTable();
         }
@@ -817,7 +826,7 @@ abstract class WFInstall {
         include_once (dirname(__FILE__) . '/models/profiles.php');
 
         $profiles = new WFModelProfiles();
-        
+
         if (method_exists($profiles, 'installProfiles')) {
             return $profiles->installProfiles();
         }
@@ -1027,7 +1036,7 @@ abstract class WFInstall {
         $query = 'DROP TABLE IF EXISTS #__jce_plugins';
         $db->setQuery($query);
         $db->query();
-        
+
         $query = 'DROP TABLE IF EXISTS #__jce_extensions';
         $db->setQuery($query);
         $db->query();
@@ -1048,7 +1057,14 @@ abstract class WFInstall {
         }
 
         // try with query
-        $query = 'SELECT COUNT(id) FROM ' . $table;
+        $query = $db->getQuery(true);
+
+        if (is_object($query)) {
+            $query->select('COUNT(id)')->from($table);
+        } else {
+            $query = 'SELECT COUNT(id) FROM ' . $table;
+        }
+        
         $db->setQuery($query);
 
         return $db->query();
@@ -1056,12 +1072,20 @@ abstract class WFInstall {
 
     /**
      * Check table contents
-     * @return boolean
+     * @return integer
      * @param string $table Table name
      */
     private static function checkTableContents($table) {
         $db = JFactory::getDBO();
-        $query = 'SELECT COUNT(id) FROM ' . $table;
+
+        $query = $db->getQuery(true);
+
+        if (is_object($query)) {
+            $query->select('COUNT(id)')->from($table);
+        } else {
+            $query = 'SELECT COUNT(id) FROM ' . $table;
+        }
+
         $db->setQuery($query);
 
         return $db->loadResult();
@@ -1069,7 +1093,12 @@ abstract class WFInstall {
 
     private static function checkTableColumn($table, $column) {
         $db = JFactory::getDBO();
-        
+
+        // use built in function
+        if (method_exists($db, 'getTableColumns')) {
+            return in_array($column, (array) $db->getTableColumns($table));
+        }
+
         $db->setQuery('DESCRIBE ' . $table);
         $fields = $db->loadResultArray();
 
