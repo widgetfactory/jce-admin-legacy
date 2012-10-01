@@ -44,7 +44,9 @@ class WFModelProfiles extends WFModel {
      * @return 
      */
     public function getExtensions($plugin) {
-        $model = JModel::getInstance('plugins', 'WFModel');
+        wfimport('admin.models.plugins');
+
+        $model = new WFModelplugins();
 
         $types = array();
         $extensions = array();
@@ -87,7 +89,9 @@ class WFModelProfiles extends WFModel {
     }
 
     public function getPlugins($plugins = array()) {
-        $model = JModel::getInstance('plugins', 'WFModel');
+        wfimport('admin.models.plugins');
+
+        $model = new WFModelplugins();
 
         $commands = array();
 
@@ -121,17 +125,21 @@ class WFModelProfiles extends WFModel {
             );
         } else {
             jimport('joomla.access.access');
-            
+
             $query = $db->getQuery(true);
-            
+
             if (is_object($query)) {
                 $query->select('id')->from('#__usergroups');
             } else {
                 $query = 'SELECT id FROM #__usergroups';
             }
-            
+
             $db->setQuery($query);
-            $groups = $db->loadResultArray();
+            if (method_exists($db, 'loadColumn')) {
+                $groups = $db->loadColumn();
+            } else {
+                $groups = $db->loadResultArray();
+            }
 
             $front = array();
             $back = array();
@@ -204,6 +212,7 @@ class WFModelProfiles extends WFModel {
 	        `types` varchar(255) NOT NULL,
 	        `components` text NOT NULL,
 	        `area` tinyint(3) NOT NULL,
+                `device` varchar(255) NOT NULL,
 	        `rows` text NOT NULL,
 	        `plugins` text NOT NULL,
 	        `published` tinyint(3) NOT NULL,
@@ -272,7 +281,7 @@ class WFModelProfiles extends WFModel {
 
         if ($this->createProfilesTable()) {
             self::buildCountQuery();
-            
+
             $profiles = array('Default' => false, 'Front End' => false);
 
             // No Profiles table data
@@ -306,18 +315,18 @@ class WFModelProfiles extends WFModel {
         // check for name
         if (is_object($query)) {
             $query->select('COUNT(id)')->from('#__wf_profiles');
-            
+
             if ($name) {
                 $query->where('name = ' . $db->Quote($name));
             }
         } else {
             $query = 'SELECT COUNT(id) FROM #__wf_profiles';
-            
+
             if ($name) {
-               $query .= ' WHERE name = ' . $db->Quote($name);
+                $query .= ' WHERE name = ' . $db->Quote($name);
             }
         }
-        
+
         $db->setQuery($query);
     }
 
@@ -367,7 +376,7 @@ class WFModelProfiles extends WFModel {
                             // only if name set and table name not set
                             if ($name && !$row->name) {
                                 self::buildCountQuery($name);
-                                
+
                                 // create name copy if exists
                                 while ($db->loadResult()) {
                                     $name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
@@ -544,7 +553,7 @@ class WFModelProfiles extends WFModel {
      */
     public static function checkTableContents() {
         $db = JFactory::getDBO();
-        
+
         self::buildCountQuery();
 
         return $db->loadResult();
