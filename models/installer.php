@@ -72,7 +72,7 @@ class WFModelInstaller extends WFModel {
 
         // Set Adapter
         $type = $package['type'];
-        
+
         if (!$type) {
             $this->setState('message', 'WF_INSTALLER_NO_PACKAGE');
             return false;
@@ -287,27 +287,33 @@ class WFModelInstaller extends WFModel {
         // pre-defined array of other plugins
         $related = explode(',', $params->get('related_extensions', 'jcemediabox,jceutilities,mediaobject,wfmediabox'));
 
-        $where = '';
+        $query  = $db->getQuery(true);
 
-        if (WF_JOOMLA15) {
-            $query = 'SELECT id, name, element, folder FROM #__plugins';
+        // Joomla! 2.5
+        if (is_object($query)) {
+            $query->select(array('name', 'element', 'folder'))->from('#__extensions')->where('type = ' . $db->Quote('plugin'))->order('name');
+            // Joomla! 1.5    
         } else {
-            $query = 'SELECT extension_id as id, name, element, folder FROM #__extensions';
-            $where .= ' AND type = ' . $db->Quote('plugin');
+            $query = 'SELECT name, element, folder FROM #__plugins'
+                    . ' WHERE type = ' . $db->Quote('plugin')
+                    . ' ORDER BY name';
         }
 
-        $query .= ' WHERE element IN (' . preg_replace('/([a-z0-9-_\.]+)/i', "'$1'", implode(',', $related)) . ')' . $where . ' ORDER BY name';
         $db->setQuery($query);
-        $rows = $db->loadObjectList();
+        $rows = $db->loadObjectList() or die($db->stdErr());
 
         $language = JFactory::getLanguage();
 
         $numRows = count($rows);
         for ($i = 0; $i < $numRows; $i++) {
             $row = $rows[$i];
-            
+
+            if (in_array($row->element, $related) === false) {
+                unset($rows[$i]);
+            }
+
             $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . '/' . $row->element . ".xml";
-            
+
             if (WF_JOOMLA15) {
                 $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . ".xml";
             }
@@ -330,7 +336,7 @@ class WFModelInstaller extends WFModel {
             $language->load('plg_' . trim($row->folder) . '_' . trim($row->element), JPATH_SITE);
         }
 
-        return $rows;
+        return array_values($rows);
     }
 
     public function getLanguages() {
