@@ -173,9 +173,9 @@ class WFViewProfiles extends WFViewBase {
 
                 $language->load('plg_editors_jce', JPATH_ADMINISTRATOR);
                 $plugins = $model->getPlugins();
-                
+
                 // load plugin languages
-                foreach($plugins as $plugin) {
+                foreach ($plugins as $plugin) {
                     if ($plugin->core == 0) {
                         // Load Language for plugin
                         $language->load('com_jce_' . $plugin->name, JPATH_SITE);
@@ -213,13 +213,13 @@ class WFViewProfiles extends WFViewBase {
                 $row->area = (isset($row->area)) ? $row->area : 0;
 
                 // build the html select list for ordering
-                $query = 'SELECT ordering AS value, name AS text' 
-                . ' FROM #__wf_profiles' 
-                . ' WHERE published = 1' 
-                . ' AND ordering > -10000' 
-                . ' AND ordering < 10000' 
-                . ' ORDER BY ordering';
-                
+                $query = 'SELECT ordering AS value, name AS text'
+                        . ' FROM #__wf_profiles'
+                        . ' WHERE published = 1'
+                        . ' AND ordering > -10000'
+                        . ' AND ordering < 10000'
+                        . ' ORDER BY ordering';
+
                 $order = JHTML::_('list.genericordering', $query);
                 $lists['ordering'] = JHTML::_('select.genericlist', $order, 'ordering', 'class="inputbox" size="1"', 'value', 'text', intval($row->ordering));
                 $lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $row->published);
@@ -250,24 +250,24 @@ class WFViewProfiles extends WFViewBase {
                 );
 
                 if (WF_JOOMLA15) {
-                    $query = "SELECT `option` AS value, name AS text" 
-                    . " FROM #__components" 
-                    . " WHERE parent = 0" 
-                    . " AND enabled = 1" 
-                    . " ORDER BY name";
+                    $query = "SELECT `option` AS value, name AS text"
+                            . " FROM #__components"
+                            . " WHERE parent = 0"
+                            . " AND enabled = 1"
+                            . " ORDER BY name";
                 } else {
-                    $query = "SELECT element AS value, name AS text" 
-                    . " FROM #__extensions" 
-                    . " WHERE type = " . $db->Quote('component') 
-                    . " AND client_id = 1 AND enabled = 1" 
-                    . " ORDER BY name";
+                    $query = "SELECT element AS value, name AS text"
+                            . " FROM #__extensions"
+                            . " WHERE type = " . $db->Quote('component')
+                            . " AND client_id = 1 AND enabled = 1"
+                            . " ORDER BY name";
                 }
                 $db->setQuery($query);
                 $components = $db->loadObjectList();
 
                 $options = array();
 
-                for ($i = 0; $i < count($components); $i++) {                    
+                for ($i = 0; $i < count($components); $i++) {
                     if (!in_array($components[$i]->value, $exclude)) {
                         $options[] = $components[$i];
                         // load system language file
@@ -280,34 +280,38 @@ class WFViewProfiles extends WFViewBase {
                 //$lists['components'] = JHTML::_('select.genericlist', $options, 'components[]', 'class="inputbox levels" size="10" multiple="multiple"' . $disabled, 'value', 'text', explode(',', $row->components));
 
                 $lists['components'] = '<ul id="components" class="checkbox-list">';
-                
-                foreach($options as $option) {
+
+                foreach ($options as $option) {
                     $checked = in_array($option->value, explode(',', $row->components)) ? ' checked="checked"' : '';
                     $lists['components'] .= '<li><input type="checkbox" name="components[]" value="' . $option->value . '"' . $checked . $disabled . ' /><label>' . JText::_($option->text) . '</label></li>';
                 }
-                
+
                 $lists['components'] .= '</ul>';
-                
-                
+
+
                 $options = array();
                 $options[] = JHTML::_('select.option', 'all', WFText::_('WF_PROFILES_COMPONENTS_ALL'));
                 $options[] = JHTML::_('select.option', 'select', WFText::_('WF_PROFILES_COMPONENTS_SELECT'));
 
-                $lists['components-select'] = JHTML::_('select.radiolist', $options, 'components-select', 'class="inputbox"', 'value', 'text', $row->components ? 'select' : 'all', false);                
-                
+                $lists['components-select'] = JHTML::_('select.radiolist', $options, 'components-select', 'class="inputbox"', 'value', 'text', $row->components ? 'select' : 'all', false);
+
                 $options = array();
                 $options[] = JHTML::_('select.option', '', '-- ' . WFText::_('WF_PROFILES_AREA_SELECT') . ' --');
                 $options[] = JHTML::_('select.option', 0, WFText::_('WF_PROFILES_AREA_BOTH'));
                 $options[] = JHTML::_('select.option', 1, WFText::_('WF_PROFILES_AREA_FRONTEND'));
                 $options[] = JHTML::_('select.option', 2, WFText::_('WF_PROFILES_AREA_BACKEND'));
-                
+
                 $lists['area'] = JHTML::_('select.genericlist', $options, 'area', 'class="inputbox levels" size="1"', 'value', 'text', $row->area);
-                
+
                 $query = 'SELECT types' . ' FROM #__wf_profiles'
                         // Exclude ROOT, USERS, Super Administrator, Public Frontend, Public Backend
                         . ' WHERE id NOT IN (17,28,29,30)';
                 $db->setQuery($query);
-                $types = $db->loadResultArray();
+                if (method_exists($db, 'loadColumn')) {
+                    $types = $db->loadColumn();
+                } else {
+                    $types = $db->loadResultArray();
+                }
 
                 if (WF_JOOMLA15) {
                     // get list of Groups for dropdown filter
@@ -357,15 +361,15 @@ class WFViewProfiles extends WFViewBase {
                 }
 
                 $lists['usergroups'] = '<ul id="user-groups" class="checkbox-list">';
-                
-                foreach($options as $option) {
+
+                foreach ($options as $option) {
                     $checked = in_array($option->value, explode(',', $row->types)) ? ' checked="checked"' : '';
                     $lists['usergroups'] .= '<li><input type="checkbox" name="usergroups[]" value="' . $option->value . '"' . $checked . ' /><label>' . $option->text . '</label></li>';
                 }
-                
+
                 $lists['usergroups'] .= '</ul>';
-                
-                
+
+
                 $options = array();
 
                 if ($row->id && $row->users) {
@@ -380,11 +384,11 @@ class WFViewProfiles extends WFViewBase {
                     }
                 }
                 $lists['users'] = '<ul id="users" class="users-list">';
-                
-                foreach($options as $option) {
+
+                foreach ($options as $option) {
                     $lists['users'] .= '<li><input type="hidden" name="users[]" value="' . $option->value . '" /><label><span class="users-list-delete"></span>' . $option->text . '</label></li>';
                 }
-                
+
                 $lists['users'] .= '</ul>';
 
                 //JHTML::_('select.genericlist', $options, 'users[]', 'class="inputbox users" size="10" multiple="multiple"', 'value', 'text', '');
