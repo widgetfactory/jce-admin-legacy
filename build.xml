@@ -46,6 +46,7 @@
             <fileset dir="../../../plugins/editors/jce/">
                 <include name="jce.php" />
                 <include name="jce.xml" />
+                <include name="legacy.xml" />
             </fileset>
             <fileset dir="${component_admin_lang}">
                 <include name="en-GB.plg_editors_jce.ini" />
