@@ -23,10 +23,16 @@ abstract class WFInstall {
 
             // cleanup menus
             if (defined('JPATH_PLATFORM')) {
-                $db->setQuery('DELETE FROM #__menu WHERE alias = ' . $db->Quote('jce') . ' AND menutype = ' . $db->Quote('main'));
+                $query = $db->getQuery(true);
+                $query->delete('#__menu')->where(array('alias', $db->Quote('jce'), 'menutype', $db->Quote('main')));
+
+                $db->setQuery($query);
                 $db->query();
 
-                $db->setQuery('DELETE FROM #__menu WHERE alias LIKE ' . $db->Quote('wf-menu-%') . ' AND menutype = ' . $db->Quote('main'));
+                $query->clear();
+
+                $query->delete('#__menu')->where('alias LIKE ' . $db->Quote('wf-menu-%') . ' AND menutype = ' . $db->Quote('main'));
+                $db->setQuery($query);
                 $db->query();
             } else {
                 $db->setQuery('DELETE FROM #__components WHERE `option` = ' . $db->Quote('com_jce'));
@@ -162,7 +168,6 @@ abstract class WFInstall {
         if (self::checkTableColumn('#__wf_profiles', 'device') === false) {
             $db = JFactory::getDBO();
 
-            // Change description field to TEXT
             $query = 'ALTER TABLE #__wf_profiles CHANGE `description` `description` TEXT';
             $db->setQuery($query);
             $db->query();
@@ -171,9 +176,14 @@ abstract class WFInstall {
             $query = 'ALTER TABLE #__wf_profiles CHANGE `types` `types` TEXT';
             $db->setQuery($query);
             $db->query();
-
+            
             // Add device field
-            $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCHAR(255) AFTER `area`';
+            $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCAHR(255) AFTER `area`';
+            
+            if (strtolower($db->name) == 'sqlsrv' || strtolower($db->name) == 'sqlazure') {
+                $query = 'ALTER TABLE #__wf_profiles ADD `device` NVARCHAR(250)';
+            }
+
             $db->setQuery($query);
             $db->query();
         }
@@ -552,11 +562,11 @@ abstract class WFInstall {
 
     private static function installProfile($name) {
         $db = JFactory::getDBO();
-        
+
         $query = $db->getQuery(true);
-        
+
         if (is_object($query)) {
-            $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->quoteName($name));
+            $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote($name));
         } else {
             $query = 'SELECT COUNT(id) FROM #__wf_profiles WHERE name = ' . $db->Quote($name);
         }
@@ -691,8 +701,8 @@ abstract class WFInstall {
 
         // 2.1 - Add visualblocks plugin
         if (version_compare($version, '2.1', '<')) {
-            $profiles   = self::getProfiles();
-            $profile    = JTable::getInstance('Profiles', 'WFTable');
+            $profiles = self::getProfiles();
+            $profile = JTable::getInstance('Profiles', 'WFTable');
 
             if (!empty($profiles)) {
                 foreach ($profiles as $item) {
@@ -712,8 +722,8 @@ abstract class WFInstall {
 
         // 2.1.1 - Add anchor plugin
         if (version_compare($version, '2.1.1', '<')) {
-            $profiles   = self::getProfiles();
-            $profile    = JTable::getInstance('Profiles', 'WFTable');
+            $profiles = self::getProfiles();
+            $profile = JTable::getInstance('Profiles', 'WFTable');
 
             if (!empty($profiles)) {
                 foreach ($profiles as $item) {
@@ -746,8 +756,8 @@ abstract class WFInstall {
 
         // replace some profile row items
         if (version_compare($version, '2.2.8', '<')) {
-            $profiles   = self::getProfiles();
-            $profile    = JTable::getInstance('Profiles', 'WFTable');
+            $profiles = self::getProfiles();
+            $profile = JTable::getInstance('Profiles', 'WFTable');
 
             if (!empty($profiles)) {
                 foreach ($profiles as $item) {
@@ -797,7 +807,7 @@ abstract class WFInstall {
 
     private static function getProfiles() {
         $db = JFactory::getDBO();
-        
+
         if (is_object($query)) {
             $query->select('id')->from('#__wf_profiles');
         } else {
@@ -1064,7 +1074,7 @@ abstract class WFInstall {
         } else {
             $query = 'SELECT COUNT(id) FROM ' . $table;
         }
-        
+
         $db->setQuery($query);
 
         return $db->query();

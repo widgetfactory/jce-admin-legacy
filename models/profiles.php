@@ -308,7 +308,7 @@ class WFModelProfiles extends WFModel {
             $query->select('COUNT(id)')->from('#__wf_profiles');
             
             if ($name) {
-                $query->where('name = ' . $db->quoteName($name));
+                $query->where('name = ' . $db->Quote($name));
             }
         } else {
             $query = 'SELECT COUNT(id) FROM #__wf_profiles';
