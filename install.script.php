@@ -11,17 +11,19 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
-
-abstract class com_jceInstallerScript {
+class com_jceInstallerScript {
 
     public function install($parent) {
+        require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
+        
         $installer = method_exists($parent, 'getParent') ? $parent->getParent() : $parent->parent;
 
         return WFInstall::install($installer);
     }
 
     public function uninstall() {
+        require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
+        
         return WFInstall::uninstall();
     }
 
