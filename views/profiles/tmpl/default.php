@@ -69,13 +69,15 @@ defined('_JEXEC') or die('RESTRICTED');
 			for ($i=0, $n=count( $rows ); $i < $n; $i++) {
 			$row = $rows[$i];
 		
-			$link 		= JRoute::_( 'index.php?option=com_jce&view=profiles&task=edit&cid[]='. $row->id );
+			$link 	= JRoute::_( 'index.php?option=com_jce&view=profiles&task=edit&cid[]='. $row->id );
 			
 			// state
-			$state 		= JHTML::_('grid.published', $row, $i );
+			$state 	= JHTML::_('grid.published', $row, $i );
 			
 			// checked out
-			$checked 	= JHTML::_('grid.checkedout', $row, $i );
+			$checked = JHTML::_('grid.checkedout', $row, $i );
+                        
+                        $profile = JTable::getInstance('profiles', 'WFTable');
 		?>
 			<tr>
 				<td align="center">
@@ -83,7 +85,7 @@ defined('_JEXEC') or die('RESTRICTED');
 				</td>
 				<td>
 					<?php
-					if (  JTable::isCheckedOut($this->user->get ('id'), $row->checked_out ) ) {
+					if ($profile->isCheckedOut($this->user->get ('id'), $row->checked_out)) {
 						echo $row->name;
 					} else {	
 					?>

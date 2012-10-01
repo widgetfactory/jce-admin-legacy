@@ -131,7 +131,11 @@
             });*/
 
             // Check list
-            $('select.checklist, input.checklist').checkList();
+            $('select.checklist, input.checklist').checkList({
+                onCheck : function() {
+                    self.setRows();
+                }
+            });
 
             $('input.autocomplete').each( function() {
                 var el = this, v = $(el).attr('placeholder') || '';
@@ -168,7 +172,7 @@
                     }
                 }
                 
-                //$('span.profileLayoutContainerEditor', '#profileLayoutTable').height(v);
+            //$('span.profileLayoutContainerEditor', '#profileLayoutTable').height(v);
             });
             
             // Toolbar Theme
@@ -385,7 +389,7 @@
             var rows = [];
 
             $('div.sortableRow:has(span)', '#toolbar_container').each( function() {
-                rows.push($.map($('span.sortableRowItem', $(this)), function(el) {
+                rows.push($.map($('span.sortableRowItem:visible', $(this)), function(el) {
                     return $(el).data('name');
                 }).join(','));
             });

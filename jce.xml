@@ -9,8 +9,6 @@
     <authorUrl>www.joomlacontenteditor.net</authorUrl>
     <version>@@version@@</version>
     <description>WF_ADMIN_DESC</description>
-    <!--installfile>install.php</installfile>
-    <uninstallfile>install.php</uninstallfile-->
     
     <scriptfile>install.script.php</scriptfile>
 	
@@ -30,6 +28,7 @@
 	
     <languages folder="language/en-GB">
         <language tag="en-GB">en-GB.com_jce.xml</language>
+        <language tag="en-GB">en-GB.com_jce.ini</language>
     </languages>
 	
 	<!-- SQL query files to execute on installation -->

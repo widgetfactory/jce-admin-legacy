@@ -42,7 +42,7 @@ class WFElementList extends WFElement {
 
         foreach ($node->children() as $option) {
             $val        = (string) $option->attributes()->value;
-            $text       = WFText::_((string) $option);
+            $text       = (string) $option;
             $disabled   = (string) $option->attributes()->disabled ? true : false;
 
             $text = strpos($text, 'WF_') === false ? $text : WFText::_($text);
