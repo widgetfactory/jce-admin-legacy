@@ -60,26 +60,50 @@ class WFViewProfiles extends JView {
                         $where[] = 'p.published = 0';
                     }
                 }
-                $where = (count($where) ? ' WHERE ' . implode(' AND ', $where) : '');
-                $orderby = ' ORDER BY ' . $filter_order . ' ' . $filter_order_Dir;
-
+                $order = array($filter_order, $filter_order_Dir);
+                
                 // get the total number of records
-                $query = 'SELECT COUNT(p.id)' . ' FROM #__wf_profiles AS p' . $where;
+                $query = $db->getQuery(true);
+                if (is_object($query)) {
+                    $query->select('COUNT(p.id)')->from('#__wf_profiles AS p');
+                    
+                    if (count($where)) {
+                        $query->where($where);
+                    }
+                    
+                } else {
+                    $query = 'SELECT COUNT(p.id)' 
+                    . ' FROM #__wf_profiles AS p' 
+                    . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '');
+                }
+
                 $db->setQuery($query);
                 $total = $db->loadResult();
 
                 jimport('joomla.html.pagination');
                 $pagination = new JPagination($total, $limitstart, $limit);
 
-                $query = 'SELECT p.*, u.name AS editor'
-                        . ' FROM #__wf_profiles AS p'
-                        . ' LEFT JOIN #__users AS u ON u.id = p.checked_out'
-                        . $where
-                        //. ' GROUP BY p.id' 
-                        . $orderby;
+                $query = $db->getQuery(true);
+                if (is_object($query)) {
+                    $query->select('p.*, u.name AS editor')->from('#__wf_profiles AS p')->join('LEFT', '#__users AS u ON u.id = p.checked_out');
+                    
+                    if (count($where)) {
+                        $query->where($where);
+                    }
+                    
+                    $query->order(trim(implode(',', $order), ','));
+                    
+                } else {
+                    $query = 'SELECT p.*, u.name AS editor'
+                    . ' FROM #__wf_profiles AS p'
+                    . ' LEFT JOIN #__users AS u ON u.id = p.checked_out'
+                    . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '')
+                    . 'ORDER BY ' . implode(' ', $order);
+                }
 
                 $db->setQuery($query, $pagination->limitstart, $pagination->limit);
                 $rows = $db->loadObjectList();
+                
                 if ($db->getErrorNum()) {
                     echo $db->stderr();
                     return false;
@@ -143,12 +167,8 @@ class WFViewProfiles extends JView {
                 $this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
                 $this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/select.js?version=' . $model->getVersion());
 
-                $cid = JRequest::getVar('cid', array(
-                            0
-                                ), '', 'array');
-                JArrayHelper::toInteger($cid, array(
-                    0
-                ));
+                $cid = JRequest::getVar('cid', array(0), '', 'array');
+                JArrayHelper::toInteger($cid, array(0));
 
                 $lists = array();
                 $row = JTable::getInstance('profiles', 'WFTable');
@@ -186,7 +206,14 @@ class WFViewProfiles extends JView {
                 if ($cid[0]) {
                     $row->checkout($user->get('id'));
                 } else {
-                    $query = 'SELECT COUNT(id)' . ' FROM #__wf_profiles';
+                    $query = $db->getQuery(true);
+                    
+                    if (is_object($query)) {
+                        $query->select('COUNT(id)')->from('#__wf_profiles');
+                    } else {
+                        $query = 'SELECT COUNT(id)' . ' FROM #__wf_profiles';
+                    }
+
                     $db->setQuery($query);
                     $total = $db->loadResult();
 
@@ -211,14 +238,20 @@ class WFViewProfiles extends JView {
                 }
 
                 $row->area = (isset($row->area)) ? $row->area : 0;
-
-                // build the html select list for ordering
-                $query = 'SELECT ordering AS value, name AS text'
+                
+                $query = $db->getQuery(true);
+                
+                if (is_object($query)) {
+                    $query->select('ordering AS value, name AS text')->from('#__wf_profiles')->where(array('published = 1', 'ordering > -10000', 'ordering < 10000'))->order('ordering');
+                } else {
+                    // build the html select list for ordering
+                    $query = 'SELECT ordering AS value, name AS text'
                         . ' FROM #__wf_profiles'
                         . ' WHERE published = 1'
                         . ' AND ordering > -10000'
                         . ' AND ordering < 10000'
                         . ' ORDER BY ordering';
+                }
 
                 $order = JHTML::_('list.genericordering', $query);
                 $lists['ordering'] = JHTML::_('select.genericlist', $order, 'ordering', 'class="inputbox" size="1"', 'value', 'text', intval($row->ordering));
