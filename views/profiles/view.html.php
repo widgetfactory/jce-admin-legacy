@@ -98,7 +98,7 @@ class WFViewProfiles extends JView {
                     . ' FROM #__wf_profiles AS p'
                     . ' LEFT JOIN #__users AS u ON u.id = p.checked_out'
                     . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '')
-                    . 'ORDER BY ' . implode(' ', $order);
+                    . 'ORDER BY ' . implode(',', $order);
                 }
 
                 $db->setQuery($query, $pagination->limitstart, $pagination->limit);
