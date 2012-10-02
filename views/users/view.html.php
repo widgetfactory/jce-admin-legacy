@@ -15,167 +15,171 @@ wfimport('admin.classes.view');
 
 class WFViewUsers extends WFViewBase
 {
-	function display($tpl = null)
-	{
-		$app 	= JFactory::getApplication();
-		$option = JRequest::getCmd('option');
-		
-		$client = 'admin';
-		$view 	= JRequest::getWord( 'view' );
-		
-		$db				= JFactory::getDBO();
-		$currentUser	= JFactory::getUser();
-		$acl			= JFactory::getACL();
-		
-		$model 			= $this->getModel();
-		
-		$this->document->addScript('components/com_jce/media/js/users.js?version=' . $model->getVersion());
+	public function display($tpl = null) {
+        $app = JFactory::getApplication();
+        $option = JRequest::getCmd('option');
 
-		$filter_order		= $app->getUserStateFromRequest("$option.$view.filter_order",		'filter_order',		'a.name',	'cmd' );
-		$filter_order_Dir	= $app->getUserStateFromRequest("$option.$view.filter_order_Dir",	'filter_order_Dir',	'',			'word' );
-		$filter_type		= $app->getUserStateFromRequest("$option.$view.filter_type",		'filter_type', 		0,			'word' );
-		$search				= $app->getUserStateFromRequest("$option.$view.search",				'search', 			'',			'cmd' );
-		$search				= JString::strtolower( $search );
+        $client = 'admin';
+        $view = JRequest::getWord('view');
 
-		$limit				= $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'), 'int' );
-		$limitstart 		= $app->getUserStateFromRequest("$option.$view.limitstart", 'limitstart', 0, 'int' );
+        $db = JFactory::getDBO();
+        $currentUser = JFactory::getUser();
+        $acl = JFactory::getACL();
 
-		$where = array();
-		
-		if (isset( $search ) && $search!= '')
-		{
-			$searchEscaped = $db->Quote( '%'.$db->getEscaped( $search, true ).'%', false );
-			$where[] = 'a.username LIKE '.$searchEscaped.' OR a.email LIKE '.$searchEscaped.' OR a.name LIKE '.$searchEscaped;
-		}
-		
-		$join = '';
-		
-		if (WF_JOOMLA15) {
-			if ($filter_type) {
-				$where[] = 'a.gid ='.(int)$filter_type;
-			}
-			// exclude any child group id's for this user
-			$pgids = $acl->get_group_children( $currentUser->get('gid'), 'ARO', 'RECURSE' );
-	
-			if (is_array( $pgids ) && count( $pgids ) > 0) {
-				JArrayHelper::toInteger($pgids);
-				$where[] = 'a.gid NOT IN (' . implode( ',', $pgids ) . ')';
-			}
-			
-			// Exclude ROOT, USERS, Super Administrator, Public Frontend, Public Backend
-			$where[] = 'a.gid NOT IN (17,28,29,30)';
-		} else {
-			if ($filter_type) {
-				$where[] = 'map.group_id = LOWER('.$db->Quote($filter_type).') ';
-			}
-		}
+        $model = $this->getModel();
 
-		// Only unblocked users
-		$where[] = 'a.block = 0';
-		
-		$orderby = ' ORDER BY '. $filter_order .' '. $filter_order_Dir;
-		$where = ( count( $where ) ? ' WHERE (' . implode( ') AND (', $where ) . ')' : '' );
-		
-		jimport('joomla.html.pagination');
+        $this->document->addScript('components/com_jce/media/js/users.js?version=' . $model->getVersion());
 
-		if (WF_JOOMLA15) {
-			$query = 'SELECT COUNT(a.id)'
-			. ' FROM #__users AS a'
-			. $where
-			;
-			$db->setQuery($query);
-			$total = $db->loadResult();
-			$pagination = new JPagination($total, $limitstart, $limit);
-			
-			$query = 'SELECT a.id, a.name, a.username, g.name AS groupname'
-			. ' FROM #__users AS a'
-			. ' INNER JOIN #__core_acl_aro AS aro ON aro.value = a.id'
-			. ' INNER JOIN #__core_acl_groups_aro_map AS gm ON gm.aro_id = aro.id'
-			. ' INNER JOIN #__core_acl_aro_groups AS g ON g.id = gm.group_id'
-			. $where
-			. ' GROUP BY a.id, a.name, a.username, g.name'
-			. $orderby
-			;
-		} else {
-			// Join over the group mapping table.
-			$query = 'SELECT COUNT(a.id)'
-			. ' FROM #__users AS a'
-			. ' LEFT JOIN #__user_usergroup_map AS map ON map.user_id = a.id'
-			. $where
-			;
-			$db->setQuery($query);
-			$total = $db->loadResult();
-			
-			$pagination = new JPagination($total, $limitstart, $limit);
+        $filter_order       = $app->getUserStateFromRequest("$option.$view.filter_order", 'filter_order', 'a.name', 'cmd');
+        $filter_order_Dir   = $app->getUserStateFromRequest("$option.$view.filter_order_Dir", 'filter_order_Dir', '', 'word');
+        $filter_type        = $app->getUserStateFromRequest("$option.$view.filter_type", 'filter_type', 0, 'int');
+        $search             = $app->getUserStateFromRequest("$option.$view.search", 'search', '', 'cmd');
+        $search             = JString::strtolower($search);
 
-			$query = 'SELECT a.id, a.name, a.username, g.title AS groupname'
-			. ' FROM #__users AS a'
-			. ' LEFT JOIN #__user_usergroup_map AS map ON map.user_id = a.id'
-			. ' LEFT JOIN #__usergroups AS g ON g.id = map.group_id'
-			. $where
-			. ' GROUP BY a.id, a.name, a.username, g.title'
-			. $orderby
-			;
-		}
-		
-		$db->setQuery($query, $pagination->limitstart, $pagination->limit);
-		$rows = $db->loadObjectList();
+        $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'), 'int');
+        $limitstart = $app->getUserStateFromRequest("$option.$view.limitstart", 'limitstart', 0, 'int');
 
-		$options = array(
-			JHTML::_('select.option',  '0', '- '. WFText::_('WF_USERS_GROUP_SELECT') .' -' )
-		);
+        $where = array();
 
-		if (WF_JOOMLA15) {
-			// get list of Groups for dropdown filter
-			$query = 'SELECT id AS value, name AS text'
-			. ' FROM #__core_acl_aro_groups'
-			// Exclude ROOT, USERS, Super Administrator, Public Frontend, Public Backend
-			. ' WHERE id NOT IN (17,28,29,30)'
-			;
-			$db->setQuery($query);
-			$types = $db->loadObjectList();
-			
-			$i = '-';
-			
-			foreach( $types as $type ){
-				$options[] = JHTML::_('select.option', $type->value, $i . WFText::_( $type->text ) );
-				$i .= '-';
-			}
-		} else {
-			$join 	= ' LEFT JOIN #__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt';
-			$where 	= '';
-			
-			$query = 'SELECT a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level'
-			. ' FROM #__usergroups AS a'
-			. ' LEFT JOIN #__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt'
-			. ' GROUP BY a.id, a.title, a.lft, a.rgt'
-			. ' ORDER BY a.lft ASC'
-			;
-	
-			// Get the options.
-			$db->setQuery($query);		
-			$items = $db->loadObjectList();
+        if (isset($search) && $search != '') {
+            $searchEscaped = $db->Quote('%' . $db->getEscaped($search, true) . '%', false);
+            $where[] = 'a.username LIKE ' . $searchEscaped . ' OR a.email LIKE ' . $searchEscaped . ' OR a.name LIKE ' . $searchEscaped;
+        }
 
-			// Pad the option text with spaces using depth level as a multiplier.
-			for ($i = 0, $n = count($items); $i < $n; $i++) {
-				$options[] = JHTML::_('select.option', $items[$i]->value, str_repeat('- ',$items[$i]->level).$items[$i]->text);
-			}
-		}
+        if (JPATH_PLATFORM) {            
+            if ($filter_type) {
+                $where[] = 'map.group_id = LOWER(' . $db->Quote($filter_type) . ') ';
+            }
+        } else {
+            if ($filter_type) {
+                $where[] = 'a.gid =' . (int) $filter_type;
+            }
+            // exclude any child group id's for this user
+            $pgids = $acl->get_group_children($currentUser->get('gid'), 'ARO', 'RECURSE');
 
-		$lists['group'] = JHTML::_('select.genericlist', $options, 'filter_type', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "$filter_type" );
+            if (is_array($pgids) && count($pgids) > 0) {
+                JArrayHelper::toInteger($pgids);
+                $where[] = 'a.gid NOT IN (' . implode(',', $pgids) . ')';
+            }
 
-		// table ordering
-		$lists['order_Dir']	= $filter_order_Dir;
-		$lists['order']		= $filter_order;
+            // Exclude ROOT, USERS, Super Administrator, Public Frontend, Public Backend
+            $where[] = 'a.gid NOT IN (17,28,29,30)';
+        }
 
-		// search filter
-		$lists['search']= $search;
+        // Only unblocked users
+        $where[] = 'a.block = 0';
 
-		$this->assignRef('user',		JFactory::getUser());
-		$this->assignRef('lists',		$lists);
-		$this->assignRef('items',		$rows);
-		$this->assignRef('pagination',	$pagination);
+        $orderby = array($filter_order, $filter_order_Dir);
 
-		parent::display($tpl);
-	}
+        jimport('joomla.html.pagination');
+
+        if (JPATH_PLATFORM) {
+            $query = $db->getQuery(true);
+
+            $query->select('COUNT(a.id)')->from('#__users AS a')->join('LEFT', '#__user_usergroup_map AS map ON map.user_id = a.id');
+
+            if (count($where)) {
+                $query->where($where);
+            }
+
+            $db->setQuery($query);
+            $total = $db->loadResult();
+
+            $pagination = new JPagination($total, $limitstart, $limit);
+
+            $query = $db->getQuery(true);
+
+            $query->select('a.id, a.name, a.username, g.title AS groupname');
+            $query->from('#__users AS a');
+            $query->join('LEFT', '#__user_usergroup_map AS map ON map.user_id = a.id');
+            $query->join('LEFT', '#__usergroups AS g ON g.id = map.group_id');
+
+            if (count($where)) {
+                $query->where($where);
+            }
+
+            $query->group('a.id, a.name, a.username, g.title');
+            $query->order(trim(implode(',', $orderby), ','));
+            
+        } else {
+            $query = 'SELECT COUNT(a.id)'
+                    . ' FROM #__users AS a'
+                    . $where
+            ;
+            $db->setQuery($query);
+            $total = $db->loadResult();
+            $pagination = new JPagination($total, $limitstart, $limit);
+
+            $query = 'SELECT a.id, a.name, a.username, g.name AS groupname'
+                    . ' FROM #__users AS a'
+                    . ' INNER JOIN #__core_acl_aro AS aro ON aro.value = a.id'
+                    . ' INNER JOIN #__core_acl_groups_aro_map AS gm ON gm.aro_id = aro.id'
+                    . ' INNER JOIN #__core_acl_aro_groups AS g ON g.id = gm.group_id'
+                    . ( count($where) ? ' WHERE (' . implode(') AND (', $where) . ')' : '' )
+                    . ' GROUP BY a.id, a.name, a.username, g.name'
+                    . ' ORDER BY ' . implode(',', $orderby)
+            ;
+        }
+
+        $db->setQuery($query, $pagination->limitstart, $pagination->limit);
+        $rows = $db->loadObjectList();
+
+        $options = array(
+            JHTML::_('select.option', '', '- ' . WFText::_('WF_USERS_GROUP_SELECT') . ' -')
+        );
+
+        if (JPATH_PLATFORM) {
+            $query = $db->getQuery(true);
+
+            $query->select('a.id AS value, a.title AS text')->from('#__usergroups AS a');
+
+            // Add the level in the tree.
+            $query->select('COUNT(DISTINCT b.id) AS level');
+            $query->join('LEFT OUTER', '#__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt');
+            $query->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
+            $query->order('a.lft ASC');
+
+            // Get the options.
+            $db->setQuery($query);
+            $items = $db->loadObjectList() or die($db->stdErr());
+
+            // Pad the option text with spaces using depth level as a multiplier.
+            for ($i = 0, $n = count($items); $i < $n; $i++) {
+                $options[] = JHTML::_('select.option', $items[$i]->value, str_repeat('- ', $items[$i]->level) . $items[$i]->text);
+            }
+        } else {
+            // get list of Groups for dropdown filter
+            $query = 'SELECT id AS value, name AS text'
+                    . ' FROM #__core_acl_aro_groups'
+                    // Exclude ROOT, USERS, Super Administrator, Public Frontend, Public Backend
+                    . ' WHERE id NOT IN (17,28,29,30)';
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+
+            $i = '-';
+            
+            $options[] = JHTML::_('select.option', '0', WFText::_('Guest'));
+
+            foreach ($items as $item) {
+                $options[] = JHTML::_('select.option', $item->value, $i . WFText::_($item->text));
+                $i .= '-';
+            }
+        }
+
+        $lists['group'] = JHTML::_('select.genericlist', $options, 'filter_type', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "$filter_type");
+
+        // table ordering
+        $lists['order_Dir'] = $filter_order_Dir;
+        $lists['order'] = $filter_order;
+
+        // search filter
+        $lists['search'] = $search;
+
+        $this->assignRef('user', JFactory::getUser());
+        $this->assignRef('lists', $lists);
+        $this->assignRef('items', $rows);
+        $this->assignRef('pagination', $pagination);
+
+        parent::display($tpl);
+    }
 }
