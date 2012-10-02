@@ -60,26 +60,50 @@ class WFViewProfiles extends WFViewBase {
                         $where[] = 'p.published = 0';
                     }
                 }
-                $where = (count($where) ? ' WHERE ' . implode(' AND ', $where) : '');
-                $orderby = ' ORDER BY ' . $filter_order . ' ' . $filter_order_Dir;
-
+                $order = array($filter_order, $filter_order_Dir);
+                
                 // get the total number of records
-                $query = 'SELECT COUNT(p.id)' . ' FROM #__wf_profiles AS p' . $where;
+                $query = $db->getQuery(true);
+                if (is_object($query)) {
+                    $query->select('COUNT(p.id)')->from('#__wf_profiles AS p');
+                    
+                    if (count($where)) {
+                        $query->where($where);
+                    }
+                    
+                } else {
+                    $query = 'SELECT COUNT(p.id)' 
+                    . ' FROM #__wf_profiles AS p' 
+                    . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '');
+                }
+
                 $db->setQuery($query);
                 $total = $db->loadResult();
 
                 jimport('joomla.html.pagination');
                 $pagination = new JPagination($total, $limitstart, $limit);
 
-                $query = 'SELECT p.*, u.name AS editor'
-                        . ' FROM #__wf_profiles AS p'
-                        . ' LEFT JOIN #__users AS u ON u.id = p.checked_out'
-                        . $where
-                        //. ' GROUP BY p.id' 
-                        . $orderby;
+                $query = $db->getQuery(true);
+                if (is_object($query)) {
+                    $query->select('p.*, u.name AS editor')->from('#__wf_profiles AS p')->join('LEFT', '#__users AS u ON u.id = p.checked_out');
+                    
+                    if (count($where)) {
+                        $query->where($where);
+                    }
+                    
+                    $query->order(trim(implode(',', $order), ','));
+                    
+                } else {
+                    $query = 'SELECT p.*, u.name AS editor'
+                    . ' FROM #__wf_profiles AS p'
+                    . ' LEFT JOIN #__users AS u ON u.id = p.checked_out'
+                    . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '')
+                    . 'ORDER BY ' . implode(' ', $order);
+                }
 
                 $db->setQuery($query, $pagination->limitstart, $pagination->limit);
                 $rows = $db->loadObjectList();
+                
                 if ($db->getErrorNum()) {
                     echo $db->stderr();
                     return false;
@@ -143,12 +167,8 @@ class WFViewProfiles extends WFViewBase {
                 $this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
                 $this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/select.js?version=' . $model->getVersion());
 
-                $cid = JRequest::getVar('cid', array(
-                            0
-                                ), '', 'array');
-                JArrayHelper::toInteger($cid, array(
-                    0
-                ));
+                $cid = JRequest::getVar('cid', array(0), '', 'array');
+                JArrayHelper::toInteger($cid, array(0));
 
                 $lists = array();
                 $row = JTable::getInstance('profiles', 'WFTable');
@@ -186,7 +206,14 @@ class WFViewProfiles extends WFViewBase {
                 if ($cid[0]) {
                     $row->checkout($user->get('id'));
                 } else {
-                    $query = 'SELECT COUNT(id)' . ' FROM #__wf_profiles';
+                    $query = $db->getQuery(true);
+                    
+                    if (is_object($query)) {
+                        $query->select('COUNT(id)')->from('#__wf_profiles');
+                    } else {
+                        $query = 'SELECT COUNT(id)' . ' FROM #__wf_profiles';
+                    }
+
                     $db->setQuery($query);
                     $total = $db->loadResult();
 
@@ -211,14 +238,20 @@ class WFViewProfiles extends WFViewBase {
                 }
 
                 $row->area = (isset($row->area)) ? $row->area : 0;
-
-                // build the html select list for ordering
-                $query = 'SELECT ordering AS value, name AS text'
+                
+                $query = $db->getQuery(true);
+                
+                if (is_object($query)) {
+                    $query->select('ordering AS value, name AS text')->from('#__wf_profiles')->where(array('published = 1', 'ordering > -10000', 'ordering < 10000'))->order('ordering');
+                } else {
+                    // build the html select list for ordering
+                    $query = 'SELECT ordering AS value, name AS text'
                         . ' FROM #__wf_profiles'
                         . ' WHERE published = 1'
                         . ' AND ordering > -10000'
                         . ' AND ordering < 10000'
                         . ' ORDER BY ordering';
+                }
 
                 $order = JHTML::_('list.genericordering', $query);
                 $lists['ordering'] = JHTML::_('select.genericlist', $order, 'ordering', 'class="inputbox" size="1"', 'value', 'text', intval($row->ordering));
@@ -249,39 +282,24 @@ class WFViewProfiles extends WFViewBase {
                     'com_updates'
                 );
 
-                /*if (WF_JOOMLA15) {
+                $query = $db->getQuery(true);
+
+                if (is_object($query)) {
+                    $query->select('element AS value, name AS text')->from('#__extensions')->where(array('type = ' . $db->Quote('component'), 'client_id = 1', 'enabled = 1'))->order('name');
+                } else {
                     $query = "SELECT `option` AS value, name AS text"
                             . " FROM #__components"
                             . " WHERE parent = 0"
                             . " AND enabled = 1"
                             . " ORDER BY name";
-                } else {
-                    $query = "SELECT element AS value, name AS text"
-                            . " FROM #__extensions"
-                            . " WHERE type = " . $db->Quote('component')
-                            . " AND client_id = 1 AND enabled = 1"
-                            . " ORDER BY name";
                 }
-                $db->setQuery($query);
-                $components = $db->loadObjectList();*/
-                
-                $query = $db->getQuery(true);
-                
-                if (is_object($query)) {
-                    $query->select('`option` AS value, name AS text')->from('#__components')->where(array('parent = 0', 'enabled = 1'))->order('name');
-                } else {
-                    $query = "SELECT element AS value, name AS text"
-                     . " FROM #__extensions"
-                     . " WHERE type = " . $db->Quote('component')
-                     . " AND client_id = 1 AND enabled = 1"
-                     . " ORDER BY name";
-                }
-                
+
                 $db->setQuery($query);
                 $components = $db->loadObjectList();
 
                 $options = array();
-
+                
+                // load component languages
                 for ($i = 0; $i < count($components); $i++) {
                     if (!in_array($components[$i]->value, $exclude)) {
                         $options[] = $components[$i];
@@ -289,11 +307,10 @@ class WFViewProfiles extends WFViewBase {
                         $language->load($components[$i]->value . '.sys', JPATH_ADMINISTRATOR);
                     }
                 }
-
+                // set disabled attribute
                 $disabled = (!$row->components) ? ' disabled="disabled"' : '';
 
-                //$lists['components'] = JHTML::_('select.genericlist', $options, 'components[]', 'class="inputbox levels" size="10" multiple="multiple"' . $disabled, 'value', 'text', explode(',', $row->components));
-
+                // components list
                 $lists['components'] = '<ul id="components" class="checkbox-list">';
 
                 foreach ($options as $option) {
@@ -303,13 +320,14 @@ class WFViewProfiles extends WFViewBase {
 
                 $lists['components'] .= '</ul>';
 
-
+                // components select
                 $options = array();
                 $options[] = JHTML::_('select.option', 'all', WFText::_('WF_PROFILES_COMPONENTS_ALL'));
                 $options[] = JHTML::_('select.option', 'select', WFText::_('WF_PROFILES_COMPONENTS_SELECT'));
 
                 $lists['components-select'] = JHTML::_('select.radiolist', $options, 'components-select', 'class="inputbox"', 'value', 'text', $row->components ? 'select' : 'all', false);
 
+                // area
                 $options = array();
                 $options[] = JHTML::_('select.option', '', '-- ' . WFText::_('WF_PROFILES_AREA_SELECT') . ' --');
                 $options[] = JHTML::_('select.option', 0, WFText::_('WF_PROFILES_AREA_BOTH'));
@@ -318,21 +336,48 @@ class WFViewProfiles extends WFViewBase {
 
                 $lists['area'] = JHTML::_('select.genericlist', $options, 'area', 'class="inputbox levels" size="1"', 'value', 'text', $row->area);
 
-                $query = 'SELECT types' . ' FROM #__wf_profiles'
-                        // Exclude ROOT, USERS, Super Administrator, Public Frontend, Public Backend
-                        . ' WHERE id NOT IN (17,28,29,30)';
-                $db->setQuery($query);
-                if (method_exists($db, 'loadColumn')) {
-                    $types = $db->loadColumn();
-                } else {
-                    $types = $db->loadResultArray();
-                }
+                // user types from profile
+                $query = $db->getQuery(true);
 
-                if (WF_JOOMLA15) {
-                    // get list of Groups for dropdown filter
-                    $query = 'SELECT id AS value, name AS text' . ' FROM #__core_acl_aro_groups'
+                if (is_object($query)) {
+                    $query->select('types')->from('#__wf_profiles')->where('id NOT IN (17,28,29,30)');
+                } else {
+                    $query = 'SELECT types'
+                            . ' FROM #__wf_profiles'
                             // Exclude ROOT, USERS, Super Administrator, Public Frontend, Public Backend
                             . ' WHERE id NOT IN (17,28,29,30)';
+                }
+
+                $db->setQuery($query);
+                $types = $db->loadResultArray();
+
+                if (JPATH_PLATFORM) {
+                    $options = array();
+                    
+                    $query = $db->getQuery(true);
+
+                    $query->select('a.id AS value, a.title AS text')->from('#__usergroups AS a');
+
+                    // Add the level in the tree.
+                    $query->select('COUNT(DISTINCT b.id) AS level');
+                    $query->join('LEFT OUTER', '#__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt');
+                    $query->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
+                    $query->order('a.lft ASC');
+
+                    // Get the options.
+                    $db->setQuery($query);
+                    $options = $db->loadObjectList() or die($db->stdErr());
+
+                    // Pad the option text with spaces using depth level as a multiplier.
+                    for ($i = 0, $n = count($options); $i < $n; $i++) {
+                        $options[$i]->text = str_repeat('<span class="gi">|&mdash;</span>', $options[$i]->level) . $options[$i]->text;
+                    }
+                } else {
+                    // get list of Groups for dropdown filter
+                    $query = 'SELECT id AS value, name AS text' 
+                    . ' FROM #__core_acl_aro_groups'
+                    // Exclude ROOT, USERS, Super Administrator, Public Frontend, Public Backend
+                    . ' WHERE id NOT IN (17,28,29,30)';
                     $db->setQuery($query);
                     $types = $db->loadObjectList();
 
@@ -345,34 +390,6 @@ class WFViewProfiles extends WFViewBase {
                         $options[] = JHTML::_('select.option', $type->value, $i . WFText::_($type->text));
                         $i .= '|&mdash;';
                     }
-                } else {
-                    $options = array();
-
-                    $join = ' LEFT JOIN #__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt';
-                    $where = '';
-
-                    $query = 'SELECT a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level'
-                            . ' FROM #__usergroups AS a'
-                            . ' LEFT JOIN #__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt'
-                            . ' GROUP BY a.id, a.title, a.lft, a.rgt'
-                            . ' ORDER BY a.lft ASC'
-                    ;
-
-                    // Prevent parenting to children of this item.
-
-                    /* if ($id = $this->form->getValue('id')) {
-                      $query->join('LEFT', '`#__usergroups` AS p ON p.id = '.(int) $id);
-                      $query->where('NOT(a.lft >= p.lft AND a.rgt <= p.rgt)');
-                      } */
-
-                    // Get the options.
-                    $db->setQuery($query);
-                    $options = $db->loadObjectList();
-
-                    // Pad the option text with spaces using depth level as a multiplier.
-                    for ($i = 0, $n = count($options); $i < $n; $i++) {
-                        $options[$i]->text = str_repeat('<span class="gi">|&mdash;</span>', $options[$i]->level) . $options[$i]->text;
-                    }
                 }
 
                 $lists['usergroups'] = '<ul id="user-groups" class="checkbox-list">';
@@ -384,14 +401,23 @@ class WFViewProfiles extends WFViewBase {
 
                 $lists['usergroups'] .= '</ul>';
 
-
+                // users
                 $options = array();
 
                 if ($row->id && $row->users) {
-                    $query = 'SELECT id as value, username as text' . ' FROM #__users' . ' WHERE id IN (' . $row->users . ')';
+                    $query = $db->getQuery(true);
+
+                    if (is_object($query)) {
+                        $query->select('id AS value, username AS text')->from('#__users')->where('id IN (' . $row->users . ')');
+                    } else {
+                        $query = 'SELECT id as value, username as text'
+                        . ' FROM #__users'
+                        . ' WHERE id IN (' . $row->users . ')';
+                    }
 
                     $db->setQuery($query);
                     $gusers = $db->loadObjectList();
+
                     if ($gusers) {
                         foreach ($gusers as $guser) {
                             $options[] = JHTML::_('select.option', $guser->value, $guser->text);
@@ -406,14 +432,14 @@ class WFViewProfiles extends WFViewBase {
 
                 $lists['users'] .= '</ul>';
 
-                //JHTML::_('select.genericlist', $options, 'users[]', 'class="inputbox users" size="10" multiple="multiple"', 'value', 'text', '');
-
-
+                // Get layout rows
                 $rows = $model->getRowArray($row->rows);
 
+                // assign params to row
                 $model->getEditorParams($row);
                 $model->getLayoutParams($row);
 
+                // create $params object for "editor"
                 $params = new WFParameter($row->params, '', 'editor');
 
                 // load other theme css
@@ -425,6 +451,7 @@ class WFViewProfiles extends WFViewBase {
                     }
                 }
 
+                // assign references
                 $this->assignRef('lists', $lists);
                 $this->assignRef('profile', $row);
                 $this->assignRef('rows', $rows);
@@ -435,12 +462,14 @@ class WFViewProfiles extends WFViewBase {
 
                 $this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Profiles.init(' . json_encode($options) . ')});');
 
+                // set toolbar
                 if ($row->id) {
                     JToolBarHelper::title(WFText::_('WF_ADMINISTRATION') . ' :: ' . WFText::_('WF_PROFILES_EDIT') . ' - [' . $row->name . ']', 'logo.png');
                 } else {
                     JToolBarHelper::title(WFText::_('WF_ADMINISTRATION') . ' :: ' . WFText::_('WF_PROFILES_NEW'), 'logo.png');
                 }
 
+                // set buttons
                 WFToolbarHelper::save();
                 WFToolbarHelper::apply();
                 WFToolbarHelper::cancel('cancelEdit', 'Close');
