@@ -15,7 +15,7 @@ jimport('joomla.application.component.view');
 
 class WFViewUsers extends JView {
 
-    function display($tpl = null) {
+    public function display($tpl = null) {
         $app = JFactory::getApplication();
         $option = JRequest::getCmd('option');
 

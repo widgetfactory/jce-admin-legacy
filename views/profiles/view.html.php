@@ -15,7 +15,7 @@ jimport('joomla.application.component.view');
 
 class WFViewProfiles extends JView {
 
-    function display($tpl = null) {
+    public function display($tpl = null) {
         $app = JFactory::getApplication();
 
         $db = JFactory::getDBO();
