@@ -249,19 +249,18 @@ class WFViewProfiles extends JView {
                     'com_updates'
                 );
 
-                if (WF_JOOMLA15) {
-                    $query = "SELECT `option` AS value, name AS text" 
-                    . " FROM #__components" 
-                    . " WHERE parent = 0" 
-                    . " AND enabled = 1" 
-                    . " ORDER BY name";
+                $query = $db->getQuery(true);
+                
+                if (is_object($query)) {
+                    $query->select('`option` AS value, name AS text')->from('#__components')->where(array('parent = 0', 'enabled = 1'))->order('name');
                 } else {
-                    $query = "SELECT element AS value, name AS text" 
-                    . " FROM #__extensions" 
-                    . " WHERE type = " . $db->Quote('component') 
-                    . " AND client_id = 1 AND enabled = 1" 
-                    . " ORDER BY name";
+                    $query = "SELECT element AS value, name AS text"
+                     . " FROM #__extensions"
+                     . " WHERE type = " . $db->Quote('component')
+                     . " AND client_id = 1 AND enabled = 1"
+                     . " ORDER BY name";
                 }
+                
                 $db->setQuery($query);
                 $components = $db->loadObjectList();
 
