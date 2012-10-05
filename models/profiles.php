@@ -46,9 +46,10 @@ class WFModelProfiles extends WFModel {
     public function getExtensions($plugin) {
         $model = JModel::getInstance('plugins', 'WFModel');
 
-        $types = array();
         $extensions = array();
-        $supported = '';
+        $supported = array();
+
+        $item = null;
 
         $manifest = WF_EDITOR_PLUGINS . '/' . $plugin . '/' . $plugin . '.xml';
 
@@ -57,30 +58,27 @@ class WFModelProfiles extends WFModel {
 
             // get the plugin xml file    
             if ($xml) {
-                $supported = (string) $xml->extensions;
+                // get extensions supported by the plugin
+                if ((string) $xml->extensions) {
+                    $supported = explode(',', (string) $xml->extensions);
+                }
             }
-        }
-
-        // get extensions supported by the plugin
-        if ($supported) {
-            $types = explode(',', $supported);
         }
 
         foreach ($model->getExtensions() as $extension) {
-            // filter by plugin
-            if (!empty($extension->plugins)) {
-                // extension only supports specific plugins
-                if (in_array($plugin, $extension->plugins)) {
-                    if (!empty($types) && in_array($extension->folder, $types)) {
-                        $extensions[] = $extension;
-                    }
-                }
-                // extension potentially supports all plugins
-            } else {
-                if (!empty($types) && in_array($extension->folder, $types)) {
-                    $extensions[] = $extension;
-                }
+            $type = $extension->folder;
+            
+            // the plugin only supports some extensions, move along
+            if (!in_array($type, $supported)) {
+                continue;
             }
+            
+            // this extension only supports some plugins, move along
+            if (!empty($extension->plugins) && !in_array($plugin, $extension->plugins)) {
+                continue;
+            }
+            
+            $extensions[$type][] = $extension;
         }
 
         return $extensions;
@@ -121,15 +119,15 @@ class WFModelProfiles extends WFModel {
             );
         } else {
             jimport('joomla.access.access');
-            
+
             $query = $db->getQuery(true);
-            
+
             if (is_object($query)) {
                 $query->select('id')->from('#__usergroups');
             } else {
                 $query = 'SELECT id FROM #__usergroups';
             }
-            
+
             $db->setQuery($query);
             $groups = $db->loadResultArray();
 
@@ -272,7 +270,7 @@ class WFModelProfiles extends WFModel {
 
         if ($this->createProfilesTable()) {
             self::buildCountQuery();
-            
+
             $profiles = array('Default' => false, 'Front End' => false);
 
             // No Profiles table data
@@ -306,18 +304,18 @@ class WFModelProfiles extends WFModel {
         // check for name
         if (is_object($query)) {
             $query->select('COUNT(id)')->from('#__wf_profiles');
-            
+
             if ($name) {
                 $query->where('name = ' . $db->Quote($name));
             }
         } else {
             $query = 'SELECT COUNT(id) FROM #__wf_profiles';
-            
+
             if ($name) {
-               $query .= ' WHERE name = ' . $db->Quote($name);
+                $query .= ' WHERE name = ' . $db->Quote($name);
             }
         }
-        
+
         $db->setQuery($query);
     }
 
@@ -367,7 +365,7 @@ class WFModelProfiles extends WFModel {
                             // only if name set and table name not set
                             if ($name && !$row->name) {
                                 self::buildCountQuery($name);
-                                
+
                                 // create name copy if exists
                                 while ($db->loadResult()) {
                                     $name = JText::sprintf('WF_PROFILES_COPY_OF', $name);
@@ -544,7 +542,7 @@ class WFModelProfiles extends WFModel {
      */
     public static function checkTableContents() {
         $db = JFactory::getDBO();
-        
+
         self::buildCountQuery();
 
         return $db->loadResult();

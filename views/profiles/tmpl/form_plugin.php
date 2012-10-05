@@ -13,10 +13,10 @@ defined('_JEXEC') or die('RESTRICTED');
 $count = 0;
 
 foreach ($this->plugins as $plugin) :
-    
+
     if ($plugin->type == 'plugin') :
-        $path       = JPATH_SITE . $plugin->path;
-        $manifest   = $path . '/' . $plugin->name . '.xml';
+        $path = JPATH_SITE . $plugin->path;
+        $manifest = $path . '/' . $plugin->name . '.xml';
 
         if ($plugin->editable && is_file($manifest)) :
 
@@ -36,7 +36,7 @@ foreach ($this->plugins as $plugin) :
                 $params->addElementPath($path . '/elements');
             }
 
-            $class = in_array($plugin->name, explode(',', $this->profile->plugins)) ? '' : 'ui-tabs-hidden';
+            $class = in_array($plugin->name, explode(',', $this->profile->plugins)) ? 'tabs-plugin-parameters' : 'tabs-plugin-parameters ui-tabs-hidden';
             $groups = $params->getGroups();
 
             if (count($groups)) :
@@ -53,38 +53,64 @@ foreach ($this->plugins as $plugin) :
                         echo $params->render('params[' . $plugin->name . ']', $group);
                         echo '</fieldset>';
                     endforeach;
-                    // Get extensions supported by this plugin
+
                     $extensions = $this->model->getExtensions($plugin->name);
 
-                    foreach ($extensions as $extension) :
-                        // get extension xml file
-                        $file = $extension->manifest;
-                        if ($extension->core == 0) {
-                            // Load extension language file
-                            $language = JFactory::getLanguage();
-                            $language->load('com_jce_' . $extension->folder . '_' . trim($extension->extension), JPATH_SITE);
-                        }
+                    // Get extensions supported by this plugin
+                    foreach ($extensions as $type => $items) :
+                        if (!empty($items) && $type) {
+                            $html       = '';
+                            
+                            $options    = array('<option value="">' . WFText::_('WF_OPTION_NOT_SET') . '</option>');
+                            
+                            foreach ($items as $extension) :
+                                // get extension xml file
+                                $file = $extension->manifest;
+                                if ($extension->core == 0) {
+                                    // Load extension language file
+                                    $language = JFactory::getLanguage();
+                                    $language->load('com_jce_' . $extension->folder . '_' . trim($extension->extension), JPATH_SITE);
+                                }
 
-                        if (JFile::exists($file)) :
-                            // get params for plugin
-                            $key = $plugin->name . '.' . $extension->type . '.' . $extension->extension;
-                            $params = new WFParameter($this->profile->params, $file, $key);
+                                if (JFile::exists($file)) :
+                                    // get params for plugin
+                                    $key    = $plugin->name . '.' . $type . '.' . $extension->extension;
+                                    $params = new WFParameter($this->profile->params, $file, $key);
 
-                            // add element paths
-                            $params->addElementPath(JPATH_COMPONENT . '/elements');
-                            $params->addElementPath(JPATH_COMPONENT_SITE . '/elements');
-                            $params->addElementPath(WF_EDITOR . '/elements');
+                                    // add element paths
+                                    $params->addElementPath(JPATH_COMPONENT . '/elements');
+                                    $params->addElementPath(JPATH_COMPONENT_SITE . '/elements');
+                                    $params->addElementPath(WF_EDITOR . '/elements');
 
-                            // render params
-                            if (!$params->hasParent()) :
-                                echo '<fieldset class="adminform panelform"><legend>' . WFText::_($extension->name) . '</legend>';
-                                echo '<p>' . WFText::_($extension->description) . '</p>';
-                                foreach ($params->getGroups() as $group => $num) :
-                                    echo $params->render('params[' . $plugin->name . '][' . $extension->type . '][' . $group . ']', $group);
-                                endforeach;
+                                    // render params
+                                    if (!$params->hasParent()) :
+                                        $key        = array($plugin->name, $type, $extension->extension);
+                                        
+                                        $enabled    = (int) $params->get('enable', 1);
+                                        $checked    = $enabled ? ' checked="checked"' : '';
+                                        $disabled   = $enabled ? '' : ' disabled="disabled"';
+                                        
+                                        // add "default" option
+                                        $options[]  = '<option value="' . $extension->extension . '"' . $disabled . '>' . WFText::_($extension->name) . '</option>';
+                                        
+                                        $html .= '<h3><input type="checkbox" data-name="' . $extension->extension . '" class="params-enable-checkbox" id="params' . implode('', $key) . 'enable" name="params[' . implode('][', $key) . '][enable]" value="' . $enabled . '" '. $checked .'/>' . WFText::_($extension->name) . '</h3>';
+                                        $html .= '<p>' . WFText::_($extension->description) . '</p>';
+                                        foreach ($params->getGroups() as $group => $num) :
+                                            $html .= $params->render('params[' . implode('][', $key) . ']', $group, array('enable'));
+                                        endforeach;
+                                    endif;
+                                endif;
+                            endforeach;
+                            
+                            if ($html) :
+                                echo '<fieldset class="adminform panelform"><legend>' . WFText::_('WF_EXTENSIONS_' . strtoupper($type) . '_TITLE') . '</legend>';
+                                echo '<ul class="adminformlist"><li><label class="hasTip" title="' . WFText::_('WF_EXTENSIONS_' . strtoupper($type) . '_DEFAULT_DESC') . '" for="params[' . $plugin->name . '][' . $type . ']">' . WFText::_('WF_LABEL_DEFAULT') . '</label><select class="params-default-select" name="params[' . $plugin->name . '][' . $type . '][default]">';
+                                echo implode('', $options);
+                                echo '</select></li></ul>';
+                                echo $html;
                                 echo '</fieldset>';
                             endif;
-                        endif;
+                        }
                     endforeach;
                     ?>
                 </div>

@@ -279,6 +279,14 @@
                     $(n).parent().parent().remove();
                 }
             });
+            
+            $('input.params-enable-checkbox').click(function() {
+                var p = this.parentNode.parentNode, s = this.checked, v = $(this).data('name');
+                // set value
+                this.value = s ? 1 : 0;
+                
+                $('select.params-default-select', p).children('option[value="' + v + '"]').prop('disabled', !s);
+            });
         },
         
         validate : function() {
