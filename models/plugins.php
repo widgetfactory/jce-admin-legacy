@@ -75,7 +75,7 @@ class WFModelPlugins extends WFModel {
                     //$plugins[$name]->version = '';
                     //$plugins[$name]->creationdate = '';
                     //$plugins[$name]->description = '';
-                    
+
                     $plugins[$name]->path = str_replace(JPATH_SITE, '', WF_EDITOR_PLUGINS) . '/' . $name;
                 }
             }
@@ -92,7 +92,7 @@ class WFModelPlugins extends WFModel {
         // get external
         foreach ($external as $plugin) {
             $path = JPATH_PLUGINS . '/jce/' . $plugin->name;
-
+            // marked as a plugin by existence of editor_plugin.js file
             if (is_dir($path) && is_file($path . '/editor_plugin.js')) {
                 $folders[] = $path;
             }
@@ -154,6 +154,20 @@ class WFModelPlugins extends WFModel {
 
         // recursively get all extension files
         $files = JFolder::files(WF_EDITOR_EXTENSIONS, '\.xml$', true, true);
+
+        // get external extensions
+        jimport('joomla.plugin.helper');
+        $external = JPluginHelper::getPlugin('jce');
+
+        // get external
+        foreach ($external as $plugin) {
+            $path = JPATH_PLUGINS . '/jce/' . $plugin->name;
+            
+            // not a plugin
+            if (is_dir($path) && !is_file($path . '/editor_plugin.js')) {
+                $folders[] = $path;
+            }
+        }
 
         foreach ($files as $file) {
             $object = new StdClass();
@@ -218,7 +232,7 @@ class WFModelPlugins extends WFModel {
      */
     public static function installPostflight($name, $installer) {
         $db = JFactory::getDBO();
-        
+
         jimport('joomla.filesystem.folder');
 
         $plugin = JTable::getInstance('extension');
@@ -228,13 +242,13 @@ class WFModelPlugins extends WFModel {
         // load the plugin and enable
         if ($id) {
             $plugin->load($id);
-            
+
             // plugin is installed
             if ($plugin->extension_id) {
                 $plugin->publish(1);
-                
+
                 $legacy = JPATH_SITE . '/components/com_jce/editor/tiny_mce/plugins/' . $name;
-                
+
                 // remove old version
                 if (JFolder::exists($legacy)) {
                     @JFolder::delete($legacy);

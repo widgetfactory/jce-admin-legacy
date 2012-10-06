@@ -48,9 +48,10 @@ class WFModelProfiles extends WFModel {
 
         $model = new WFModelplugins();
 
-        $types = array();
         $extensions = array();
-        $supported = '';
+        $supported = array();
+
+        $item = null;
 
         $manifest = WF_EDITOR_PLUGINS . '/' . $plugin . '/' . $plugin . '.xml';
 
@@ -59,30 +60,27 @@ class WFModelProfiles extends WFModel {
 
             // get the plugin xml file    
             if ($xml) {
-                $supported = (string) $xml->extensions;
+                // get extensions supported by the plugin
+                if ((string) $xml->extensions) {
+                    $supported = explode(',', (string) $xml->extensions);
+                }
             }
-        }
-
-        // get extensions supported by the plugin
-        if ($supported) {
-            $types = explode(',', $supported);
         }
 
         foreach ($model->getExtensions() as $extension) {
-            // filter by plugin
-            if (!empty($extension->plugins)) {
-                // extension only supports specific plugins
-                if (in_array($plugin, $extension->plugins)) {
-                    if (!empty($types) && in_array($extension->folder, $types)) {
-                        $extensions[] = $extension;
-                    }
-                }
-                // extension potentially supports all plugins
-            } else {
-                if (!empty($types) && in_array($extension->folder, $types)) {
-                    $extensions[] = $extension;
-                }
+            $type = $extension->folder;
+            
+            // the plugin only supports some extensions, move along
+            if (!in_array($type, $supported)) {
+                continue;
             }
+            
+            // this extension only supports some plugins, move along
+            if (!empty($extension->plugins) && !in_array($plugin, $extension->plugins)) {
+                continue;
+            }
+            
+            $extensions[$type][] = $extension;
         }
 
         return $extensions;

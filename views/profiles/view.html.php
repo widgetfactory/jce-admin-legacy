@@ -15,7 +15,7 @@ wfimport('admin.classes.view');
 
 class WFViewProfiles extends WFViewBase {
 
-    function display($tpl = null) {
+    public function display($tpl = null) {
         $app = JFactory::getApplication();
 
         $db = JFactory::getDBO();

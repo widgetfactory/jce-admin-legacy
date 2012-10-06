@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -8,14 +9,13 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die('RESTRICTED');
 
 wfimport('admin.classes.view');
 
-class WFViewUsers extends WFViewBase
-{
-	public function display($tpl = null) {
+class WFViewUsers extends WFViewBase {
+
+    public function display($tpl = null) {
         $app = JFactory::getApplication();
         $option = JRequest::getCmd('option');
 
@@ -30,11 +30,11 @@ class WFViewUsers extends WFViewBase
 
         $this->document->addScript('components/com_jce/media/js/users.js?version=' . $model->getVersion());
 
-        $filter_order       = $app->getUserStateFromRequest("$option.$view.filter_order", 'filter_order', 'a.name', 'cmd');
-        $filter_order_Dir   = $app->getUserStateFromRequest("$option.$view.filter_order_Dir", 'filter_order_Dir', '', 'word');
-        $filter_type        = $app->getUserStateFromRequest("$option.$view.filter_type", 'filter_type', 0, 'int');
-        $search             = $app->getUserStateFromRequest("$option.$view.search", 'search', '', 'cmd');
-        $search             = JString::strtolower($search);
+        $filter_order = $app->getUserStateFromRequest("$option.$view.filter_order", 'filter_order', 'a.name', 'cmd');
+        $filter_order_Dir = $app->getUserStateFromRequest("$option.$view.filter_order_Dir", 'filter_order_Dir', '', 'word');
+        $filter_type = $app->getUserStateFromRequest("$option.$view.filter_type", 'filter_type', 0, 'int');
+        $search = $app->getUserStateFromRequest("$option.$view.search", 'search', '', 'cmd');
+        $search = JString::strtolower($search);
 
         $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'), 'int');
         $limitstart = $app->getUserStateFromRequest("$option.$view.limitstart", 'limitstart', 0, 'int');
@@ -46,7 +46,7 @@ class WFViewUsers extends WFViewBase
             $where[] = 'a.username LIKE ' . $searchEscaped . ' OR a.email LIKE ' . $searchEscaped . ' OR a.name LIKE ' . $searchEscaped;
         }
 
-        if (JPATH_PLATFORM) {            
+        if (JPATH_PLATFORM) {
             if ($filter_type) {
                 $where[] = 'map.group_id = LOWER(' . $db->Quote($filter_type) . ') ';
             }
@@ -100,7 +100,6 @@ class WFViewUsers extends WFViewBase
 
             $query->group('a.id, a.name, a.username, g.title');
             $query->order(trim(implode(',', $orderby), ','));
-            
         } else {
             $query = 'SELECT COUNT(a.id)'
                     . ' FROM #__users AS a'
@@ -157,7 +156,7 @@ class WFViewUsers extends WFViewBase
             $items = $db->loadObjectList();
 
             $i = '-';
-            
+
             $options[] = JHTML::_('select.option', '0', WFText::_('Guest'));
 
             foreach ($items as $item) {
@@ -182,4 +181,5 @@ class WFViewUsers extends WFViewBase
 
         parent::display($tpl);
     }
+
 }

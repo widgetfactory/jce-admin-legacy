@@ -168,12 +168,12 @@ class WFParameter {
 
      * @since   2.2.5
      */
-    public function addElementPath($path) {
+    public function addElementPath($paths) {
         // Just force path to array.
-        settype($path, 'array');
+        settype($paths, 'array');
 
         // Loop through the path directories.
-        foreach ($path as $dir) {
+        foreach ($paths as $dir) {
             // No surrounding spaces allowed!
             $dir = trim($dir);
 
@@ -406,7 +406,7 @@ class WFParameter {
      * @return	array	Array of all parameters, each as array Any array of the label, the form element and the tooltip
      * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
      */
-    public function getParams($name = 'params', $group = '_default') {
+    public function getParams($name = 'params', $group = '_default', $exclude = array()) {
         if (!isset($this->xml[$group])) {
             return false;
         }
@@ -415,6 +415,11 @@ class WFParameter {
         $parent = (string) $this->xml[$group]->attributes()->parent;
 
         foreach ($this->xml[$group]->children() as $param) {
+
+            if (!empty($exclude) && in_array((string) $param->attributes()->name, $exclude)) {
+                continue;
+            }
+
             $results[] = $this->getParam($param, $name, $group, $parent);
 
             $parameters = (string) $param->attributes()->parameters;
@@ -483,42 +488,45 @@ class WFParameter {
         return $matches[1] . '="' . preg_replace('#([^a-z0-9_-]+)#i', '', $matches[2]) . '"';
     }
 
-    public function render($name = 'params', $group = '_default') {
-        $params = $this->getParams($name, $group);
-        $html = '<ul class="adminformlist">';
+    public function render($name = 'params', $group = '_default', $exclude = array()) {
+        $params = $this->getParams($name, $group, $exclude);
+        $html   = '';
+        
+        if (!empty($params)) {
+            $html .= '<ul class="adminformlist">';
 
-        foreach ($params as $item) {
-            //if (is_a($item, 'WFParameter')) {
-            if ($item instanceof WFParameter) {
+            foreach ($params as $item) {
+                //if (is_a($item, 'WFParameter')) {
+                if ($item instanceof WFParameter) {
+                    foreach ($item->getGroups() as $group => $num) {
+                        $label = $group;
+                        $class = '';
+                        $parent = '';
 
-                foreach ($item->getGroups() as $group => $num) {
-                    $label = $group;
-                    $class = '';
-                    $parent = '';
+                        $xml = $item->xml[$group];
 
-                    $xml = $item->xml[$group];
+                        if ((string) $xml->attributes()->parent) {
+                            $parent = '[' . (string) $xml->attributes()->parent . '][' . $group . ']';
+                            $class = ' class="' . (string) $xml->attributes()->parent . '"';
+                            $label = (string) $xml->attributes()->parent . '_' . $group;
+                        }
 
-                    if ((string) $xml->attributes()->parent) {
-                        $parent = '[' . (string) $xml->attributes()->parent . '][' . $group . ']';
-                        $class = ' class="' . (string) $xml->attributes()->parent . '"';
-                        $label = (string) $xml->attributes()->parent . '_' . $group;
+                        $html .= '<div data-type="' . $group . '"' . $class . '>';
+                        $html .= '<h4>' . WFText::_('WF_' . strtoupper($label) . '_TITLE') . '</h4>';
+                        //$html .= $item->render($name . '[' . $parent . '][' . $group . ']', $group);
+                        $html .= $item->render($name . $parent, $group);
+                        $html .= '</div>';
                     }
+                } else {
+                    $label = preg_replace_callback('#(for|id)="([^"]+)"#', array($this, '_cleanAttribute'), $item[0]);
+                    $element = preg_replace_callback('#(id)="([^"]+)"#', array($this, '_cleanAttribute'), $item[1]);
 
-                    $html .= '<div data-type="' . $group . '"' . $class . '>';
-                    $html .= '<h4>' . WFText::_('WF_' . strtoupper($label) . '_TITLE') . '</h4>';
-                    //$html .= $item->render($name . '[' . $parent . '][' . $group . ']', $group);
-                    $html .= $item->render($name . $parent, $group);
-                    $html .= '</div>';
+                    $html .= '<li>' . $label . $element;
                 }
-            } else {
-                $label = preg_replace_callback('#(for|id)="([^"]+)"#', array($this, '_cleanAttribute'), $item[0]);
-                $element = preg_replace_callback('#(id)="([^"]+)"#', array($this, '_cleanAttribute'), $item[1]);
-
-                $html .= '<li>' . $label . $element;
             }
-        }
 
-        $html .= '</li></ul>';
+            $html .= '</li></ul>';
+        }
 
         return $html;
     }

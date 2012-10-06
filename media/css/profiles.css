@@ -262,3 +262,33 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     margin: 5px 0 0;
     vertical-align: middle;
 }
+#jce div.tabs-plugin-parameters {
+    
+}
+
+#jce div.tabs-plugin-parameters h3 {
+    margin : 0 7px;
+    line-height: 30px;
+    background-color: #F0F0EE;
+}
+
+#jce div.tabs-plugin-parameters h3 + p, #jce div.tabs-plugin-parameters h3 + p + ul {
+    margin-left : 20px;
+}
+
+#jce div.tabs-plugin-parameters p {
+    font-size : 1em;
+    margin : 5px 7px;
+    padding: 10px 5px;
+}
+
+#jce div.tabs-plugin-parameters input[type="checkbox"] {
+    margin : 5px 7px;
+    vertical-align: inherit;
+    background-color: #fff;
+    padding: 2px;
+}
+
+#jce div.tabs-plugin-parameters a[href^="http"] {
+    cursor: pointer;
+}
