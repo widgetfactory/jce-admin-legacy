@@ -168,12 +168,12 @@ class WFParameter {
 
      * @since   2.2.5
      */
-    public function addElementPath($path) {
+    public function addElementPath($paths) {
         // Just force path to array.
-        settype($path, 'array');
+        settype($paths, 'array');
 
         // Loop through the path directories.
-        foreach ($path as $dir) {
+        foreach ($paths as $dir) {
             // No surrounding spaces allowed!
             $dir = trim($dir);
 
