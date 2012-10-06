@@ -13,7 +13,7 @@ defined('_JEXEC') or die('RESTRICTED');
 ?>
 <div id="editor_params">
 <?php
-	foreach ($this->profile->editor_groups as $group => $num) : ?>
+	foreach ($this->profile->editor_groups as $group) : ?>
 		<div id="tabs-editor-<?php echo $group?>">
 			<h2><?php echo WFText::_('WF_PROFILES_EDITOR_' . strtoupper($group)); ?></h2>
 			<?php echo $this->profile->editor_params->render('params[editor]', $group);?>

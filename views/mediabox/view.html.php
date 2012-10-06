@@ -29,7 +29,7 @@ class WFViewMediabox extends JView {
             $groups = array();
             $array  = array();
 
-            foreach ($params->getGroups() as $group => $num) {
+            foreach ($params->getGroups() as $group) {
                 $groups[] = $params->getParams('params', $group);
             }
 

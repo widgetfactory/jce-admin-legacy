@@ -43,7 +43,7 @@ if (strpos($theme, '.') === false) {
     <legend><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT'); ?></legend>
     <!-- Layout Params -->
     <div id="layout_params">
-        <?php foreach ($this->profile->layout_groups as $group => $num) : ?>
+        <?php foreach ($this->profile->layout_groups as $group) : ?>
             <div id="tabs-editor-<?php echo $group ?>">
                 <h2><?php echo WFText::_('WF_PROFILES_EDITOR_' . strtoupper($group)); ?></h2>
             <?php echo $this->profile->layout_params->render('params[editor]', $group); ?>

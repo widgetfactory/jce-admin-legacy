@@ -14,7 +14,7 @@ defined('_JEXEC') or die('RESTRICTED');
 <form action="index.php" method="post" name="adminForm">
     <div id="jce">
             <div>
-                <?php foreach($this->params->getGroups() as $group => $num): ?>
+                <?php foreach($this->params->getGroups() as $group): ?>
                 	<fieldset class="adminform panelform">
 						<legend><?php echo WFText::_('WF_CONFIG_'.strtoupper($group)); ?></legend>
 						<?php 
