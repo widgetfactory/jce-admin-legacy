@@ -282,7 +282,7 @@
             
             $('input:checkbox.plugins-enable-checkbox').click(function() {
                 var p = this.parentNode.parentNode, s = this.checked, name = $(this).data('name');
-                // set value                
+                // set value for proxy onput and trigger change                
                 $(this).prev().val(s ? 1 : 0).change();
                 // disable select
                 $('select.plugins-default-select', p).children('option[value="' + name + '"]').prop('disabled', !s);
