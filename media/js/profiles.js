@@ -299,12 +299,12 @@
             });
         	
             if (required.length) {
-                var msg = '<p>' + $jce.options.labels.required + '</p>';
+                var msg = '<p>' + $.jce.options.labels.required + '</p>';
                 msg += '<ul>';
                 msg += required.join('');
                 msg += '</ul>';
         		
-                $jce.createDialog({
+                $.jce.createDialog({
                     type  : 'alert',
                     text  : msg,
                     modal : true
