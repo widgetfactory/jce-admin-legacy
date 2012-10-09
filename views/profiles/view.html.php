@@ -125,7 +125,7 @@ class WFViewProfiles extends JView {
 
                 WFToolbarHelper::editListX();
                 WFToolbarHelper::addNewX();
-                WFToolbarHelper::custom('copy', 'copy.png', 'copy_f2.png', WFText::_('WF_PROFILES_COPY'), true);
+                WFToolbarHelper::custom('copy', 'copy.png', 'copy_f2.png', 'WF_PROFILES_COPY', true);
                 WFToolbarHelper::export();
 
                 if (count($rows) > 1) {

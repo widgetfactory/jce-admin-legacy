@@ -100,8 +100,8 @@ class WFElement extends JObject
 		$output = '<label id="' . $control_name . $name . '-lbl" for="' . $control_name . $name . '"';
 		if ($description)
 		{
-                    $label          = JText::_($label);
-                    $description    = JText::_($description);
+                    $label          = WFText::_($label);
+                    $description    = WFText::_($description);
                     
                     if (strpos($description, '::') === false) {
                         $title = $label . '::' . $description;
@@ -115,7 +115,7 @@ class WFElement extends JObject
 		{
 			$output .= '>';
 		}
-		$output .= JText::_($label) . '</label>';
+		$output .= $label . '</label>';
 
 		return $output;
 	}
