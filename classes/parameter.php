@@ -322,7 +322,7 @@ class WFParameter {
         $results = array();
 
         if ($name) {
-            $groups = array($name => $this->getNumParams($name));
+            $groups = (array) $name;
         } else {
             $groups = $this->getGroups();
         }
