@@ -1130,6 +1130,10 @@ class WFModelEditor extends JModel {
                         if (preg_match('#^(?:[0-9A-F]{3}){1,2}$#', $k) === false) {
                             $k = strtolower($k);
                         }
+                        
+                        if (strpos($k, 'HEX_') !== false) {
+                            $k = strtoupper(str_replace('HEX_', '', $k));
+                        }
 
                         $output .= '"' . $k . '":' . $v . ',';
 
