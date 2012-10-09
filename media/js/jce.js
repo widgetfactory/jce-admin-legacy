@@ -31,7 +31,7 @@
             $('a.dialog').click( function(e) {                
                 self.createDialog({
                     src 	: $(this).attr('href'),
-                    options : $(this).data('options'),
+                    options     : $(this).data('options'),
                     modal	: $(this).hasClass('modal'),
                     type	: /(users|help|preferences|updates|browser|legend)/.exec($(this).attr('class'))[0],
                     title	: $(this).attr('title')
@@ -144,8 +144,8 @@
 
             // add optional settings from link
             if ($.type(o.options) == 'string') {
-                data = $.parseJSON(o.options.replace(/'/g, '"'));
-            } else {
+                data = $.parseJSON(o.options.replace("'", '"', 'g'));                
+            } else {                
                 data = o.options;
             }
             
