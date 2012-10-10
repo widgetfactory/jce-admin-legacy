@@ -32,7 +32,7 @@ class WFViewUsers extends JView {
 
         $filter_order       = $app->getUserStateFromRequest("$option.$view.filter_order", 'filter_order', 'a.name', 'cmd');
         $filter_order_Dir   = $app->getUserStateFromRequest("$option.$view.filter_order_Dir", 'filter_order_Dir', '', 'word');
-        $filter_type        = $app->getUserStateFromRequest("$option.$view.filter_type", 'filter_type', 0, 'int');
+        $filter_type        = $app->getUserStateFromRequest("$option.$view.filter_type", 'filter_type', '', 'int');
         $search             = $app->getUserStateFromRequest("$option.$view.search", 'search', '', 'cmd');
         $search             = JString::strtolower($search);
 
@@ -46,7 +46,7 @@ class WFViewUsers extends JView {
             $where[] = 'a.username LIKE ' . $searchEscaped . ' OR a.email LIKE ' . $searchEscaped . ' OR a.name LIKE ' . $searchEscaped;
         }
 
-        if (JPATH_PLATFORM) {            
+        if (defined('JPATH_PLATFORM')) {            
             if ($filter_type) {
                 $where[] = 'map.group_id = LOWER(' . $db->Quote($filter_type) . ') ';
             }
@@ -73,7 +73,7 @@ class WFViewUsers extends JView {
 
         jimport('joomla.html.pagination');
 
-        if (JPATH_PLATFORM) {
+        if (defined('JPATH_PLATFORM')) {
             $query = $db->getQuery(true);
 
             $query->select('COUNT(a.id)')->from('#__users AS a')->join('LEFT', '#__user_usergroup_map AS map ON map.user_id = a.id');
@@ -117,7 +117,7 @@ class WFViewUsers extends JView {
                     . ' INNER JOIN #__core_acl_aro_groups AS g ON g.id = gm.group_id'
                     . ( count($where) ? ' WHERE (' . implode(') AND (', $where) . ')' : '' )
                     . ' GROUP BY a.id, a.name, a.username, g.name'
-                    . ' ORDER BY ' . implode(',', $orderby)
+                    . ' ORDER BY ' . trim(implode(',', $orderby), ',')
             ;
         }
 
@@ -128,7 +128,7 @@ class WFViewUsers extends JView {
             JHTML::_('select.option', '', '- ' . WFText::_('WF_USERS_GROUP_SELECT') . ' -')
         );
 
-        if (JPATH_PLATFORM) {
+        if (defined('JPATH_PLATFORM')) {
             $query = $db->getQuery(true);
 
             $query->select('a.id AS value, a.title AS text')->from('#__usergroups AS a');
@@ -158,7 +158,7 @@ class WFViewUsers extends JView {
 
             $i = '-';
             
-            $options[] = JHTML::_('select.option', '0', WFText::_('Guest'));
+            //$options[] = JHTML::_('select.option', '0', WFText::_('Guest'));
 
             foreach ($items as $item) {
                 $options[] = JHTML::_('select.option', $item->value, $i . WFText::_($item->text));
@@ -166,7 +166,7 @@ class WFViewUsers extends JView {
             }
         }
 
-        $lists['group'] = JHTML::_('select.genericlist', $options, 'filter_type', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "$filter_type");
+        $lists['group'] = JHTML::_('select.genericlist', $options, 'filter_type', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', (int) $filter_type);
 
         // table ordering
         $lists['order_Dir'] = $filter_order_Dir;
