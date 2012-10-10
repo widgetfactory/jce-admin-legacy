@@ -247,11 +247,11 @@ class WFInstallerPlugin extends JObject {
             $query = $db->getQuery(true);
 
             if (is_object($query)) {
-                $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote('Default'));
+                $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote('Default') . ' OR id = 1');
             } else {
                 $query = 'SELECT id'
                 . ' FROM #__wf_profiles'
-                . ' WHERE name = ' . $db->Quote('Default');
+                . ' WHERE name = ' . $db->Quote('Default') . ' OR id = 1';
             }
             $db->setQuery($query);
             $id = $db->loadResult();
