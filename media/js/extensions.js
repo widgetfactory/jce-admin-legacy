@@ -20,22 +20,22 @@
         _init : function() {
             var self = this, el = this.element, v = $(el).val() || '', name = $(el).attr('name').replace(/\[\]/, '');
 
-			// store defaults
-			this.defaultMap = {};
-			var dv = this.options.defaults || $(el).data('default');
+            // store defaults
+            this.defaultMap = {};
+            var dv = this.options.defaults || $(el).data('default');
 			
-			if (dv) {
-				$.each(dv.split(';'), function(i, s) {
-					var parts = s.split('=');
+            if (dv) {
+                $.each(dv.split(';'), function(i, s) {
+                    var parts = s.split('=');
 					
-					self.defaultMap[parts[0]] = parts[1].split(',');
-				});
-			}
+                    self.defaultMap[parts[0]] = parts[1].split(',');
+                });
+            }
 
             // process value
             v = $.type(v) == 'array' ? v.join(';') : v;
 
-            $input = $('<input type="hidden" name="' + name + '" id="' + $(el).attr('id') + '" />').addClass( function() {
+            var $input = $('<input type="hidden" name="' + name + '" id="' + $(el).attr('id') + '" />').addClass( function() {
                 return $(el).hasClass('create') ? 'create' : '';
             }).insertBefore(el).hide().val(v);
 
@@ -102,14 +102,14 @@
             this._createSortable($('ul.extension_list', $container));
             
             $container.sortable({
-            	tolerance	: 'intersect',
+                tolerance	: 'intersect',
                 placeholder	: 'sortable-highlight',
                 handle		: 'span.extension_group_handle',
                 update: function(event, ui) {
                     self._setValues();
                 },
                 start : function(event, ui) {
-                	$(ui.placeholder).width($(ui.item).width()).height($(ui.item).height());
+                    $(ui.placeholder).width($(ui.item).width()).height($(ui.item).height());
                 }
             });
 
@@ -147,24 +147,24 @@
             values = values || ['custom', 'custom'];
 
             var $tmpl = $('<div class="extension_group_container" role="group">' +
-            '	<div class="extension_group_titlebar">'+
-            '		<span class="extension_group_handle ui-icon ui-icon-arrow-4-diag"></span>' +
-            '		<span class="extension_group_title"></span>' +
-            '	</div>' +
-            '	<div class="extension_list_add"><span role="button">' + this.options.labels.type_new + '</span></div>' +
-            '	<div class="extension_list_scroll_top" role="button"><span class="extension_list_scroll_top_icon ui-icon ui-icon-triangle-1-n"></span></div>'+
-            '	<div class="extension_list_container">'+
-            '		<ul class="extension_list"></ul>'+
-            '	</div>'+
-            '	<div class="extension_list_scroll_bottom" role="button"><span class="extension_list_scroll_bottom_icon ui-icon ui-icon-triangle-1-s"></span></div>'+
-            '</div>');
+                '	<div class="extension_group_titlebar">'+
+                '		<span class="extension_group_handle ui-icon ui-icon-arrow-4-diag"></span>' +
+                '		<span class="extension_group_title"></span>' +
+                '	</div>' +
+                '	<div class="extension_list_add"><span role="button">' + this.options.labels.type_new + '</span></div>' +
+                '	<div class="extension_list_scroll_top" role="button"><span class="extension_list_scroll_top_icon ui-icon ui-icon-triangle-1-n"></span></div>'+
+                '	<div class="extension_list_container">'+
+                '		<ul class="extension_list"></ul>'+
+                '	</div>'+
+                '	<div class="extension_list_scroll_bottom" role="button"><span class="extension_list_scroll_bottom_icon ui-icon ui-icon-triangle-1-s"></span></div>'+
+                '</div>');
 
             // get group name
             var name = values[0], list = values[1];
 
             // Create input element if custom
             if (name == 'custom') {
-                $('<input type="text" size="8" value="" pattern="[a-zA-Z]" />').change( function() {
+                $('<input type="text" size="8" value="" pattern="[a-zA-Z0-9_-]+" />').change( function() {
                     if (this.value == '')
                         return;
 
@@ -173,7 +173,7 @@
                 }).appendTo($('span.extension_group_title', $tmpl)).focus().pattern();
 
                 // replace checkbox with remove button
-                $remove = $('<span class="extension_group_remove" role="button"></span>').click( function() {
+                var $remove = $('<span class="extension_group_remove" role="button"></span>').click( function() {
                     $($tmpl).fadeOut('fast', function() {
                         $tmpl.remove();
                         // Trigger serialization
@@ -183,46 +183,46 @@
 
                 $('div.extension_group_titlebar', $tmpl).append($remove);
 
-                // Set title html
+            // Set title html
             } else {
                 // remove non-word characters
                 var key = name.replace(/[\W]/g, '');
-                
+
                 if (this.defaultMap[key]) {
-                	// Add checkbox
-	                var $check = $('<span class="checkbox" role="checkbox"></span>').addClass( function() {
-	                    return name.charAt(0) == '-' ? '' : 'checked';
-	                }).attr('aria-checked', !(name.charAt(0) == '-'));
+                    // Add checkbox
+                    var $check = $('<span class="checkbox" role="checkbox"></span>').addClass( function() {
+                        return name.charAt(0) == '-' ? '' : 'checked';
+                    }).attr('aria-checked', !(name.charAt(0) == '-'));
 	
-	                $check.click( function() {
-	                	var s = name;
+                    $check.click( function() {
+                        var s = name;
 	                	
-	                	if (s.charAt(0) === '-') {
-	                		s = s.substr(1);
-	                	}
+                        if (s.charAt(0) === '-') {
+                            s = s.substr(1);
+                        }
 	                	
-	                    if ($(this).is('.checked')) {
-	                        $(this).removeClass('checked').attr('aria-checked', false).prev('span.extension_group_title').attr('title', '-' + s);
-	                    } else {
-	                        $(this).addClass('checked').attr('aria-checked', true).prev('span.extension_group_title').attr('title', s);
-	                    }
-	                    // Trigger serialization
-	                    self._setValues();
-	                });
+                        if ($(this).is('.checked')) {
+                            $(this).removeClass('checked').attr('aria-checked', false).prev('span.extension_group_title').attr('title', '-' + s);
+                        } else {
+                            $(this).addClass('checked').attr('aria-checked', true).prev('span.extension_group_title').attr('title', s);
+                        }
+                        // Trigger serialization
+                        self._setValues();
+                    });
 	                
-	                $('div.extension_group_titlebar', $tmpl).append($check);
+                    $('div.extension_group_titlebar', $tmpl).append($check);
                 } else {
-                	// replace checkbox with remove button
-	                $remove = $('<span class="extension_group_remove" role="button"></span>').click( function() {
-	                    $($tmpl).fadeOut('fast', function() {
-	                        $tmpl.remove();
-	                        // Trigger serialization
-	                        self._setValues();
-	                    });
+                    // replace checkbox with remove button
+                    var $remove = $('<span class="extension_group_remove" role="button"></span>').click( function() {
+                        $($tmpl).fadeOut('fast', function() {
+                            $tmpl.remove();
+                            // Trigger serialization
+                            self._setValues();
+                        });
 	
-	                });
+                    });
 	                
-	                $('div.extension_group_titlebar', $tmpl).append($remove);
+                    $('div.extension_group_titlebar', $tmpl).append($remove);
                 }
 
                 // Set html as title case eg: Image (from image)
@@ -235,12 +235,12 @@
 
             // add button action
             $('div.extension_list_add span', $tmpl).click( function() {            	
-            	self._createItem('custom').hide().prependTo($('ul.extension_list', $tmpl)).fadeIn('fast', function() {
-                	var parent = this.parentNode;
+                self._createItem('custom').hide().prependTo($('ul.extension_list', $tmpl)).fadeIn('fast', function() {
+                    var parent = this.parentNode;
                 	
-                	// Show scroll buttons
+                    // Show scroll buttons
                     if (parent.firstChild.offsetHeight * parent.childNodes.length > parent.parentNode.offsetHeight) {
-                    	$(parent).parent('div.extension_list_container').next('div.extension_list_scroll_bottom').css('visibility', 'visible');
+                        $(parent).parent('div.extension_list_container').next('div.extension_list_scroll_bottom').css('visibility', 'visible');
                     }
                     
                     $(this).focus();
@@ -259,7 +259,7 @@
 
             // Split value by comma to get individual file extensions and build list elements
             $.each(list.split(','), function() {
-                $('ul.extension_list', $tmpl).append(self._createItem(this));
+                $('ul.extension_list', $tmpl).append(self._createItem(this, key));
             });
 
             // Return container
@@ -271,17 +271,17 @@
          * @param {String} value
          * @return {Object} Item Object
          */
-        _createItem : function(value) {
-            var self = this, v = value.replace(/[^a-z0-9]/i, ''), $item;
+        _createItem : function(value, group) {
+            var self = this, v = value.replace(/[^a-z0-9]/gi, ''), $item;
 
             // Create input element if custom
             if (value == 'custom') {
                 // custom item
                 $item = $('<li class="file custom">'+
-                '	<span class="extension_title"><input type="text" value="" size="6" pattern="[a-zA-Z0-9]+" /></span>'+
-                //'	<span class="checkbox view" role="checkbox" aria-checked="false"></span>'+
-                '	<span class="extension_list_remove" role="button"></span>'+
-                '</li>');
+                    '	<span class="extension_title"><input type="text" value="" size="6" pattern="[a-zA-Z0-9_-]+" /></span>'+
+                    //'	<span class="checkbox view" role="checkbox" aria-checked="false"></span>'+
+                    '	<span class="extension_list_remove" role="button"></span>'+
+                    '</li>');
 
                 $('input', $item).change( function() {
                     if (this.value == '') {
@@ -308,55 +308,36 @@
                             self._setValues();
                         }
                     }
-                    // add pattern validation
+                // add pattern validation
                 }).focus().pattern();
 
-                $('span.extension_list_remove', $item).click( function() {
-                    $item.fadeOut('fast', function() {
-                        // Trigger serialization
-                        if ($('input', $item).val() != '') {
-                            self._setValues();
-                        }
-                        
-                        var parent = this.parentNode;                      
-
-                    	// Show scroll buttons
-                        if (parent.firstChild.offsetHeight * parent.childNodes.length < parent.parentNode.offsetHeight) {
-                        	$(parent).parent('div.extension_list_container').next('div.extension_list_scroll_bottom').css('visibility', 'hidden');
-                        }
-                        
-                        if ($(parent).children().length == 0) {
-                            $(parent).parents('div.extension_group_container').fadeOut('fast', function() {
-                                $(this).remove();
-                            });
-                        }
-                        
-                        $(this).remove();
-                    });
-
-                });
-
-                // Set title html
+            // Set title html
             } else {
                 $item = $('<li class="file ' + v + '">' +
-                '	<span class="extension_title" title="' + value + '">' + value.replace(/[\W]+/, '') + '</span>'+
-                //'	<span class="checkbox view" role="checkbox" aria-checked="false"></span>'+
-                '	<span class="checkbox" role="checkbox" aria=checked="false"></span>'+
-                '</li>');
-
-                $('span.checkbox', $item).addClass( function() {
-                    return value.charAt(0) == '-' ? '' : 'checked';
-                }).attr('aria-checked', !(value.charAt(0) == '-')).click( function() {
-                    if ($(this).is('.checked')) {
-                        $(this).removeClass('checked').attr('aria-checked', false).prev('span.extension_title').attr('title', '-' + v);
-                    } else {
-                        $(this).addClass('checked').attr('aria-checked', true).prev('span.extension_title').attr('title', v);
-                    }
-                    // Trigger serialization
-                    self._setValues();
-                });
+                    '	<span class="extension_title" title="' + value + '">' + value.replace(/[\W]+/, '') + '</span>'+
+                    //'	<span class="checkbox view" role="checkbox" aria-checked="false"></span>'+
+                    '	<span class="checkbox" role="checkbox" aria=checked="false"></span>'+
+                    '</li>');
                 
-                /*$('span.checkbox.view', $item).addClass( function() {
+                var map = this.defaultMap[group];
+
+                if ($.inArray(v, map) == -1) {
+                    $('span.checkbox', $item).removeClass('checkbox').addClass('extension_list_remove').attr('role', 'button')
+                } else {
+                    $('span.checkbox', $item).addClass( function() {
+                        return value.charAt(0) == '-' ? '' : 'checked';
+                    }).attr('aria-checked', !(value.charAt(0) == '-')).click( function() {
+                        if ($(this).is('.checked')) {
+                            $(this).removeClass('checked').attr('aria-checked', false).prev('span.extension_title').attr('title', '-' + v);
+                        } else {
+                            $(this).addClass('checked').attr('aria-checked', true).prev('span.extension_title').attr('title', v);
+                        }
+                        // Trigger serialization
+                        self._setValues();
+                    });
+                }
+                
+            /*$('span.checkbox.view', $item).addClass( function() {
                     return value.charAt(0) == '!' ? 'checked' : '';
                 }).attr('aria-checked', (value.charAt(0) == '!')).click( function() {
                     var $title = $(this).prev('span.extension_title'), title = $title.attr('title').replace('^!', '');
@@ -374,6 +355,33 @@
                 });*/
 
             }
+            
+            $('span.extension_list_remove', $item).click( function() {
+                $item.fadeOut('fast', function() {   
+                    var parent = this.parentNode;                      
+
+                    // Show scroll buttons
+                    if (parent.firstChild.offsetHeight * parent.childNodes.length < parent.parentNode.offsetHeight) {
+                        $(parent).parent('div.extension_list_container').next('div.extension_list_scroll_bottom').css('visibility', 'hidden');
+                    }
+                        
+                    if ($(parent).children().length == 0) {
+                        $(parent).parents('div.extension_group_container').fadeOut('fast', function() {
+                            $(this).remove();
+                        });
+                    }
+                        
+                    $(this).remove();
+                    
+                    // Trigger serialization
+                    if ($('input', $item).val() == '') {
+                        return;
+                    }
+                    
+                    self._setValues();
+                });
+
+            });
 
             return $item;
         },
