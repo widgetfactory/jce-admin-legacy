@@ -764,12 +764,12 @@ abstract class WFInstall {
                     $profile->load($item->id);
 
                     $profile->rows = str_replace('paste', 'clipboard', $profile->rows);
-                    $profile->plugins = str_replace('paste', 'clipboard', $profile->rows);
+                    $profile->plugins = str_replace('paste', 'clipboard', $profile->plugins);
 
                     $data = json_decode($profile->params, true);
 
                     // swap paste data to 'clipboard'
-                    if (array_key_exists('paste', $data)) {
+                    if ($data && array_key_exists('paste', $data)) {
                         $params = array();
 
                         // add 'paste_' prefix
