@@ -176,10 +176,10 @@ abstract class WFInstall {
             $query = 'ALTER TABLE #__wf_profiles CHANGE `types` `types` TEXT';
             $db->setQuery($query);
             $db->query();
-            
+
             // Add device field
             $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCAHR(255) AFTER `area`';
-            
+
             if (strtolower($db->name) == 'sqlsrv' || strtolower($db->name) == 'sqlazure') {
                 $query = 'ALTER TABLE #__wf_profiles ADD `device` NVARCHAR(250)';
             }
@@ -294,7 +294,19 @@ abstract class WFInstall {
             $db->setQuery($query);
             $plugins = $db->loadAssocList('id');
 
-            $map = array('advlink' => 'link', 'advcode' => 'source', 'paste' => 'clipboard', 'tablecontrols' => 'table', 'styleprops' => 'style');
+            $map = array(
+                'advlink'           => 'link', 
+                'advcode'           => 'source',
+                'tablecontrols'     => 'table', 
+                'cut,copy,paste'    => 'clipboard',
+                'paste'             => 'clipboard',
+                'search,replace'    => 'searchreplace',
+                'cite,abbr,acronym,del,ins,attribs' => 'xhtmlxtras',
+                'styleprops'        => 'style',
+                'readmore,pagebreak'=> 'article',
+                'ltr,rtl'           => 'directionality',
+                'insertlayer,moveforward,movebackward,absolute' => 'layer'
+            );
 
             if (self::createProfilesTable()) {
                 foreach ($groups as $group) {
@@ -321,10 +333,7 @@ abstract class WFInstall {
                             }
                             $icons[] = $icon;
                         }
-
-                        $rows[] = str_replace(array('clipboard', 'table'), array('cut,copy,paste', 'table_insert,delete_table,|,row_props,cell_props,|,row_before,row_after,delete_row,|,col_before,col_after,delete_col,|,split_cells,merge_cells'), implode(',', $icons));
-
-                        //$rows[] = str_replace(array('cite,abbr,acronym,del,ins,attribs', 'search,replace', 'ltr,rtl', 'readmore,pagebreak', 'cut,copy,paste'), array('xhtmlxtras', 'searchreplace', 'directionality', 'article', 'paste'), implode(',', $icons));
+                        $rows[] = implode(',', $icons); 
                     }
                     // re-assign rows
                     $row->rows = implode(';', $rows);
@@ -1106,11 +1115,11 @@ abstract class WFInstall {
 
         // use built in function
         if (method_exists($db, 'getTableColumns')) {
-            return in_array($column, (array) $db->getTableColumns($table));
+            $fields = $db->getTableColumns($table);
+        } else {
+            $db->setQuery('DESCRIBE ' . $table);
+            $fields = $db->loadResultArray();
         }
-
-        $db->setQuery('DESCRIBE ' . $table);
-        $fields = $db->loadResultArray();
 
         return in_array($column, (array) $fields);
     }
