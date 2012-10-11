@@ -91,14 +91,14 @@ class WFViewProfiles extends JView {
                         $query->where($where);
                     }
                     
-                    $query->order(trim(implode(',', $order), ','));
+                    $query->order(trim(implode(' ', $order)));
                     
                 } else {
                     $query = 'SELECT p.*, u.name AS editor'
                     . ' FROM #__wf_profiles AS p'
                     . ' LEFT JOIN #__users AS u ON u.id = p.checked_out'
                     . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '')
-                    . ' ORDER BY ' . trim(implode(',', $order), ',');
+                    . ' ORDER BY ' . trim(implode(' ', $order));
                 }
 
                 $db->setQuery($query, $pagination->limitstart, $pagination->limit);

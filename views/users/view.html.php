@@ -99,7 +99,7 @@ class WFViewUsers extends JView {
             }
 
             $query->group('a.id, a.name, a.username, g.title');
-            $query->order(trim(implode(',', $orderby), ','));
+            $query->order(trim(implode(' ', $orderby)));
             
         } else {
             $query = 'SELECT COUNT(a.id)'
@@ -117,7 +117,7 @@ class WFViewUsers extends JView {
                     . ' INNER JOIN #__core_acl_aro_groups AS g ON g.id = gm.group_id'
                     . ( count($where) ? ' WHERE (' . implode(') AND (', $where) . ')' : '' )
                     . ' GROUP BY a.id, a.name, a.username, g.name'
-                    . ' ORDER BY ' . trim(implode(',', $orderby), ',')
+                    . ' ORDER BY ' . trim(implode(' ', $orderby))
             ;
         }
 
