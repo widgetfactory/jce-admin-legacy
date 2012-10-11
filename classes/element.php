@@ -98,9 +98,10 @@ class WFElement extends JObject
 	public function fetchTooltip($label, $description, &$xmlElement, $control_name = '', $name = '')
 	{
 		$output = '<label id="' . $control_name . $name . '-lbl" for="' . $control_name . $name . '"';
-		if ($description)
+		$label  = WFText::_($label);
+                
+                if ($description)
 		{
-                    $label          = WFText::_($label);
                     $description    = WFText::_($description);
                     
                     if (strpos($description, '::') === false) {
