@@ -178,7 +178,7 @@ abstract class WFInstall {
             $db->query();
 
             // Add device field
-            $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCAHR(255) AFTER `area`';
+            $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCHAR(255) AFTER `area`';
 
             if (strtolower($db->name) == 'sqlsrv' || strtolower($db->name) == 'sqlazure') {
                 $query = 'ALTER TABLE #__wf_profiles ADD `device` NVARCHAR(250)';
