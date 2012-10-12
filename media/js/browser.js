@@ -101,6 +101,6 @@
 //fake tinyMCE object for language files
 var tinyMCE = {
     addI18n : function(p, o) {
-        return $.Plugin.addI18n(p, o);
+        return jQuery.Plugin.addI18n(p, o);
     }
 };
