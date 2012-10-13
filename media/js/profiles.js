@@ -401,7 +401,7 @@
             var rows = [];
 
             $('div.sortableRow:has(span)', '#toolbar_container').each( function() {
-                rows.push($.map($('span.sortableRowItem:visible', $(this)), function(el) {
+                rows.push($.map($('span.sortableRowItem', this), function(el) {
                     return $(el).data('name');
                 }).join(','));
             });
