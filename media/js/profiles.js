@@ -447,7 +447,7 @@
 
                 var s = $.inArray(name, plugins) != -1;
                 // disable forms in tab panel
-                $(':input[name]', $(this)).prop('disabled', !s);
+                $(':input[name]', this).prop('disabled', !s);
 
                 if (!s) {
                     if ($tabs.tabs('option', 'selected') == i) {
