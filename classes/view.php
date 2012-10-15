@@ -49,28 +49,30 @@ class WFView extends WFViewBase {
     protected $javascript = array();
 
     public function display($tpl = null) {
-        $document = JFactory::getDocument();
+        $document   = JFactory::getDocument();
+        $tab        = $document->_getTab();
+        $end        = $document->_getLineEnd();
         
         foreach ($this->scripts as $script) {
-            $document->addCustomTag('<script type="text/javascript" src="' . $script . '"></script>');
+            $document->addCustomTag($tab . '<script src="' . $script . '" type="text/javascript"></script>' . $end);
         }
         
         $head = array();
         
         foreach ($this->javascript as $script) {
-            $head[] = '<script type="text/javascript">' . $script . '</script>';
+            $head[] = $tab . '<script type="text/javascript">' . $script . '</script>' . $end;
         }
         
         foreach ($this->stylesheets as $style) {
-            $document->addCustomTag('<link type="text/css" rel="stylesheet" href="' . $style . '" />');
+            $document->addCustomTag($tab . '<link rel="stylesheet" href="' . $style . '" type="text/css" />' . $end);
         }
         
         foreach ($this->styles as $style) {
-            $head[] = '<style type="text/css">' . $style . '></style>';
+            $head[] = $tab . '<style type="text/css">' . $style . '></style>' . $end;
         }
         
-        if (!empty($head)) {
-            $document->addCustomTag(implode("\n", $head));
+        if (!empty($head)) { 
+            $document->addCustomTag(implode('', $head));
         }
 
         parent::display($tpl);
