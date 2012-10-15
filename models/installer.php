@@ -294,9 +294,7 @@ class WFModelInstaller extends WFModel {
             $query->select(array('name', 'element', 'folder'))->from('#__extensions')->where('type = ' . $db->Quote('plugin'))->order('name');
             // Joomla! 1.5    
         } else {
-            $query = 'SELECT name, element, folder FROM #__plugins'
-                    . ' WHERE type = ' . $db->Quote('plugin')
-                    . ' ORDER BY name';
+            $query = 'SELECT name, element, folder FROM #__plugins ORDER BY name';
         }
 
         $db->setQuery($query);

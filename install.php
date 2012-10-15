@@ -24,16 +24,37 @@ abstract class WFInstall {
             // cleanup menus
             if (defined('JPATH_PLATFORM')) {
                 $query = $db->getQuery(true);
-                $query->delete('#__menu')->where(array('alias', $db->Quote('jce'), 'menutype', $db->Quote('main')));
+                $query->select('id')->from('#__menu')->where(array('alias = ' . $db->Quote('jce'), 'menutype = ' . $db->Quote('main')));
 
                 $db->setQuery($query);
-                $db->query();
+                $id = $db->loadResult();
 
                 $query->clear();
 
-                $query->delete('#__menu')->where('alias LIKE ' . $db->Quote('wf-menu-%') . ' AND menutype = ' . $db->Quote('main'));
-                $db->setQuery($query);
-                $db->query();
+                if ($id) {
+                    $table = JTable::getInstance('menu');
+
+                    // delete main item
+                    $table->delete((int) $id);
+
+                    // delete children
+                    $query->select('id')->from('#__menu')->where('parent_id = ' . $db->Quote($id));
+
+                    $db->setQuery($query);
+                    $ids = $db->loadColumn();
+
+                    $query->clear();
+
+                    if (!empty($ids)) {
+                        // Iterate the items to delete each one.
+                        foreach ($ids as $menuid) {
+                            $table->delete((int) $menuid);
+                        }
+                    }
+                    
+                    // Rebuild the whole tree
+                    $table->rebuild();
+                }
             } else {
                 $db->setQuery('DELETE FROM #__components WHERE `option` = ' . $db->Quote('com_jce'));
                 $db->query();
@@ -176,10 +197,10 @@ abstract class WFInstall {
             $query = 'ALTER TABLE #__wf_profiles CHANGE `types` `types` TEXT';
             $db->setQuery($query);
             $db->query();
-            
+
             // Add device field
-            $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCAHR(255) AFTER `area`';
-            
+            $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCHAR(255) AFTER `area`';
+
             if (strtolower($db->name) == 'sqlsrv' || strtolower($db->name) == 'sqlazure') {
                 $query = 'ALTER TABLE #__wf_profiles ADD `device` NVARCHAR(250)';
             }
@@ -294,7 +315,19 @@ abstract class WFInstall {
             $db->setQuery($query);
             $plugins = $db->loadAssocList('id');
 
-            $map = array('advlink' => 'link', 'advcode' => 'source', 'paste' => 'clipboard', 'tablecontrols' => 'table', 'styleprops' => 'style');
+            $map = array(
+                'advlink' => 'link',
+                'advcode' => 'source',
+                'tablecontrols' => 'table',
+                'cut,copy,paste' => 'clipboard',
+                'paste' => 'clipboard',
+                'search,replace' => 'searchreplace',
+                'cite,abbr,acronym,del,ins,attribs' => 'xhtmlxtras',
+                'styleprops' => 'style',
+                'readmore,pagebreak' => 'article',
+                'ltr,rtl' => 'directionality',
+                'insertlayer,moveforward,movebackward,absolute' => 'layer'
+            );
 
             if (self::createProfilesTable()) {
                 foreach ($groups as $group) {
@@ -321,10 +354,7 @@ abstract class WFInstall {
                             }
                             $icons[] = $icon;
                         }
-
-                        $rows[] = str_replace(array('clipboard', 'table'), array('cut,copy,paste', 'table_insert,delete_table,|,row_props,cell_props,|,row_before,row_after,delete_row,|,col_before,col_after,delete_col,|,split_cells,merge_cells'), implode(',', $icons));
-
-                        //$rows[] = str_replace(array('cite,abbr,acronym,del,ins,attribs', 'search,replace', 'ltr,rtl', 'readmore,pagebreak', 'cut,copy,paste'), array('xhtmlxtras', 'searchreplace', 'directionality', 'article', 'paste'), implode(',', $icons));
+                        $rows[] = implode(',', $icons);
                     }
                     // re-assign rows
                     $row->rows = implode(';', $rows);
@@ -764,12 +794,12 @@ abstract class WFInstall {
                     $profile->load($item->id);
 
                     $profile->rows = str_replace('paste', 'clipboard', $profile->rows);
-                    $profile->plugins = str_replace('paste', 'clipboard', $profile->rows);
+                    $profile->plugins = str_replace('paste', 'clipboard', $profile->plugins);
 
                     $data = json_decode($profile->params, true);
 
                     // swap paste data to 'clipboard'
-                    if (array_key_exists('paste', $data)) {
+                    if ($data && array_key_exists('paste', $data)) {
                         $params = array();
 
                         // add 'paste_' prefix
@@ -1106,11 +1136,11 @@ abstract class WFInstall {
 
         // use built in function
         if (method_exists($db, 'getTableColumns')) {
-            return array_key_exists($column, (array) $db->getTableColumns($table));
+            $fields = $db->getTableColumns($table);
+        } else {
+            $db->setQuery('DESCRIBE ' . $table);
+            $fields = $db->loadResultArray();
         }
-
-        $db->setQuery('DESCRIBE ' . $table);
-        $fields = $db->loadResultArray();
 
         return in_array($column, (array) $fields);
     }

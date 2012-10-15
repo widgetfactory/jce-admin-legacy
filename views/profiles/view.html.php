@@ -91,14 +91,14 @@ class WFViewProfiles extends WFViewBase {
                         $query->where($where);
                     }
                     
-                    $query->order(trim(implode(',', $order), ','));
+                    $query->order(trim(implode(' ', $order)));
                     
                 } else {
                     $query = 'SELECT p.*, u.name AS editor'
                     . ' FROM #__wf_profiles AS p'
                     . ' LEFT JOIN #__users AS u ON u.id = p.checked_out'
                     . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '')
-                    . 'ORDER BY ' . implode(',', $order);
+                    . ' ORDER BY ' . trim(implode(' ', $order));
                 }
 
                 $db->setQuery($query, $pagination->limitstart, $pagination->limit);
@@ -125,7 +125,7 @@ class WFViewProfiles extends WFViewBase {
 
                 WFToolbarHelper::editListX();
                 WFToolbarHelper::addNewX();
-                WFToolbarHelper::custom('copy', 'copy.png', 'copy_f2.png', WFText::_('WF_PROFILES_COPY'), true);
+                WFToolbarHelper::custom('copy', 'copy.png', 'copy_f2.png', 'WF_PROFILES_COPY', true);
                 WFToolbarHelper::export();
 
                 if (count($rows) > 1) {
@@ -351,7 +351,7 @@ class WFViewProfiles extends WFViewBase {
                 $db->setQuery($query);
                 $types = $db->loadResultArray();
 
-                if (JPATH_PLATFORM) {
+                if (defined('JPATH_PLATFORM')) {
                     $options = array();
                     
                     $query = $db->getQuery(true);

@@ -282,11 +282,7 @@ class WFController extends WFControllerBase {
         wfimport('admin.models.model');
 
         if (WFModel::authorize($task) === false) {
-            if (WFModel::authorize('manage')) {
-                $this->setRedirect('index.php?option=com_jce', WFText::_('ALERTNOTAUTH'), 'error');
-            } else {
-                $this->setRedirect('index.php', WFText::_('ALERTNOTAUTH'), 'error');
-            }
+            $this->setRedirect('index.php', WFText::_('ALERTNOTAUTH'), 'error');
             return false;
         }
 

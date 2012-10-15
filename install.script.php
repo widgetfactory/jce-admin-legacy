@@ -30,21 +30,6 @@ class com_jceInstallerScript {
     public function update($parent) {
         return $this->install($parent);
     }
-
-    public function preflight($type, $parent) {
-        // only on install
-        if ($type == 'install') {
-            $db = JFactory::getDBO();
-
-            $db->setQuery('DELETE FROM #__menu WHERE alias = ' . $db->Quote('jce') . ' AND menutype = ' . $db->Quote('main'));
-            $db->query();
-
-            $db->setQuery('DELETE FROM #__menu WHERE alias LIKE ' . $db->Quote('wf-menu-%') . ' AND menutype = ' . $db->Quote('main'));
-            $db->query();
-        }
-        
-        return true;
-    }
 }
 
 /**
@@ -54,6 +39,8 @@ class com_jceInstallerScript {
 function com_install() {
 
     if (!defined('JPATH_PLATFORM')) {
+        require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
+        
         $installer = JInstaller::getInstance();
         return WFInstall::install($installer);
     }
@@ -68,10 +55,11 @@ function com_install() {
 function com_uninstall() {
 
     if (!defined('JPATH_PLATFORM')) {
+        require_once(JPATH_ADMINISTRATOR . '/components/com_jce/install.php');
+        
         return WFInstall::uninstall();
     }
 
     return true;
 }
-
 ?>

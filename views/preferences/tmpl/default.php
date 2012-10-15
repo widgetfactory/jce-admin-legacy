@@ -15,14 +15,14 @@ defined('_JEXEC') or die('RESTRICTED');
 	<div id="jce">
 		<div id="tabs">
 		    <ul>
-		    <?php foreach ($this->params->getGroups() as $group => $num) : ?>
+		    <?php foreach ($this->params->getGroups() as $group) : ?>
 		    	<li><a href="#tabs-<?php echo $group;?>"><?php echo JText :: _('WF_PREFERENCES_' . strtoupper($group));?></a></li>
 		    <?php endforeach;?>
 		    <?php if ($this->permissons) : ?>
 		    	<li><a href="#tabs-access"><?php echo JText :: _('WF_PREFERENCES_PERMISSIONS');?></a></li>
 		    <?php endif;?>		
 		    </ul>	
-		    <?php foreach ($this->params->getGroups() as $group => $num) : ?>
+		    <?php foreach ($this->params->getGroups() as $group) : ?>
 				<div id="tabs-<?php echo $group?>">
 					<?php echo $this->params->render('params[preferences]', $group);?>
 				</div>

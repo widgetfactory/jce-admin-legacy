@@ -280,12 +280,18 @@
                 }
             });
             
-            $('input.plugins-enable-checkbox').click(function() {
-                var p = this.parentNode.parentNode, s = this.checked, v = $(this).data('name');
-                // set value
-                this.value = s ? 1 : 0;
-                
-                $('select.plugins-default-select', p).children('option[value="' + v + '"]').prop('disabled', !s);
+            $('input:checkbox.plugins-enable-checkbox').click(function() {
+                var p = this.parentNode.parentNode, s = this.checked, name = $(this).data('name');                
+                // set value for proxy onput and trigger change                
+                $(this).prev('input[name$="\\[' + name + '\\]\\[enable\\]"]').val(s ? 1 : 0).change();
+                // disable select
+                $('select.plugins-default-select', p).children('option[value="' + name + '"]').prop('disabled', !s).parent().val(function(i, v) {                    
+                    if (v === name) {
+                        return "";
+                    }
+                    
+                    return v;
+                });
             });
         },
         
@@ -299,12 +305,12 @@
             });
         	
             if (required.length) {
-                var msg = '<p>' + $jce.options.labels.required + '</p>';
+                var msg = '<p>' + $.jce.options.labels.required + '</p>';
                 msg += '<ul>';
                 msg += required.join('');
                 msg += '</ul>';
         		
-                $jce.createDialog({
+                $.jce.createDialog({
                     type  : 'alert',
                     text  : msg,
                     modal : true
@@ -318,7 +324,7 @@
 
         onSubmit : function() {
             // select all users
-            $('option', '#users').prop('selected', true);
+            //$('option', '#users').prop('selected', true);
             
             $('div#tabs-editor, div#tabs-plugins').find(':input[name]').each( function() {
                 // disable placeholder values
@@ -397,7 +403,7 @@
             var rows = [];
 
             $('div.sortableRow:has(span)', '#toolbar_container').each( function() {
-                rows.push($.map($('span.sortableRowItem:visible', $(this)), function(el) {
+                rows.push($.map($('span.sortableRowItem', this), function(el) {
                     return $(el).data('name');
                 }).join(','));
             });
@@ -443,7 +449,7 @@
 
                 var s = $.inArray(name, plugins) != -1;
                 // disable forms in tab panel
-                $(':input[name]', $(this)).prop('disabled', !s);
+                $(':input[name]', this).prop('disabled', !s);
 
                 if (!s) {
                     if ($tabs.tabs('option', 'selected') == i) {

@@ -194,46 +194,6 @@ class WFInstallerPlugin extends JObject {
             }
         }
 
-        // Install plugin install default profile layout if a row is set
-        if (is_numeric($this->get('row')) && intval($this->get('row'))) {
-            // Add to Default Group
-            $profile = JTable::getInstance('profiles', 'WFTable');
-
-            $query = 'SELECT id' . ' FROM #__wf_profiles' . ' WHERE name = ' . $db->Quote('Default');
-            $db->setQuery($query);
-            $id = $db->loadResult();
-
-            $profile->load($id);
-            // Add to plugins list
-            $plugins = explode(',', $profile->plugins);
-
-            if (!in_array($this->get('plugin'), $plugins)) {
-                $plugins[] = $this->get('plugin');
-            }
-
-            $profile->plugins = implode(',', $plugins);
-
-            if ($this->get('icon')) {
-                if (!in_array($this->get('plugin'), preg_split('/[;,]+/', $profile->rows))) {
-                    // get rows as array	
-                    $rows = explode(';', $profile->rows);
-                    // get key (row number)
-                    $key = intval($this->get('row')) - 1;
-                    // get row contents as array
-                    $row = explode(',', $rows[$key]);
-                    // add plugin name to end of row
-                    $row[] = $this->get('plugin');
-                    // add row data back to rows array
-                    $rows[$key] = implode(',', $row);
-
-                    $profile->rows = implode(';', $rows);
-                }
-            }
-
-            if (!$profile->store()) {
-                JError::raiseWarning(100, 'WF_INSTALLER_PLUGIN_PROFILE_ERROR');
-            }
-        }
         /**
          * ---------------------------------------------------------------------------------------------
          * Finalization and Cleanup Section
@@ -277,6 +237,57 @@ class WFInstallerPlugin extends JObject {
             }
         } else {
             $this->parent->set('extension.message', '');
+        }
+
+        // Install plugin install default profile layout if a row is set
+        if (is_numeric($this->get('row')) && intval($this->get('row'))) {
+            // Add to Default Group
+            $profile = JTable::getInstance('profiles', 'WFTable');
+
+            $query = $db->getQuery(true);
+
+            if (is_object($query)) {
+                $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote('Default') . ' OR id = 1');
+            } else {
+                $query = 'SELECT id'
+                . ' FROM #__wf_profiles'
+                . ' WHERE name = ' . $db->Quote('Default') . ' OR id = 1';
+            }
+            $db->setQuery($query);
+            $id = $db->loadResult();
+
+            if ($id) {
+                $profile->load($id);
+                // Add to plugins list
+                $plugins = explode(',', $profile->plugins);
+
+                if (!in_array($this->get('plugin'), $plugins)) {
+                    $plugins[] = $this->get('plugin');
+                }
+
+                $profile->plugins = implode(',', $plugins);
+
+                if ($this->get('icon')) {
+                    if (!in_array($this->get('plugin'), preg_split('/[;,]+/', $profile->rows))) {
+                        // get rows as array	
+                        $rows = explode(';', $profile->rows);
+                        // get key (row number)
+                        $key = intval($this->get('row')) - 1;
+                        // get row contents as array
+                        $row = explode(',', $rows[$key]);
+                        // add plugin name to end of row
+                        $row[] = $this->get('plugin');
+                        // add row data back to rows array
+                        $rows[$key] = implode(',', $row);
+
+                        $profile->rows = implode(';', $rows);
+                    }
+                }
+
+                if (!$profile->store()) {
+                    JError::raiseWarning(100, 'WF_INSTALLER_PLUGIN_PROFILE_ERROR');
+                }
+            }
         }
 
         // post-install

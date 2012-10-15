@@ -46,7 +46,7 @@ foreach ($this->plugins as $plugin) :
                     <h2><?php echo WFText::_($plugin->title); ?></h2>
                     <?php
                     // Draw parameters
-                    foreach ($groups as $group => $num) :
+                    foreach ($groups as $group) :
                         echo '<fieldset class="adminform panelform"><legend>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group)) . '</legend>';
                         echo '<p>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group) . '_DESC') . '</p>';
                         //echo $params->render('params[' . $plugin->name . '][' . $group . ']', $group);
@@ -71,7 +71,7 @@ foreach ($this->plugins as $plugin) :
                                 WF_EDITOR . '/elements'
                             ));
 
-                            foreach ($params->getGroups() as $group => $num) :
+                            foreach ($params->getGroups() as $group) :
                                 $html .= $params->render('params[' . $plugin->name . '][' . $type . ']', $group);
                             endforeach;
                         }
@@ -102,9 +102,9 @@ foreach ($this->plugins as $plugin) :
                                     $enabled = (int) $params->get('enable', 1);
                                     $checked = $enabled ? ' checked="checked"' : '';
 
-                                    $html .= '<h3><input type="checkbox" data-name="' . $extension->extension . '" class="plugins-enable-checkbox" id="params' . implode('', $key) . 'enable" name="params[' . implode('][', $key) . '][enable]" value="' . $enabled . '" ' . $checked . '/>' . WFText::_($extension->name) . '</h3>';
+                                    $html .= '<h3><input type="hidden" id="params' . implode('', $key) . 'enable" name="params[' . implode('][', $key) . '][enable]" value="' . $enabled . '" /><input type="checkbox" data-name="' . $extension->extension . '" class="plugins-enable-checkbox"' . $checked . '/>' . WFText::_($extension->name) . '</h3>';
                                     $html .= '<p>' . WFText::_($extension->description) . '</p>';
-                                    foreach ($params->getGroups() as $group => $num) :
+                                    foreach ($params->getGroups() as $group) :
                                         $html .= $params->render('params[' . implode('][', $key) . ']', $group, array('enable'));
                                     endforeach;
                                 endif;

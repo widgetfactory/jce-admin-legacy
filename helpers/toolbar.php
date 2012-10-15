@@ -109,7 +109,7 @@ abstract class WFToolbarHelper {
 
     public static function export() {
         $icon = WF_JOOMLA15 ? 'unarchive' : 'export';
-        self::custom('export', $icon . '.png', $icon . '_f2.png', WFText::_('WF_PROFILES_EXPORT'), true);
+        self::custom('export', $icon . '.png', $icon . '_f2.png', 'WF_PROFILES_EXPORT', true);
     }
 
     public static function save($task = 'save') {

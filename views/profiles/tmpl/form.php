@@ -29,8 +29,8 @@ defined('_JEXEC') or die('RESTRICTED');
 			<div id="tabs-editor" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
 				<ul>
 				<?php 				
-				foreach($this->profile->editor_groups as $name => $group) :
-					echo '<li><a href="#tabs-editor-'. $name.'"><span>'. WFText::_('WF_PROFILES_EDITOR_' . strtoupper($name)). '</span></a></li>';
+				foreach($this->profile->editor_groups as $group) :
+					echo '<li><a href="#tabs-editor-'. $group.'"><span>'. WFText::_('WF_PROFILES_EDITOR_' . strtoupper($group)). '</span></a></li>';
 				endforeach;?>
 				</ul>
 				<?php echo $this->loadTemplate('editor');?>
