@@ -24,16 +24,37 @@ abstract class WFInstall {
             // cleanup menus
             if (defined('JPATH_PLATFORM')) {
                 $query = $db->getQuery(true);
-                $query->delete('#__menu')->where(array('alias', $db->Quote('jce'), 'menutype', $db->Quote('main')));
+                $query->select('id')->from('#__menu')->where(array('alias = ' . $db->Quote('jce'), 'menutype = ' . $db->Quote('main')));
 
                 $db->setQuery($query);
-                $db->query();
+                $id = $db->loadResult();
 
                 $query->clear();
 
-                $query->delete('#__menu')->where('alias LIKE ' . $db->Quote('wf-menu-%') . ' AND menutype = ' . $db->Quote('main'));
-                $db->setQuery($query);
-                $db->query();
+                if ($id) {
+                    $table = JTable::getInstance('menu');
+
+                    // delete main item
+                    $table->delete((int) $id);
+
+                    // delete children
+                    $query->select('id')->from('#__menu')->where('parent_id = ' . $db->Quote($id));
+
+                    $db->setQuery($query);
+                    $ids = $db->loadColumn();
+
+                    $query->clear();
+
+                    if (!empty($ids)) {
+                        // Iterate the items to delete each one.
+                        foreach ($ids as $menuid) {
+                            $table->delete((int) $menuid);
+                        }
+                    }
+                    
+                    // Rebuild the whole tree
+                    $table->rebuild();
+                }
             } else {
                 $db->setQuery('DELETE FROM #__components WHERE `option` = ' . $db->Quote('com_jce'));
                 $db->query();
@@ -295,16 +316,16 @@ abstract class WFInstall {
             $plugins = $db->loadAssocList('id');
 
             $map = array(
-                'advlink'           => 'link', 
-                'advcode'           => 'source',
-                'tablecontrols'     => 'table', 
-                'cut,copy,paste'    => 'clipboard',
-                'paste'             => 'clipboard',
-                'search,replace'    => 'searchreplace',
+                'advlink' => 'link',
+                'advcode' => 'source',
+                'tablecontrols' => 'table',
+                'cut,copy,paste' => 'clipboard',
+                'paste' => 'clipboard',
+                'search,replace' => 'searchreplace',
                 'cite,abbr,acronym,del,ins,attribs' => 'xhtmlxtras',
-                'styleprops'        => 'style',
-                'readmore,pagebreak'=> 'article',
-                'ltr,rtl'           => 'directionality',
+                'styleprops' => 'style',
+                'readmore,pagebreak' => 'article',
+                'ltr,rtl' => 'directionality',
                 'insertlayer,moveforward,movebackward,absolute' => 'layer'
             );
 
@@ -333,7 +354,7 @@ abstract class WFInstall {
                             }
                             $icons[] = $icon;
                         }
-                        $rows[] = implode(',', $icons); 
+                        $rows[] = implode(',', $icons);
                     }
                     // re-assign rows
                     $row->rows = implode(';', $rows);
