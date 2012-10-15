@@ -13,7 +13,7 @@ defined('_JEXEC') or die('RESTRICTED');
 
 wfimport('admin.classes.view');
 
-class WFViewProfiles extends WFViewBase {
+class WFViewProfiles extends WFView {
 
     public function display($tpl = null) {
         $app = JFactory::getApplication();
@@ -161,11 +161,11 @@ class WFViewProfiles extends WFViewBase {
                 );
                 // Load scripts
                 foreach ($scripts as $script) {
-                    $this->document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/' . $script . '?version=' . $model->getVersion());
+                    $this->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/' . $script . '?version=' . $model->getVersion());
                 }
-
-                $this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
-                $this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/select.js?version=' . $model->getVersion());
+                
+                $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
+                $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/select.js?version=' . $model->getVersion());
 
                 $cid = JRequest::getVar('cid', array(0), '', 'array');
                 JArrayHelper::toInteger($cid, array(0));
@@ -335,6 +335,15 @@ class WFViewProfiles extends WFViewBase {
                 $options[] = JHTML::_('select.option', 2, WFText::_('WF_PROFILES_AREA_BACKEND'));
 
                 $lists['area'] = JHTML::_('select.genericlist', $options, 'area', 'class="inputbox levels" size="1"', 'value', 'text', $row->area);
+                
+                // device
+                $options = array();
+                $options[] = JHTML::_('select.option', '', '-- ' . WFText::_('WF_OPTION_NOT_SET') . ' --');
+                $options[] = JHTML::_('select.option', 'desktop', WFText::_('WF_PROFILES_DEVICE_DESKTOP'));
+                $options[] = JHTML::_('select.option', 'tablet', WFText::_('WF_PROFILES_DEVICE_TABLET'));
+                $options[] = JHTML::_('select.option', 'mobile', WFText::_('WF_PROFILES_DEVICE_MOBILE'));
+
+                $lists['device'] = JHTML::_('select.genericlist', $options, 'device', 'class="inputbox levels" size="1"', 'value', 'text', $row->device);
 
                 // user types from profile
                 $query = $db->getQuery(true);
@@ -447,7 +456,7 @@ class WFViewProfiles extends WFViewBase {
                     $files = JFolder::files($theme, 'ui([\w\.]*)\.css$');
 
                     foreach ($files as $file) {
-                        $this->document->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/tiny_mce/themes/advanced/skins/' . basename($theme) . '/' . $file);
+                        $this->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/tiny_mce/themes/advanced/skins/' . basename($theme) . '/' . $file);
                     }
                 }
 
@@ -460,7 +469,8 @@ class WFViewProfiles extends WFViewBase {
 
                 $options = WFToolsHelper::getOptions($params);
 
-                $this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Profiles.init(' . json_encode($options) . ')});');
+                //$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Profiles.init(' . json_encode($options) . ')});');
+                $this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Profiles.init(' . json_encode($options) . ')});');
 
                 // set toolbar
                 if ($row->id) {

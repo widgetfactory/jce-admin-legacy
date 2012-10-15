@@ -13,7 +13,7 @@ defined('_JEXEC') or die('RESTRICTED');
 
 wfimport('admin.classes.view');
 
-class WFViewConfig extends WFViewBase
+class WFViewConfig extends WFView
 {
     function display($tpl = null)
     {        

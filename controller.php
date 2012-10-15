@@ -46,11 +46,7 @@ class WFController extends WFControllerBase {
 
         foreach ($subMenus as $menu => $item) {
             if (WFModel::authorize($item)) {
-                if ($item == 'installer') {
-                    JSubMenuHelper::addEntry(WFText::_($menu), 'index.php?option=com_installer');
-                } else {
-                    JSubMenuHelper::addEntry(WFText::_($menu), 'index.php?option=com_jce&view=' . $item, $view == $item);
-                }
+                JSubMenuHelper::addEntry(WFText::_($menu), 'index.php?option=com_jce&view=' . $item, $view == $item);
             }
         }
     }
@@ -84,18 +80,17 @@ class WFController extends WFControllerBase {
         $model = $this->getModel($name);
 
         $view = parent::getView($name, $type, $prefix, $config);
-
         $document = JFactory::getDocument();
-        if (defined('JPATH_PLATFORM') && is_dir(JPATH_SITE . '/media/jui')) {
-            JHtml::_('jquery.ui');
-        } else {
+        
+        // not using JUI...
+        if (!class_exists('JHtmlJquery')) {
             // jquery versions
-            $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
-            $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
-
+            $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
             // jQuery noConflict
-            $document->addScriptDeclaration('jQuery.noConflict();');
+            $view->addScriptDeclaration('jQuery.noConflict();');
         }
+        
+        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
 
         $scripts = array();
 
@@ -121,25 +116,9 @@ class WFController extends WFControllerBase {
                 $params = WFParameterHelper::getComponentParams();
                 $theme = $params->get('preferences.theme', 'jce');
 
-                /* $scripts = array_merge(array(
-                  'tips.js',
-                  'html5.js'
-                  )); */
-
-                // Load admin scripts
-                //$document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js?version=' . $model->getVersion());
-
-                if (JPATH_PLATFORM) {
-                    JHtml::script('components/com_jce/editor/libraries/js/tips.js');
-                    JHtml::script('components/com_jce/editor/libraries/js/html5.js');
-
-                    JHtml::script('administrator/components/com_jce/media/js/jce.js');
-                } else {
-                    JHtml::script('tips.js', 'components/com_jce/editor/libraries/js/', false);
-                    JHtml::script('html5.js', 'components/com_jce/editor/libraries/js/', false);
-
-                    JHtml::script('jce.js', 'administrator/components/com_jce/media/js/', false);
-                }
+                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/tips.js');
+                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/html5.js');
+                $view->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js');
 
                 $options = array(
                     'labels' => array(
@@ -153,7 +132,8 @@ class WFController extends WFControllerBase {
                     )
                 );
 
-                $document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');
+                $view->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');
+                //$document->addCustomTag('<script type="text/javascript">jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});</script>');
 
                 $view->addHelperPath(dirname(__FILE__) . '/helpers');
                 $this->addModelPath(dirname(__FILE__) . '/models');
@@ -171,20 +151,59 @@ class WFController extends WFControllerBase {
         if ($model = $this->getModel($name)) {
             $view->setModel($model, true);
         }
-
-        // Load site scripts
-        /*foreach ($scripts as $script) {
-            $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/' . $script . '?version=' . $model->getVersion());
-        }*/
-
-        require_once(dirname(__FILE__) . '/helpers/system.php');
-
-        $app = JFactory::getApplication();
-        $app->registerEvent('onAfterRender', 'WFSystemHelper');
+        
+        $styles = $this->getStyles();
+        
+        foreach ($styles as $style) {
+            $view->addStyleSheet(JURI::root(true) . '/' . $style);
+        } 
 
         $view->assignRef('document', $document);
 
         return $view;
+    }
+    
+    protected function getStyles()
+    {
+        jimport('joomla.filesystem.folder');
+        jimport('joomla.filesystem.file');
+        
+        wfimport('admin.helpers.extension');
+        
+        $view = JRequest::getCmd('view', 'cpanel');
+
+        $component 	= WFExtensionHelper::getComponent();        
+        $params 	= new WFParameter($component->params);
+        
+        $theme  	= $params->get('preferences.theme', 'jce');
+        $site_path  = JPATH_COMPONENT_SITE . '/editor/libraries/css';
+		$admin_path = JPATH_COMPONENT_ADMINISTRATOR . '/media/css';
+        
+        // Load styles
+        $styles = array();
+        
+        if (!JFolder::exists($site_path  . '/jquery/' . $theme)) {
+            $theme = 'jce';
+        }
+        
+        if (JFolder::exists($site_path . '/jquery/' . $theme)) {
+            $files = JFolder::files($site_path . '/jquery/' . $theme, '\.css');
+            
+            foreach ($files as $file) {
+                $styles[] = 'components/com_jce/editor/libraries/css/jquery/' . $theme . '/' . $file;
+            }
+        }
+
+		// admin global css
+        $styles = array_merge($styles, array(
+            'administrator/components/com_jce/media/css/global.css'
+        ));
+        
+        if (JFile::exists($admin_path . '/' . $view . '.css')) {
+            $styles[] = 'administrator/components/com_jce/media/css/' . $view . '.css';
+        }
+        
+        return $styles;
     }
 
     public function pack() {

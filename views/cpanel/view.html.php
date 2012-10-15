@@ -13,7 +13,7 @@ defined('_JEXEC') or die('RESTRICTED');
 
 wfimport('admin.classes.view');
 
-class WFViewCpanel extends WFViewBase {
+class WFViewCpanel extends WFView {
 
     function display($tpl = null) {
         wfimport('admin.models.updates');
@@ -40,9 +40,9 @@ class WFViewCpanel extends WFViewBase {
             )
         );
 
-        $this->document->addScript('components/com_jce/media/js/cpanel.js?version=' . $model->getVersion());
+        $this->addScript('components/com_jce/media/js/cpanel.js?version=' . $model->getVersion());
 
-        $this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.CPanel.init(' . json_encode($options) . ')});');
+        $this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.CPanel.init(' . json_encode($options) . ')});');
 
         if (WFModel::authorize('preferences')) {
             WFToolbarHelper::preferences();

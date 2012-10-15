@@ -20,7 +20,7 @@ jimport('joomla.client.helper');
  * @package		JCE
  * @since		1.6
  */
-class WFViewInstaller extends WFViewBase
+class WFViewInstaller extends WFView
 {
 	function display($tpl=null)
 	{
@@ -51,9 +51,9 @@ class WFViewInstaller extends WFViewBase
 				'alert'		=> WFText::_('WF_INSTALLER_FILETYPE_ERROR')	
 			)
 		);
-		$this->document->addScript('components/com_jce/media/js/installer.js?version=' . $model->getVersion());
-		$this->document->addScript('components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
-		$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Installer.init({});$(":file").upload('.json_encode($options).')});');
+		$this->addScript('components/com_jce/media/js/installer.js?version=' . $model->getVersion());
+		$this->addScript('components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
+		$this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Installer.init({});$(":file").upload('.json_encode($options).')});');
 		
 		$state->set('install.directory', $app->getCfg('tmp_path'));
 		

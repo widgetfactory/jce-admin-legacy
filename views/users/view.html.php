@@ -13,7 +13,7 @@ defined('_JEXEC') or die('RESTRICTED');
 
 wfimport('admin.classes.view');
 
-class WFViewUsers extends WFViewBase {
+class WFViewUsers extends WFView {
 
     public function display($tpl = null) {
         $app = JFactory::getApplication();
@@ -28,7 +28,7 @@ class WFViewUsers extends WFViewBase {
 
         $model = $this->getModel();
 
-        $this->document->addScript('components/com_jce/media/js/users.js?version=' . $model->getVersion());
+        $this->addScript('components/com_jce/media/js/users.js?version=' . $model->getVersion());
 
         $filter_order       = $app->getUserStateFromRequest("$option.$view.filter_order", 'filter_order', 'a.name', 'cmd');
         $filter_order_Dir   = $app->getUserStateFromRequest("$option.$view.filter_order_Dir", 'filter_order_Dir', '', 'word');

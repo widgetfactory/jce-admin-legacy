@@ -734,9 +734,12 @@ class WFModelEditor extends WFModelBase {
             // Template css (template.css or template_css.css)
             case 1 :
                 // Joomla! 1.5 standard
-                $file = 'template.css';
-
-                $css = JFolder::files($path, '(base|core|template|template_css)\.css$', false, true);
+                $file   = 'template.css';
+                $css    = array();
+                
+                if (JFolder::exists($path)) {
+                    $css = JFolder::files($path, '(base|core|template|template_css)\.css$', false, true);
+                }
 
                 if (!empty($css)) {
                     // use the first result
