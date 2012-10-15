@@ -285,10 +285,12 @@
                 // set value for proxy onput and trigger change                
                 $(this).prev('input[name$="\\[' + name + '\\]\\[enable\\]"]').val(s ? 1 : 0).change();
                 // disable select
-                $('select.plugins-default-select', p).children('option[value="' + name + '"]').prop('disabled', !s).parent().val(function(i, v) {
-                    if (v == name) {
+                $('select.plugins-default-select', p).children('option[value="' + name + '"]').prop('disabled', !s).parent().val(function(i, v) {                    
+                    if (v === name) {
                         return "";
                     }
+                    
+                    return v;
                 });
             });
         },
