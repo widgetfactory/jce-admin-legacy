@@ -21,7 +21,7 @@
             $('body').addClass('ui-jce');
 
             // Tips
-            $('.tooltip, .hasTip').tips({
+            $('.wf-tooltip, .hasTip').tips({
                 parent : '#jce'
             });
 
