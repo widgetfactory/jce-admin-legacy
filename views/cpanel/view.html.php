@@ -39,6 +39,8 @@ class WFViewCpanel extends WFView {
                 'updates_available' => WFText::_('WF_UPDATES_AVAILABLE')
             )
         );
+        
+        JHtml::_('behavior.modal');
 
         $this->addScript('components/com_jce/media/js/cpanel.js?version=' . $model->getVersion());
 
