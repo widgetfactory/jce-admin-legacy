@@ -31,7 +31,7 @@
 	margin: 5px 0;
 	clear:none;
 }
-#jce input, #jce textarea, #jce select, #jce img, #jce label {
+#content-box #jce input, #content-box #jce textarea, #content-box #jce select, #content-box #jce img, #content-box #jce label {
     float: none;
     margin: 0;
     padding: 0;
@@ -42,19 +42,19 @@
 #jce fieldset button {
     float: none;
 }
-#jce fieldset textarea {
+#content-box #jce fieldset textarea {
     padding: 2px;
     width: 300px;
 }
-#jce input[type="checkbox"] {
+#content-box #jce input[type="checkbox"] {
     border: none;
 }
-#jce input[type="text"], #jce input[type="password"], #jce select {
+#content-box #jce input[type="text"], #content-box #jce input[type="password"], #content-box #jce select {
     height: 20px;
     line-height: 18px;
     padding: 1px 2px;
 }
-#jce input[type="checkbox"], input[type="radio"] {
+#content-box #jce input[type="checkbox"], #content-box #jce input[type="radio"] {
     height: auto;
     border: 0 none;
 }
@@ -91,7 +91,7 @@
 #jce fieldset label {
     font-size: 1em;
 }
-#jce button {
+#content-box #jce button {
     cursor: pointer;
     min-width: 50px;
     min-height: 28px;
@@ -202,7 +202,7 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
 #jce ul.adminformlist li input, #jce ul.adminformlist li textarea, #jce ul.adminformlist li select, #jce dl.adminformlist dd input, #jce dl.adminformlist dd textarea, #jce dl.adminformlist dd select {
     vertical-align: middle;
 }
-#jce .ui-widget {
+#content-box #jce .ui-widget {
     font-size: 1em;
 }
 #jce td.ui-state-default {
@@ -310,59 +310,59 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
 #jce span.widget-password.locked {
     background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1120px;
 }
-/*#jce table {
+#content-box #jce table.table {
     width: 100%;
 	border: 1px solid #CCC;
 	border-right-width: 0;
 	border-spacing: 0;
 }
-#jce table th, #jce table td {
+#content-box #jce table.table th, #content-box #jce table.table td {
     padding: 5px;
-	border-spacing: 0;
-	line-height: 20px;
+border-spacing: 0;
+line-height: 20px;
 }
 
-#jce table thead th, #jce table tbody td {
+#content-box #jce table.table thead th, #content-box #jce table.table tbody td {
 	border-bottom: 1px solid #bbbbbb;
 	border-left: 1px solid #ffffff;
 	border-right: 1px solid #cccccc;
 	border-top: 1px solid #ffffff;
 }
 
-#jce table th{
+#content-box #jce table.table th{
 	font-size: 1.1em;
 	text-shadow: 0px 1px 1px rgba(255,255,255,1);
 }
 
-#jce table th, #jce table tfoot td {
+#content-box #jce table.table th, #content-box #jce table tfoot td {
 	background-color: #F0F0F0;
 }
 
-#jce table tbody tr:last-child td {
+#content-box #jce table.table tbody tr:last-child td {
 	border-bottom-width: 0;
 }
 
-#jce table tfoot td {
+#content-box #jce table.table tfoot td {
 	border: 0;
 	border-right: 1px solid #cccccc;
 	border-top: 1px solid #bbbbbb;
 }
 
-#jce table[cellspacing="0"] {
+#content-box #jce table.table[cellspacing="0"] {
 	border: 1px solid #CCC;
 }
-#jce table[cellspacing="0"] td {
+#content-box #jce table.table[cellspacing="0"] td {
 	border: 0;
 }
-#jce table tr.odd {
+#content-box #jce table.table tr.odd {
     background-color: #F8F8F8;
 }
-#jce table tbody tr:hover {
+#content-box #jce table.table tbody tr:hover {
     background-color: #f4f8fd;
 }
-#jce table#profiles-toolbar tbody tr:hover, #jce table#users-toolbar tbody tr:hover {
+#content-box #jce table#profiles-toolbar tbody tr:hover, #content-box #jce table#users-toolbar tbody tr:hover {
     background-color: inherit;
-}*/
+}
 #jce div.limit select {
     margin: 0 0 0 5px;
 }
