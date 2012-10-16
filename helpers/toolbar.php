@@ -49,18 +49,22 @@ abstract class WFToolbarHelper {
      * @since 1.0
      */
     public static function preferences() {
-        $bar = JToolBar::getInstance('toolbar');
+        if (defined('JPATH_PLATFORM')) {
+            JToolbarHelper::preferences('com_jce');
+        } else {
+            $bar = JToolBar::getInstance('toolbar');
 
-        $options = array(
-            'width' => 760,
-            'height' => 540,
-            'modal' => true
-        );
+            $options = array(
+                'width' => 760,
+                'height' => 540,
+                'modal' => true
+            );
 
-        $html = '<a href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog preferences" title="' . WFText::_('WF_PREFERENCES_TITLE') . '">';
-        $html .= '<span class="icon-32-config icon-32-options" title="' . WFText::_('WF_PREFERENCES_TITLE') . '"></span>' . WFText::_('WF_PREFERENCES') . '</a>';
+            $html = '<a href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog preferences" title="' . WFText::_('WF_PREFERENCES_TITLE') . '">';
+            $html .= '<span class="icon-32-config icon-32-options" title="' . WFText::_('WF_PREFERENCES_TITLE') . '"></span>' . WFText::_('WF_PREFERENCES') . '</a>';
 
-        $bar->appendButton('Custom', $html, 'config');
+            $bar->appendButton('Custom', $html, 'config');
+        }
     }
 
     /**
@@ -82,7 +86,7 @@ abstract class WFToolbarHelper {
         );
 
         if ($enabled) {
-            $html = '<a href="index.php?option=com_jce&amp;view=updates&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog updates" title="' . WFText::_('WF_UPDATES') . '">';
+            $html = '<a href="index.php?option=com_jce&amp;view=updates&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" rel="{handler:\'iframe\',size:{x:760, y:540}}" class="modal updates" title="' . WFText::_('WF_UPDATES') . '">';
             $html .= '<span class="icon-32-default icon-32-update" title="' . WFText::_('WF_UPDATES_CHECK') . '"></span>' . WFText::_('WF_UPDATES') . '</a>';
         } else {
             $html = '<a href="#"><span class="icon-32-default icon-32-update" title="' . WFText::_('WF_UPDATES_NOSUPPORT') . '"><span class="icon-32-error"></span></span>' . WFText::_('WF_UPDATES_NOSUPPORT') . '</a>';
@@ -101,7 +105,7 @@ abstract class WFToolbarHelper {
             'buttons' => '{}'
         );
 
-        $html = '<a href="index.php?option=com_config&amp;view=component&amp;component=com_jce&amp;path=&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog preferences" title="' . WFText::_('WF_PREFERENCES_TITLE') . '">';
+        $html = '<a href="index.php?option=com_config&amp;view=component&amp;component=com_jce&amp;path=&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" rel="{handler:iframe,size:{x:760, y:540}}" class="modal preferences" title="' . WFText::_('WF_PREFERENCES_TITLE') . '">';
         $html .= '<span class="icon-32-lock" title="' . WFText::_('WF_ACCESS_TITLE') . '"></span>' . WFText::_('WF_ACCESS') . '</a>';
 
         $bar->appendButton('Custom', $html, 'access');
