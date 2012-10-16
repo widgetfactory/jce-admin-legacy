@@ -48,7 +48,8 @@ class WFModelUpdates extends WFModel {
             $versions['joomla']['plg_jcemediabox'] = $mediabox_xml['version'];
         }
 
-        $model = JModel::getInstance('plugins', 'WFModel');
+        wfimport('admin.models.plugins');
+        $model = new WFModelPlugins();
 
         // get all plugins
         $plugins = $model->getPlugins();
