@@ -13,7 +13,7 @@ defined('_JEXEC') or die('RESTRICTED');
 
 wfimport('admin.classes.view');
 
-class WFViewHelp extends WFViewBase
+class WFViewHelp extends WFView
 {
     function display($tpl = null)
     {        
@@ -66,10 +66,10 @@ class WFViewHelp extends WFViewBase
 			'pattern' 	=> $pattern
 		);
 		
-		$this->document->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/libraries/css/help.css');
+		$this->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/libraries/css/help.css');
 		
-		$this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-layout.js?version=' . $model->getVersion());
-		$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Help.init('.json_encode($options).');});');
+		$this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-layout.js?version=' . $model->getVersion());
+		$this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Help.init('.json_encode($options).');});');
 
         parent::display($tpl);
     }

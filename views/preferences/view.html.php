@@ -20,7 +20,7 @@ wfimport('admin.classes.view');
  * @package		JCE
  * @since		1.5
  */
-class WFViewPreferences extends WFViewBase
+class WFViewPreferences extends WFView
 {
     function display($tpl = null)
     {        
@@ -48,12 +48,12 @@ class WFViewPreferences extends WFViewBase
         $this->assignRef('params', $params);		
 		$this->assignRef('permissons', $form);
 
-		$this->document->addScript('components/com_jce/media/js/preferences.js?version=' . $model->getVersion());
+		$this->addScript('components/com_jce/media/js/preferences.js?version=' . $model->getVersion());
 		
         if (JRequest::getInt('close') == 1) {
-        	$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Preferences.close();});');
+        	$this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Preferences.close();});');
         } else {
-        	$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Preferences.init();});');	
+        	$this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Preferences.init();});');	
 		}
         
         parent::display($tpl);
