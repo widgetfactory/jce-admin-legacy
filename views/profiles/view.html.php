@@ -144,8 +144,8 @@ class WFViewProfiles extends WFView {
                     )
                 );
 
-                $this->document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
-                $this->document->addScriptDeclaration('jQuery(document).ready(function($){$(":file").upload(' . json_encode($options) . ')});');
+                $this->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
+                $this->addScriptDeclaration('jQuery(document).ready(function($){$(":file").upload(' . json_encode($options) . ')});');
 
                 $this->setLayout('default');
                 break;
