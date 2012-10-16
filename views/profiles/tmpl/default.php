@@ -10,27 +10,27 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 ?>
-<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="adminForm">
+<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
     <div id="jce">
-        <table id="profiles-toolbar" cellspacing="0" class="table table-bordered">
+        <table id="profiles-toolbar" cellspacing="0" class="adminlist table table-bordered">
             <tr>
                 <td>
                     <label for="search"><?php echo WFText::_('WF_LABEL_FILTER'); ?></label><input type="text" name="search" id="search" size="50" value="<?php echo $this->lists['search']; ?>" class="text_area" onchange="document.adminForm.submit();" />
-                    <button id="filter_go" onclick="this.form.submit();"><?php echo WFText::_('WF_LABEL_GO'); ?></button>
-                    <button id="filter_reset" onclick="document.getElementById('search').value='';this.form.submit();"><?php echo WFText::_('WF_LABEL_RESET'); ?></button>
+                    <button id="filter_go" onclick="this.form.submit();" class="btn"><i class="icon-search"></i><?php echo WFText::_('WF_LABEL_GO'); ?></button>
+                    <button id="filter_reset" onclick="document.getElementById('search').value='';this.form.submit();" class="btn"><i class="icon-remove"></i><?php echo WFText::_('WF_LABEL_RESET'); ?></button>
                 </td>
 
                 <td nowrap="nowrap">
                     <span class="upload-container">
                         <label for="import"><?php echo WFText::_('WF_PROFILES_IMPORT'); ?></label>
                         <input type="file" name="import" id="upload" accept="application/xml" />
-                        <button id="upload_button"><?php echo WFText::_('WF_PROFILES_IMPORT_IMPORT'); ?></button>								
+                        <button id="upload_button" class="btn"><i class="icon-arrow-up"></i><?php echo WFText::_('WF_PROFILES_IMPORT_IMPORT'); ?></button>								
                     </span>
                 </td>
             </tr>			
         </table>
         <br />
-        <table id="profiles-list" cellspacing="1" class="table table-striped">
+        <table id="profiles-list" cellspacing="1" class="adminlist table table-striped">
             <thead>
                 <tr>
                     <th width="3%">
