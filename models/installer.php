@@ -115,32 +115,10 @@ class WFModelInstaller extends WFModel {
 
         $installer = JInstaller::getInstance();
 
-        // Use Joomla! Installer class for related extensions
-        if ($type == 'related') {
-            $table = WF_JOOMLA15 ? 'plugin' : 'extension';
-
-            $row = JTable::getInstance($table);
-            // get extension data not returned by uninstall method
-            $row->load($id);
-            // get manifest
-            $manifest = WF_JOOMLA15 ? JPATH_PLUGINS . $row->folder . '/' . $row->element . '.xml' : JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . '/' . $row->element . '.xml';
-
-            if (file_exists($manifest)) {
-                $xml = WFXMLHelper::parseInstallManifest($manifest);
-
-                if ($xml) {
-                    $installer->set('name', $xml['name']);
-                    $installer->set('version', $xml['version']);
-                }
-            }
-
-            $result = $installer->uninstall('plugin', $id);
-        } else {
-            // Set Adapter
-            $adapter = $this->getAdapter($type);
-            $installer->setAdapter($type, $adapter);
-            $result = $installer->uninstall($type, $id);
-        }
+        // Set Adapter
+        $adapter = $this->getAdapter($type);
+        $installer->setAdapter($type, $adapter);
+        $result = $installer->uninstall($type, $id);
 
         $result = $result ? true : false;
 
@@ -287,7 +265,7 @@ class WFModelInstaller extends WFModel {
         // pre-defined array of other plugins
         $related = explode(',', $params->get('related_extensions', 'jcemediabox,jceutilities,mediaobject,wfmediabox'));
 
-        $query  = $db->getQuery(true);
+        $query = $db->getQuery(true);
 
         // Joomla! 2.5
         if (is_object($query)) {
