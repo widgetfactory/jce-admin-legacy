@@ -8,7 +8,7 @@
  * other free or open source software licenses.
  */
 #jce, #jce td {
-    font-size: 11px;
+    /*font-size: 11px;*/
 }
 #jce.dialog:hover, #jce.dialog:visited {
 	text-decoration: none;
@@ -310,7 +310,7 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
 #jce span.widget-password.locked {
     background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1120px;
 }
-#jce table {
+/*#jce table {
     width: 100%;
 	border: 1px solid #CCC;
 	border-right-width: 0;
@@ -362,7 +362,7 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
 }
 #jce table#profiles-toolbar tbody tr:hover, #jce table#users-toolbar tbody tr:hover {
     background-color: inherit;
-}
+}*/
 #jce div.limit select {
     margin: 0 0 0 5px;
 }

@@ -13,7 +13,7 @@ defined('_JEXEC') or die('RESTRICTED');
 ?>
 <form action="index.php?option=com_jce&tmpl=component" method="post" name="adminForm">
 	<div id="jce">
-	    <table width="100%" cellspacing="0" id="users-toolbar">
+	    <table width="100%" cellspacing="0" id="users-toolbar" class="table table-bordered">
 			<tr>
 				<td width="100%">
 					<?php echo WFText::_('WF_LABEL_FILTER'); ?>
@@ -27,7 +27,7 @@ defined('_JEXEC') or die('RESTRICTED');
 			</tr>
 		</table>
 		<br />
-		<table cellspacing="1" id="users-list">
+		<table cellspacing="1" id="users-list" class="table table-striped">
 			<thead>
 				<tr>
 					<th width="20px" class="title" align="center">
