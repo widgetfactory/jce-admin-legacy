@@ -292,3 +292,8 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
 #jce div.tabs-plugin-parameters a[href^="http"] {
     cursor: pointer;
 }
+
+#jce table td.order input[type="text"] {
+    max-width : 30px; 
+    margin : 0 10px;
+}
