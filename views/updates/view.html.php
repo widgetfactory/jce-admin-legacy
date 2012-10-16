@@ -13,13 +13,13 @@ defined('_JEXEC') or die('RESTRICTED');
 
 wfimport('admin.classes.view');
 
-class WFViewUpdates extends WFViewBase
+class WFViewUpdates extends WFView
 {
     function display($tpl = null)
     {
         $model =$this->getModel();
 		
-		$this->document->addScript('components/com_jce/media/js/update.js?version=' . $model->getVersion());
+		$this->addScript('components/com_jce/media/js/update.js?version=' . $model->getVersion());
 		
 		$options = array(
 			'language' => array(
@@ -41,7 +41,7 @@ class WFViewUpdates extends WFViewBase
 		
 		$options  = json_encode($options);
 		
-		$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Update.init('.$options.');});');
+		$this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Update.init('.$options.');});');
         
         parent::display($tpl);
     }
