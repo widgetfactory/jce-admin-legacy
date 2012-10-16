@@ -53,7 +53,7 @@
 			}
 			
 			// create button
-			var $button = $('<button/>');
+			var $button = $('<button/>').addClass('btn');
 
 			var $buttoncontainer = $('<span/>').addClass('upload_button_container').insertBefore(this.element).append(this.element).hover( function() {
 				$button.addClass('ui-state-hover');
@@ -67,7 +67,7 @@
 				'type' 			: 'text',
 				'name'			: $(this.element).attr('name') + '_input',
 				'placeholder'	: $(this.element).attr('placeholder')
-			}).addClass('ui-widget-content upload_text ui-corner-all').css({
+			}).addClass('btn upload_text').css({
 				'width': o.width
 			}).appendTo($inputcontainer);
 
@@ -86,7 +86,8 @@
 				}
 			}).click( function(e) {
 				e.preventDefault();
-			});
+			}).prepend('<i class="icon-search"></i>');
+                        
 			// hide file input element
 			$(this.element).css({
 				'width'		: '100%',
