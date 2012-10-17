@@ -25,6 +25,8 @@ class WFViewMediabox extends JView {
             $xml = JPATH_PLUGINS . '/system/jcemediabox/jcemediabox.xml';
 
             $params = new WFParameter($data, $xml, '', array('control' => 'config:fields:fieldset'));
+            
+            $params->addElementPath(JPATH_PLUGINS . '/system/jcemediabox/elements');
 
             $groups = array();
             $array  = array();
