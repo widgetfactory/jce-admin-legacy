@@ -85,12 +85,12 @@ class WFController extends WFControllerBase {
         // not using JUI...
         if (!class_exists('JHtmlJquery')) {
             // jquery versions
-            $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
+            $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
             // jQuery noConflict
             $view->addScriptDeclaration('jQuery.noConflict();');
         }
         
-        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
+        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
 
         $scripts = array();
 
