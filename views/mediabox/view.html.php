@@ -13,7 +13,7 @@ defined('_JEXEC') or die('RESTRICTED');
 
 wfimport('admin.classes.view');
 
-class WFViewMediabox extends WFViewBase {
+class WFViewMediabox extends WFView {
 
     function getParams($data) {
 
@@ -66,8 +66,8 @@ class WFViewMediabox extends WFViewBase {
         $this->assignRef('params', $params);
         $this->assignRef('client', $client);
 
-        $this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
-        $this->document->addStyleSheet('components/com_jce/media/css/colorpicker.css?version=' . $model->getVersion());
+        $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
+        $this->addStyleSheet('components/com_jce/media/css/colorpicker.css?version=' . $model->getVersion());
 
         $options = array(
             'template_colors' => WFToolsHelper::getTemplateColors(),
@@ -84,7 +84,7 @@ class WFViewMediabox extends WFViewBase {
             )
         );
 
-        $this->document->addScriptDeclaration('jQuery(document).ready(function($){$("input.color").colorpicker(' . json_encode($options) . ');});');
+        $this->addScriptDeclaration('jQuery(document).ready(function($){$("input.color").colorpicker(' . json_encode($options) . ');});');
 
         WFToolbarHelper::save();
         WFToolbarHelper::apply();
