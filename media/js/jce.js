@@ -26,9 +26,9 @@
             });
 
             // Style stuff
-            $('div.icon a').addClass('ui-widget-content ui-corner-all');
+            //$('div.icon a').addClass('ui-widget-content ui-corner-all');
 
-            $('a.dialog').click( function(e) {                
+            /*$('a.dialog').click( function(e) {                
                 self.createDialog({
                     src 	: $(this).attr('href'),
                     options : $(this).data('options'),
@@ -37,7 +37,7 @@
                     title	: $(this).attr('title')
                 });
                 e.preventDefault();
-            });
+            });*/
 
             // IE
             if (!$.support.cssFloat) {
@@ -71,7 +71,7 @@
 
             // Profiles list
             // buttons
-            $('button#filter_go').button({
+            /*$('button#filter_go').button({
                 icons: {
                     primary: 'ui-icon-search'
                 }
@@ -84,7 +84,7 @@
             });
 
             // Table striping
-            $('div#jce tbody tr:odd').addClass('odd');
+            $('div#jce tbody tr:odd').addClass('odd');*/
             
             // set dependant parameters
             this._setDependants();
