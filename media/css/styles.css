@@ -7,8 +7,14 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-#jce, #jce td {
+#jce {
     /*font-size: 11px;*/
+
+    padding: 10px;
+    background-color: #FFFFFF;
+    border-radius : 10px;
+    -moz-border-radius : 10px;
+    -webkit-border-radius: 10px;
 }
 #jce.dialog:hover, #jce.dialog:visited {
 	text-decoration: none;
@@ -31,14 +37,14 @@
 	margin: 5px 0;
 	clear:none;
 }
-#content-box #jce input, #content-box #jce textarea, #content-box #jce select, #content-box #jce img, #content-box #jce label {
+/*#content-box #jce input, #content-box #jce textarea, #content-box #jce select, #content-box #jce img, #content-box #jce label {
     float: none;
     margin: 0;
     padding: 0;
     font-size: 1em;
     clear: none;
     display: inline;
-}
+}*/
 #jce fieldset button {
     float: none;
 }
@@ -100,10 +106,6 @@
     float: none;
     font-size: 1em;
     clear: none;
-}
-div#jce {
-    padding: 5px;
-    background-color: #FFFFFF;
 }
 div#jce textarea {
     max-width : 375px;
@@ -310,7 +312,12 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
 #jce span.widget-password.locked {
     background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1120px;
 }
-#content-box #jce table.table {
+
+#jce #profiles-list thead th.title {
+    text-align: left;
+}
+
+/*#content-box #jce table.table {
     width: 100%;
 	border: 1px solid #CCC;
 	border-right-width: 0;
@@ -370,7 +377,7 @@ line-height: 20px;
     display:table;
     margin:0 auto;
     padding:0;
-}
+}*/
 
 input.placeholder, textarea.placeholder {
 	color: #bbb;
