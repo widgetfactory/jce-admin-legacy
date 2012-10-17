@@ -98,10 +98,6 @@ class WFModelEditor extends WFModelBase {
         if ($profile) {
             jimport('joomla.filesystem.folder');
 
-            // get jqueryui theme
-            $dialog_theme = $wf->getParam('editor.dialog_theme', 'jce');
-            $dialog_theme_css = JFolder::files(WF_EDITOR_LIBRARIES . '/css/jquery/' . $dialog_theme, '\.css$');
-
             $settings = array_merge($settings, array('theme' => 'advanced', 'component_id' => $component_id, 'plugins' => $this->getPlugins()), $this->getToolbar($profile->rows));
 
             // Theme and skins
@@ -130,7 +126,10 @@ class WFModelEditor extends WFModelBase {
             $settings['height'] = $wf->getParam('editor.height');
 
             // 'Look & Feel'
-            $settings['jquery_ui'] = JURI::root(true) . '/components/com_jce/editor/libraries/css/jquery/' . $dialog_theme . '/' . basename($dialog_theme_css[0]);
+            
+            /*if (!JHtml::isRegistered('behavior.framework')) {
+                $settings['bootstrap'] = JURI::root(true) . '/components/com_jce/editor/libraries/bootstrap/css/bootstrap.css';
+            }*/
 
             $skin = explode('.', $wf->getParam('editor.toolbar_theme', 'default', 'default'));
             $settings['skin'] = $skin[0];
@@ -188,6 +187,9 @@ class WFModelEditor extends WFModelBase {
         } else {
             // CSS
             $this->addStyleSheet($this->getURL(true) . '/libraries/css/editor.css?version=' . $version);
+            
+            $this->addStyleSheet($this->getURL(true) . '/libraries/bootstrap/css/bootstrap.css?version=' . $version);
+            
             // get plugin styles
             $this->getPluginStyles($settings);
 
