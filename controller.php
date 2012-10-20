@@ -83,14 +83,18 @@ class WFController extends WFControllerBase {
         $document = JFactory::getDocument();
         
         // not using JUI...
-        if (!class_exists('JHtmlJquery')) {
+        if (class_exists('JHtmlJquery')) {
+            JHtml::_('jquery.framework');
+        } else {
             // jquery versions
             $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
             // jQuery noConflict
             $view->addScriptDeclaration('jQuery.noConflict();');
         }
-        
+        // JQuery UI
         $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
+        // JQuery Touch Punch
+        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery.ui.touch-punch.min.js?version=' . $model->getVersion());
 
         $scripts = array();
 
