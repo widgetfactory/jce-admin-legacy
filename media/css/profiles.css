@@ -8,12 +8,11 @@
  * other free or open source software licenses.
  */
 @import url("../../../../../components/com_jce/editor/libraries/css/select.css");
-@import url("upload.css");
 @import url("colorpicker.css");
 @import url("extensions.css");
 @import url("../../../../../components/com_jce/editor/libraries/css/files.css");
-/*@import url("../../../../../components/com_jce/editor/tiny_mce/themes/advanced/skins/default/ui.css");*/
 @import url("layout.css");
+
 
 #profile-list a {
 	text-decoration: underline;
@@ -57,15 +56,6 @@ input#components-all, input#components-select, label[for="components-all"], labe
 	width: 200px;
 }
 
-#jce a.ui-button span.icon-legend { 
-	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -880px;
-}
-#jce a.ui-button span.icon-remove { 
-	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -180px;
-}
-#jce a.ui-button span.icon-add { 
-	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -300px;
-}
 #jce span.profiles-enable,  #jce span.profiles-disable {
 	background: url(../img/tick.png) no-repeat 0 0;
 	width: 20px;
