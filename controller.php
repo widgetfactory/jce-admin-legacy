@@ -203,10 +203,6 @@ class WFController extends WFControllerBase {
             'administrator/components/com_jce/media/css/global.css'
         ));
         
-        if (JFile::exists($admin_path . '/' . $view . '.css')) {
-            $styles[] = 'administrator/components/com_jce/media/css/' . $view . '.css';
-        }
-        
         return $styles;
     }
 
