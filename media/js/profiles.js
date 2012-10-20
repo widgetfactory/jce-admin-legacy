@@ -45,7 +45,10 @@
             $.extend(true, this.options, options);
 
             // Tabs
-            $('#tabs').tabs();
+            $('#tabs ul li a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
             
             $('input.checkbox-list-toggle-all').click(function() {                
                 $('input', this.parentNode.parentNode).prop('checked', this.checked);
@@ -57,7 +60,7 @@
             });
 
             // users list
-            $('a#users-add').button({
+            /*$('a#users-add').button({
                 icons : {
                     primary : 'icon-add'
                 }
@@ -77,25 +80,29 @@
                 icons : {
                     primary : 'icon-legend'
                 }
-            });
+            });*/
 
             // Editable Selects
 
             $( "select.editable, select.combobox" ).combobox(options.combobox);
 
             // Editor Tabs
-            $("#tabs-editor").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
+            $("#tabs-editor > ul li a:first").tab('show');
+            // Plugin tabs
+            $("#tabs-plugins > ul li a:first").tab('show');
+            
+            $('#jce a.nolink').remove();
 
-            $("#tabs-plugins").tabs({
+            /*$("#tabs-plugins").tabs({
                 selected : -1
-            }).addClass('ui-tabs-vertical ui-helper-clearfix');
+            }).addClass('ui-tabs-vertical ui-helper-clearfix');*/
             
             var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
             
             // make vertical tabs
-            $("#tabs-editor ul.ui-tabs-nav > li, #tabs-plugins ul.ui-tabs-nav > li").removeClass('ui-corner-top').addClass('ui-corner-' + dir);
+            //$("#tabs-editor ul.ui-tabs-nav > li, #tabs-plugins ul.ui-tabs-nav > li").removeClass('ui-corner-top').addClass('ui-corner-' + dir);
             
-            $("#tabs-plugins").tabs('select', $('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first', '#tabs-plugins').index());
+            //$("#tabs-plugins").tabs('select', $('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first', '#tabs-plugins').index());
 
             // Color Picker
             $('input.color').colorpicker(options.colorpicker);
@@ -353,7 +360,8 @@
                     self.setRows();
                     self.setPlugins();
                 },
-                placeholder	: 'sortableListItem ui-state-highlight'
+                placeholder : 'sortableListItem sortable-highlight',
+                opacity : 0.8
             }).disableSelection();
             
             $('span.sortableOption').hover(function() {
@@ -383,7 +391,8 @@
                 start : function(event, ui) {
                     $(ui.placeholder).width($(ui.item).width());
                 },
-                placeholder	: 'sortableRowItem ui-state-highlight'
+                opacity : 0.8,
+                placeholder	: 'sortableRowItem sortable-highlight'
             }).disableSelection();
             
             if (!$.support.leadingWhitespace) {
