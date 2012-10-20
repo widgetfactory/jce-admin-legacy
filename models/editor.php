@@ -19,7 +19,7 @@ wfimport('editor.libraries.classes.token');
 wfimport('editor.libraries.classes.editor');
 
 if (!defined('WF_INI_LANG')) {
-    define('WF_INI_LANG', 0);
+    define('WF_INI_LANG', 1);
 }
 
 jimport('joomla.application.component.model');
@@ -489,26 +489,27 @@ class WFModelEditor extends WFModelBase {
         $profile = $wf->getProfile();
 
         if (is_object($profile)) {
-            $plugins = explode(',', $profile->plugins);
-            $plugins = array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'core', 'code', 'dragupload', 'format', 'lists', 'wordcount'), $plugins));
-            $external = array();
+            $plugins    = explode(',', $profile->plugins);
+            $plugins    = array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'core', 'code', 'dragupload', 'format', 'lists', 'wordcount'), $plugins));
+            $installed  = array();
 
             // check for external plugin
-            foreach (JPluginHelper::getPlugin('jce') as $item) {
+            foreach (JPluginHelper::getPlugin('jce-plugins') as $item) {
                 if (in_array($item->name, $plugins)) {
-                    $external[] = $item->name;
+                    $installed[] = $item->name;
                 }
             }
 
             foreach ($plugins as $plugin) {
                 $path = WF_EDITOR_PLUGINS . '/' . $plugin;
 
-                if (in_array($plugin, $external)) {
-                    $path = JPATH_PLUGINS . '/jce/' . $plugin;
+                // use newer installed version 
+                if (in_array($plugin, $installed)) {
+                    $path   = JPATH_PLUGINS . '/jce-plugins/' . $plugin;
                     $plugin = '-' . $plugin;
                 }
 
-                // check plugin is correctly installed and is a tinymce plugin
+                // check plugin is correctly installed and is a tinymce plugin, ie: it has an editor_plugin.js file
                 if (JFile::exists($path . '/editor_plugin.js')) {
                     $return[] = $plugin;
                 }
@@ -1134,21 +1135,21 @@ class WFModelEditor extends WFModelBase {
                         } else {
                             $v = '"' . $v . '"';
                         }
-                        // skip hex colors
-                        if (preg_match('#^(?:[0-9A-F]{3}){1,2}$#', $k) === false) {
-                            $k = strtolower($k);
-                        }
                         
-                        if (strpos($k, 'HEX_') !== false) {
-                            $k = strtoupper(str_replace('HEX_', '', $k));
+                        // key to lowercase
+                        $k = strtolower($k);
+                        
+                        // hex colours to uppercase and remove marker
+                        if (strpos($k, 'hex_') !== false) {
+                            $k = strtoupper(str_replace('hex_', '', $k));
                         }
-
+                        // create key/value pair as JSON string
                         $output .= '"' . $k . '":' . $v . ',';
 
                         $i++;
                     }
                     // remove last comma
-                    rtrim(trim($output), ',');
+                    $output = rtrim(trim($output), ',');
 
                     $output .= "},";
 
@@ -1156,7 +1157,7 @@ class WFModelEditor extends WFModelBase {
                 }
             }
             // remove last comma
-            rtrim(trim($output), ',');
+            $output = rtrim(trim($output), ',');
         }
         return $output;
     }
