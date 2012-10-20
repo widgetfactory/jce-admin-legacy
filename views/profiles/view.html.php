@@ -152,6 +152,8 @@ class WFViewProfiles extends WFView {
             case 'apply':
             case 'add':
             case 'edit':
+                JHtml::_('behavior.modal');
+
                 // Load media   
                 $scripts = array(
                     'profiles.js',
@@ -254,8 +256,24 @@ class WFViewProfiles extends WFView {
                 }
 
                 $order = JHTML::_('list.genericordering', $query);
-                $lists['ordering'] = JHTML::_('select.genericlist', $order, 'ordering', 'class="inputbox" size="1"', 'value', 'text', intval($row->ordering));
-                $lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $row->published);
+                $lists['ordering']  = JHTML::_('select.genericlist', $order, 'ordering', 'class="inputbox" size="1"', 'value', 'text', intval($row->ordering));
+                
+                $lists['published'] = '';
+                
+                $options = array(
+                    1 => WFText::_('WF_OPTION_YES'),
+                    0 => WFTEXT::_('WF_OPTION_NO')
+                );
+                
+                foreach($options as $value => $text) {
+                    $checked = '';
+                    
+                    if ($value == $row->published) {
+                        $checked = ' checked="checked"';
+                    }
+                    
+                    $lists['published'] .= '<label class="radio inline"><input type="radio" id="published-' . $value . '" name="published" value="' . $value . '"' . $checked . ' />' . $text . '</label>';
+                }
 
                 $exclude = array(
                     'com_admin',
@@ -315,35 +333,73 @@ class WFViewProfiles extends WFView {
 
                 foreach ($options as $option) {
                     $checked = in_array($option->value, explode(',', $row->components)) ? ' checked="checked"' : '';
-                    $lists['components'] .= '<li><input type="checkbox" name="components[]" value="' . $option->value . '"' . $checked . $disabled . ' /><label>' . JText::_($option->text) . '</label></li>';
+                    $lists['components'] .= '<li><input type="checkbox" name="components[]" value="' . $option->value . '"' . $checked . $disabled . ' /><label class="checkbox">' . JText::_($option->text) . '</label></li>';
                 }
 
                 $lists['components'] .= '</ul>';
 
                 // components select
-                $options = array();
-                $options[] = JHTML::_('select.option', 'all', WFText::_('WF_PROFILES_COMPONENTS_ALL'));
-                $options[] = JHTML::_('select.option', 'select', WFText::_('WF_PROFILES_COMPONENTS_SELECT'));
+                $options = array(
+                    'all'       => WFText::_('WF_PROFILES_COMPONENTS_ALL'),
+                    'select'    => WFText::_('WF_PROFILES_COMPONENTS_SELECT')
+                );
 
-                $lists['components-select'] = JHTML::_('select.radiolist', $options, 'components-select', 'class="inputbox"', 'value', 'text', $row->components ? 'select' : 'all', false);
+                $lists['components-select'] = '';
+                
+                foreach($options as $value => $text) {
+                    $checked = '';
+                    
+                    if ($row->components) {
+                        if ($value == 'select') {
+                            $checked = ' checked="checked"';
+                        }
+                    } else {
+                        if ($value == 'all') {
+                            $checked = ' checked="checked"';
+                        }
+                    }
+                    
+                    $lists['components-select'] .= '<label class="radio inline"><input type="radio" id="components-select-' . $value . '" name="components-select" value="' . $value . '"' . $checked . ' />' . $text . '</label>';
+                }
 
                 // area
-                $options = array();
-                $options[] = JHTML::_('select.option', '', '-- ' . WFText::_('WF_PROFILES_AREA_SELECT') . ' --');
-                $options[] = JHTML::_('select.option', 0, WFText::_('WF_PROFILES_AREA_BOTH'));
-                $options[] = JHTML::_('select.option', 1, WFText::_('WF_PROFILES_AREA_FRONTEND'));
-                $options[] = JHTML::_('select.option', 2, WFText::_('WF_PROFILES_AREA_BACKEND'));
-
-                $lists['area'] = JHTML::_('select.genericlist', $options, 'area', 'class="inputbox levels" size="1"', 'value', 'text', $row->area);
+                $options = array(
+                    'site'  => WFText::_('WF_PROFILES_AREA_FRONTEND'),
+                    'admin' => WFText::_('WF_PROFILES_AREA_BACKEND')      
+                );
                 
-                // device
-                $options = array();
-                $options[] = JHTML::_('select.option', '', '-- ' . WFText::_('WF_OPTION_NOT_SET') . ' --');
-                $options[] = JHTML::_('select.option', 'desktop', WFText::_('WF_PROFILES_DEVICE_DESKTOP'));
-                $options[] = JHTML::_('select.option', 'tablet', WFText::_('WF_PROFILES_DEVICE_TABLET'));
-                $options[] = JHTML::_('select.option', 'mobile', WFText::_('WF_PROFILES_DEVICE_MOBILE'));
+                $lists['area'] = '';
+                
+                foreach($options as $value => $text) {
+                    $checked = '';
+                    
+                    if (!isset($row->area) || empty($row->area) || in_array($value, explode(',', $row->area))) {
+                        $checked = ' checked="checked"';
+                    }
+                    
+                    $lists['area'] .= '<label class="checkbox inline"><input type="checkbox" name="area[]" value="' . $value . '"'. $checked .' />' . $text . '</label>'; 
+                }
 
-                $lists['device'] = JHTML::_('select.genericlist', $options, 'device', 'class="inputbox levels" size="1"', 'value', 'text', $row->device);
+                // device
+                $options = array(
+                    'desktop'   => WFText::_('WF_PROFILES_DEVICE_DESKTOP'),
+                    'tablet'    => WFText::_('WF_PROFILES_DEVICE_TABLET'),
+                    'mobile'    => WFText::_('WF_PROFILES_DEVICE_MOBILE')
+                );
+                
+                $lists['device'] = '<div class="">';
+                
+                foreach($options as $value => $text) {
+                    $checked = '';
+                    
+                    if (!isset($row->device) || empty($row->device) || in_array($value, explode(',', $row->device))) {
+                        $checked = ' checked="checked"';
+                    }
+                    
+                    $lists['device'] .= '<label class="checkbox inline"><input type="checkbox" name="device[]" value="' . $value . '"'. $checked .' />' . $text . '</label>'; 
+                }
+                
+                $lists['device'] .= '</div>';
 
                 // user types from profile
                 $query = $db->getQuery(true);
@@ -405,7 +461,7 @@ class WFViewProfiles extends WFView {
 
                 foreach ($options as $option) {
                     $checked = in_array($option->value, explode(',', $row->types)) ? ' checked="checked"' : '';
-                    $lists['usergroups'] .= '<li><input type="checkbox" name="usergroups[]" value="' . $option->value . '"' . $checked . ' /><label>' . $option->text . '</label></li>';
+                    $lists['usergroups'] .= '<li><input type="checkbox" name="usergroups[]" value="' . $option->value . '"' . $checked . ' /><label class="checkbox">' . $option->text . '</label></li>';
                 }
 
                 $lists['usergroups'] .= '</ul>';

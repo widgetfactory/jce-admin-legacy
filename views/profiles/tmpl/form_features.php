@@ -45,7 +45,6 @@ if (strpos($theme, '.') === false) {
     <div id="layout_params">
         <?php foreach ($this->profile->layout_groups as $group) : ?>
             <div id="tabs-editor-<?php echo $group ?>">
-                <h2><?php echo WFText::_('WF_PROFILES_EDITOR_' . strtoupper($group)); ?></h2>
             <?php echo $this->profile->layout_params->render('params[editor]', $group); ?>
             </div>
         <?php endforeach; ?>
@@ -54,7 +53,7 @@ if (strpos($theme, '.') === false) {
     <ul class="adminformlist" id="profileLayoutTable">
         <!-- Active Editor Layout -->
         <li>
-            <label class="tooltip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR') . '::' . WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR'); ?></label>
+            <label class="wf-tooltip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR') . '::' . WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_EDITOR'); ?></label>
             <span class="profileLayoutContainer profileLayoutContainerCurrent <?php echo $theme; ?>">
                 <span id="editor_toggle"><?php echo $this->profile->layout_params->get('toggle_label', '[Toggle Editor]');?></span>
                 <span class="widthMarker" style="width:<?php echo $width; ?>;"><span><?php echo $width; ?></span></span>
@@ -72,7 +71,7 @@ if (strpos($theme, '.') === false) {
                                                 <?php endif; ?>
                                                 <?php foreach ($this->plugins as $plugin) : ?>
                                                     <?php if ($plugin->icon && $plugin->name == $icon) : ?>
-                                                        <span data-name="<?php echo $plugin->name; ?>" class="sortableRowItem <?php echo $plugin->type; ?> tooltip tooltip-cancel-ondrag" title="<?php echo WFText::_($plugin->title);?>::<?php echo WFText::_($plugin->description);?>"><?php echo $this->model->getIcon($plugin); ?></span>
+                                                        <span data-name="<?php echo $plugin->name; ?>" class="sortableRowItem <?php echo $plugin->type; ?> wf-tooltip wf-tooltip-cancel-ondrag" title="<?php echo WFText::_($plugin->title);?>::<?php echo WFText::_($plugin->description);?>"><?php echo $this->model->getIcon($plugin); ?></span>
                                                     <?php
                                                     endif;
                                                 endforeach;
@@ -81,7 +80,7 @@ if (strpos($theme, '.') === false) {
                                     endfor;
                                     ?>
                                 </div>
-                                <span class="sortableRowHandle"><span class="ui-icon ui-icon-arrowthick-2-n-s"><img src="components/com_jce/media/img/spacer.gif" width="11px" height="20px" /></span></span>
+                                <span class="sortableRowHandle"></span>
                                 <span class="sortableOption"></span>
                             </li>
                         <?php endfor; ?>
@@ -95,7 +94,7 @@ if (strpos($theme, '.') === false) {
         </li>
         <!-- Available Buttons -->
         <li>
-            <label class="tooltip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE') . '::' . WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE'); ?></label>
+            <label class="wf-tooltip" title="<?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE') . '::' . WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE_DESC'); ?>"><?php echo WFText::_('WF_PROFILES_FEATURES_LAYOUT_AVAILABLE'); ?></label>
             <span class="profileLayoutContainer <?php echo $theme; ?>">
                 <span class="profileLayoutContainerToolbar">
                 <ul class="sortableList">
@@ -113,13 +112,13 @@ if (strpos($theme, '.') === false) {
                                 foreach ($this->plugins as $plugin) :
                                     if (!in_array($plugin->name, explode(',', implode(',', $this->rows)))) :
                                         if ($plugin->icon && (int)$plugin->row == $i) :
-                                            echo '<span class="sortableRowItem ' . $plugin->type . ' tooltip tooltip-cancel-ondrag" data-name="' . $plugin->name . '" title="' . WFText::_($plugin->title) . '::' . WFText::_($plugin->description) . '">' . $this->model->getIcon($plugin) . '</span>';
+                                            echo '<span class="sortableRowItem ' . $plugin->type . ' wf-tooltip wf-tooltip-cancel-ondrag" data-name="' . $plugin->name . '" title="' . WFText::_($plugin->title) . '::' . WFText::_($plugin->description) . '">' . $this->model->getIcon($plugin) . '</span>';
                                         endif;
                                     endif;
                                 endforeach;
                                 ?>
                             </div>
-                            <span class="sortableRowHandle"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top:7px;"><img src="components/com_jce/media/img/spacer.gif" width="11px" height="20px" /></span></span>
+                            <span class="sortableRowHandle"></span>
                             <span class="sortableOption"></span>
                         </li>
                     <?php endfor; ?>
