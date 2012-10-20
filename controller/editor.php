@@ -32,8 +32,6 @@ class WFControllerEditor extends WFControllerBase {
                     if ($task == 'pack' || $task == 'loadlanguages') {
                         jimport('joomla.application.component.model');
 
-                        JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
-
                         require_once(WF_EDITOR_CLASSES . '/editor.php');
 
                         wfimport('admin.models.editor');
