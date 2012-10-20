@@ -155,10 +155,7 @@ html {
     float : left;
 }
 
-#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem.ui-state-highlight {
-    border-style: dashed;
-    min-width: 5px;
-}
+
 #jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem.spacer {
     min-width: 0px;
     margin: 3px 0 0;
@@ -169,22 +166,21 @@ html {
     padding: 0;
     margin: 0
 }
-#jce ul.sortableList li.sortableListItem.ui-state-highlight, 
-#jce ul.sortableList li.sortableRowItem.ui-state-highlight, 
-#jce span.profileLayoutContainer span.sortableContainer.ui-state-highlight {
-    border: 1px dashed #CCCCCC;
+/* Sortable Highlight */
+#jce ul.sortableList span.sortableRowItem.sortable-highlight {
+    min-width: 5px;
 }
-#jce span.profileLayoutContainer span.sortableContainer.ui-state-highlight {
+#jce ul.sortableList li.sortableListItem.sortable-highlight, 
+#jce ul.sortableList span.sortableRowItem.sortable-highlight {
+    border: 1px dashed #9FBBDD;
+}
+#jce span.profileLayoutContainer span.sortableContainer.sortable-highlight {
     display: block;
 }
-#jce span.profileLayoutContainer span.sortableContainer.ui-state-highlight:first-child {
+#jce span.profileLayoutContainer span.sortableContainer.sortable-highlight:first-child {
     margin: 0 0 1px 0;
 }
-#jce span.sortableRowItem.ui-sortable-helper {
-    opacity: 0.8;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-    filter: alpha(opacity=80);
-}
+
 #jce span.sortableRowItem span.mceButton {
     cursor: move;
     height: auto;
@@ -194,16 +190,40 @@ html {
 }
 
 #jce span.sortableRowHandle {
-    height: 26px;
-    border: 1px solid #CCC;
-    cursor: move;
     background-color: #F0F0EE;
-    text-align: center;
-    margin: -28px -19px 0 0;
-    position: relative;
+    border: 1px solid #CCCCCC;
+    cursor: move;
     display: block;
     float: right;
+    margin: -28px -18px 0 0;
+    padding: 8px 3px 8px 4px;
+    position: relative;
+    text-align: center;
 }
+#jce span.sortableRowHandle:before, #jce span.sortableRowHandle:after {
+    content : "";
+    
+    display: block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+    border-top: 4px solid #000000;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    position: relative;
+}
+
+#jce span.sortableRowHandle:before {    
+    border-bottom: 4px solid #000000;
+    border-top: 0 none;
+    margin-bottom : 2px;
+}
+
+#jce span.sortableRowHandle:after {
+    right: 1px;
+    margin-top : 2px;
+}
+
 #jce span.sortableRowHandle span.ui-icon {
     margin: 5px 0 0;
     cursor: move;

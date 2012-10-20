@@ -159,22 +159,14 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
 }
 
 #jce input.checkbox-list-toggle-all {
-    margin : 2px 6px;
+    /*margin : 2px 6px;*/
 }
 #jce input.checkbox-list-toggle-all + label {
-    margin : 0 5px;
+    /*margin : 0 5px;*/
 }
 
 #jce #tabs-setup input.checkbox-list-toggle-all {
-    margin : 2px 1px;
-}
-
-#jce input[name="area[]"] {
-    margin : 2px;
-}
-
-#jce input[name="area[]"]  + label {
-    margin : 0 5px;
+    /*margin : 2px 1px;*/
 }
 
 #jce ul.checkbox-list {
@@ -187,6 +179,10 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     margin : 0;
     list-style : none;
     min-width : 200px;
+}
+
+#jce ul.checkbox-list li {
+    padding : 5px 0;
 }
 
 #jce ul.users-list {
@@ -215,8 +211,13 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     cursor: pointer;
 }
 
+#jce ul.checkbox-list li input[type="checkbox"] {
+    margin: 5px 5px 5px 0;
+}
+
 #jce ul.checkbox-list li label {
-    margin : 0 5px;
+    margin : 0 10px;
+    display: inline-block;
 }
 
 #jce ul.users-list li label {
@@ -232,6 +233,15 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
 
 #jce #users-add {
     float : right;
+    margin: 5px 0;
+}
+
+#jce #users-add i.icon-add {
+    background: none;
+}
+
+#jce #users-add i.icon-add:before {
+    content : "";
 }
 
 /* Button Checklist */
@@ -296,4 +306,12 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
 #jce table td.order input[type="text"] {
     max-width : 30px; 
     margin : 0 10px;
+}
+
+#jce div.tab-pane.tabbable.tabs-left ul li a {
+    max-width: 100px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    white-space: pre-wrap;
+    cursor: pointer;
 }

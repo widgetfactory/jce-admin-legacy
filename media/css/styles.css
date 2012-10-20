@@ -8,7 +8,7 @@
  * other free or open source software licenses.
  */
 #jce {
-    /*font-size: 11px;*/
+    font-size: 12px;
 
     padding: 10px;
     background-color: #FFFFFF;
@@ -64,16 +64,16 @@
     height: auto;
     border: 0 none;
 }
-#jce input[disabled], select[disabled] {
+#jce input[disabled], #jce input[disabled] + label, select[disabled], select[disabled] + label {
     opacity : 0.5;
 }
 #jce legend {
-    font-size: 1.1em;
+    /*font-size: 1.1em;
     font-weight: bold;
     border: 0 none;
     margin: auto 0;
     padding: 0 5px;
-    width: auto;
+    width: auto;*/
 }
 #jce select.inputbox.levels, select.inputbox.users {
     width: 200px;
@@ -108,15 +108,19 @@
     clear: none;
 }
 div#jce textarea {
-    max-width : 375px;
-}
-div#jce textarea.text_area {
-    padding: 5px;
+    max-width : 350px;
+    width : auto;
+    padding : 5px;
 }
 div#jce button {
     margin : 0 2px 0 3px;
     font-size: 10.5px;
 }
+
+div#jce label input {
+    margin: 5px 10px 5px 6px;
+}
+
 /* Parameters */
 #jce fieldset.adminform {
     color: #000000;
@@ -149,7 +153,7 @@ div#jce button {
 }
 #jce ul.adminformlist > li, #jce dl.adminformlist > dd {
     vertical-align: middle;
-    background: url('../img/list_label_bg.gif') repeat-y;
+    /*background: url('../img/list_label_bg.gif') repeat-y;*/
     margin: 2px;
     float: left;
     clear: both;
