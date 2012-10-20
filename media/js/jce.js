@@ -86,11 +86,17 @@
             // Table striping
             $('div#jce tbody tr:odd').addClass('odd');*/
             
+            $('input[size="100"]').addClass('input-xlarge');
+            $('input[size="50"]').addClass('input-large');
+            $('input[size="5"]').addClass('input-mini');
+            
             // set dependant parameters
             this._setDependants();
 
             // HTML5 style form elements
             this._formWidgets();
+            
+            $('label.radio').addClass('inline');
         },
 
         createDialog : function(o) {
