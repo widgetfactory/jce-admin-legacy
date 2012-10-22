@@ -9,6 +9,10 @@
  */
 (function($) {
 
+    if (typeof Joomla === 'undefined') {
+        Joomla = {};
+    }
+    
     $.jce = {
 
         options : {},
@@ -23,6 +27,19 @@
             // Tips
             $('.wf-tooltip').tips({
                 parent : '#jce'
+            });
+            
+            $('th input[type="checkbox"]', $('table.adminlist')).click(function() {
+               var n = $('td input[type="checkbox"]', $('table.adminlist')).prop('checked', this.checked);
+               
+               $('input[name="boxchecked"]').val($(n).filter(':checked').length);
+            });
+            
+            $('td input[type="checkbox"]', $('table.adminlist')).click(function() {
+                var bc = $('input[name="boxchecked"]').val();
+                var n  = $('td input[type="checkbox"]', $('table.adminlist')).length;
+                
+                $('th input[type="checkbox"]', $('table.adminlist')).prop('checked', bc == n);
             });
 
             // Style stuff
@@ -42,23 +59,9 @@
             // IE
             if (!$.support.cssFloat) {
                 $('#jce').addClass('ie'); 
-                // IE6
-                if (!window.XMLHttpRequest) {
-                    $('#jce').addClass('ie6');
-                    
-                    $('input:text').addClass('ie_input_text');
 
-                    $('ul.adminformlist > li, dl.adminformlist > dd').addClass('ie_adminformlist');
-                    $('ul.adminformlist > li > label:first-child, ul.adminformlist > li > span:first-child, dl.adminformlist > dd > label:first-child, dl.adminformlist > dd > span:first-child').addClass('ie_adminformlist_child');
-                } else {
-                    if (!document.querySelector) {
-                        $('#jce').addClass('ie7');
-                    }
-                }
                 // IE6 / IE7
-                if (!document.querySelector) {
-                    $('button').addClass('ie_button');
-                } else {
+                if (document.querySelector) {
                     // IE8
                     if (!$.support.leadingWhitespace) {
                         $('#jce').addClass('ie8');

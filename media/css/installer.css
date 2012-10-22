@@ -56,3 +56,10 @@
 html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 	float: right;
 }
+
+#jce #tabs {
+    margin : 10px 0;
+}
+#jce fieldset {
+    margin : 0 0 10px 0;
+}

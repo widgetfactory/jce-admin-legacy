@@ -11,19 +11,21 @@
     $.jce.Installer = {
         init : function(options) {
             // Tabs
-            $('#tabs').tabs();
-
-            $('button#install_button').button({
-                icons : {
-                    primary : 'icon-install'
-                }
+            $('#tabs ul li a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+            
+            $('#upload_button').click( function(e) {
+                //if ($('div#tabs input:checkbox:checked').length) {
+                    $(this).addClass('loading');
+                    $('input[name="task"]').val('install');
+                    $('form[name="adminForm"]').submit();
+                //}
+                e.preventDefault();
             });
 
-            $('button.install_uninstall').button({
-                icons : {
-                    primary : 'icon-remove'
-                }
-            }).click( function(e) {
+            $('button.install_uninstall').click( function(e) {
                 if ($('div#tabs input:checkbox:checked').length) {
                     $(this).addClass('ui-state-loading');
                     $('input[name="task"]').val('remove');

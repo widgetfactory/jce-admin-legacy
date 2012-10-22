@@ -32,11 +32,11 @@
 #jce .ui-addselect {
     background-color:#DDD;
 }
-#jce fieldset {
+/*#jce fieldset {
     padding: 5px;
 	margin: 5px 0;
 	clear:none;
-}
+}*/
 /*#content-box #jce input, #content-box #jce textarea, #content-box #jce select, #content-box #jce img, #content-box #jce label {
     float: none;
     margin: 0;
@@ -45,9 +45,9 @@
     clear: none;
     display: inline;
 }*/
-#jce fieldset button {
+/*#jce fieldset button {
     float: none;
-}
+}*/
 #content-box #jce fieldset textarea {
     padding: 2px;
     width: 300px;
@@ -112,10 +112,10 @@ div#jce textarea {
     width : auto;
     padding : 5px;
 }
-div#jce button {
+/*div#jce button {
     margin : 0 2px 0 3px;
     font-size: 10.5px;
-}
+}*/
 
 div#jce label input {
     margin: 5px 10px 5px 6px;
@@ -461,10 +461,6 @@ body.ui-jce .ui-dialog-content.ui-widget-content {
 	padding: 0;
 }
 
-#jce #search {
-	width: 200px;
-}
-
 #toolbar span.icon-32-update span.icon-32-error {
 	background: url('../img/error.png') no-repeat bottom right;
 }
@@ -485,4 +481,35 @@ html[dir="rtl"] div.ui-dialog-buttonset button.ui-button span.ui-button-text {
 }
 html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 	float: right;
+}
+
+#jce input[name="order[]"] {
+    width : 30px;
+}
+
+#jce a.saveorder.pull-right {
+    float : none;
+}
+
+#jce td.order span {
+    float : left;
+    display: inline-block;
+    min-width: 24px;
+    margin: 4px;
+}
+
+#jce .smallsub {
+    font-size : 0.9em;
+}
+
+#jce #profiles-list td {
+    vertical-align: middle;
+}
+
+#jce #profiles-list td p {
+    margin : 0;
+}
+
+#jce a.nolink {
+    display: none;
 }

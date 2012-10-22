@@ -8,10 +8,6 @@
  * other free or open source software licenses.
  */
 (function($) {
-    if (typeof Joomla === 'undefined') {
-        Joomla = {};
-    }
-	
     Joomla.submitbutton = submitbutton = function(button) {
         // Cancel button
         if (button == "cancelEdit") {
@@ -91,7 +87,7 @@
             // Plugin tabs
             $("#tabs-plugins > ul li a:first").tab('show');
             
-            $('#jce a.nolink').remove();
+            //$('#jce a.nolink').remove();
 
             /*$("#tabs-plugins").tabs({
                 selected : -1

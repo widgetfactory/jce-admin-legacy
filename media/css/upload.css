@@ -28,13 +28,13 @@ span.upload_button_container input[type="file"] {
     position	: absolute;
     top			: 0;
     right		: 0;
-    font-size	: 20px;
+    font-size   : 20px;
     padding		: 0;
     margin		: 0;
-    height 		: 26px;
+    min-height 		: 24px;
 }
 #jce span.upload_button_container button {
-    margin-left: 5px;
+    /*margin-left: 5px;*/
 }
 #jce button span.browse, #jce button span.import {
     left: 0;
@@ -76,9 +76,8 @@ html[dir="rtl"] #jce label[for="import"] {
 	float: right;
 }
 #jce input.upload_text {
-	float: left;
+    float: left;
     color: #888;
-    height: 24px;
 }
 #jce input.upload_text.upload_file {
     color: #888;
@@ -88,7 +87,7 @@ html[dir="rtl"] #jce label[for="import"] {
 }
 
 #jce span.upload_button_container > span {
-    left : 5px;
+    left : 0;
 }
 
 html[dir="rtl"] #jce span.upload_button_container > span {
