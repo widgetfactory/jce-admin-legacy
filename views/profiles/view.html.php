@@ -51,7 +51,7 @@ class WFViewProfiles extends WFView {
                 $where = array();
 
                 if ($search) {
-                    $where[] = 'LOWER( p.name ) LIKE ' . $db->Quote('%' . $db->getEscaped($search, true) . '%', false);
+                    $where[] = 'LOWER( p.name ) LIKE ' . $db->Quote('%' . method_exists($db, 'escape') ? $db->escape($search, true) : $db->getEscaped($search, true) . '%', false);
                 }
                 if ($filter_state) {
                     if ($filter_state == 'P') {
@@ -148,7 +148,7 @@ class WFViewProfiles extends WFView {
                 $this->addScriptDeclaration('jQuery(document).ready(function($){$(":file").upload(' . json_encode($options) . ')});');
                 
                 // load styles
-                $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/uploads.css');
+                $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/upload.css');
 
                 $this->setLayout('default');
                 break;
