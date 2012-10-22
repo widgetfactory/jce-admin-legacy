@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -8,65 +9,61 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 abstract class WFExtensionHelper {
 
-	public static function getComponent($id =null, $option ='com_jce')
-	{
+    public static function getComponent($id = null, $option = 'com_jce') {
 
-		if(WF_JOOMLA15) {
-			// get component table
-			$component =JTable::getInstance('component');
+        if (defined('JPATH_PLATFORM')) {
+            // get component table
+            $component = JTable::getInstance('extension');
 
-			if($id) {
-				$component->load($id);
-			} else {
-				$component->loadByOption($option);
-			}
-		} else {
-			// get component table
-			$component =JTable::getInstance('extension');
+            if (!$id) {
+                $id = $component->find(array('type' => 'component', 'element' => $option));
+            }
 
-			if(!$id) {
-				$id = $component->find( array('type' => 'component', 'element' => $option));
-			}
+            $component->load($id);
+        } else {
+            // get component table
+            $component = JTable::getInstance('component');
 
-			$component->load($id);
-		}
-		
-		return $component;
-	}
+            if ($id) {
+                $component->load($id);
+            } else {
+                $component->loadByOption($option);
+            }
+        }
 
-	public static function getPlugin($id =null, $element ='jce', $folder ='editors')
-	{
+        return $component;
+    }
 
-		if(WF_JOOMLA15) {
-			$plugin =JTable::getInstance('plugin');
+    public static function getPlugin($id = null, $element = 'jce', $folder = 'editors') {
 
-			if(!$id) {
-				$db =JFactory::getDBO();
-				$query = 'SELECT id FROM #__plugins' . ' WHERE folder = ' . $db->Quote($folder) . ' AND element = ' . $db->Quote($element);
+        if (defined('JPATH_PLATFORM')) {
+            // get component table
+            $plugin = JTable::getInstance('extension');
 
-				$db->setQuery($query);
-				$id = $db->loadResult();
-			}
+            if (!$id) {
+                $id = $plugin->find(array('type' => 'plugin', 'folder' => $folder, 'element' => $element));
+            }
 
-			$plugin->load($id);
+            $plugin->load($id);
+            // map extension_id to id
+            $plugin->id = $plugin->extension_id;
+        } else {
+            $plugin = JTable::getInstance('plugin');
 
-		} else {
-			// get component table
-			$plugin =JTable::getInstance('extension');
+            if (!$id) {
+                $db = JFactory::getDBO();
+                $query = 'SELECT id FROM #__plugins' . ' WHERE folder = ' . $db->Quote($folder) . ' AND element = ' . $db->Quote($element);
 
-			if(!$id) {
-				$id = $plugin->find( array('type' => 'plugin', 'folder' => $folder, 'element' => $element));
-			}
+                $db->setQuery($query);
+                $id = $db->loadResult();
+            }
 
-			$plugin->load($id);
-			// map extension_id to id
-			$plugin->id = $plugin->extension_id;
-		}
+            $plugin->load($id);
+        }
 
-		return $plugin;
-	}
+        return $plugin;
+    }
 
 }
