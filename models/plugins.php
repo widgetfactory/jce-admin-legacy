@@ -86,18 +86,6 @@ class WFModelPlugins extends WFModel {
         // get all Plugins
         $folders = JFolder::folders(WF_EDITOR_PLUGINS, '.', false, true, array_merge(array('.svn', 'CVS'), array_keys($plugins)));
 
-        jimport('joomla.plugin.helper');
-        $external = JPluginHelper::getPlugin('jce');
-
-        // get external
-        foreach ($external as $plugin) {
-            $path = JPATH_PLUGINS . '/jce/' . $plugin->name;
-            // marked as a plugin by existence of editor_plugin.js file
-            if (is_dir($path) && is_file($path . '/editor_plugin.js')) {
-                $folders[] = $path;
-            }
-        }
-
         foreach ($folders as $folder) {
             $name = basename($folder);
             $file = $folder . '/' . $name . '.xml';
@@ -154,20 +142,6 @@ class WFModelPlugins extends WFModel {
 
         // recursively get all extension files
         $files = JFolder::files(WF_EDITOR_EXTENSIONS, '\.xml$', true, true);
-
-        // get external extensions
-        jimport('joomla.plugin.helper');
-        $external = JPluginHelper::getPlugin('jce');
-
-        // get external
-        foreach ($external as $plugin) {
-            $path = JPATH_PLUGINS . '/jce/' . $plugin->name;
-
-            // not a plugin
-            if (is_dir($path) && !is_file($path . '/editor_plugin.js')) {
-                $folders[] = $path;
-            }
-        }
 
         foreach ($files as $file) {
             $object = new StdClass();
