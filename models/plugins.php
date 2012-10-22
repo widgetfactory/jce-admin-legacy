@@ -86,18 +86,6 @@ class WFModelPlugins extends WFModel {
         // get all Plugins
         $folders = JFolder::folders(WF_EDITOR_PLUGINS, '.', false, true, array_merge(array('.svn', 'CVS'), array_keys($plugins)));
 
-        jimport('joomla.plugin.helper');
-        $external = JPluginHelper::getPlugin('jce');
-
-        // get external
-        foreach ($external as $plugin) {
-            $path = JPATH_PLUGINS . '/jce/' . $plugin->name;
-            // marked as a plugin by existence of editor_plugin.js file
-            if (is_dir($path) && is_file($path . '/editor_plugin.js')) {
-                $folders[] = $path;
-            }
-        }
-
         foreach ($folders as $folder) {
             $name = basename($folder);
             $file = $folder . '/' . $name . '.xml';
@@ -154,20 +142,6 @@ class WFModelPlugins extends WFModel {
 
         // recursively get all extension files
         $files = JFolder::files(WF_EDITOR_EXTENSIONS, '\.xml$', true, true);
-
-        // get external extensions
-        jimport('joomla.plugin.helper');
-        $external = JPluginHelper::getPlugin('jce');
-
-        // get external
-        foreach ($external as $plugin) {
-            $path = JPATH_PLUGINS . '/jce/' . $plugin->name;
-
-            // not a plugin
-            if (is_dir($path) && !is_file($path . '/editor_plugin.js')) {
-                $folders[] = $path;
-            }
-        }
 
         foreach ($files as $file) {
             $object = new StdClass();
@@ -241,7 +215,7 @@ class WFModelPlugins extends WFModel {
             $profile->plugins = implode(',', $plugins);
 
             if ($plugin->icon) {
-                if (!in_array($plugin, preg_split('/[;,]+/', $profile->rows))) {
+                if (in_array($plugin->name, preg_split('/[;,]+/', $profile->rows)) === false) {
                     // get rows as array	
                     $rows = explode(';', $profile->rows);
                     // get key (row number)
@@ -282,12 +256,12 @@ class WFModelPlugins extends WFModel {
 
             if ($plugin->icon) {
                 // check if its in the profile
-                if (in_array($plugin->icon, preg_split('/[;,]+/', $profile->rows))) {
+                if (in_array($plugin->name, preg_split('/[;,]+/', $profile->rows))) {
                     $lists = array();
                     foreach (explode(';', $profile->rows) as $list) {
                         $icons = explode(',', $list);
                         foreach ($icons as $k => $v) {
-                            if ($plugin->icon == $v) {
+                            if ($plugin->name == $v) {
                                 unset($icons[$k]);
                             }
                         }
@@ -314,7 +288,7 @@ class WFModelPlugins extends WFModel {
         jimport('joomla.filesystem.file');
 
         // get the base file
-        $file = WF_ADMINISTRATOR . '/index.html';
+        $file = dirname(dirname(__FILE__)) . '/index.html';
 
         if (is_file($file) && is_dir($path)) {
 
@@ -332,60 +306,40 @@ class WFModelPlugins extends WFModel {
     private static function getPlugin($name) {
         wfimport('admin.helpers.extension');
 
-        $plugin = WFExtensionHelper::getPlugin(null, $name, 'jce');
+        return WFExtensionHelper::getPlugin(null, $name, 'jce-plugins');
     }
 
-    public static function postFlight($route, $name, $installer) {
+    public static function postInstall($route, $plugin, $installer) {
         $db = JFactory::getDBO();
 
         jimport('joomla.filesystem.folder');
 
-        $plugin = self::getPlugin($name);
-
         // load the plugin and enable
-        if ($plugin && $plugin->id) {
-            $plugin->publish(1);
+        if (isset($plugin->row)) {
+            // Install plugin install default profile layout if a row is set
+            if (is_numeric($plugin->row) && (int) $plugin->row) {
+                $query = $db->getQuery(true);
 
-            $legacy = JPATH_SITE . '/components/com_jce/editor/tiny_mce/plugins/' . $name;
+                if (is_object($query)) {
+                    $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote('Default') . ' OR id = 1');
+                } else {
+                    $query = 'SELECT id'
+                            . ' FROM #__wf_profiles'
+                            . ' WHERE name = ' . $db->Quote('Default') . ' OR id = 1';
+                }
 
-            // remove old version
-            if (JFolder::exists($legacy)) {
-                @JFolder::delete($legacy);
-            }
+                $db->setQuery($query);
+                $id = $db->loadResult();
 
-            // get manifest from installer
-            $xml = $installer->manifest;
-
-            if ($xml) {
-                $plugin->row = WFXMLHelper::getAttribute('row');
-                $plugin->icon = WFXMLHelper::getElement('icon');
-                $plugin->name = WFXMLHelper::getElement('element');
-
-                // Install plugin install default profile layout if a row is set
-                if (is_numeric($plugin->row) && (int) $plugin->row) {
-                    $query = $db->getQuery(true);
-
-                    if (is_object($query)) {
-                        $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote('Default') . ' OR id = 1');
+                if ($id) {
+                    if ($route == 'install') {
+                        // add index.html files
+                        self::addIndexfiles(JPATH_PLUGINS . '/' . $plugin->folder . '/' . $plugin->element);
+                        // add to profile
+                        self::addToProfile($id, $plugin);
                     } else {
-                        $query = 'SELECT id'
-                                . ' FROM #__wf_profiles'
-                                . ' WHERE name = ' . $db->Quote('Default') . ' OR id = 1';
-                    }
-
-                    $db->setQuery($query);
-                    $id = $db->loadResult();
-
-                    if ($id) {
-                        if ($route == 'install') {
-                            // add index.html files
-                            self::addIndexfiles(JPATH_PLUGINS . '/' . $plugin->folder . '/' . $plugin->element);
-                            // add to profile
-                            self::addToProfile($id, $plugin);
-                        } else {
-                            // remove from profile
-                            self::removeFromProfile($id, $plugin);
-                        }
+                        // remove from profile
+                        self::removeFromProfile($id, $plugin);
                     }
                 }
             }
@@ -393,4 +347,5 @@ class WFModelPlugins extends WFModel {
 
         return true;
     }
+
 }
