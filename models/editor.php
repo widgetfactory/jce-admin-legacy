@@ -328,10 +328,6 @@ class WFModelEditor extends JModel {
             foreach ((array) $settings['plugins'] as $plugin) {
                 $path = WF_EDITOR_PLUGINS . '/' . $plugin;
 
-                if ($plugin[0] == '-') {
-                    $path = JPATH_PLUGINS . '/jce/' . substr($plugin, 1);
-                }
-
                 if (JFile::exists($path . '/langs/en.js') && !JFile::exists($path . '/langs/' . $language . '.js')) {
                     $plugins[] = $plugin;
                 }
@@ -486,22 +482,9 @@ class WFModelEditor extends JModel {
         if (is_object($profile)) {
             $plugins = explode(',', $profile->plugins);
             $plugins = array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'core', 'code', 'dragupload', 'format', 'lists', 'wordcount'), $plugins));
-            $external = array();
-
-            // check for external plugin
-            foreach (JPluginHelper::getPlugin('jce') as $item) {
-                if (in_array($item->name, $plugins)) {
-                    $external[] = $item->name;
-                }
-            }
 
             foreach ($plugins as $plugin) {
                 $path = WF_EDITOR_PLUGINS . '/' . $plugin;
-
-                if (in_array($plugin, $external)) {
-                    $path = JPATH_PLUGINS . '/jce/' . $plugin;
-                    $plugin = '-' . $plugin;
-                }
 
                 // check plugin is correctly installed and is a tinymce plugin
                 if (JFile::exists($path . '/editor_plugin.js')) {
