@@ -11,8 +11,6 @@
  */
 defined('JPATH_BASE') or die('RESTRICTED');
 
-jimport('joomla.installer.adapters.plugin');
-
 /**
  * JCE Plugin installer
  *
@@ -20,7 +18,58 @@ jimport('joomla.installer.adapters.plugin');
  * @subpackage  Installer
  * @since   1.5
  */
-class WFInstallerPlugin extends JInstallPlugin {
+class WFInstallerPlugin extends JObject {
+
+    /**
+     * Constructor
+     *
+     * @param object  $parent Parent object [JInstaller instance]
+     * @return  void
+     */
+    function __construct(&$parent) {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Setup manifest data
+     * @param object $manifest
+     */
+    private function setManifest($manifest) {
+        // element
+        foreach (array(
+    'name',
+    'version',
+    'description',
+    'installfile',
+    'uninstallfile',
+    'icon'
+        ) as $item) {
+            $this->set($item, WFXMLHelper::getElement($manifest, $item));
+        }
+
+        // attribute
+        foreach (array(
+    'group',
+    'type',
+    'plugin',
+    'core',
+    'editable',
+    'row'
+        ) as $item) {
+            $this->set($item, WFXMLHelper::getAttribute($manifest, $item));
+        }
+
+        // elements
+        foreach (array(
+    'files',
+    'languages',
+    'media'
+        ) as $item) {
+            $this->set($item, WFXMLHelper::getElements($manifest, $item));
+        }
+
+        return true;
+    }
 
     /**
      * Install method
@@ -29,43 +78,177 @@ class WFInstallerPlugin extends JInstallPlugin {
      * @return  boolean True on success
      */
     public function install() {
-        $ret = parent::install();
+        // Get a database connector object
+        $db = $this->parent->getDBO();
 
-        // post-install
-        if (!defined('JPATH_PLATFORM')) {
-            $scriptfile = $this->manifest->getElementByPath('scriptfile');
-            $scriptfile = $this->parent->getPath('source') . '/' . $scriptfile;
+        // Get the extension manifest object
+        $manifest = $this->parent->getManifest();
+        // setup manifest data
+        $this->setManifest($manifest);
 
-            if (is_file($scriptfile)) {
-                include_once($scriptfile);
+        $this->parent->set('name', $this->get('name'));
+        $this->parent->set('version', $this->get('version'));
+        $this->parent->set('message', $this->get('description'));
+
+        $plugin = $this->get('plugin');
+        $group = $this->get('group');
+        $type = $this->get('type');
+
+        // JCE Plugin
+        if (!empty($plugin)) {
+            if (version_compare($this->version, '2.0.0', '<')) {
+                $this->parent->abort(WFText::_('WF_INSTALLER_INCORRECT_VERSION'));
+                return false;
             }
 
-            // Set the class name
-            $classname = $this->get('name') . 'InstallerScript';
+            $this->parent->setPath('extension_root', JPATH_COMPONENT_SITE . '/editor/tiny_mce/plugins/' . $plugin);
+        } else {
+            // Non-JCE plugin type, probably JCE MediaBox or JCE Editor
+            if ($type == 'plugin' && ($group == 'system' || $group == 'editors')) {
+                require_once(JPATH_LIBRARIES . '/joomla/installer/adapters/plugin.php');
 
-            if (class_exists($classname)) {
-                // Create a new instance
-                $manifestClass = new $classname($this);
+                $adapter = new JInstallerPlugin($this->parent, $db);
+                $this->parent->setAdapter('plugin', $adapter);
+                return $adapter->install();
+            } else {
+                $this->parent->abort(WFText::_('WF_INSTALLER_EXTENSION_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_NO_PLUGIN_FILE'));
+                return false;
             }
-            
-            $msg = '';
-
-            // And now we run the postflight
-            ob_start();
-            ob_implicit_flush(false);
-
-            if ($manifestClass && method_exists($manifestClass, 'postflight')) {
-                $manifestClass->postflight('install', $this);
-            }
-
-            // Append messages
-            $msg .= ob_get_contents();
-            ob_end_clean();
-
-            $this->parent->set('extension.message', $msg);
         }
 
-        return $ret;
+        /**
+         * ---------------------------------------------------------------------------------------------
+         * Filesystem Processing Section
+         * ---------------------------------------------------------------------------------------------
+         */
+        // If the extension directory does not exist, lets create it
+        $created = false;
+        if (!file_exists($this->parent->getPath('extension_root'))) {
+            if (!$created = JFolder::create($this->parent->getPath('extension_root'))) {
+                $this->parent->abort(WFText::_('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_MKDIR_ERROR') . ' : "' . $this->parent->getPath('extension_root') . '"');
+                return false;
+            }
+        }
+
+        // Set overwrite flag if not set by Manifest
+        $this->parent->setOverwrite(true);
+
+        /*
+         * If we created the extension directory and will want to remove it if we
+         * have to roll back the installation, lets add it to the installation
+         * step stack
+         */
+        if ($created) {
+            $this->parent->pushStep(array(
+                'type' => 'folder',
+                'path' => $this->parent->getPath('extension_root')
+            ));
+        }
+
+        // Copy all necessary files
+        if (!$this->parent->parseFiles($this->get('files'), -1)) {
+            // Install failed, roll back changes
+            $this->parent->abort();
+            return false;
+        }
+        // install languages
+        $this->parent->parseLanguages($this->get('languages'), 0);
+        // install media
+        $this->parent->parseMedia($this->get('media'), 0);
+
+        // Load the language file
+        $language = JFactory::getLanguage();
+        $language->load('com_jce_' . trim($plugin), JPATH_SITE);
+
+        $install = $this->get('install.script');
+
+        if ($install) {
+            // Make sure it hasn't already been copied (this would be an error in the xml install file)
+            if (!file_exists($this->parent->getPath('extension_root') . '/' . $install)) {
+                $path['src'] = $this->parent->getPath('source') . '/' . $install;
+                $path['dest'] = $this->parent->getPath('extension_root') . '/' . $install;
+                if (!$this->parent->copyFiles(array(
+                            $path
+                        ))) {
+                    // Install failed, rollback changes
+                    $this->parent->abort(JText('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_PHP_INSTALL_FILE_ERROR'));
+                    return false;
+                }
+            }
+        }
+
+        $uninstall = $this->get('uninstall.script');
+
+        if ($uninstall) {
+            // Make sure it hasn't already been copied (this would be an error in the xml install file)
+            if (!file_exists($this->parent->getPath('extension_root') . '/' . $uninstall)) {
+                $path['src'] = $this->parent->getPath('source') . '/' . $uninstall;
+                $path['dest'] = $this->parent->getPath('extension_root') . '/' . $uninstall;
+                if (!$this->parent->copyFiles(array(
+                            $path
+                        ))) {
+                    // Install failed, rollback changes
+                    $this->parent->abort(JText('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_PHP_UNINSTALL_FILE_ERROR'));
+                    return false;
+                }
+            }
+        }
+
+        /**
+         * ---------------------------------------------------------------------------------------------
+         * Finalization and Cleanup Section
+         * ---------------------------------------------------------------------------------------------
+         */
+        // Lastly, we will copy the manifest file to its appropriate place.
+        if (!$this->parent->copyManifest(-1)) {
+            // Install failed, rollback changes
+            $this->parent->abort(WFText::_('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_SETUP_COPY_ERROR'));
+            return false;
+        }
+
+        /*
+         * If we have an install script, lets include it, execute the custom
+         * install method, and append the return value from the custom install
+         * method to the installation message.
+         */
+        $install = $this->get('install.script');
+
+        if ($install) {
+            if (file_exists($this->parent->getPath('extension_root') . '/' . $install)) {
+                ob_start();
+                ob_implicit_flush(false);
+                require_once($this->parent->getPath('extension_root') . '/' . $install);
+                if (function_exists('jce_install')) {
+                    if (jce_install() === false) {
+                        $this->parent->abort(WFText::_('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_CUSTOM_INSTALL_ERROR'));
+                        return false;
+                    }
+                } else if (function_exists('com_install')) {
+                    if (com_install() === false) {
+                        $this->parent->abort(WFText::_('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_CUSTOM_INSTALL_ERROR'));
+                        return false;
+                    }
+                }
+                $msg = ob_get_contents();
+                ob_end_clean();
+                if ($msg != '') {
+                    $this->parent->set('extension.message', $msg);
+                }
+            }
+        } else {
+            $this->parent->set('extension.message', '');
+        }
+
+        $plugin = new StdClass();
+        $plugin->name = $this->get('name');
+        $plugin->icon = $this->get('icon');
+        $plugin->row = $this->get('row');
+
+        wfimport('admin.modesl.plugin');
+        $model = new WFModelPlugins();
+        $model->postInstall('install', $plugin, $this);
+
+        return true;
     }
 
     /**
@@ -75,42 +258,90 @@ class WFInstallerPlugin extends JInstallPlugin {
      * @param 	string   $name  The name of the plugin to uninstall
      * @return  boolean True on success
      */
-    public function uninstall($id) {
-        $ret = parent::uninstall($id, $clientId = 0);
+    public function uninstall($name) {
+        // Initialize variables
+        $row = null;
+        $retval = true;
+        $db = $this->parent->getDBO();
 
-        // post-install
-        if (!defined('JPATH_PLATFORM')) {
-            $scriptfile = $this->manifest->getElementByPath('scriptfile');
-            $scriptfile = $this->parent->getPath('source') . '/' . $scriptfile;
+        $this->parent->set('name', $name);
 
-            if (is_file($scriptfile)) {
-                include_once($scriptfile);
+        // Set the plugin root path
+        $this->parent->setPath('extension_root', JPATH_COMPONENT_SITE . '/editor/tiny_mce/plugins/' . $name);
+
+        $manifest = $this->parent->getPath('extension_root') . '/' . $name . '.xml';
+
+        // Load the language file
+        $language = JFactory::getLanguage();
+        $language->load('com_jce_' . trim($name), JPATH_SITE);
+
+        if (file_exists($manifest)) {
+            $xml = WFXMLHelper::getXML($manifest);
+
+            if (!$this->setManifest($xml)) {
+                JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_MANIFEST_INVALID'));
             }
 
-            // Set the class name
-            $classname = 'plg' . str_replace('-', '', $row->folder) . $row->element . 'InstallerScript';
+            $this->parent->set('name', $this->get('name'));
+            $this->parent->set('version', $this->get('version'));
+            $this->parent->set('message', $this->get('description'));
 
-            if (class_exists($classname)) {
-                // Create a new instance
-                $manifestClass = new $classname($this);
-            }
-            
-            $msg = '';
-
-            // And now we run the postflight
-            ob_start();
-            ob_implicit_flush(false);
-
-            if ($manifestClass && method_exists($manifestClass, 'uninstall')) {
-                $manifestClass->uninstall($this);
+            // can't remove a core plugin
+            if ($this->get('core') == 1) {
+                JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . JText::sprintf('WF_INSTALLER_WARNCOREPLUGIN', WFText::_($this->get('name'))));
+                return false;
             }
 
-            // Append messages
-            $msg .= ob_get_contents();
-            ob_end_clean();
+            // Remove all media and languages as well
+            $this->parent->removeFiles($this->get('languages'), 0);
+            $this->parent->removeFiles($this->get('media'), 0);
 
-            $this->parent->set('extension.message', $msg);
+            /**
+             * ---------------------------------------------------------------------------------------------
+             * Custom Uninstallation Script Section
+             * ---------------------------------------------------------------------------------------------
+             */
+            // Now lets load the uninstall file if there is one and execute the uninstall function if it exists.
+            $uninstall = $this->get('uninstall.script');
+
+            if ($uninstall) {
+                // Element exists, does the file exist?
+                if (is_file($this->parent->getPath('extension_root') . '/' . $uninstall)) {
+                    ob_start();
+                    ob_implicit_flush(false);
+                    require_once($this->parent->getPath('extension_root') . '/' . $uninstall);
+                    if (function_exists('com_uninstall')) {
+                        if (com_uninstall() === false) {
+                            JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_CUSTOM_UNINSTALL_ERROR'));
+                            $retval = false;
+                        }
+                    }
+                    $msg = ob_get_contents();
+                    ob_end_clean();
+                    if ($msg != '') {
+                        $this->parent->set('extension.message', $msg);
+                    }
+                }
+            }
+
+            $plugin = new StdClass();
+            $plugin->name = $this->get('name');
+            $plugin->icon = $this->get('icon');
+
+            wfimport('admin.modesl.plugin');
+            $model = new WFModelPlugins();
+            $model->postInstall('uninstall', $plugin, $this);
+        } else {
+            JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_MANIFEST_ERROR'));
+            $retval = false;
         }
+        // remove the plugin folder
+        if (!JFolder::delete($this->parent->getPath('extension_root'))) {
+            JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_PLUGIN_FOLDER_ERROR'));
+            $retval = false;
+        }
+
+        return $retval;
     }
 
 }
