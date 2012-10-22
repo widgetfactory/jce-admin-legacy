@@ -23,18 +23,20 @@ abstract class WFToolbarHelper {
         $category = array_shift($sub);
         $article = implode('.', $sub);
 
-        $link = '&category=' . $category . '&article=' . $article;
+        $link = 'index.php?option=com_jce&amp;view=help&amp;tmpl=component&amp;section=admin&category=' . $category . '&article=' . $article . '&amp;lang=' . substr($tag, 0, strpos($tag, '-'));
 
         $bar = JToolBar::getInstance('toolbar');
 
         $options = array(
-            'width' => 780,
-            'height' => 560,
-            'modal' => true
+            'size' => array(
+                'x' => 780,
+                'y' => 560
+            ),
+            'handler' => 'iframe'
         );
 
-        $html = '<a href="index.php?option=com_jce&amp;view=help&amp;tmpl=component&amp;section=admin' . $link . '&amp;lang=' . substr($tag, 0, strpos($tag, '-')) . '" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog help" title="' . WFText::_('WF_HELP') . '">';
-        $html .= '<span class="icon-32-help" title="' . WFText::_('WF_HELP') . '"></span>' . WFText::_('WF_HELP') . '</a>';
+        $html = '<a href="' . $link . '" target="_blank" rel="' . str_replace('"', "'", json_encode($options)) . '" class="modal help" title="' . WFText::_('WF_HELP') . '">';
+        $html .= '<span class="icon-32-help btn" title="' . WFText::_('WF_HELP') . '"></span>' . WFText::_('WF_HELP') . '</a>';
 
         $bar->appendButton('Custom', $html, 'help');
     }
@@ -55,12 +57,14 @@ abstract class WFToolbarHelper {
             $bar = JToolBar::getInstance('toolbar');
 
             $options = array(
-                'width' => 760,
-                'height' => 540,
-                'modal' => true
+                'size' => array(
+                    'x' => 780,
+                    'y' => 560
+                ),
+                'handler' => 'iframe'
             );
 
-            $html = '<a href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" class="dialog preferences" title="' . WFText::_('WF_PREFERENCES_TITLE') . '">';
+            $html = '<a href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component" target="_blank" rel="' . str_replace('"', "'", json_encode($options)) . '" class="modal preferences" title="' . WFText::_('WF_PREFERENCES_TITLE') . '">';
             $html .= '<span class="icon-32-config icon-32-options" title="' . WFText::_('WF_PREFERENCES_TITLE') . '"></span>' . WFText::_('WF_PREFERENCES') . '</a>';
 
             $bar->appendButton('Custom', $html, 'config');
@@ -80,16 +84,18 @@ abstract class WFToolbarHelper {
         $bar = JToolBar::getInstance('toolbar');
         // Add a configuration button
         $options = array(
-            'width' => 760,
-            'height' => 540,
-            'modal' => true
+            'size' => array(
+                'x' => 780,
+                'y' => 560
+            ),
+            'handler' => 'iframe'
         );
 
         if ($enabled) {
-            $html = '<a href="index.php?option=com_jce&amp;view=updates&amp;tmpl=component" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" rel="{handler:\'iframe\',size:{x:760, y:540}}" class="modal updates" title="' . WFText::_('WF_UPDATES') . '">';
-            $html .= '<span class="icon-32-default icon-32-update" title="' . WFText::_('WF_UPDATES_CHECK') . '"></span>' . WFText::_('WF_UPDATES') . '</a>';
+            $html = '<a href="index.php?option=com_jce&amp;view=updates&amp;tmpl=component" target="_blank" rel="' . str_replace('"', "'", json_encode($options)) . '" class="modal updates" title="' . WFText::_('WF_UPDATES') . '">';
+            $html .= '<span class="icon-32-default icon-32-update btn icon-update" title="' . WFText::_('WF_UPDATES_CHECK') . '"></span>' . WFText::_('WF_UPDATES') . '</a>';
         } else {
-            $html = '<a href="#"><span class="icon-32-default icon-32-update" title="' . WFText::_('WF_UPDATES_NOSUPPORT') . '"><span class="icon-32-error"></span></span>' . WFText::_('WF_UPDATES_NOSUPPORT') . '</a>';
+            $html = '<a href="#"><span class="icon-32-default icon-32-update btn icon-update" title="' . WFText::_('WF_UPDATES_NOSUPPORT') . '"><span class="icon-32-error"></span></span>' . WFText::_('WF_UPDATES_NOSUPPORT') . '</a>';
         }
 
         $bar->appendButton('Custom', $html, 'config');
@@ -154,8 +160,8 @@ abstract class WFToolbarHelper {
         return JToolbarHelper::unpublishList($task);
     }
 
-    public static function deleteList($msg = '', $task = 'remove') {
-        return JToolbarHelper::deleteList($msg, $task);
+    public static function deleteList($msg = '', $task = 'remove', $alt = '') {
+        return JToolbarHelper::deleteList($msg, $task, $alt);
     }
 
 }
