@@ -12,28 +12,31 @@ defined('_JEXEC') or die('RESTRICTED');
 ?>
 <form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
     <div id="jce">
-        <fieldset id="filter-bar">
-            <div id="profiles-toolbar">
-                <div class="filter-search fltlft">
-                    <label for="search"><?php echo WFText::_('WF_LABEL_FILTER'); ?></label><input type="text" name="search" id="search" size="50" value="<?php echo $this->lists['search']; ?>" class="text_area" onchange="document.adminForm.submit();" />
-                    <button id="filter_go" onclick="this.form.submit();" class="btn"><i class="icon-search"></i><?php echo WFText::_('WF_LABEL_SEARCH'); ?></button>
-                    <button id="filter_reset" onclick="document.getElementById('search').value='';this.form.submit();" class="btn"><i class="icon-remove"></i><?php echo WFText::_('WF_LABEL_CLEAR'); ?></button>
-                </div>
-                <div class="filter-search fltrgt">
-                    <span class="upload-container">
-                        <label for="import"><?php echo WFText::_('WF_PROFILES_IMPORT'); ?></label>
+        <fieldset id="filter-bar" class="btn-toolbar">
+            <div class="filter-search btn-group pull-left fltlft">
+                <label for="search" class="element-invisible"><?php echo WFText::_('WF_LABEL_SEARCH'); ?></label>
+                <input type="text" name="search" id="search" size="50" value="<?php echo $this->lists['search']; ?>" class="text_area" onchange="document.adminForm.submit();" placeholder="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>" />
+            </div>
+            <div class="btn-group hidden-phone">
+                <button id="filter_go" onclick="this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>"><i class="icon-search"></i></button>
+                <button id="filter_reset" onclick="document.getElementById('search').value='';this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_CLEAR'); ?>"><i class="icon-remove"></i></button>
+            </div>
+            <div class="filter-search fltrgt btn-group pull-right hidden-phone">
+                <div class="upload-container btn-group pull-right">
+                    <label for="import" class="element-invisible"><?php echo WFText::_('WF_PROFILES_IMPORT'); ?></label>
+                    <div class="input-append">
                         <input type="file" name="import" id="upload" accept="application/xml" />
-                        <button id="upload_button" class="btn"><i class="icon-arrow-up"></i><?php echo WFText::_('WF_PROFILES_IMPORT_IMPORT'); ?></button>								
-                    </span>
+                        <button id="upload_button" class="btn"><i class="icon-arrow-up"></i>&nbsp;<?php echo WFText::_('WF_PROFILES_IMPORT_IMPORT'); ?></button>
+                    </div>
                 </div>
             </div>
         </fieldset>
-        <div class="clr"></div>
-        <table id="profiles-list" cellspacing="1" class="adminlist table table-striped">
+        <div class="clr clearfix"></div>
+        <table id="profiles-list" class="adminlist table table-striped" style="position: relative;">
             <thead>
                 <tr>
                     <th width="1%">
-                        <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->rows); ?>);" />
+                        <input type="checkbox" value="" />
                     </th>
                     <th class="title">
                         <?php echo JHTML::_('grid.sort', 'WF_PROFILES_NAME', 'p.name', @$this->lists['order_Dir'], @$this->lists['order']); ?>
@@ -88,21 +91,25 @@ defined('_JEXEC') or die('RESTRICTED');
                                 ?>
                                 <span class="editlinktip wf-tooltip" title="<?php echo WFText::_('WF_PROFILES_EDIT'); ?>::<?php echo $row->name; ?>">
                                     <a href="<?php echo $link; ?>">
-        <?php echo $row->name; ?></a></span>
+                                        <?php echo $row->name; ?></a></span>
                             <?php } ?>
                             <p class="smallsub"><?php echo $row->description; ?></p>
                         </td>
                         <td align="center">
-    <?php echo $state; ?>
+                            <?php echo $state; ?>
                         </td>
                         <td class="order" align="center">
-                            <span><?php echo $this->pagination->orderUpIcon($i, true, 'orderup', 'WF_PROFILES_ORDER_UP', $row->ordering); ?></span>
-                            <span><?php echo $this->pagination->orderDownIcon($i, $n, true, 'orderdown', 'WF_PROFILES_ORDER_DOWN', $row->ordering); ?></span>
-    <?php $disabled = $n > 1 ? '' : 'disabled="disabled"'; ?>
+                            <span class="order-up">
+                                <?php echo $this->pagination->orderUpIcon($i, true, 'orderup', 'WF_PROFILES_ORDER_UP', $row->ordering); ?>
+                            </span>
+                            <span class="order-down">
+                                <?php echo $this->pagination->orderDownIcon($i, $n, true, 'orderdown', 'WF_PROFILES_ORDER_DOWN', $row->ordering); ?>
+                            </span>
+                            <?php $disabled = $n > 1 ? '' : 'disabled="disabled"'; ?>
                             <input type="text" name="order[]" size="5" value="<?php echo $row->ordering; ?>" <?php echo $disabled ?> class="text_area" style="text-align: center" />
                         </td>
                         <td align="center">
-                    <?php echo $row->id; ?>
+                            <?php echo $row->id; ?>
                         </td>
                     </tr>
                     <?php
@@ -118,5 +125,5 @@ defined('_JEXEC') or die('RESTRICTED');
     <input type="hidden" name="boxchecked" value="0" />
     <input type="hidden" name="filter_order" value="<?php echo $this->lists['order']; ?>" />
     <input type="hidden" name="filter_order_Dir" value="<?php echo $this->lists['order_Dir']; ?>" />
-<?php echo JHTML::_('form.token'); ?>
+    <?php echo JHTML::_('form.token'); ?>
 </form>

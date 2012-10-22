@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 ?>
-<table cellspacing="1">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th width="20" align="center">&nbsp;</th>
