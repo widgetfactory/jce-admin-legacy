@@ -53,20 +53,20 @@ class WFView extends WFViewBase {
         $tab        = $document->_getTab();
         $end        = $document->_getLineEnd();
         
+        foreach ($this->stylesheets as $style) {
+            $document->addCustomTag($tab . '<link rel="stylesheet" href="' . $style . '" type="text/css" />' . $end);
+        }
+        
         foreach ($this->scripts as $script) {
             $document->addCustomTag($tab . '<script src="' . $script . '" type="text/javascript"></script>' . $end);
         }
         
         $head = array();
-        
+
         foreach ($this->javascript as $script) {
             $head[] = $tab . '<script type="text/javascript">' . $script . '</script>' . $end;
         }
-        
-        foreach ($this->stylesheets as $style) {
-            $document->addCustomTag($tab . '<link rel="stylesheet" href="' . $style . '" type="text/css" />' . $end);
-        }
-        
+
         foreach ($this->styles as $style) {
             $head[] = $tab . '<style type="text/css">' . $style . '></style>' . $end;
         }
