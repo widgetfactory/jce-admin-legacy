@@ -18,10 +18,6 @@ wfimport('admin.helpers.extension');
 wfimport('editor.libraries.classes.token');
 wfimport('editor.libraries.classes.editor');
 
-if (!defined('WF_INI_LANG')) {
-    define('WF_INI_LANG', 1);
-}
-
 jimport('joomla.application.component.model');
 
 class WFModelEditor extends WFModelBase {
@@ -188,7 +184,7 @@ class WFModelEditor extends WFModelBase {
             // CSS
             $this->addStyleSheet($this->getURL(true) . '/libraries/css/editor.css?version=' . $version);
             
-            $this->addStyleSheet($this->getURL(true) . '/libraries/bootstrap/css/bootstrap.css?version=' . $version);
+            //$this->addStyleSheet($this->getURL(true) . '/libraries/bootstrap/css/bootstrap.css?version=' . $version);
             
             // get plugin styles
             $this->getPluginStyles($settings);
