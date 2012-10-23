@@ -39,13 +39,47 @@
             var self = this;
             
             $.extend(true, this.options, options);
-
-            // Tabs
-            $('#tabs ul li a').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
             
+            var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
+            
+            if ($('body').hasClass('ui-bootstrap')) {
+                // Tabs
+                $('#tabs ul li a').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+                
+                // Editor Tabs
+                $("#tabs-editor > ul li a:first").tab('show');
+                // Plugin tabs
+                $("#tabs-plugins > ul li a:first").tab('show');
+                
+            } else {
+                $('#tabs').tabs();
+                
+                // users list
+                $('a#users-add').button({
+                    icons : {
+                        primary : 'icon-add'
+                    }
+                });
+                
+                $("#tabs-editor").tabs({
+                    selected : -1
+                }).addClass('ui-tabs-vertical ui-helper-clearfix');
+                
+                $("#tabs-plugins").tabs({
+                    'activate' : $('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first', '#tabs-plugins').index()
+                }).addClass('ui-tabs-vertical ui-helper-clearfix');
+                
+                // make vertical tabs
+                $("#tabs-editor ul.ui-tabs-nav > li, #tabs-plugins ul.ui-tabs-nav > li").removeClass('ui-corner-top').addClass('ui-corner-' + dir);
+            }
+            
+            $('input[name="area\\[\\]"]').click(function() {
+                
+            });
+
             $('input.checkbox-list-toggle-all').click(function() {                
                 $('input', this.parentNode.parentNode).prop('checked', this.checked);
             });
@@ -55,51 +89,10 @@
                 $('input[type="checkbox"]', '#components').prop('disabled', (this.value == 'all')).filter(':checked').prop('checked', false);
             });
 
-            // users list
-            /*$('a#users-add').button({
-                icons : {
-                    primary : 'icon-add'
-                }
-            });
-
-            $('a#users-remove').button({
-                icons : {
-                    primary : 'icon-remove'
-                }
-            }).click( function(e) {
-                e.preventDefault();
-                $('select#users').children(':selected').remove();
-                return false;
-            });
-
-            $('a#layout-legend').button({
-                icons : {
-                    primary : 'icon-legend'
-                }
-            });*/
-
             // Editable Selects
 
             $( "select.editable, select.combobox" ).combobox(options.combobox);
-
-            // Editor Tabs
-            $("#tabs-editor > ul li a:first").tab('show');
-            // Plugin tabs
-            $("#tabs-plugins > ul li a:first").tab('show');
             
-            //$('#jce a.nolink').remove();
-
-            /*$("#tabs-plugins").tabs({
-                selected : -1
-            }).addClass('ui-tabs-vertical ui-helper-clearfix');*/
-            
-            var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
-            
-            // make vertical tabs
-            //$("#tabs-editor ul.ui-tabs-nav > li, #tabs-plugins ul.ui-tabs-nav > li").removeClass('ui-corner-top').addClass('ui-corner-' + dir);
-            
-            //$("#tabs-plugins").tabs('select', $('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first', '#tabs-plugins').index());
-
             // Color Picker
             $('input.color').colorpicker(options.colorpicker);
 
@@ -140,13 +133,13 @@
                 }
             });
 
-            $('input.autocomplete').each( function() {
+            /*$('input.autocomplete').each( function() {
                 var el = this, v = $(el).attr('placeholder') || '';
                 $(el).removeAttr('placeholder');
                 $(el).autocomplete({
                     source: v.split(',') || []
                 });
-            });
+            });*/
 
 
             $('#paramseditorwidth').change( function() {

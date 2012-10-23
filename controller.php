@@ -82,11 +82,14 @@ class WFController extends WFControllerBase {
         $view = parent::getView($name, $type, $prefix, $config);
         $document = JFactory::getDocument();
         
-        // not using JUI...
-        if (class_exists('JHtmlJquery')) {
-            JHtml::_('jquery.framework');
-        } else {
-            // jquery versions
+        $bootstrap  = class_exists('JHtmlBootstrap');
+        $jquery     = class_exists('JHtmlJquery'); 
+        
+        // using JUI...
+        if (!$bootstrap || !$jquery) {
+            // JQuery UI
+            $view->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/css/jquery-ui.custom.css?version=' . $model->getVersion());
+            // JQuery UI
             $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
             // jQuery noConflict
             $view->addScriptDeclaration('jQuery.noConflict();');
@@ -100,12 +103,7 @@ class WFController extends WFControllerBase {
 
         switch ($name) {
             case 'help':
-                if (JPATH_PLATFORM) {
-                    JHtml::script('components/com_jce/editor/libraries/js/help.js');
-                } else {
-                    JHtml::script('help.js', 'components/com_jce/editor/libraries/js/', false);
-                }
-
+                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/help.js?version=' . $model->getVersion());
                 break;
             default:
                 // load Joomla! core javascript
@@ -133,7 +131,8 @@ class WFController extends WFControllerBase {
                         'saveclose' => WFText::_('WF_LABEL_SAVECLOSE'),
                         'alert' => WFText::_('WF_LABEL_ALERT'),
                         'required' => WFText::_('WF_MESSAGE_REQUIRED')
-                    )
+                    ),
+                    'bootstrap' => $bootstrap
                 );
 
                 $view->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');

@@ -10,17 +10,36 @@
 (function($) {
     $.jce.Installer = {
         init : function(options) {
-            // Tabs
-            $('#tabs ul li a').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
             
+            $(":file").upload(options);
+            
+            if ($('body').hasClass('ui-bootstrap')) {
+                // Tabs
+                $('#tabs ul li a').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+            } else {
+                $('#tabs').tabs();
+                
+                $('button#upload_button').button({
+                    icons : {
+                        primary : 'icon-install'
+                    }
+                });
+                
+                $('#upload_button_container button').button({
+                    icons : {
+                        primary : 'icon-browse'
+                    }
+                });
+            }
+
             $('#upload_button').click( function(e) {
                 //if ($('div#tabs input:checkbox:checked').length) {
-                    $(this).addClass('loading');
-                    $('input[name="task"]').val('install');
-                    $('form[name="adminForm"]').submit();
+                $(this).addClass('loading');
+                $('input[name="task"]').val('install');
+                $('form[name="adminForm"]').submit();
                 //}
                 e.preventDefault();
             });
@@ -33,7 +52,6 @@
                 }
                 e.preventDefault();
             });
-
         }
     };
 })(jQuery);

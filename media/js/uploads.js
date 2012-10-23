@@ -53,20 +53,25 @@
             }
 			
             // create button
-            var $button = $('<button/>').addClass('btn');
+            var $button = $('<button/>').html(o.labels.browse).prepend('<i class="icon-search" />&nbsp;').addClass('upload-browse').button({
+                icons : {
+                    primary : 'ui-icon-search'
+                }
+            });
 
-            var $buttoncontainer = $('<span/>').addClass('upload_button_container').insertBefore(this.element).append(this.element).hover( function() {
+            var $buttoncontainer = $('<div/>').addClass('upload_button_container').insertBefore(this.element).append(this.element).hover( function() {
                 $button.addClass('ui-state-hover');
             }, function() {
                 $button.removeClass('ui-state-hover');
             });
 			
-            var $inputcontainer = $('<span/>').addClass('upload_input_container').insertBefore($buttoncontainer);
+            var $inputcontainer = $('<div/>').addClass('upload_input_container').insertBefore($buttoncontainer);
 			
             var $input = $('<input/>').attr({
-                'type' 			: 'text',
-                'name'			: $(this.element).attr('name') + '_input',
-                'placeholder'	: $(this.element).attr('placeholder')
+                'type' 		: 'text',
+                'name'		: $(this.element).attr('name') + '_input',
+                'placeholder'	: $(this.element).attr('placeholder'),
+                'size'          : $(this.element).attr('size') || 30
             }).addClass('upload_text').appendTo($inputcontainer);
 
             if (o.readonly) {
@@ -78,9 +83,9 @@
                 $(self.element).val('');
             });
 			
-            $button.html(o.labels.browse).click( function(e) {
+            $button.click( function(e) {
                 e.preventDefault();
-            }).prepend('<i class="icon-search" />&nbsp;');
+            });
                         
             // hide file input element
             $(this.element).css({
@@ -102,9 +107,9 @@
 
             // submit button
             if (o.button) {
-                var btn = document.getElementById(o.button), submit = o.submit;
+                var submit = o.submit;
 
-                $(btn).click( function(e) {
+                $(o.button).click( function(e) {
                     if ($input.hasClass('placeholder')) {
                         $input.val('');
                     }
@@ -121,14 +126,12 @@
                     }
 
                     e.preventDefault();
-                });
-
-                $buttoncontainer.append(btn);
+                }).appendTo($buttoncontainer);
 
                 // add input wrapper
-                $('<span style="position:absolute;overflow:hidden;display:inline-block;"></span>').css({
+                $('<span class="upload-input-wrapper"></span>').css({
                     'width' 	: $button.outerWidth(),
-                    'height' 	: $button.outerHeight()
+                    'height' 	: $button.outerHeight(true)
                 }).insertBefore(this.element).append(this.element);
             }
 

@@ -72,7 +72,7 @@ defined('_JEXEC') or die('RESTRICTED');
                 <?php echo WFText::_('WF_PROFILES_GROUPS'); ?>
             </label>
             <span class="list">
-                <div><label class="checkbox"><?php echo WFText::_('WF_PROFILES_TOGGLE_ALL'); ?>&nbsp;<input class="checkbox-list-toggle-all" type="checkbox" /></label></div>
+                <div><label class="checkbox"><input class="checkbox-list-toggle-all" type="checkbox" />&nbsp;<?php echo WFText::_('WF_PROFILES_TOGGLE_ALL'); ?></label></div>
                 <?php echo $this->lists['usergroups']; ?>
             </span>
         </li>

@@ -10,7 +10,7 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 ?>
-<h5><?php echo WFText::_('WF_INSTALLER_UNINSTALL_DESC'); ?></h5>
+<h4><?php echo WFText::_('WF_INSTALLER_UNINSTALL_DESC'); ?></h4>
 <div id="tabs">
     <ul class="nav nav-tabs">
         <li class="wf-tooltip active" title="<?php echo JText :: _('WF_INSTALLER_PLUGINS') . '::' . WFText::_('WF_INSTALLER_PLUGINS_DESC'); ?>"><a href="#tabs-plugins"><?php echo JText :: _('WF_INSTALLER_PLUGINS'); ?></a></li>

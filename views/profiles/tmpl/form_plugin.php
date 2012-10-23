@@ -47,9 +47,11 @@ foreach ($this->plugins as $plugin) :
                     <?php
                     // Draw parameters
                     foreach ($groups as $group) :
-                        echo '<h4>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group)) . '</h4>';
+                        echo '<fieldset class="adminform panelform">';
+                        echo '<legend>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group)) . '</legend>';
                         echo '<p>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group) . '_DESC') . '</p>';
                         echo $params->render('params[' . $plugin->name . ']', $group);
+                        echo '</fieldset>';
                     endforeach;
 
                     $extensions = $this->model->getExtensions($plugin->name);

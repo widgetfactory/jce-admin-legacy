@@ -57,7 +57,7 @@ class WFViewInstaller extends WFView {
         );
         $this->addScript('components/com_jce/media/js/installer.js?version=' . $model->getVersion());
         $this->addScript('components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
-        $this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Installer.init({});$(":file").upload(' . json_encode($options) . ')});');
+        $this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Installer.init(' . json_encode($options) . ');});');
 
         // load styles
         $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/installer.css');

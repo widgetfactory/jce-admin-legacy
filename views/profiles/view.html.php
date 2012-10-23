@@ -136,7 +136,7 @@ class WFViewProfiles extends WFView {
                 WFToolbarHelper::help('profiles.about');
 
                 $options = array(
-                    'button' => 'upload_button',
+                    'button' => '#upload_button',
                     'task' => 'import',
                     'labels' => array(
                         'browse' => WFText::_('WF_LABEL_BROWSE'),
@@ -145,7 +145,7 @@ class WFViewProfiles extends WFView {
                 );
 
                 $this->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
-                $this->addScriptDeclaration('jQuery(document).ready(function($){$(":file").upload(' . json_encode($options) . ')});');
+                $this->addScriptDeclaration('jQuery(document).ready(function($){$(\'input[type="file"]\').upload(' . json_encode($options) . ')});');
                 
                 // load styles
                 $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/upload.css');

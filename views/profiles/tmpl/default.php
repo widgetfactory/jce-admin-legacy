@@ -15,18 +15,18 @@ defined('_JEXEC') or die('RESTRICTED');
         <fieldset id="filter-bar" class="btn-toolbar">
             <div class="filter-search btn-group pull-left fltlft">
                 <label for="search" class="element-invisible"><?php echo WFText::_('WF_LABEL_SEARCH'); ?></label>
-                <input type="text" name="search" id="search" size="50" value="<?php echo $this->lists['search']; ?>" class="text_area" onchange="document.adminForm.submit();" placeholder="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>" />
+                <input type="text" name="search" id="search" size="30" value="<?php echo $this->lists['search']; ?>" class="text_area" onchange="document.adminForm.submit();" placeholder="" />
             </div>
-            <div class="btn-group hidden-phone">
-                <button id="filter_go" onclick="this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>"><i class="icon-search"></i></button>
-                <button id="filter_reset" onclick="document.getElementById('search').value='';this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_CLEAR'); ?>"><i class="icon-remove"></i></button>
+            <div class="btn-group hidden-phone fltlft">
+                <button id="filter_go" onclick="this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>"><i class="icon-search"></i>&nbsp;<?php echo WFText::_('WF_LABEL_SEARCH'); ?></button>
+                <button id="filter_reset" onclick="document.getElementById('search').value='';this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_CLEAR'); ?>"><i class="icon-remove"></i>&nbsp;<?php echo WFText::_('WF_LABEL_CLEAR'); ?></button>
             </div>
-            <div class="filter-search fltrgt btn-group pull-right hidden-phone">
+            <div class="filter-search fltrt btn-group pull-right hidden-phone">
                 <div class="upload-container btn-group pull-right">
                     <label for="import" class="element-invisible"><?php echo WFText::_('WF_PROFILES_IMPORT'); ?></label>
-                    <div class="input-append">
-                        <input type="file" name="import" id="upload" accept="application/xml" />
-                        <button id="upload_button" class="btn"><i class="icon-arrow-up"></i>&nbsp;<?php echo WFText::_('WF_PROFILES_IMPORT_IMPORT'); ?></button>
+                    <div class="input-append upload_button_container">
+                        <input type="file" name="import" size="30" id="upload" accept="application/xml" placeholder="" />
+                        <button id="upload_button" class="btn upload-import"><i class="icon-arrow-up"></i>&nbsp;<?php echo WFText::_('WF_PROFILES_IMPORT_IMPORT'); ?></button>
                     </div>
                 </div>
             </div>
@@ -35,7 +35,7 @@ defined('_JEXEC') or die('RESTRICTED');
         <table id="profiles-list" class="adminlist table table-striped" style="position: relative;">
             <thead>
                 <tr>
-                    <th width="1%">
+                    <th width="2%">
                         <input type="checkbox" value="" />
                     </th>
                     <th class="title">

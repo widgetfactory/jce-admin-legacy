@@ -23,6 +23,53 @@
 
             // add ui-jce class to body
             $('body').addClass('ui-jce');
+            
+            // Bootstrap styles
+            if (this.options.bootstrap) {
+                // add boostrap id class
+                $('body').addClass('ui-bootstrap');
+                
+                $('input[size="100"]').addClass('input-xlarge');
+                $('input[size="50"]').addClass('input-large');
+                $('input[size="5"]').addClass('input-mini');
+            } else {
+                $('body').addClass('ui-jquery');
+                
+                // Style stuff
+                $('div.icon a').addClass('ui-widget-content ui-corner-all');
+
+                $('a.dialog').click( function(e) {                
+                    self.createDialog({
+                        src 	: $(this).attr('href'),
+                        options     : $(this).data('options'),
+                        modal	: $(this).hasClass('modal'),
+                        type	: /(users|help|preferences|updates|browser|legend)/.exec($(this).attr('class'))[0],
+                        title	: $(this).attr('title')
+                    });
+                    e.preventDefault();
+                });
+                
+                $('button#filter_go').button({
+                    icons: {
+                        primary: 'ui-icon-search'
+                    }
+                });
+
+                $('button#filter_reset').button({
+                    icons : {
+                        primary : 'ui-icon-arrowrefresh-1-e'
+                    }
+                });
+                
+                $('button.upload-import').button({
+                    icons : {
+                        primary : 'ui-icon-arrowthick-1-n'
+                    }
+                });
+
+                // Table striping
+                $('div#jce tbody tr:odd').addClass('odd');
+            }
 
             // Tips
             $('.wf-tooltip').tips({
@@ -42,20 +89,6 @@
                 $('th input[type="checkbox"]', $('table.adminlist')).prop('checked', bc == n);
             });
 
-            // Style stuff
-            //$('div.icon a').addClass('ui-widget-content ui-corner-all');
-
-            /*$('a.dialog').click( function(e) {                
-                self.createDialog({
-                    src 	: $(this).attr('href'),
-                    options : $(this).data('options'),
-                    modal	: $(this).hasClass('modal'),
-                    type	: /(users|help|preferences|updates|browser|legend)/.exec($(this).attr('class'))[0],
-                    title	: $(this).attr('title')
-                });
-                e.preventDefault();
-            });*/
-
             // IE
             if (!$.support.cssFloat) {
                 $('#jce').addClass('ie'); 
@@ -71,27 +104,6 @@
                     }
                 }
             }
-
-            // Profiles list
-            // buttons
-            /*$('button#filter_go').button({
-                icons: {
-                    primary: 'ui-icon-search'
-                }
-            });
-
-            $('button#filter_reset').button({
-                icons : {
-                    primary : 'ui-icon-arrowrefresh-1-e'
-                }
-            });
-
-            // Table striping
-            $('div#jce tbody tr:odd').addClass('odd');*/
-            
-            $('input[size="100"]').addClass('input-xlarge');
-            $('input[size="50"]').addClass('input-large');
-            $('input[size="5"]').addClass('input-mini');
             
             // set dependant parameters
             this._setDependants();

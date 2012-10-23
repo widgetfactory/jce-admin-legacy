@@ -73,24 +73,6 @@ input#components-all, input#components-select, label[for="components-all"], labe
 	display: inline;
 }
 
-#jce table tfoot td, table tfoot th {
-	text-align:center;
-}
-
-#jce .jgrid span.state {
-	display:inline-block;
-	height:12px;
-	width: 12px;
-	vertical-align: middle;
-}
-#jce .jgrid span.text {
-	display: none;
-}
-#jce a.saveorder {
-	display: inline-block;
-	float: none;
-	vertical-align: middle;
-}
 div#plugin_params span.mceIcon {
 	display: inline-block;
 	vertical-align: middle;
@@ -109,13 +91,6 @@ div#plugin_params h2 {
 	margin: 0 0 0.8em 0;
 }
 
-#jce td.order span {
-	width:18px;
-	display: inline-block;
-}
-#jce td.order span a span span {
-	display: none;
-}
 #jce span.browser {
 	width: 20px;
 	height: 20px;
@@ -298,10 +273,14 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     margin : 0 10px;
 }
 
-#jce div.tab-pane.tabbable.tabs-left ul li a {
+.ui-bootstrap #jce div.tab-pane.tabbable.tabs-left ul li a {
     max-width: 100px;
     padding-bottom: 20px;
     padding-top: 20px;
     white-space: pre-wrap;
     cursor: pointer;
+}
+
+#jce #tabs ul li span.tabs-label {
+    margin : 5px 0;
 }
