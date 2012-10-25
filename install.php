@@ -947,6 +947,15 @@ abstract class WFInstall {
                         $module->store();
                     }
                 }
+                
+                if ($folder == 'editors') {
+                    $manifest = $installer->getPath('manifest');
+                    
+                    if (basename($manifest) == 'legacy.xml') {
+                        // rename legacy.xml to jce.xml
+                        JFile::move($installer->getPath('extension_root') . '/' . basename($manifest), $installer->getPath('extension_root') . '/jce.xml');
+                    }
+                }
 
                 // add index files
                 self::addIndexfiles(array($installer->getPath('extension_root')));
