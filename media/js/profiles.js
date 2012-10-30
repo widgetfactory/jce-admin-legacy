@@ -75,10 +75,6 @@
                 // make vertical tabs
                 $("#tabs-editor ul.ui-tabs-nav > li, #tabs-plugins ul.ui-tabs-nav > li").removeClass('ui-corner-top').addClass('ui-corner-' + dir);
             }
-            
-            $('input[name="area\\[\\]"]').click(function() {
-
-            });
 
             $('input.checkbox-list-toggle-all').click(function() {                                                
                 $('input[type="checkbox"]', '#user-groups').prop('checked', this.checked);
