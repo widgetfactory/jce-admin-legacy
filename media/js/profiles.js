@@ -77,11 +77,11 @@
             }
             
             $('input[name="area\\[\\]"]').click(function() {
-                
+
             });
 
-            $('input.checkbox-list-toggle-all').click(function() {                
-                $('input', this.parentNode.parentNode).prop('checked', this.checked);
+            $('input.checkbox-list-toggle-all').click(function() {                                                
+                $('input[type="checkbox"]', '#user-groups').prop('checked', this.checked);
             });
             
             // Components select
