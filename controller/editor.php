@@ -18,7 +18,7 @@ wfimport('admin.helpers.extension');
 
 class WFControllerEditor extends WFControllerBase {
 
-    function execute($task) {
+    public function execute($task) {
         // Load language
         $language = JFactory::getLanguage();
         $language->load('com_jce', JPATH_ADMINISTRATOR);
@@ -59,21 +59,9 @@ class WFControllerEditor extends WFControllerBase {
                     break;
                 case 'plugin':
                     $file = basename(JRequest::getCmd('file', $plugin));
+                    $path = WF_EDITOR_PLUGINS . '/' . $plugin;
 
-                    // external plugin folder
-                    $path = JPATH_PLUGINS . '/jce/' . $plugin;
-
-                    // check external path first
-                    if (is_dir($path)) {
-                        // check enabled
-                        if (JPluginHelper::isEnabled('jce', $plugin) === false) {
-                            $path = WF_EDITOR_PLUGINS . '/' . $plugin;
-                        }
-                    } else {
-                        $path = WF_EDITOR_PLUGINS . '/' . $plugin;
-                    }
-
-                    if (is_dir($path) && file_exists($path . '/' . $file . '.php')) {
+                    if (is_dir($path) && file_exists($path . '/' . $file . '.php')) {                        
                         include_once($path . '/' . $file . '.php');
                     } else {
                         throw new InvalidArgumentException('File ' . $file . ' not found!');
