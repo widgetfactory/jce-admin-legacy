@@ -60,7 +60,7 @@
                 // users list
                 $('a#users-add').button({
                     icons : {
-                        primary : 'icon-add'
+                        primary : 'ui-icon-person'
                     }
                 });
                 
