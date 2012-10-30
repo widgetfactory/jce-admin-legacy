@@ -8,38 +8,39 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die('RESTRICTED');
 ?>
 <div id="jce">
-	<fieldset>
-		<legend><?php echo WFText::_('WF_UPDATES_AVAILABLE');?></legend>
-		<table class="ui-widget ui-widget-content" id="updates-list" cellspacing="1">
-			<thead>
-				<tr class="ui-widget-header">
-					<th width="3%"></th>
-					<th class="title">
-						<?php echo WFText::_('WF_UPDATES_NAME') ?>
-					</th>
-					<th class="title" width="20%">
-						<?php echo WFText::_('WF_UPDATES_TYPE') ?>
-					</th>
-			        <th class="title" width="20%">
-						<?php echo WFText::_('WF_UPDATES_VERSION') ?>
-					</th>
-					<th class="title" width="20%">
-						<?php echo WFText::_('WF_UPDATES_PRIORITY') ?>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr><td colspan="5"></td></tr>
-			</tbody>
-		</table>
-		</fieldset>
-	<fieldset>
-		<legend><?php echo WFText::_('WF_UPDATES_INFO') ?></legend>
-		<div id="updates-info"></div>
-	</fieldset>
-	<div style="float:right;margin:10px 0 0 0;"><button id="update-button" class="check"><?php echo WFText::_('WF_UPDATES_CHECK');?></button></div>
+    <fieldset>
+        <legend><?php echo WFText::_('WF_UPDATES_AVAILABLE'); ?></legend>
+        <table class="table table-striped table-bordered ui-widget ui-widget-content" id="updates-list" cellspacing="1">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th width="3%"></th>
+                    <th class="title">
+                        <?php echo WFText::_('WF_UPDATES_NAME') ?>
+                    </th>
+                    <th class="title" width="20%">
+                        <?php echo WFText::_('WF_UPDATES_TYPE') ?>
+                    </th>
+                    <th class="title" width="20%">
+                        <?php echo WFText::_('WF_UPDATES_VERSION') ?>
+                    </th>
+                    <th class="title" width="20%">
+                        <?php echo WFText::_('WF_UPDATES_PRIORITY') ?>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="5"></td></tr>
+            </tbody>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend><?php echo WFText::_('WF_UPDATES_INFO') ?></legend>
+        <div id="updates-info"></div>
+    </fieldset>
+    <div class="btn-group pull-right fltrgt">
+        <button id="update-button" class="check btn">&nbsp;<?php echo WFText::_('WF_UPDATES_CHECK'); ?></button>
+    </div>
 </div>

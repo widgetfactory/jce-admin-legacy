@@ -179,6 +179,8 @@ class WFViewUsers extends WFView {
         $this->assignRef('lists', $lists);
         $this->assignRef('items', $rows);
         $this->assignRef('pagination', $pagination);
+        
+        $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/users.css');
 
         parent::display($tpl);
     }
