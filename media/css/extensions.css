@@ -6,7 +6,7 @@
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- */ */
+ */
 #jce div.extension_mapper {
 	min-width : 200px;
 	margin: 5px 0 5px 215px;
@@ -106,7 +106,7 @@ html[dir="rtl"] #jce div.extension_list_scroll_bottom span.extension_list_scroll
 	border: 1px solid #9FBBDD;
 	cursor:move;
 	height:20px;
-	line-height: 16px;
+	line-height: 20px;
 	margin:1px;
 	padding:0 0 0 22px;
 	vertical-align:middle;
