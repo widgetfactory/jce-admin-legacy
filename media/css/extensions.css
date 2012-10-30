@@ -87,8 +87,12 @@ html[dir="rtl"] #jce div.extension_group_container span.extension_group_title {
 	position: relative;
 	width: 16px;
 	height: 10px;
-	margin: -3px 0 0 -8px;
+	margin: 0 0 0 -8px;
 	left: 50%;
+        top : -3px;
+        vertical-align : top;
+        font-size : 8px;
+        text-align : center;
 }
 html[dir="rtl"] #jce div.extension_list_scroll_top span.extension_list_scroll_top_icon, 
 html[dir="rtl"] #jce div.extension_list_scroll_bottom span.extension_list_scroll_bottom_icon {
