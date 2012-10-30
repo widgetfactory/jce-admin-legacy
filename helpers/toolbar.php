@@ -129,8 +129,13 @@ abstract class WFToolbarHelper {
     }
 
     public static function export() {
-        $icon = 'download';
-        self::custom('export', $icon . '.png', $icon . '_f2.png', 'WF_PROFILES_EXPORT', true);
+        if (class_exists('JHtmlSidebar')) {
+            $icon = 'download';
+        } else {
+            $icon = defined('JPATH_PLATFORM') ? 'export' : 'unarchive';
+        }
+
+        self::custom('export', $icon, $icon . '_f2', 'WF_PROFILES_EXPORT', true);
     }
 
     public static function save($task = 'save') {
