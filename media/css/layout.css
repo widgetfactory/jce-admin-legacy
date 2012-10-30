@@ -220,7 +220,6 @@ html {
 }
 
 #jce span.sortableRowHandle:after {
-    right: 1px;
     margin-top : 2px;
 }
 
