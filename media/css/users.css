@@ -1,0 +1,10 @@
+body {
+    height : 500px;
+}
+
+#jce table + div.btn-group {
+    position : absolute;
+    right : 0;
+    bottom : 0;
+}
+
