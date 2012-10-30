@@ -1,3 +1,6 @@
+html {
+    overflow: auto;
+}
 body {
     height : 500px;
 }
