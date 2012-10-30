@@ -78,7 +78,7 @@
 
         createElement: function(el, ul, n) {
             // Create elements
-            var self = this, d = document, li = d.createElement('li'), check = d.createElement('span'), plugin;
+            var self = this, d = document, li = d.createElement('li'), plugin;
 
             $(li).attr({
                 title: n.value
@@ -100,15 +100,9 @@
             }
 
             // Add checkboxes
-            $(check).addClass('checkbox').addClass( function() {
-                return n.selected ? 'checked' : '';
-            }).click( function() {
-                
-                if ($(this).hasClass('disabled')) {
-                    return;
-                } 
+            $('<input type="checkbox" />').addClass('checkbox inline').prop('checked', n.selected).prop('disabled', n.disabled).click(function() {                
                 // add check and trigger
-                $(this).toggleClass('checked').trigger('checkbox:check', $(this).hasClass('checked'));
+                $(this).trigger('checkbox:check', this.checked);
             }).appendTo(li).on('checkbox:check', function(e, state) {             
                 // Trigger serialization
                 self.setValue(el, ul);
@@ -122,41 +116,26 @@
                 self.options.onCheck.call(self, [this, n]);
             });
             
-            // initialise
-            $(check).trigger('checkbox:check', $(check).hasClass('checked'));
-            
-            // disable
-            if (n.disabled) {
-                $(check).addClass('disabled');
-            }
-
-            // Add name
-            $(li).append('<span class="widget-checklist-' + n.value + '" title="' + n.name + '">' + n.name + '</span>');
+            // Add label
+            $(li).append('<label class="checkbox inline widget-checklist-' + n.value + '" title="' + n.name + '">' + n.name + '</label>');
 
                         
             if ($(el).hasClass('buttonlist')) {                
-                $('span.widget-checklist-' + n.value, li).prepend('<span class="mceButton mceSplitButton"><span class="mceIcon mce_' + n.value + '"></span></span>');
+                $('label', li).prepend('<span class="mceButton mceSplitButton"><span class="mceIcon mce_' + n.value + '"></span></span>');
             }
         },
 
         setValue: function(el, ul) {
             var $list = $('li', ul);
 
-            var x = $.map($('span.checked', $list), function(n) {
+            var x = $.map($('input[type="checkbox"]:checked', $list), function(n) {
                 return $(n).parent('li').attr('title');
             });
 
-            if (el.nodeName == 'SELECT') {
-                $(el).empty();                
-                
-                $.each($list, function(i, item) {
-                    var v = $(item).attr('title');
-                    var o = document.createElement('option');
-                	
-                    $(o).attr({
-                        'value' : v
-                    }).prop('selected', !($.inArray(v, x) == -1)).appendTo(el);
-                });                
+            if (el.nodeName == 'SELECT') {                
+                $('option', el).each(function() {
+                    $(this).prop('selected', $.inArray(this.value, x) != -1);
+                })                
             } else {
                 el.value = x.join(',');
             }
