@@ -238,7 +238,11 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     vertical-align: middle;
 }
 #jce div.tabs-plugin-parameters {
-    
+    margin : 0;
+}
+
+#jce .ui-tabs-vertical .ui-tabs-panel {
+    margin: 0;
 }
 
 #jce div.tabs-plugin-parameters h3 {
