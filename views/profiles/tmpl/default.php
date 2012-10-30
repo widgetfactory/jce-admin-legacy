@@ -44,7 +44,7 @@ defined('_JEXEC') or die('RESTRICTED');
                     <th nowrap="nowrap" width="5%">
                         <?php echo JHTML::_('grid.sort', 'WF_PROFILES_STATE', 'p.published', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                     </th>
-                    <th nowrap="nowrap" width="10%" >
+                    <th nowrap="nowrap" width="15%" >
                         <?php echo JHTML::_('grid.sort', 'WF_PROFILES_ORDERING', 'p.ordering', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                         <?php
                         if (count($this->rows) > 1) {
