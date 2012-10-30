@@ -128,6 +128,7 @@ html[dir="rtl"] #jce div.extension_list_container ul.extension_list li {
 	position: absolute;
 	right: 0;
 	top: 0;
+        padding : 0;
 }
 #jce div.extension_mapper span.checkbox.view {
 	background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1180px;
