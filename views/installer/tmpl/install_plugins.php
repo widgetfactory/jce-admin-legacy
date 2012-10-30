@@ -23,7 +23,7 @@ defined('_JEXEC') or die('RESTRICTED');
     <tbody>
 <?php foreach ($this->plugins as $plugin) : ?>
             <tr>
-                <td width="20px" align="center"><input type="checkbox" name="pid[]" value="<?php echo $plugin->name; ?>" /></td>
+                <td width="20px" align="center"><input type="checkbox" name="pid[]" value="plugins.<?php echo $plugin->name; ?>" /></td>
                 <td><span class="bold"><?php echo WFText::_($plugin->title); ?></span></td>
                 <td align="center"><?php echo @$plugin->version != '' ? $plugin->version : '&nbsp;'; ?></td>
                 <td align="center"><?php echo @$plugin->creationdate != '' ? $plugin->creationdate : '&nbsp;'; ?></td>
