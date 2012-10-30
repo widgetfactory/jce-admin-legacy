@@ -405,8 +405,28 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
     left : -6px;
 }
 
-@media (min-width: 979px) {
+#jce #profiles-list th:first-child {
+    width : 2%;
+}
+
+#jce #profiles-list th:first-child + th + th {
+    width : 5%;
+}
+
+#jce #profiles-list th:first-child + th + th + th {
+    width : 10%;
+}
+
+#jce #profiles-list th:first-child + th + th + th + th {
+    width : 1%;
+}
+
+@media (max-width: 979px) {
     input#upload_text, input.upload_text {
         width : 200px
+    }
+    
+    #jce #profiles-list th:first-child + th + th + th {
+        width : 15%;
     }
 }

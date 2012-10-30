@@ -35,16 +35,16 @@ defined('_JEXEC') or die('RESTRICTED');
         <table id="profiles-list" class="adminlist table table-striped" style="position: relative;">
             <thead>
                 <tr>
-                    <th width="2%">
+                    <th>
                         <input type="checkbox" value="" />
                     </th>
                     <th class="title">
                         <?php echo JHTML::_('grid.sort', 'WF_PROFILES_NAME', 'p.name', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                     </th>
-                    <th nowrap="nowrap" width="5%">
+                    <th nowrap="nowrap">
                         <?php echo JHTML::_('grid.sort', 'WF_PROFILES_STATE', 'p.published', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                     </th>
-                    <th nowrap="nowrap" width="15%" >
+                    <th nowrap="nowrap">
                         <?php echo JHTML::_('grid.sort', 'WF_PROFILES_ORDERING', 'p.ordering', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                         <?php
                         if (count($this->rows) > 1) {
@@ -52,7 +52,7 @@ defined('_JEXEC') or die('RESTRICTED');
                         }
                         ?>
                     </th>
-                    <th nowrap="nowrap"  width="1%" class="title">
+                    <th nowrap="nowrap" class="title">
                         <?php echo JHTML::_('grid.sort', 'WF_LABEL_ID', 'p.id', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                     </th>
                 </tr>
