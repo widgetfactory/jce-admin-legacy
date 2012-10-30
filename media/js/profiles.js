@@ -44,15 +44,15 @@
             
             if ($('body').hasClass('ui-bootstrap')) {
                 // Tabs
-                $('#tabs ul li a').click(function (e) {
+                $('ul.nav-tabs > li > a[href]', '#tabs').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');
                 });
                 
                 // Editor Tabs
-                $("#tabs-editor > ul li a:first").tab('show');
+                $("#tabs-editor > ul.nav-tabs li a:first").tab('show');
                 // Plugin tabs
-                $("#tabs-plugins > ul li a:first").tab('show');
+                $("#tabs-plugins > ul.nav-tabs li a:first").tab('show');
                 
             } else {
                 $('#tabs').tabs();

@@ -49,6 +49,15 @@
                 $('input[size="100"]').addClass('input-xlarge');
                 $('input[size="50"]').addClass('input-large');
                 $('input[size="5"]').addClass('input-mini');
+                
+                $('a.dialog').click( function(e) { 
+                    var options = $(this).data('options');
+                    var data = $.parseJSON(options.replace(/'/g, '"'));
+                    
+                    Joomla.modal(this, this.href, data.width, data.height);
+                    e.preventDefault();
+                });
+                
             } else {
                 $('body').addClass('ui-jquery');
                 
