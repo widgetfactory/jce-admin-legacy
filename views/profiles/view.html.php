@@ -131,7 +131,7 @@ class WFViewProfiles extends WFView {
                 if (count($rows) > 1) {
                     WFToolbarHelper::publishList();
                     WFToolbarHelper::unpublishList();
-                    WFToolbarHelper::deleteList();
+                    WFToolbarHelper::deleteList('', 'remove', 'WF_PROFILES_DELETE');
                 }
                 WFToolbarHelper::help('profiles.about');
 
@@ -390,7 +390,7 @@ class WFViewProfiles extends WFView {
                 $options = array(
                     'desktop'   => WFText::_('WF_PROFILES_DEVICE_DESKTOP'),
                     'tablet'    => WFText::_('WF_PROFILES_DEVICE_TABLET'),
-                    'mobile'    => WFText::_('WF_PROFILES_DEVICE_MOBILE')
+                    'phone'    => WFText::_('WF_PROFILES_DEVICE_PHONE')
                 );
                 
                 $lists['device'] = '<div class="">';
