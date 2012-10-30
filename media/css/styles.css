@@ -95,9 +95,9 @@ html[dir="rtl"] #jce dl.adminformlist > dd {
 #jce ul.adminformlist > li > div h4 {
     margin-left: 10px;
 }
-#jce ul.adminformlist > li {
+/*#jce ul.adminformlist > li {
     line-height: 30px;
-}
+}*/
 #jce dl.adminformlist > dd {
     display: block;
     float: none;
