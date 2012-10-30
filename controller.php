@@ -85,15 +85,18 @@ class WFController extends WFControllerBase {
         $bootstrap  = class_exists('JHtmlBootstrap');
         $jquery     = class_exists('JHtmlJquery'); 
         
+        $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/global.css?version=' . $model->getVersion());
+        
         // using JUI...
         if (!$bootstrap || !$jquery) {
-            // JQuery UI
-            $view->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/css/jquery-ui.custom.css?version=' . $model->getVersion());
+            $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/styles-ui.css?version=' . $model->getVersion());
+
             // JQuery UI
             $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
             // jQuery noConflict
             $view->addScriptDeclaration('jQuery.noConflict();');
         }
+        
         // JQuery UI
         $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
         // JQuery Touch Punch
@@ -154,12 +157,6 @@ class WFController extends WFControllerBase {
         if ($model = $this->getModel($name)) {
             $view->setModel($model, true);
         }
-        
-        $styles = $this->getStyles();
-        
-        foreach ($styles as $style) {
-            $view->addStyleSheet(JURI::root(true) . '/' . $style);
-        } 
 
         $view->assignRef('document', $document);
 
@@ -179,8 +176,8 @@ class WFController extends WFControllerBase {
         $params 	= new WFParameter($component->params);
         
         $theme  	= $params->get('preferences.theme', 'jce');
-        $site_path  = JPATH_COMPONENT_SITE . '/editor/libraries/css';
-		$admin_path = JPATH_COMPONENT_ADMINISTRATOR . '/media/css';
+        $site_path      = JPATH_COMPONENT_SITE . '/editor/libraries/css';
+	$admin_path     = JPATH_COMPONENT_ADMINISTRATOR . '/media/css';
         
         // Load styles
         $styles = array();
