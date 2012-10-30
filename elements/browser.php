@@ -74,7 +74,7 @@ class WFElementBrowser extends WFElement {
         wfimport('admin.models.model');
         $model = new WFModel();
 
-        $html .= '<a href="' . $model->getBrowserLink($attributes['id'], $filter) . '" class="dialog browser" target="_blank" data-options=\'' . json_encode($options) . '\' title="' . WFText::_('WF_BROWSER_TITLE') . '"><span class="browser"></span></a>';
+        $html .= '<a href="' . $model->getBrowserLink($attributes['id'], $filter) . '" class="dialog browser" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" title="' . WFText::_('WF_BROWSER_TITLE') . '"><span class="browser"></span></a>';
 
         return $html;
     }
