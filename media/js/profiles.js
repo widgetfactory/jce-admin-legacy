@@ -345,6 +345,9 @@
                     self.setRows();
                     self.setPlugins();
                 },
+                start : function(event, ui) {
+                    $(ui.placeholder).width($(ui.item).width());
+                },
                 placeholder : 'sortableListItem sortable-highlight',
                 opacity : 0.8
             }).disableSelection();
