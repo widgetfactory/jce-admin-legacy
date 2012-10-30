@@ -1,6 +1,6 @@
 /**
  * @package   	JCE
- * @copyright 	Copyright � 2009-2012 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -36,7 +36,7 @@
          * @param {Object} options
          */
         init : function(options) {
-            var t = this;
+            var self = this;
 
             $.extend(this.options, options);
 
@@ -45,10 +45,8 @@
                     primary : 'icon-update'
                 }
             }).click( function() {
-                t.execute(this);
-            });
-
-            this.check($('button#update-button'));
+                self.execute(this);
+            }).click();
         },
 
         execute : function(el) {
