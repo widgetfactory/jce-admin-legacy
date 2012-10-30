@@ -108,6 +108,12 @@ class WFControllerProfiles extends WFController
 		$types 		= JRequest::getVar( 'usergroups', array(), 'post', 'array' );
 		// get users
 		$users 		= JRequest::getVar( 'users', array(), 'post', 'array' );
+                
+                // get device
+		$device 	= JRequest::getVar( 'device', array(), 'post', 'array' );
+                
+                // get area
+		$area 	= JRequest::getVar( 'area', array(), 'post', 'array' );
 
 		if (!$row->bind(JRequest::get('post'))) {
 			JError::raiseError(500, $row->getError() ); 
@@ -116,6 +122,8 @@ class WFControllerProfiles extends WFController
 		$row->types 		= implode(',', $types);
 		$row->components 	= implode(',', $components);
 		$row->users 		= implode(',', $users);
+                $row->device 		= implode(',', $device);
+                $row->area 		= implode(',', $area);
 
 		$data 				= new StdClass();
 		// get params array
