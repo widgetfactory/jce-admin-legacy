@@ -53,7 +53,7 @@
             }
 			
             // create button
-            var $button = $('<button/>').html(o.labels.browse).prepend('<i class="icon-search" />&nbsp;').addClass('upload-browse').button({
+            var $button = $('<button/>').html(o.labels.browse).prepend('<i class="icon-search" />&nbsp;').addClass('upload-browse btn').button({
                 icons : {
                     primary : 'ui-icon-search'
                 }
