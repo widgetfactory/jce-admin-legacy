@@ -8,8 +8,7 @@
  * other free or open source software licenses.
 */
 #jce {
-    font-size: 11px;
-
+    font-size : 12px;
     padding: 10px;
     background-color: #FFFFFF;
     border-radius : 10px;
@@ -17,72 +16,15 @@
     -webkit-border-radius: 10px;
 }
 
-.icon-48-logo {
-    background-image: url("../img/logo.png");
-}
-
-#jce.dialog:hover, #jce.dialog:visited {
-    text-decoration: none;
-}
-#jce .ui-tabs .ui-tabs-hide {
-    display: block !important;
-    position: absolute;
-    top: -10000px;
-    left: -10000px;
-}
-
-#jce .ui-tabs-nav .ui-state-disabled {
-    display:none !important;
-}
 #jce .ui-addselect {
     background-color:#DDD;
 }
-/*#jce fieldset {
-    padding: 5px;
-        margin: 5px 0;
-        clear:none;
-}*/
-#jce input, #jce textarea, #jce select, #jce img, #jce label {
-    float: none;
-    margin: 0;
-    padding: 0;
-    font-size: 1em;
-    clear: none;
-    display: inline;
-}
-#jce fieldset button {
-    float: none;
-}
+
 #jce fieldset textarea {
     padding: 2px;
     width: 300px;
 }
-#jce input[type="checkbox"] {
-    border: none;
-}
-#jce input[type="text"], #jce input[type="password"], #jce select {
-    height: 20px;
-    line-height: 18px;
-    padding: 4px 2px 3px;
-}
-#jce select {
-    height: 26px;
-}
-#jce input[type="checkbox"], #jce input[type="radio"] {
-    height: auto;
-    border: 0 none;
-}
-#jce input[disabled], #jce input[disabled] + label, select[disabled], select[disabled] + label {
-    opacity : 0.5;
-}
-#jce legend {
-    font-size: 1.1em;
-    font-weight: bold;
-    border: 0 none;
-    margin: auto 0;
-    padding: 0 5px;
-    width: auto;
-}
+
 #jce select.inputbox.levels, select.inputbox.users {
     width: 200px;
 }
@@ -92,48 +34,9 @@
 #jce select[multiple] {
     height: auto !important;
 }
-#jce input, label {
-    vertical-align: middle;
-}
-#jce label {
-    line-height: 24px;
-}
-
-#jce input[type="radio"] + label {
-    display: inline-block;
-    margin: 0 10px 0 5px;
-    min-width: 30px;
-}
-
-#jce label.radio.inline, #jce label.checkbox.inline {
-    margin: 0 10px 0 0;
-}
-
-#jce fieldset label {
-    font-size: 1em;
-}
-#jce button {
-    cursor: pointer;
-    min-width: 50px;
-    min-height: 28px;
-    vertical-align:middle;
-    padding: 1px;
-    float: none;
-    font-size: 1em;
-    clear: none;
-}
-div#jce textarea {
-    max-width : 350px;
-    width : auto;
-    padding : 5px;
-}
-div#jce button {
-    margin : 0 2px 0 3px;
-    font-size: 10.5px;
-}
 
 div#jce label input {
-    margin: 5px 10px 5px 6px;
+    margin: 2px 10px 2px 6px;
 }
 
 /* Parameters */
@@ -176,16 +79,10 @@ div#jce label input {
 }
 #jce ul.adminformlist > li, #jce dl.adminformlist > dd {
     vertical-align: middle;
-    background: url('../img/list_label_bg.gif') repeat-y;
     margin: 2px;
     float: left;
     clear: both;
     display: inline-block;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
     width: 100%;
 }
 html[dir="rtl"] #jce ul.adminformlist > li, 
@@ -260,6 +157,11 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
     background-repeat: no-repeat;
     background-position: 98% center;
     padding: 2px;
+    border : 1px solid #ccc;
+    border-radius : 3px;
+    -moz-border-radius : 3px;
+    -webkit-border-radius : 3px;
+    background-color: #fff;
 }
 #jce ul.widget-checklist li.flash {
     background-image: url('../img/flash.gif');
@@ -282,18 +184,19 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
     height: 22px; 
 }
 /* Formats */
-#jce ul.widget-checklist.sortable li span.widget-checklist-p {}
-#jce ul.widget-checklist.sortable li span.widget-checklist-address {font-style:italic}
-#jce ul.widget-checklist.sortable li span.widget-checklist-pre {font-family:monospace}
-#jce ul.widget-checklist.sortable li span.widget-checklist-h1 {font-weight:bolder; font-size: 1.8em}
-#jce ul.widget-checklist.sortable li span.widget-checklist-h2 {font-weight:bolder; font-size: 1.5em}
-#jce ul.widget-checklist.sortable li span.widget-checklist-h3 {font-weight:bolder; font-size: 1.17em}
-#jce ul.widget-checklist.sortable li span.widget-checklist-h4 {font-weight:bolder; font-size: 1em}
-#jce ul.widget-checklist.sortable li span.widget-checklist-h5 {font-weight:bolder; font-size: .83em}
-#jce ul.widget-checklist.sortable li span.widget-checklist-h6 {font-weight:bolder; font-size: .75em}
+#jce ul.widget-checklist.sortable li label.widget-checklist-p {}
+#jce ul.widget-checklist.sortable li label.widget-checklist-address {font-style:italic}
+#jce ul.widget-checklist.sortable li label.widget-checklist-pre {font-family:monospace}
+#jce ul.widget-checklist.sortable li label.widget-checklist-h1 {font-weight:bolder; font-size: 1.8em}
+#jce ul.widget-checklist.sortable li label.widget-checklist-h2 {font-weight:bolder; font-size: 1.5em}
+#jce ul.widget-checklist.sortable li label.widget-checklist-h3 {font-weight:bolder; font-size: 1.17em}
+#jce ul.widget-checklist.sortable li label.widget-checklist-h4 {font-weight:bolder; font-size: 1em}
+#jce ul.widget-checklist.sortable li label.widget-checklist-h5 {font-weight:bolder; font-size: .83em}
+#jce ul.widget-checklist.sortable li label.widget-checklist-h6 {font-weight:bolder; font-size: .75em}
+#jce ul.widget-checklist.sortable li label.widget-checklist-span {display: inline; float:none; width : inherit; margin : inherit;}
 
 #jce ul.widget-checklist.sortable li input {
-    cursor: default;
+    margin : 5px 10px;
 }
 #jce ul.widget-checklist.sortable li, ul.widget-checklist.sortable li label {
     cursor: move;
@@ -338,72 +241,6 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
 }
 #jce span.widget-password.locked {
     background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1120px;
-}
-
-#jce #profiles-list thead th.title {
-    text-align: left;
-}
-
-#jce table.table {
-    width: 100%;
-    border: 1px solid #CCC;
-    border-right-width: 0;
-    border-spacing: 0;
-}
-#jce table.table th, #jce table.table td {
-    padding: 5px;
-    border-spacing: 0;
-    line-height: 20px;
-}
-
-#jce table.table thead th, #jce table.table tbody td {
-    border-bottom: 1px solid #bbbbbb;
-    border-left: 1px solid #ffffff;
-    border-right: 1px solid #cccccc;
-    border-top: 1px solid #ffffff;
-}
-
-#jce table.table th{
-    font-size: 1.1em;
-    text-shadow: 0px 1px 1px rgba(255,255,255,1);
-}
-
-#jce table.table th, #jce table tfoot td {
-    background-color: #F0F0F0;
-}
-
-#jce table.table tbody tr:last-child td {
-    border-bottom-width: 0;
-}
-
-#jce table.table tfoot td {
-    border: 0;
-    border-right: 1px solid #cccccc;
-    border-top: 1px solid #bbbbbb;
-}
-
-#jce table.table[cellspacing="0"] {
-    border: 1px solid #CCC;
-}
-#jce table.table[cellspacing="0"] td {
-    border: 0;
-}
-#jce table.table tr.odd {
-    background-color: #F8F8F8;
-}
-#jce table.table tbody tr:hover {
-    background-color: #f4f8fd;
-}
-#jce table#profiles-toolbar tbody tr:hover, #jce table#users-toolbar tbody tr:hover {
-    background-color: inherit;
-}
-#jce div.limit select {
-    margin: 0 0 0 5px;
-}
-#jce table div.pagination {
-    display:table;
-    margin:0 auto;
-    padding:0;
 }
 
 input.placeholder, textarea.placeholder {
@@ -456,7 +293,6 @@ dl.adminformlist dd.ie_adminformlist, #jce ul.adminformlist li.ie_adminformlist 
 #jce ul.adminformlist li.ie_adminformlist, #jce dl.adminformlist dd.ie_adminformlist {
     line-height: 24px;
     vertical-align: middle;
-    background: url('../img/list_label_bg.gif') repeat-y;
     margin: 2px;
     float: left;
     clear: both;
@@ -515,19 +351,8 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 }
 
 #jce td.order span {
-    float : left;
     display: inline-block;
-    /*min-width: 24px;*/
-    margin: 5px 0;
-    width:18px;
-}
-
-#jce td.order span a span span {
-    display: none;
-}
-
-#jce table tfoot td, table tfoot th {
-	text-align:center;
+    min-width: 24px;
 }
 
 #jce .jgrid span.state {
@@ -550,27 +375,38 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 }
 
 #jce .smallsub {
-    font-size : 10px;
+    font-size : 0.9em;
 }
 
 #jce #profiles-list td {
     vertical-align: middle;
 }
 
-#jce #profiles-list td p {
-    margin : 0;
-}
-
 #jce a.nolink {
     display: none;
 }
 
-/*#jce label.element-invisible {
-    border: 0 none;
-    height: 1px;
-    margin: 0;
+#jce .tabs-left .tab-content {
     overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-}*/
+}
+
+#jce .ui-icon-checkbox {
+    border: 1px solid #CCCCCC;
+    cursor: pointer;
+    display: inline-block;
+    padding: 6px;
+    position: relative;
+}
+
+#jce .ui-icon-checkbox input[type="checkbox"] {
+    opacity     : 0;
+    position    : absolute;
+    top : -7px;
+    left : -6px;
+}
+
+@media (min-width: 979px) {
+    input#upload_text, input.upload_text {
+        width : 200px
+    }
+}
