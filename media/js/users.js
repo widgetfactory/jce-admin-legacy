@@ -10,8 +10,7 @@
 (function($) {
     $.jce.Users = {
         select : function() {
-            var u = [], v, s, o, h;
-            s = window.parent.document.getElementById('users');
+            var u = [], v, o, h, s = window.parent.document.getElementById('users');
 
             $('input:checkbox:checked').each( function() {
                 v = $(this).val();
@@ -23,13 +22,16 @@
                         return;
                     }
                     
+                    // create element
                     var li = document.createElement('li');
-                    
-                    s.appendChild(li);
-                    
                     li.innerHTML = '<input type="hidden" name="users[]" value="' + v + '" /><label><span class="users-list-delete"></span>' + h + '</label>';
+                    
+                    // add to list
+                    s.appendChild(li);
                 }
             });
+            
+            this.close();
 
         },
 
@@ -43,10 +45,30 @@
             });
 
             return false;
+        },
+        
+        close : function() {
+            var win = window.parent;
+
+            // try squeezebox
+            if( typeof win.SqueezeBox !== 'undefined') {
+                win.SqueezeBox.close();
+            }
         }
 
     };
     
-    window.selectUsers = $.jce.Users.select;
+    $(document).ready(function(){
+        $('#cancel').click(function(e) {
+            $.jce.Users.close();
+        
+            e.preventDefault();
+        });
     
+        $('#select').click(function(e) {
+            $.jce.Users.select();
+        
+            e.preventDefault();
+        });
+    });
 })(jQuery);
