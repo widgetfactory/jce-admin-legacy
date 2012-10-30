@@ -303,12 +303,6 @@ class WFModelPlugins extends WFModel {
         }
     }
 
-    private static function getPlugin($name) {
-        wfimport('admin.helpers.extension');
-
-        return WFExtensionHelper::getPlugin(null, $name, 'jce-plugins');
-    }
-
     public static function postInstall($route, $plugin, $installer) {
         $db = JFactory::getDBO();
 
@@ -324,8 +318,8 @@ class WFModelPlugins extends WFModel {
                     $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote('Default') . ' OR id = 1');
                 } else {
                     $query = 'SELECT id'
-                            . ' FROM #__wf_profiles'
-                            . ' WHERE name = ' . $db->Quote('Default') . ' OR id = 1';
+                    . ' FROM #__wf_profiles'
+                    . ' WHERE name = ' . $db->Quote('Default') . ' OR id = 1';
                 }
 
                 $db->setQuery($query);
@@ -333,13 +327,23 @@ class WFModelPlugins extends WFModel {
 
                 if ($id) {
                     if ($route == 'install') {
+                        
+                        if ($plugin->type == 'extension') {
+                            $plugin->path = $plugin->path . '/' . $plugin->name;
+                        }
+                        
                         // add index.html files
-                        self::addIndexfiles(JPATH_PLUGINS . '/' . $plugin->folder . '/' . $plugin->element);
-                        // add to profile
-                        self::addToProfile($id, $plugin);
+                        self::addIndexfiles($plugin->path);
+                        
+                        if (isset($plugin->row)) {
+                            // add to profile
+                            self::addToProfile($id, $plugin);
+                        }
                     } else {
-                        // remove from profile
-                        self::removeFromProfile($id, $plugin);
+                        if (isset($plugin->row)) {
+                            // remove from profile
+                            self::removeFromProfile($id, $plugin);
+                        }
                     }
                 }
             }
