@@ -13,6 +13,17 @@
         Joomla = {};
     }
     
+    Joomla.modal = function(el, url, width, height) {
+        return SqueezeBox.open(el, {
+           'handler' : 'iframe',
+           'size' : {
+               x : width,
+               y : height
+           },
+           'url' : url
+        });
+    };
+
     $.jce = {
 
         options : {},
@@ -23,6 +34,12 @@
 
             // add ui-jce class to body
             $('body').addClass('ui-jce');
+            
+            /*$('input[type="checkbox"]').each(function() {
+               $(this).wrap('<span class="ui-icon ui-icon-shadow ui-icon-checkbox" />'); 
+            }).click(function() {
+                $(this.parentNode).toggleClass('ui-icon-checkbox-on', this.checked);
+            });*/
             
             // Bootstrap styles
             if (this.options.bootstrap) {
