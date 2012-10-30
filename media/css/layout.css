@@ -204,7 +204,21 @@ html {
 #jce span.sortableRowHandle span.ui-icon {
     margin: 5px 0 0;
     cursor: move;
+    
+    background-image: url("../../../../../components/com_jce/editor/libraries/jquery/images/ui-icons_222222_256x240.png");
+    height: 16px;
+    width: 16px;
+    
+    background-repeat: no-repeat;
+    display: block;
+    overflow: hidden;
+    text-indent: -99999px;
 }
+
+#jce span.sortableRowHandle span.ui-icon.ui-icon-arrowthick-2-n-s {
+    background-position: -128px -48px;
+}
+
 #jce span.sortableContainerHandle {
     border: 1px solid #CCC;
     cursor: move;
