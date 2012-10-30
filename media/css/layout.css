@@ -190,37 +190,15 @@ html {
 }
 
 #jce span.sortableRowHandle {
-    background-color: #F0F0EE;
-    border: 1px solid #CCCCCC;
+    height: 26px;
+    border: 1px solid #CCC;
     cursor: move;
+    background-color: #F0F0EE;
+    text-align: center;
+    margin: -28px -19px 0 0;
+    position: relative;
     display: block;
     float: right;
-    margin: -28px -18px 0 0;
-    padding: 8px 3px 8px 4px;
-    position: relative;
-    text-align: center;
-}
-#jce span.sortableRowHandle:before, #jce span.sortableRowHandle:after {
-    content : "";
-    
-    display: block;
-    width: 0;
-    height: 0;
-    vertical-align: middle;
-    border-top: 4px solid #000000;
-    border-right: 4px solid transparent;
-    border-left: 4px solid transparent;
-    position: relative;
-}
-
-#jce span.sortableRowHandle:before {    
-    border-bottom: 4px solid #000000;
-    border-top: 0 none;
-    margin-bottom : 2px;
-}
-
-#jce span.sortableRowHandle:after {
-    margin-top : 2px;
 }
 
 #jce span.sortableRowHandle span.ui-icon {
