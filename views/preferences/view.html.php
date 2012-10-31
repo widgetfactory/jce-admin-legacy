@@ -46,7 +46,7 @@ class WFViewPreferences extends WFView {
         $this->assignRef('params', $params);
         $this->assignRef('permissons', $form);
         
-        $this->addStyleSheet('components/com_jce/media/js/preferences.css?version=' . $model->getVersion());
+        $this->addStyleSheet('components/com_jce/media/css/preferences.css?version=' . $model->getVersion());
 
         $this->addScript('components/com_jce/media/js/preferences.js?version=' . $model->getVersion());
 
