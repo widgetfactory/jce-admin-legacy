@@ -17,24 +17,24 @@
                 plugin : 'browser',
                 root : '',
                 site : '',
-                help : function() {
+                help : function(e) {
                     var win = window.parent;
 
-                    if( typeof win.$jce !== 'undefined') {
-                        window.parent.$jce.createDialog({
-                            src : 'index.php?option=com_jce&view=help&tmpl=component&section=editor&category=browser',
-                            type : 'help',
+                    /*if( typeof win.$jce !== 'undefined') {
+                        window.parent.$jce.createDialog(e, {
+                            src     : 'index.php?option=com_jce&view=help&tmpl=component&section=editor&category=browser',
+                            type    : 'help',
                             options : {
-                                width : 780,
-                                height : 560
+                                width   : 780,
+                                height  : 560
                             }
                         });
-                    } else {
+                    } else {*/
                         $.Dialog.iframe('Help', 'index.php?option=com_jce&view=help&tmpl=component&section=editor&category=browser', {
-                            width : 780,
-                            height : 560
+                            width   : 760,
+                            height  : 520
                         });
-                    }
+                    //}
                 }
             },
             manager : {
