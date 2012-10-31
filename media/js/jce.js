@@ -15,12 +15,12 @@
     
     Joomla.modal = function(el, url, width, height) {
         return SqueezeBox.open(el, {
-           'handler' : 'iframe',
-           'size' : {
-               x : width,
-               y : height
-           },
-           'url' : url
+            'handler' : 'iframe',
+            'size' : {
+                x : width,
+                y : height
+            },
+            'url' : url
         });
     };
 
@@ -41,6 +41,15 @@
                 $(this.parentNode).toggleClass('ui-icon-checkbox-on', this.checked);
             });*/
             
+            $('a.dialog').click( function(e) { 
+                self.createDialog(e, {
+                    src 	: $(this).attr('href'),
+                    options     : $(this).data('options')
+                });
+                    
+                e.preventDefault();
+            });
+            
             // Bootstrap styles
             if (this.options.bootstrap) {
                 // add boostrap id class
@@ -50,30 +59,11 @@
                 $('input[size="50"]').addClass('input-large');
                 $('input[size="5"]').addClass('input-mini');
                 
-                $('a.dialog').click( function(e) { 
-                    var options = $(this).data('options');
-                    var data = $.parseJSON(options.replace(/'/g, '"'));
-                    
-                    Joomla.modal(this, this.href, data.width, data.height);
-                    e.preventDefault();
-                });
-                
             } else {
                 $('body').addClass('ui-jquery');
                 
                 // Style stuff
                 $('div.icon a').addClass('ui-widget-content ui-corner-all');
-
-                $('a.dialog').click( function(e) {                
-                    self.createDialog({
-                        src 	: $(this).attr('href'),
-                        options     : $(this).data('options'),
-                        modal	: $(this).hasClass('modal'),
-                        type	: /(users|help|preferences|updates|browser|legend)/.exec($(this).attr('class'))[0],
-                        title	: $(this).attr('title')
-                    });
-                    e.preventDefault();
-                });
                 
                 $('button#filter_go').button({
                     icons: {
@@ -103,9 +93,9 @@
             });
             
             $('th input[type="checkbox"]', $('table.adminlist')).click(function() {
-               var n = $('td input[type="checkbox"]', $('table.adminlist')).prop('checked', this.checked);
+                var n = $('td input[type="checkbox"]', $('table.adminlist')).prop('checked', this.checked);
                
-               $('input[name="boxchecked"]').val($(n).filter(':checked').length);
+                $('input[name="boxchecked"]').val($(n).filter(':checked').length);
             });
             
             $('td input[type="checkbox"]', $('table.adminlist')).click(function() {
@@ -140,54 +130,8 @@
             $('label.radio').addClass('inline');
         },
 
-        createDialog : function(o) {
-            var self = this;
-            function _fixDialog(el, settings) {
-                // opera bug?
-                if (parseFloat(el.style.height) == 0) {
-                    var h = settings.height;
-                    // get height of siblings
-                    $(el).siblings('div').each( function() {
-                        h = h - parseFloat($(this).outerHeight());
-                    });
-
-                    // remove border, padding etc.
-                    h = h - $(el).outerHeight();
-                    // set height and centre
-                    $(el).css('height', h).dialog('option', 'position', 'center');
-                }
-            }
-
-            var buttons = {};
-            var div		= document.createElement('div');
-            var loader	= document.createElement('div');
-            var iframe 	= document.createElement('iframe');
-            var title 	= o.title || '';
-
-            if (o.type == 'users') {
-                $.extend(buttons, {
-                    '$select' : function() {
-                        iframe.contentWindow.selectUsers();
-                        $(this).dialog("close");
-                    }
-
-                });
-            }
-
-            if (o.type == 'preferences') {
-                $.extend(buttons, {
-                    '$save' : function() {
-                        iframe.contentWindow.submitform('apply');
-                    },
-
-                    '$saveclose' : function() {
-                        iframe.contentWindow.submitform('save');
-                    }
-
-                });
-            }
-
-            var src = o.src, data = {};
+        createDialog : function(e, o) {
+            var self = this, data = {};
 
             // add optional settings from link
             if ($.type(o.options) == 'string') {
@@ -196,105 +140,20 @@
                 data = o.options;
             }
             
-            data = data || {};
-
-            var settings = {
-                bgiframe: true,
-                width 	: 640,
-                height	: 480,
-                modal	: o.modal || false,
-                buttons : buttons,
-                resizable: true,
-                open : function() {
-                    _fixDialog(div, settings);
-                    $(loader).addClass('loader').appendTo(div);
-
-                    $(iframe).css({
-                        width : '100%',
-                        height : '100%'
-                    }).attr({
-                        src 		: src,
-                        scrolling 	: 'auto',
-                        frameBorder : 'no'
-                    }).appendTo(div).load( function() {
-                        $(loader).hide();
-                    });
-
-                    $('button').each( function() {
-                        var h = this.innerHTML;
-                        h = h.replace(/\$([a-z]+)/, function(a, b) {
-                            return self.options.labels[b];
-                        });
-
-                        this.innerHTML = h;
-                    }).button();
-
-                }
-
-            };
-
-            if (o.type == 'confirm' || o.type == 'alert') {
-                var text 	= o.text 	|| '';
-                var title 	= o.title 	|| (o.type == 'alert' ? self.options.labels.alert : '');
-
-                $.extend(settings, {
-                    width 		: 300,
-                    height		: 'auto',
-                    resizable	: false,
-                    dialogClass	: 'ui-jce',
-                    buttons : {
-                        '$ok' : function() {
-                            if (src) {
-                                if (/function\([^\)]*\)\{/.test(src)) {
-                                    $.globalEval(src);
-                                } else {
-                                    document.location.href = src;
-                                }	
-                            }
-                            $(this).dialog("close");
-                        }
-                    },
-                    open : function() {
-                        _fixDialog(div, settings);
-
-                        $(div).attr('id', 'dialog-confirm').append(text);
-
-                        $('button').each( function() {
-                            var h = this.innerHTML;
-                            h = h.replace(/\$([a-z]+)/, function(a, b) {
-                                return self.options.labels[b];
-                            });
-
-                            this.innerHTML = h;
-                        }).addClass('ui-state-default ui-corner-all');
-
-                    },
-                    
-                    close : function() {
-                        $(this).dialog('destroy');
-                    }
-
-                });
-                
-                if (o.type == 'confirm') {
-                    $.extend(settings.buttons, {
-                        '$cancel' : function() {
-                            $(this).dialog("close");
-                        }
-                    });
-                }
-            }
+            data = data || {width : 640, height : 480};
             
-            // add id if set
-            if (data.id) {
-                $(div).attr('id', data.id);
-            }
-
-            $(div).css('overflow', 'hidden').attr('title', title).dialog($.extend(settings, data));
+            return Joomla.modal(e.target, o.src, data.width, data.height);
         },
         
         closeDialog : function(el) {
-            $(el).dialog("close").remove();
+            //$(el).dialog("close").remove();
+            
+            var win = window.parent;
+            
+            // try squeezebox
+            if( typeof win.SqueezeBox !== 'undefined') {
+                return win.SqueezeBox.close();
+            }
         },
 
         /**
