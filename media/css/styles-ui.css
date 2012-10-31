@@ -557,6 +557,14 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
     display: none;
 }
 
+#jce .fltlft {
+    float : left;
+}
+
+#jce .fltrt {
+    float : right;
+}
+
 /*#jce label.element-invisible {
     border: 0 none;
     height: 1px;
