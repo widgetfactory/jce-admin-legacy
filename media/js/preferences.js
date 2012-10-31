@@ -13,7 +13,7 @@
     		// Tabs
            	$('#tabs').tabs();
            	
-           	$('#access-accordian').accordion({collapsible: true, heightStyle: "fill"});
+           	$('#access-accordian').accordion({collapsible: true, heightStyle: "content"});
            	
            	$('.hasTip').removeClass('hasTip');
     	},
