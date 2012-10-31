@@ -11,3 +11,7 @@ body {
     bottom : 0;
 }
 
+#jce div.container {
+    height : 420px;
+    overflow: auto;
+}

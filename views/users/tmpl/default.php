@@ -26,57 +26,58 @@ defined('_JEXEC') or die('RESTRICTED');
             </div>
         </fieldset>
         <div class="clr clearfix"></div>
-        <table id="profiles-list" class="adminlist table table-striped" style="position: relative;">
-            <thead>
-                <tr>
-                    <th width="20px" class="title" align="center">
-                        <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
-                    </th>
-                    <th class="title">
-                        <?php echo JHTML::_('grid.sort', 'WF_USERS_NAME', 'a.name', @$this->lists['order_Dir'], @$this->lists['order']); ?>
-                    </th>
-                    <th width="20%" class="title" >
-                        <?php echo JHTML::_('grid.sort', 'WF_USERS_USERNAME', 'a.username', @$this->lists['order_Dir'], @$this->lists['order']); ?>
-                    </th>
-                    <th width="20%" class="title">
-                        <?php echo JHTML::_('grid.sort', 'WF_USERS_GROUP', 'groupname', @$this->lists['order_Dir'], @$this->lists['order']); ?>
-                    </th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <td colspan="4">
-                        <?php echo $this->pagination->getListFooter(); ?>
-                    </td>
-                </tr>
-            </tfoot>
-            <tbody>
-                <?php
-                $k = 0;
-                for ($i = 0, $n = count($this->items); $i < $n; $i++) {
-                    $row = $this->items[$i];
-                    ?>
+        <div class="container">
+            <table id="profiles-list" class="adminlist table table-striped" style="position: relative;">
+                <thead>
                     <tr>
-                        <td>
-                            <?php echo JHTML::_('grid.id', $i, $row->id); ?>
-                        </td>
-                        <td>
-                            <?php echo $row->name; ?>
-                        </td>
-                        <td>
-                            <span id="username_<?php echo $row->id; ?>"><?php echo $row->username; ?></span>
-                        </td>
-                        <td>
-                            <?php echo WFText::_($row->groupname); ?>
+                        <th width="20px" class="title" align="center">
+                            <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
+                        </th>
+                        <th class="title">
+                            <?php echo JHTML::_('grid.sort', 'WF_USERS_NAME', 'a.name', @$this->lists['order_Dir'], @$this->lists['order']); ?>
+                        </th>
+                        <th width="20%" class="title" >
+                            <?php echo JHTML::_('grid.sort', 'WF_USERS_USERNAME', 'a.username', @$this->lists['order_Dir'], @$this->lists['order']); ?>
+                        </th>
+                        <th width="20%" class="title">
+                            <?php echo JHTML::_('grid.sort', 'WF_USERS_GROUP', 'groupname', @$this->lists['order_Dir'], @$this->lists['order']); ?>
+                        </th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <?php echo $this->pagination->getListFooter(); ?>
                         </td>
                     </tr>
+                </tfoot>
+                <tbody>
                     <?php
-                    $k = 1 - $k;
-                }
-                ?>
-            </tbody>
-        </table>
-
+                    $k = 0;
+                    for ($i = 0, $n = count($this->items); $i < $n; $i++) {
+                        $row = $this->items[$i];
+                        ?>
+                        <tr>
+                            <td>
+                                <?php echo JHTML::_('grid.id', $i, $row->id); ?>
+                            </td>
+                            <td>
+                                <?php echo $row->name; ?>
+                            </td>
+                            <td>
+                                <span id="username_<?php echo $row->id; ?>"><?php echo $row->username; ?></span>
+                            </td>
+                            <td>
+                                <?php echo WFText::_($row->groupname); ?>
+                            </td>
+                        </tr>
+                        <?php
+                        $k = 1 - $k;
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
         <div class="btn-group fltrgt pull-right">
             <button id="select" class="btn" title="<?php echo WFText::_('WF_LABEL_SELECT'); ?>"><i class="icon-apply"></i>&nbsp;<?php echo WFText::_('WF_LABEL_SELECT'); ?></button>
             <button id="cancel" class="btn" title="<?php echo WFText::_('WF_LABEL_CANCEL'); ?>"><i class="icon-remove"></i>&nbsp;<?php echo WFText::_('WF_LABEL_CANCEL'); ?></button>
