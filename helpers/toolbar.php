@@ -112,7 +112,7 @@ abstract class WFToolbarHelper {
         $bar->appendButton('Custom', $html, 'updates');
     }
 
-    public static function access() {
+    /*public static function access() {
         $bar = JToolBar::getInstance('toolbar');
 
         $options = array(
@@ -126,7 +126,7 @@ abstract class WFToolbarHelper {
         $html .= '<span class="icon-32-lock" title="' . WFText::_('WF_ACCESS_TITLE') . '"></span>' . WFText::_('WF_ACCESS') . '</a>';
 
         $bar->appendButton('Custom', $html, 'access');
-    }
+    }*/
 
     public static function export() {
         if (class_exists('JHtmlSidebar')) {
