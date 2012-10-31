@@ -14,14 +14,20 @@
     }
     
     Joomla.modal = function(el, url, width, height) {
-        return SqueezeBox.open(el, {
+        var o = {
             'handler' : 'iframe',
             'size' : {
                 x : width,
                 y : height
             },
             'url' : url
-        });
+        };
+        
+        if (typeof SqueezeBox.open === 'undefined') {
+            return SqueezeBox.fromElement(el, o);
+        }
+        
+        return SqueezeBox.open(el, o);
     };
 
     $.jce = {
