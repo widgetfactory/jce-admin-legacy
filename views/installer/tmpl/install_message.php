@@ -10,20 +10,13 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-$message1 = $this->state->get('message');
-$message2 = $this->state->get('extension_message');
+$result = $this->state->get('result') ? 'success' : 'error';
 ?>
-<table class="adminform">
-    <tbody>
-        <?php if ($message1) : ?>
-            <tr>
-                <th><?php echo $message1 ?></th>
-            </tr>
-        <?php endif; ?>
-        <?php if ($message2) : ?>
-            <tr>
-                <td><?php echo $message2; ?></td>
-            </tr>
-        <?php endif; ?>
-    </tbody>
-</table>
+
+<?php if ($this->state->get('message')) :?>
+<div class="install-message">
+    <h2 class="<?php echo $result; ?>"><?php echo $this->state->get('name'); ?></h2>
+    <p><?php echo $this->state->get('message'); ?></p>  
+    <?php echo $this->state->get('extension.message', ''); ?>
+</div>
+<?php endif;?>

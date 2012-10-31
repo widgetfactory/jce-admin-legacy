@@ -66,8 +66,10 @@ class WFModelInstaller extends WFModel {
 
         $this->setState('install.result', $this->_result);
 
+        $this->setState('name', WFText::_($installer->get('name')));
         $this->setState('message', WFText::_($installer->get('message')));
         $this->setState('extension.message', $installer->get('extension.message'));
+        $this->setState('result', $result);
 
         // Cleanup the install files
         if (!is_file($package['packagefile'])) {
@@ -114,15 +116,21 @@ class WFModelInstaller extends WFModel {
             $result = $installer->uninstall($type, $id);
         }
 
-        $result = $result ? true : false;
+        if (!$result) {
+            $app->enqueueMessage(WFText::sprintf('WF_INSTALLER_UNINSTALL_ERROR'), 'error');
+        } else {
+            $app->enqueueMessage(WFText::sprintf('WF_INSTALLER_UNINSTALL_SUCCESS'));
+        }
 
         $this->_result[] = array(
-            'name' => $installer->get('name'),
-            'type' => $type,
-            'version' => $installer->get('version'),
-            'result' => $result
+            'name'      => $installer->get('name'),
+            'type'      => $type,
+            'version'   => $installer->get('version'),
+            'result'    => $result
         );
-
+        
+        $this->setState('name', WFText::_($installer->get('name')));
+        $this->setState('result', $result);
         $this->setState('install.result', $this->_result);
 
         return $result;
@@ -135,6 +143,7 @@ class WFModelInstaller extends WFModel {
     private function getPackage() {
         $config = JFactory::getConfig();
         jimport('joomla.filesystem.file');
+        jimport('joomla.filesystem.archive');
 
         // set standard method
         $upload = true;
