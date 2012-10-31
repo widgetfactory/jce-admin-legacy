@@ -10,3 +10,8 @@
 .ui-jce #jce .ui-accordion {
     width: auto;
 }
+
+#jce .ui-tabs-panel {
+    min-height: 480px;
+    overflow: auto;
+}
