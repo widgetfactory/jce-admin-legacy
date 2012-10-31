@@ -47,7 +47,18 @@
             }
             // Open config/preferences dialog
             $('#newsfeed_enable').click(function(e) {
-                $('button[onclick*="component=com_jce"], a[href*="component=com_jce"], a[href^="index.php?option=com_jce&view=preferences"]').click();                
+                $('#toolbar-options button').click(); 
+                
+                $('#toolbar-popup-options a, #toolbar-config a').each(function() {
+                    $.jce.createDialog(this, {
+                        src 	: $(this).attr('href'),
+                        options : {
+                            'width'   : 780,
+                            'height'  : 560
+                        }
+                    });
+                });
+                
                 e.preventDefault();
             });
         }
