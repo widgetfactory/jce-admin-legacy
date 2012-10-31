@@ -22,7 +22,7 @@ defined('_JEXEC') or die('RESTRICTED');
             <li class="cpanel-icon wf-tooltip" title="<?php echo WFText::_('WF_INSTALL') . '::' . WFText::_('WF_INSTALLER_DESC'); ?>"><a href="index.php?option=com_jce&amp;view=installer"><span class="install"></span><?php echo WFText::_('WF_INSTALL'); ?></a></li>
         <?php endif; ?>
         <?php if (WFModel::authorize('browser')) : ?>
-            <li class="cpanel-icon wf-tooltip" title="<?php echo WFText::_('WF_BROWSER_TITLE') . '::' . WFText::_('WF_CPANEL_BROWSER_DESC'); ?>"><a href="<?php echo $this->model->getBrowserLink(); ?>" class="browser modal" target="_blank" rel="{handler:'iframe', size:{x:765,y:480}}" data-options="{'width':765,'height':480, 'modal':true}" title="<?php echo WFText::_('WF_BROWSER_TITLE'); ?>"><span class="browser"></span><?php echo WFText::_('WF_BROWSER_TITLE'); ?></a></li>
+            <li class="cpanel-icon wf-tooltip" title="<?php echo WFText::_('WF_BROWSER_TITLE') . '::' . WFText::_('WF_CPANEL_BROWSER_DESC'); ?>"><a href="<?php echo $this->model->getBrowserLink(); ?>" class="browser modal" target="_blank" rel="{handler:'iframe', size:{x:780,y:560}}" data-options="{'width':780,'height':560, 'modal':true}" title="<?php echo WFText::_('WF_BROWSER_TITLE'); ?>"><span class="browser"></span><?php echo WFText::_('WF_BROWSER_TITLE'); ?></a></li>
         <?php endif; ?>
         <?php if (JPluginHelper::isEnabled('system', 'jcemediabox') && WFModel::authorize('mediabox')) : ?>
             <li class="cpanel-icon wf-tooltip" title="<?php echo WFText::_('WF_MEDIABOX') . '::' . WFText::_('WF_MEDIABOX_DESC'); ?>"><a href="index.php?option=com_jce&amp;view=mediabox"><span class="mediabox"></span><?php echo WFText::_('WF_MEDIABOX'); ?></a></li>
