@@ -52,7 +52,7 @@ defined('_JEXEC') or die('RESTRICTED');
 
                                 $class = in_array($plugin->name, explode(',', $this->profile->plugins)) ? '' : 'tab-disabled';
 
-                                echo '<li class="defaultSkin ' . $class . '"><a href="#tabs-plugin-' . $plugin->name . '">' . $icon . '<span class="tabs-label">' . WFText::_($plugin->title) . '</span></a></li>';
+                                echo '<li class="defaultSkin ' . $class . '" data-name="' . $plugin->name . '"><a href="#tabs-plugin-' . $plugin->name . '">' . $icon . '<span class="tabs-label">' . WFText::_($plugin->title) . '</span></a></li>';
                             endif;
                         endforeach;
                         ?>

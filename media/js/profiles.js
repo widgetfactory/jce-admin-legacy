@@ -292,21 +292,17 @@
         	
             $(':input.required').each(function() {
                 if ($(this).val() === '') {
-                    required.push('<li>' + $('label[for="' + this.id + '"]').html() + '</li>');
+                    var parent = $(this).parents('div.tab-pane').get(0);
+                    
+                    required.push("\n" + $('#tabs ul li a[href=#' + parent.id + ']').html() + ' - ' + $.trim($('label[for="' + this.id + '"]').html()));
                 }
             });
         	
             if (required.length) {
-                var msg = '<p>' + $.jce.options.labels.required + '</p>';
-                msg += '<ul>';
-                msg += required.join('');
-                msg += '</ul>';
+                var msg = $.jce.options.labels.required;
+                msg += required.join(',');
         		
-                $.jce.createDialog({
-                    type  : 'alert',
-                    text  : msg,
-                    modal : true
-                });
+                alert(msg);
       		
                 return false;
             }
@@ -439,39 +435,21 @@
         },
 
         setParams : function(plugins) {
-            var $tabs = $('div#tabs-plugins');
+            var $tabs = $('div#tabs-plugins > ul.nav.nav-tabs > li');
 
-            $('div.ui-tabs-panel', 'div#tabs-plugins').each( function(i) {
+            $tabs.removeClass('tab-disabled ui-state-disabled').removeClass('active ui-tabs-active ui-state-active').each( function(i) {
                 var name = $(this).data('name');
 
                 var s = $.inArray(name, plugins) != -1;
                 // disable forms in tab panel
-                $(':input[name]', this).prop('disabled', !s);
+                $('input[name], select[name]', this).prop('disabled', !s);
 
-                if (!s) {
-                    if ($tabs.tabs('option', 'selected') == i) {
-                        var n = 0, x = $tabs.tabs('option', 'disabled');
-
-                        while (i == n) {
-                            n++;
-
-                            if ($.inArray(n, x) != -1) {
-                                n++;
-                            }
-                        }
-
-                        // select another tab if current tab is this one
-                        $tabs.tabs('select', n);
-                    }
-
-                    // disable the tabs
-                    $tabs.tabs('disable', i);
-
-                } else {
-                    $tabs.tabs('enable', i);
+                if (!s) {                    
+                    $(this).addClass('tab-disabled');
                 }
             });
-
+            
+            $tabs.not('.tab-disabled').first().addClass('active ui-tabs-active ui-state-active');
         }
 
     };

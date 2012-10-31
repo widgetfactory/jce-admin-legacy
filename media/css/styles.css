@@ -430,3 +430,7 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
         width : 15%;
     }
 }
+
+#tabs .tab-disabled {
+    display : none !important;
+}
