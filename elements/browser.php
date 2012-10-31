@@ -65,10 +65,10 @@ class WFElementBrowser extends WFElement {
         $html .= ' />';
 
         $options = array(
-            'width' => 765,
-            'height' => 480,
-            'modal' => true,
-            'id' => $attributes['id'] . '_browser'
+            'width'     => 780,
+            'height'    => 560,
+            'modal'     => true,
+            'id'        => $attributes['id'] . '_browser'
         );
         
         wfimport('admin.models.model');
