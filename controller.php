@@ -263,10 +263,9 @@ class WFController extends WFControllerBase {
         $type = JRequest::getWord('type', 'tables');
 
         switch ($type) {
-            case 'tables' :
-                // add models path
-                JModel::addIncludePath(dirname(__FILE__) . '/models');
-                $profiles = JModel::getInstance('profiles', 'WFModel');
+            case 'tables' :                
+                wfimport('admin.models.profiles');
+                $profiles = new WFModelProfiles();
 
                 $profiles->installProfiles();
 
