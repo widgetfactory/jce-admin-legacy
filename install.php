@@ -614,7 +614,7 @@ abstract class WFInstall {
 
             if ($xml) {
                 foreach ($xml->profiles->children() as $profile) {
-                    if ($profile->attributes()->name == 'Blogger') {
+                    if ($profile->attributes()->name == $name) {
                         $row = JTable::getInstance('profiles', 'WFTable');
 
                         foreach ($profile->children() as $item) {
