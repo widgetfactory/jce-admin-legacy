@@ -598,13 +598,13 @@ abstract class WFInstall {
         $query = $db->getQuery(true);
 
         if (is_object($query)) {
-            $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote($name));
+            $query->select('COUNT(id)')->from('#__wf_profiles')->where('name = ' . $db->Quote($name));
         } else {
             $query = 'SELECT COUNT(id) FROM #__wf_profiles WHERE name = ' . $db->Quote($name);
         }
 
         $db->setQuery($query);
-        $id = (int) $db->loadResult();
+        $id = $db->loadResult();
 
         if (!$id) {
             // Blogger
@@ -617,8 +617,17 @@ abstract class WFInstall {
                     if ((string) $profile->attributes()->name == $name) {
                         $row = JTable::getInstance('profiles', 'WFTable');
 
+                        require_once(JPATH_ADMINISTRATOR . '/components/com_jce/models/profiles.php');
+                        $groups = WFModelProfiles::getUserGroups((int) $profile->children('area'));
+
                         foreach ($profile->children() as $item) {
                             switch ((string) $item->getName()) {
+                                case 'types':
+                                    $row->types = implode(',', $groups);
+                                    break;
+                                case 'area':
+                                    $row->area = (int) $item;
+                                    break;
                                 case 'rows':
                                     $row->rows = (string) $item;
                                     break;
@@ -826,12 +835,12 @@ abstract class WFInstall {
                 }
             }
         }
-        
+
         if (version_compare($version, '2.3.0beta', '<')) {
             // add Mobile profile
             self::installProfile('Mobile');
         }
-        
+
         return true;
     }
 

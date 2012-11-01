@@ -110,18 +110,7 @@ class WFModelProfiles extends WFModel {
     public function getUserGroups($area) {
         $db = JFactory::getDBO();
 
-        if (WF_JOOMLA15) {
-            $front = array(
-                '19',
-                '20',
-                '21'
-            );
-            $back = array(
-                '23',
-                '24',
-                '25'
-            );
-        } else {
+        if (defined('JPATH_PLATFORM')) {
             jimport('joomla.access.access');
 
             $query = $db->getQuery(true);
@@ -161,6 +150,17 @@ class WFModelProfiles extends WFModel {
                     }
                 }
             }
+        } else {
+            $front = array(
+                '19',
+                '20',
+                '21'
+            );
+            $back = array(
+                '23',
+                '24',
+                '25'
+            );
         }
 
         switch ($area) {
