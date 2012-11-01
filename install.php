@@ -705,6 +705,9 @@ abstract class WFInstall {
             $admin . '/classes/installer.php',
             // remove legend model
             $admin . '/models/legend.php',
+            // remove extension adapter
+            $admin . '/adapters/extension.php',
+            
             // remove error class from site (moved to admin)
             $site . '/editor/libraries/classes/error.php',
             // remove popup file
