@@ -24,7 +24,8 @@
             <users></users>
             <types></types>
             <components></components>
-            <area>0</area>
+            <area>admin,site</area>
+            <device>desktop,tablet,phone</device>
             <rows>help,newdocument,undo,redo,spacer,bold,italic,underline,strikethrough,justifyfull,justifycenter,justifyleft,justifyright,spacer,blockquote,formatselect,styleselect,removeformat,cleanup;fontselect,fontsizeselect,forecolor,backcolor,spacer,clipboard,indent,outdent,numlist,bullist,sub,sup,textcase,charmap,hr;directionality,fullscreen,preview,source,print,searchreplace,spacer,table;visualaid,visualchars,visualblocks,nonbreaking,style,xhtmlxtras,anchor,unlink,link,imgmanager,spellchecker,article</rows>
             <plugins>contextmenu,browser,inlinepopups,media,help,clipboard,searchreplace,directionality,fullscreen,preview,source,table,textcase,print,style,nonbreaking,visualchars,visualblocks,xhtmlxtras,imgmanager,anchor,link,spellchecker,article</plugins>
             <published>1</published>
@@ -36,7 +37,8 @@
             <users></users>
             <types></types>
             <components></components>
-            <area>1</area>
+            <area>site</area>
+            <device>desktop,tablet,phone</device>
             <rows>help,newdocument,undo,redo,spacer,bold,italic,underline,strikethrough,justifyfull,justifycenter,justifyleft,justifyright,spacer,formatselect,styleselect;clipboard,searchreplace,indent,outdent,numlist,bullist,cleanup,charmap,removeformat,hr,sub,sup,textcase,nonbreaking,visualchars,visualblocks;fullscreen,preview,print,visualaid,style,xhtmlxtras,anchor,unlink,link,imgmanager,spellchecker,article</rows>
             <plugins>contextmenu,inlinepopups,help,clipboard,searchreplace,fullscreen,preview,print,style,textcase,nonbreaking,visualchars,visualblocks,xhtmlxtras,imgmanager,anchor,link,spellchecker,article</plugins>
             <published>0</published>
@@ -49,13 +51,30 @@
             <users></users>
             <types></types>
             <components></components>
-            <area>0</area>
+            <area>admin,site</area>
+            <device>desktop,tablet,phone</device>
             <rows>bold,italic,strikethrough,bullist,numlist,blockquote,spacer,justifyleft,justifycenter,justifyright,spacer,link,unlink,imgmanager,article,spellchecker,fullscreen,kitchensink;formatselect,underline,justifyfull,forecolor,clipboard,removeformat,charmap,indent,outdent,undo,redo,help</rows>
             <plugins>link,imgmanager,article,spellchecker,fullscreen,kitchensink,clipboard,contextmenu,inlinepopups</plugins>	
             <published>0</published>
             <ordering>3</ordering>
             <params>
                 <param>{"editor":{"toggle":"0"}}</param>
+            </params>
+        </profile>
+        <profile>
+            <name>Mobile</name>
+            <description>Sample Mobile Profile</description>
+            <users></users>
+            <types></types>
+            <components></components>
+            <area>admin,site</area>
+            <device>tablet,phone</device>
+            <rows>undo,redo,spacer,bold,italic,underline,formatselect,spacer,justifyleft,justifycenter,justifyfull,justifyright,spacer,fullscreen,kitchensink;styleselect,bullist,numlist,spellchecker,article,link,unlink</rows>
+            <plugins>fullscreen,kitchensink,spellchecker,article,link,inlinepopups</plugins>
+            <published>0</published>
+            <ordering>4</ordering>
+            <params>
+                <param>{"editor":{"toolbar_theme":"mobile""resizing":"0","resize_horizontal":"0","resizing_use_cookie":"0","toggle":"0","links":{"popups":{"default":"","jcemediabox":{"enable":"0"},"window":{"enable":"0"}}}}}</param>
             </params>
         </profile>
     </profiles>
