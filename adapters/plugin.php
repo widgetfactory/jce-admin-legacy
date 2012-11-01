@@ -30,33 +30,50 @@ class WFInstallerPlugin extends JObject {
         $this->parent = $parent;
     }
 
+    private function setManifest() {
+        $manifest = $this->parent->getManifest();
+
+        $values = array('name', 'version', 'description', 'install.script', 'uninstall.script');
+
+        foreach ($values as $value) {
+            $this->parent->set($value, WFXMLHelper::getElement($manifest, $value));
+        }
+
+        $attributes = array('plugin', 'group', 'type', 'folder');
+
+        foreach ($attributes as $attribute) {
+            $this->set($attribute, WFXMLHelper::getAttribute($manifest, $attribute));
+        }
+
+        $elements = array('files', 'languages', 'media');
+
+        foreach ($elements as $element) {
+            $this->set($element, WFXMLHelper::getElements($manifest, $element));
+        }
+    }
+
     /**
      * Install method
      *
      * @access  public
      * @return  boolean True on success
      */
-    public function install() {        
+    public function install() {
         // Get a database connector object
         $db = $this->parent->getDBO();
 
-        // Get the extension manifest object
-        $manifest = $this->parent->getManifest();
+        $this->setManifest();
 
-        $this->parent->set('name',      (string) $manifest->name);
-        $this->parent->set('version',   (string) $manifest->version);
-        $this->parent->set('message',   (string) $manifest->description);
+        $plugin = $this->get('plugin');
+        $group = $this->get('group');
+        $type = $this->get('type');
+        $folder = $this->get('folder');
 
-        $plugin     = (string) $manifest->attributes()->plugin;
-        $group      = (string) $manifest->attributes()->group;
-        $type       = (string) $manifest->attributes()->type;
-        $folder     = (string) $manifest->attributes()->folder;
-        
-        $extension  = (string) $manifest->attributes()->extension;
+        $extension = $this->get('extension');
 
         // JCE Plugin
         if (!empty($plugin) || !empty($extension)) {
-            if (version_compare((string) $manifest->version, '2.0.0', '<')) {
+            if (version_compare((string) $this->parent->get('version'), '2.0.0', '<')) {
                 $this->parent->abort(WFText::_('WF_INSTALLER_INCORRECT_VERSION'));
                 return false;
             }
@@ -110,21 +127,21 @@ class WFInstallerPlugin extends JObject {
         }
 
         // Copy all necessary files
-        if (!$this->parent->parseFiles($manifest->files, -1)) {
+        if (!$this->parent->parseFiles($this->get('files'), -1)) {
             // Install failed, roll back changes
             $this->parent->abort();
             return false;
         }
         // install languages
-        $this->parent->parseLanguages($manifest->languages, 0);
+        $this->parent->parseLanguages($this->get('languages'), 0);
         // install media
-        $this->parent->parseMedia($manifest->media, 0);
+        $this->parent->parseMedia($this->get('media'), 0);
 
         // Load the language file
         $language = JFactory::getLanguage();
         $language->load('com_jce_' . trim($plugin), JPATH_SITE);
 
-        $install = (string) $manifest->children('install.script');
+        $install = (string) $this->get('install.script');
 
         if ($install) {
             // Make sure it hasn't already been copied (this would be an error in the xml install file)
@@ -141,7 +158,7 @@ class WFInstallerPlugin extends JObject {
             }
         }
 
-        $uninstall = (string) $manifest->children('uninstall.script');
+        $uninstall = $this->get('uninstall.script');
 
         if ($uninstall) {
             // Make sure it hasn't already been copied (this would be an error in the xml install file)
@@ -197,11 +214,11 @@ class WFInstallerPlugin extends JObject {
         }
 
         $plugin = new StdClass();
-        $plugin->name   = (string) $manifest->attributes()->name;
-        $plugin->icon   = (string) $manifest->icon;
-        $plugin->row    = (string) $manifest->attributes()->row;
-        $plugin->path   = $this->parent->getPath('extension_root');
-        $plugin->type   = $type;
+        $plugin->name = $this->parent->get('name');
+        $plugin->icon = $this->get('icon');
+        $plugin->row = $this->get('row');
+        $plugin->path = $this->parent->getPath('extension_root');
+        $plugin->type = $type;
 
         wfimport('admin.models.plugins');
         $model = new WFModelPlugins();
@@ -219,23 +236,23 @@ class WFInstallerPlugin extends JObject {
      */
     public function uninstall($name) {
         // Initialize variables
-        $row    = null;
+        $row = null;
         $retval = true;
-        $db     = $this->parent->getDBO();
-        
-        $parts  = explode('.', $name);
+        $db = $this->parent->getDBO();
+
+        $parts = explode('.', $name);
         // get name
-        $name   = array_pop($parts);
+        $name = array_pop($parts);
         // get type eg: plugin or extension
-        $type   = array_shift($parts);
+        $type = array_shift($parts);
 
         $this->parent->set('name', $name);
-        
+
         if ($type == 'plugins') {
             $parts = array($name);
             // create $path
             $path = JPATH_COMPONENT_SITE . '/editor/tiny_mce/plugins/' . $name;
-        } else {           
+        } else {
             $parts[] = $name;
             $path = JPATH_COMPONENT_SITE . '/editor/extensions/' . $parts[0];
         }
@@ -256,9 +273,9 @@ class WFInstallerPlugin extends JObject {
                 JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_MANIFEST_INVALID'));
             }
 
-            $this->parent->set('name',      (string) $xml->name);
-            $this->parent->set('version',   (string) $xml->version);
-            $this->parent->set('message',   (string) $xml->description);
+            $this->parent->set('name', (string) $xml->name);
+            $this->parent->set('version', (string) $xml->version);
+            $this->parent->set('message', (string) $xml->description);
 
             // can't remove a core plugin
             if ((int) $xml->attributes()->core == 1) {
@@ -298,10 +315,10 @@ class WFInstallerPlugin extends JObject {
                 }
             }
 
-            $plugin         = new StdClass();
-            $plugin->name   = $name;
-            $plugin->icon   = (string) $xml->icon;
-            $plugin->path   = $this->parent->getPath('extension_root');
+            $plugin = new StdClass();
+            $plugin->name = $name;
+            $plugin->icon = (string) $xml->icon;
+            $plugin->path = $this->parent->getPath('extension_root');
 
             wfimport('admin.models.plugins');
             $model = new WFModelPlugins();

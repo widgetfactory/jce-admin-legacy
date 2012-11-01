@@ -49,11 +49,11 @@ class WFModelInstaller extends WFModel {
         // Install the package
         if (!$installer->install($package['dir'])) {
             $result = false;
-            
+
             $app->enqueueMessage(WFText::sprintf('WF_INSTALLER_INSTALL_ERROR'), 'error');
         } else {
             $result = true;
-            
+
             $app->enqueueMessage(WFText::sprintf('WF_INSTALLER_INSTALL_SUCCESS'));
         }
 
@@ -123,12 +123,12 @@ class WFModelInstaller extends WFModel {
         }
 
         $this->_result[] = array(
-            'name'      => $installer->get('name'),
-            'type'      => $type,
-            'version'   => $installer->get('version'),
-            'result'    => $result
+            'name' => $installer->get('name'),
+            'type' => $type,
+            'version' => $installer->get('version'),
+            'result' => $result
         );
-        
+
         $this->setState('name', WFText::_($installer->get('name')));
         $this->setState('result', $result);
         $this->setState('install.result', $this->_result);
@@ -173,6 +173,12 @@ class WFModelInstaller extends WFModel {
             }
         }
 
+        if (defined('JPATH_PLATFORM')) {
+            $tmp = $config->get('tmp_path');
+        } else {
+            $tmp = $config->getValue('config.tmp_path');
+        }
+
         // uploaded file
         if ($upload && $file['tmp_name'] && $file['name']) {
             // check extension
@@ -181,8 +187,8 @@ class WFModelInstaller extends WFModel {
                 return false;
             }
 
-            $dest = $config->get('tmp_path') . '/' . $file['name'];
-            $src = $file['tmp_name'];
+            $dest   = $tmp . '/' . $file['name'];
+            $src    = $file['tmp_name'];
             // upload file
             JFile::upload($src, $dest);
             // path to file
@@ -344,7 +350,7 @@ class WFModelInstaller extends WFModel {
             }
 
             if (is_file($file)) {
-                $xml = WFXMLElement::getXML($file);
+                $xml = WFXMLElement::load($file);
 
                 if ($xml) {
                     $row->title = (string) $xml->name;

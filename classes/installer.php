@@ -117,7 +117,7 @@ class WFInstaller extends JObject {
             
             $this->set('name', $this->installer->get('name'));
             $this->set('version', $this->installer->get('version'));
-            $this->set('message', $this->installer->get('message'));
+            $this->set('message', $this->installer->get('description'));
             $this->set('extension.message', $this->installer->get('extension.message'));
             
             return $ret;
