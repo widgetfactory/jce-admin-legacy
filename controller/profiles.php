@@ -123,7 +123,13 @@ class WFControllerProfiles extends WFController
 		$row->components 	= implode(',', $components);
 		$row->users 		= implode(',', $users);
                 $row->device 		= implode(',', $device);
-                $row->area 		= implode(',', $area);
+                
+                // ugly hack for area array to integer conversion
+                if (empty($area) || count($area) == 2) {
+                    $row->area = 0;
+                } else {
+                    $row->area = $area[0];
+                }
 
 		$data 				= new StdClass();
 		// get params array

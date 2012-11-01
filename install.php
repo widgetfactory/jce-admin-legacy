@@ -209,6 +209,8 @@ abstract class WFInstall {
             $db->query();
         }
 
+        self::updateDB();
+
         if ($state) {
             // legacy (JCE 1.5) cleanup
             if (!defined('JPATH_PLATFORM')) {
@@ -709,7 +711,6 @@ abstract class WFInstall {
             $admin . '/models/legend.php',
             // remove extension adapter
             $admin . '/adapters/extension.php',
-            
             // remove error class from site (moved to admin)
             $site . '/editor/libraries/classes/error.php',
             // remove popup file
@@ -1143,11 +1144,11 @@ abstract class WFInstall {
         } else {
             $db->setQuery('DESCRIBE ' . $table);
             $fields = $db->loadResultArray();
-            
+
             // we need to check keys not values
             $fields = array_flip($fields);
         }
-        
+
         return array_key_exists($column, $fields);
     }
 

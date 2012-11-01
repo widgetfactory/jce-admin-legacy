@@ -370,8 +370,8 @@ class WFViewProfiles extends WFView {
 
                 // area
                 $options = array(
-                    'site'  => WFText::_('WF_PROFILES_AREA_FRONTEND'),
-                    'admin' => WFText::_('WF_PROFILES_AREA_BACKEND')      
+                    1 => WFText::_('WF_PROFILES_AREA_FRONTEND'),
+                    2 => WFText::_('WF_PROFILES_AREA_BACKEND')      
                 );
                 
                 $lists['area'] = '';
