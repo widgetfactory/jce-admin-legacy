@@ -614,11 +614,11 @@ abstract class WFInstall {
 
             if ($xml) {
                 foreach ($xml->profiles->children() as $profile) {
-                    if ($profile->attributes()->name == $name) {
+                    if ((string) $profile->attributes()->name == $name) {
                         $row = JTable::getInstance('profiles', 'WFTable');
 
                         foreach ($profile->children() as $item) {
-                            switch ($item->getName()) {
+                            switch ((string) $item->getName()) {
                                 case 'rows':
                                     $row->rows = (string) $item;
                                     break;
