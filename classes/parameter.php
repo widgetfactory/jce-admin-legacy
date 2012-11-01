@@ -109,7 +109,7 @@ class WFParameter {
 
             $controls = explode(':', $this->control);
 
-            if ($xml = WFXMLElement::getXML($path)) {
+            if ($xml = WFXMLElement::load($path)) {
                 $params = $xml;
 
                 // move through tree

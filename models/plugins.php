@@ -19,7 +19,7 @@ class WFModelPlugins extends WFModel {
     public function getCommands() {
         //$xml  = JFactory::getXMLParser('Simple');
         $file = dirname(__FILE__) . '/commands.xml';
-        $xml = WFXMLElement::getXML($file);
+        $xml = WFXMLElement::load($file);
 
         $commands = array();
 
@@ -52,7 +52,7 @@ class WFModelPlugins extends WFModel {
         $plugins = array();
 
         // get core xml
-        $xml = WFXMLElement::getXML(dirname(__FILE__) . '/plugins.xml');
+        $xml = WFXMLElement::load(dirname(__FILE__) . '/plugins.xml');
 
         if ($xml) {
 
@@ -91,7 +91,7 @@ class WFModelPlugins extends WFModel {
             $file = $folder . '/' . $name . '.xml';
 
             if (is_file($file)) {
-                $xml = WFXMLElement::getXML($folder . '/' . $name . '.xml');
+                $xml = WFXMLElement::load($folder . '/' . $name . '.xml');
 
                 if ($xml) {
                     $params = $xml->params;
@@ -153,7 +153,7 @@ class WFModelPlugins extends WFModel {
             $object->description = '';
             $object->id = $object->folder . '.' . $object->name;
 
-            $xml = WFXMLElement::getXML($file);
+            $xml = WFXMLElement::load($file);
 
             if ($xml) {
                 $plugins = (string) $xml->plugins;

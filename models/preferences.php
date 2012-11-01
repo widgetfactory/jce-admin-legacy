@@ -111,7 +111,7 @@ class WFModelPreferences extends WFModel {
 	protected function getActions()
 	{
 		$file 		= JPATH_COMPONENT_ADMINISTRATOR . '/access.xml';			
-		$xml 		= WFXMLElement::getXML($file);
+		$xml 		= WFXMLElement::load($file);
 		
 		$actions 	= array();
 		

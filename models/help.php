@@ -29,7 +29,7 @@ class WFModelHelp extends WFModel {
 
         if (file_exists($file)) {
             // load xml
-            $xml = WFXMLElement::getXML($file);
+            $xml = WFXMLElement::load($file);
 
             if ($xml) {
                 foreach ($xml->help->children() as $topic) {

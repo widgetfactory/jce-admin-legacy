@@ -50,11 +50,11 @@ abstract class WFXMLHelper {
     }
 
     public static function getXML($file) {
-        return WFXMLElement::getXML($file);
+        return WFXMLElement::load($file);
     }
 
     public static function parseInstallManifest($file) {
-        $xml = WFXMLElement::getXML($file);
+        $xml = WFXMLElement::load($file);
         
         if (!$xml) {
             return false;

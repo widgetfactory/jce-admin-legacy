@@ -56,7 +56,7 @@ class WFModelProfiles extends WFModel {
         $manifest = WF_EDITOR_PLUGINS . '/' . $plugin . '/' . $plugin . '.xml';
 
         if (is_file($manifest)) {
-            $xml = WFXMLElement::getXML($manifest);
+            $xml = WFXMLElement::load($manifest);
 
             // get the plugin xml file    
             if ($xml) {
@@ -344,7 +344,7 @@ class WFModelProfiles extends WFModel {
 
         JTable::addIncludePath(dirname(dirname(__FILE__)) . '/tables');
 
-        $xml = WFXMLElement::getXML($file);
+        $xml = WFXMLElement::load($file);
 
         if ($xml) {
             $n = 0;
@@ -445,7 +445,7 @@ class WFModelProfiles extends WFModel {
         $mainframe = JFactory::getApplication();
         $file = JPATH_COMPONENT . '/models/profiles.xml';
 
-        $xml = WFXMLElement::getXML($file);
+        $xml = WFXMLElement::load($file);
 
         if ($xml) {
             foreach ($xml->profiles->children() as $profile) {
