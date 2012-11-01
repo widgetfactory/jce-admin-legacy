@@ -209,8 +209,6 @@ abstract class WFInstall {
             $db->query();
         }
 
-        self::updateDB();
-
         if ($state) {
             // legacy (JCE 1.5) cleanup
             if (!defined('JPATH_PLATFORM')) {
@@ -482,6 +480,8 @@ abstract class WFInstall {
                 } else {
                     // add Blogger profile
                     self::installProfile('Blogger');
+                    // add Mobile profile
+                    self::installProfile('Mobile');
                 }
             } else {
                 return false;
@@ -826,7 +826,12 @@ abstract class WFInstall {
                 }
             }
         }
-
+        
+        if (version_compare($version, '2.3.0beta', '<')) {
+            // add Mobile profile
+            self::installProfile('Mobile');
+        }
+        
         return true;
     }
 

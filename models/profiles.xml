@@ -61,7 +61,7 @@
                 <param>{"editor":{"toggle":"0"}}</param>
             </params>
         </profile>
-        <profile>
+        <profile name="Mobile">
             <name>Mobile</name>
             <description>Sample Mobile Profile</description>
             <users></users>
