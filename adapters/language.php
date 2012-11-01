@@ -31,7 +31,7 @@ class WFInstallerLanguage extends JObject {
     }
     
     private function setManifest($manifest = null) {
-    	 $values = array('name', 'version', 'message', 'tag');
+    	 $values = array('name', 'version', 'description', 'tag');
     	 
     	 foreach($values as $value) {
     	 	$this->parent->set($value, WFXMLHelper::getElement($manifest, $value));
