@@ -678,7 +678,9 @@ abstract class WFInstall {
             $site . '/editor/tiny_mce/plugins/table/langs',
             $site . '/editor/tiny_mce/plugins/xhtmlxtras/langs',
             // remove paste folder
-            $site . '/editor/tiny_mce/plugins/paste'
+            $site . '/editor/tiny_mce/plugins/paste',
+            // remove jquery
+            $site . '/editor/libraries/js/jquery'
         );
 
         foreach ($folders as $folder) {
@@ -821,17 +823,6 @@ abstract class WFInstall {
 
                     $profile->store();
                 }
-            }
-        }
-
-        // Cleanup JQuery
-        $path = $site . '/editor/libraries/js/jquery';
-        $files = JFolder::files($path, '\.js');
-        $exclude = array('jquery-1.7.2.min.js', 'jquery-ui-1.8.21.custom.min.js', 'jquery-ui-layout.js');
-
-        foreach ($files as $file) {
-            if (in_array(basename($file), $exclude) === false) {
-                @JFile::delete($path . '/' . $file);
             }
         }
 
