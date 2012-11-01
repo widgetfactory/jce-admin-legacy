@@ -157,9 +157,11 @@ class WFInstallerLanguage extends JObject {
         if (file_exists($manifest)) {
             $xml = WFXMLHelper::getXML($manifest);
 
-            if (!$this->setManifest($xml)) {
+            if (!$xml) {
                 JError::raiseWarning(100, WFText::_('WF_INSTALLER_LANGUAGE_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_MANIFEST_INVALID'));
             }
+            
+            $this->setManifest($xml);
 
             // Set the installation target paths
             $this->parent->setPath('extension_site', $path);
