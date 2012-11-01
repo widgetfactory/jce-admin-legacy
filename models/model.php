@@ -11,7 +11,7 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-wfimport('admin.classes.model');
+require_once(dirname(dirname(__FILE__)) . '/classes/model.php');
 
 class WFModel extends WFModelBase {
 
