@@ -51,7 +51,7 @@ abstract class WFInstall {
                             $table->delete((int) $menuid);
                         }
                     }
-                    
+
                     // Rebuild the whole tree
                     $table->rebuild();
                 }
@@ -947,10 +947,10 @@ abstract class WFInstall {
                         $module->store();
                     }
                 }
-                
+
                 if ($folder == 'editors') {
                     $manifest = $installer->getPath('manifest');
-                    
+
                     if (basename($manifest) == 'legacy.xml') {
                         // rename legacy.xml to jce.xml
                         JFile::move($installer->getPath('extension_root') . '/' . basename($manifest), $installer->getPath('extension_root') . '/jce.xml');
@@ -1149,9 +1149,12 @@ abstract class WFInstall {
         } else {
             $db->setQuery('DESCRIBE ' . $table);
             $fields = $db->loadResultArray();
+            
+            // we need to check keys not values
+            $fields = array_flip($fields);
         }
-
-        return in_array($column, (array) $fields);
+        
+        return array_key_exists($column, $fields);
     }
 
 }
