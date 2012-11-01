@@ -353,8 +353,9 @@
             }, function() {
                 $(this).empty();
             }).click(function() {
-                var $parent = $(this).parent();
-                var $target = $('ul.sortableList', '#profileLayoutTable').not($parent.parent());
+                var $parent     = $(this).parents('li.sortableListItem').first();
+                var $target     = $('ul.sortableList', '#profileLayoutTable').not($parent.parent());
+                
                 $parent.hide().appendTo($target).show('slow');
             	
                 $(this).empty();
