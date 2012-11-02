@@ -10,7 +10,7 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 ?>
-<form action="index.php" method="post" name="adminForm" class="form-horizontal">
+<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
     <div id="jce">
         <div id="tabs" class="">
             <ul class="nav nav-tabs">
