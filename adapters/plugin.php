@@ -221,7 +221,7 @@ class WFInstallerPlugin extends JObject {
         }
 
         $plugin = new StdClass();
-        $plugin->name = $this->parent->get('name');
+        $plugin->name = $this->get('plugin');
         $plugin->icon = $this->parent->get('icon');
         $plugin->row = (int) $this->get('row');
         $plugin->path = $this->parent->getPath('extension_root');
@@ -330,7 +330,7 @@ class WFInstallerPlugin extends JObject {
             // remove form profile
             if ($xml->icon) {
                 $plugin = new StdClass();
-                $plugin->name = $name;
+                $plugin->name = (string) $xml->plugin;
                 $plugin->icon = (string) $xml->icon;
                 $plugin->path = $this->parent->getPath('extension_root');
 

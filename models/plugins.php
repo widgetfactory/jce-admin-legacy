@@ -309,44 +309,38 @@ class WFModelPlugins extends WFModel {
         jimport('joomla.filesystem.folder');
 
         // load the plugin and enable
-        if (isset($plugin->row)) {
-            // Install plugin install default profile layout if a row is set
-            if (is_numeric($plugin->row) && (int) $plugin->row) {
-                $query = $db->getQuery(true);
+        if (isset($plugin->row) && $plugin->row > 0) {
+            $query = $db->getQuery(true);
 
-                if (is_object($query)) {
-                    $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote('Default') . ' OR id = 1');
+            if (is_object($query)) {
+                $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote('Default') . ' OR id = 1');
+            } else {
+                $query = 'SELECT id'
+                        . ' FROM #__wf_profiles'
+                        . ' WHERE name = ' . $db->Quote('Default') . ' OR id = 1';
+            }
+
+            $db->setQuery($query);
+            $id = $db->loadResult();
+
+            if ($id) {
+                if ($route == 'install') {
+                    // add to profile
+                    self::addToProfile($id, $plugin);
                 } else {
-                    $query = 'SELECT id'
-                    . ' FROM #__wf_profiles'
-                    . ' WHERE name = ' . $db->Quote('Default') . ' OR id = 1';
-                }
-
-                $db->setQuery($query);
-                $id = $db->loadResult();
-
-                if ($id) {
-                    if ($route == 'install') {
-                        
-                        if ($plugin->type == 'extension') {
-                            $plugin->path = $plugin->path . '/' . $plugin->name;
-                        }
-                        
-                        // add index.html files
-                        self::addIndexfiles($plugin->path);
-                        
-                        if (isset($plugin->row)) {
-                            // add to profile
-                            self::addToProfile($id, $plugin);
-                        }
-                    } else {
-                        if (isset($plugin->row)) {
-                            // remove from profile
-                            self::removeFromProfile($id, $plugin);
-                        }
-                    }
+                    // remove from profile
+                    self::removeFromProfile($id, $plugin);
                 }
             }
+        }
+
+        if ($route == 'install') {
+            if ($plugin->type == 'extension') {
+                $plugin->path = $plugin->path . '/' . $plugin->name;
+            }
+
+            // add index.html files
+            self::addIndexfiles($plugin->path);
         }
 
         return true;
