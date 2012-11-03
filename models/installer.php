@@ -58,10 +58,10 @@ class WFModelInstaller extends WFModel {
         }
 
         $this->_result[] = array(
-            'name'      => $installer->get('name'),
-            'type'      => $package['type'],
-            'version'   => $installer->get('version'),
-            'result'    => $result
+            'name' => $installer->get('name'),
+            'type' => $package['type'],
+            'version' => $installer->get('version'),
+            'result' => $result
         );
 
         $this->setState('install.result', $this->_result);
@@ -85,33 +85,14 @@ class WFModelInstaller extends WFModel {
     public function remove($id, $type) {
         $app = JFactory::getApplication();
 
-        $installer = WFInstaller::getInstance();
-
         // Use Joomla! Installer class for related extensions
         if ($type == 'related') {
-            $table = WF_JOOMLA15 ? 'plugin' : 'extension';
-
-            $row = JTable::getInstance($table);
-            // get extension data not returned by uninstall method
-            $row->load($id);
-
-            if (defined('JPATH_PLATFORM')) {
-                $manifest = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . '/' . $row->element . '.xml';
-            } else {
-                $manifest = JPATH_PLUGINS . $row->folder . '/' . $row->element . '.xml';
-            }
-
-            if (file_exists($manifest)) {
-                $xml = WFXMLHelper::parseInstallManifest($manifest);
-
-                if ($xml) {
-                    $installer->set('name', $xml['name']);
-                    $installer->set('version', $xml['version']);
-                }
-            }
-
+            jimport('joomla.installer.installer');
+            $installer = JInstaller::getInstance();
             $result = $installer->uninstall('plugin', $id);
         } else {
+            $installer = WFInstaller::getInstance();
+
             $installer->setAdapter($type);
             $result = $installer->uninstall($type, $id);
         }
@@ -187,8 +168,8 @@ class WFModelInstaller extends WFModel {
                 return false;
             }
 
-            $dest   = $tmp . '/' . $file['name'];
-            $src    = $file['tmp_name'];
+            $dest = $tmp . '/' . $file['name'];
+            $src = $file['tmp_name'];
             // upload file
             JFile::upload($src, $dest);
             // path to file
@@ -318,35 +299,35 @@ class WFModelInstaller extends WFModel {
         $params = JComponentHelper::getParams('com_jce');
 
         // pre-defined array of other plugins
-        $related = explode(',', $params->get('related_extensions', 'jcemediabox,jceutilities,mediaobject,wfmediabox'));
-
-        $query = $db->getQuery(true);
+        $related = preg_replace('#(\w+)#', "'$1'", $params->get('related_extensions', 'jcemediabox,jceutilities,mediaobject,wfmediabox'));
+        $query  = $db->getQuery(true);
 
         // Joomla! 2.5
         if (is_object($query)) {
-            $query->select(array('name', 'element', 'folder'))->from('#__extensions')->where('type = ' . $db->Quote('plugin'))->order('name');
+            $query->select(array('extension_id', 'name', 'element', 'folder'))->from('#__extensions')->where(array('type = ' . $db->Quote('plugin'), 'element IN (' . $related . ')'))->order('name');
             // Joomla! 1.5    
         } else {
-            $query = 'SELECT name, element, folder FROM #__plugins ORDER BY name';
+            $query = 'SELECT id, name, element, folder FROM #__plugins WHERE element IN (' . $related . ') ORDER BY name';
         }
 
         $db->setQuery($query);
-        $rows = $db->loadObjectList() or die($db->stdErr());
+        $rows = $db->loadObjectList();
 
         $language = JFactory::getLanguage();
 
-        $numRows = count($rows);
-        for ($i = 0; $i < $numRows; $i++) {
+        $num = count($rows);
+        
+        for ($i = 0; $i < $num; $i++) {
             $row = $rows[$i];
 
-            if (in_array($row->element, $related) === false) {
-                unset($rows[$i]);
-            }
-
-            $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . '/' . $row->element . ".xml";
-
-            if (WF_JOOMLA15) {
+            if (defined('JPATH_PLATFORM')) {
+                $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . '/' . $row->element . ".xml";
+            } else {
                 $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . ".xml";
+            }
+            
+            if (isset($row->extension_id)) {
+                $row->id = $row->extension_id; 
             }
 
             if (is_file($file)) {
@@ -367,7 +348,8 @@ class WFModelInstaller extends WFModel {
             $language->load('plg_' . trim($row->folder) . '_' . trim($row->element), JPATH_SITE);
         }
 
-        return array_values($rows);
+        //return array_values($rows);
+        return $rows;
     }
 
     public function getLanguages() {

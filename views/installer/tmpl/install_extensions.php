@@ -27,8 +27,8 @@ foreach ($this->extensions as $extension) :
     $disabled = $extension->core ? ' disabled="disabled"' : '';
     ?>
             <tr>
-                <td width="20px" align="center"><input type="checkbox" name="pid[]" value="extensions.<?php echo $extension->id; ?>"<?php echo $disabled; ?>/></td>
-                <td><span class="bold"><?php echo WFText::_($extension->title); ?></span></td>
+                <td width="20px" align="center"><input type="checkbox" name="pid[]" value="extension.<?php echo $extension->id; ?>"<?php echo $disabled; ?>/></td>
+                <td><?php echo WFText::_($extension->title); ?></td>
                 <td align="center"><?php echo WFText::_('WF_EXTENSIONS_' . strtoupper($extension->type) . '_TITLE'); ?></td>
                 <td align="center"><?php echo @$extension->version != '' ? $extension->version : '&nbsp;'; ?></td>
                 <td align="center"><?php echo @$extension->creationdate != '' ? $extension->creationdate : '&nbsp;'; ?></td>

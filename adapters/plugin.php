@@ -33,13 +33,13 @@ class WFInstallerPlugin extends JObject {
     private function setManifest() {
         $manifest = $this->parent->getManifest();
 
-        $values = array('name', 'version', 'description', 'install.script', 'uninstall.script');
+        $values = array('name', 'version', 'description', 'install.script', 'uninstall.script', 'icon');
 
         foreach ($values as $value) {
             $this->parent->set($value, WFXMLHelper::getElement($manifest, $value));
         }
 
-        $attributes = array('plugin', 'group', 'type', 'folder');
+        $attributes = array('plugin', 'group', 'type', 'folder', 'row');
 
         foreach ($attributes as $attribute) {
             $this->set($attribute, WFXMLHelper::getAttribute($manifest, $attribute));
@@ -64,12 +64,12 @@ class WFInstallerPlugin extends JObject {
 
         $this->setManifest();
 
-        $plugin = $this->get('plugin');
-        $group = $this->get('group');
-        $type = $this->get('type');
-        $folder = $this->get('folder');
+        $plugin     = $this->get('plugin');
+        $group      = $this->get('group');
+        $type       = $this->get('type');
+        $folder     = $this->get('folder');
 
-        $extension = $this->get('extension');
+        $extension  = $this->get('extension');
 
         // JCE Plugin
         if (!empty($plugin) || !empty($extension)) {
@@ -84,12 +84,19 @@ class WFInstallerPlugin extends JObject {
                 $this->parent->setPath('extension_root', JPATH_COMPONENT_SITE . '/editor/tiny_mce/plugins/' . $plugin);
             }
         } else {
-            // Non-JCE plugin type, probably JCE MediaBox or JCE Editor
-            if ($type == 'plugin' && ($group == 'system' || $group == 'editors')) {
+            // Non-JCE plugin type, probably JCE MediaBox
+            if ($type == 'plugin' && $group == 'system') {
                 require_once(JPATH_LIBRARIES . '/joomla/installer/adapters/plugin.php');
-
+                // create adapter
                 $adapter = new JInstallerPlugin($this->parent, $db);
+                
+                if (method_exists($adapter, 'loadLanguage')) {
+                    $adapter->loadLanguage($this->parent->getPath('source'));
+                }
+                
+                // set adapter
                 $this->parent->setAdapter('plugin', $adapter);
+                // isntall
                 return $adapter->install();
             } else {
                 $this->parent->abort(WFText::_('WF_INSTALLER_EXTENSION_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_NO_PLUGIN_FILE'));
@@ -215,8 +222,8 @@ class WFInstallerPlugin extends JObject {
 
         $plugin = new StdClass();
         $plugin->name = $this->parent->get('name');
-        $plugin->icon = $this->get('icon');
-        $plugin->row = $this->get('row');
+        $plugin->icon = $this->parent->get('icon');
+        $plugin->row = (int) $this->get('row');
         $plugin->path = $this->parent->getPath('extension_root');
         $plugin->type = $type;
 
@@ -248,23 +255,28 @@ class WFInstallerPlugin extends JObject {
 
         $this->parent->set('name', $name);
 
-        if ($type == 'plugins') {
-            $parts = array($name);
-            // create $path
-            $path = JPATH_COMPONENT_SITE . '/editor/tiny_mce/plugins/' . $name;
-        } else {
-            $parts[] = $name;
-            $path = JPATH_COMPONENT_SITE . '/editor/extensions/' . $parts[0];
+        // Load the language file
+        $language = JFactory::getLanguage();
+
+        switch ($type) {
+            case 'plugin':
+                // create $path
+                $path = JPATH_COMPONENT_SITE . '/editor/tiny_mce/plugins/' . $name;
+                // load language file
+                $language->load('com_jce_' . $name, JPATH_SITE);
+                break;
+            case 'extension':
+                $parts[] = $name;
+                $path = JPATH_COMPONENT_SITE . '/editor/extensions/' . $name;
+                // load language file
+                $language->load('com_jce_' . trim(implode('_', $parts)), JPATH_SITE);
+                break;
         }
 
         // Set the plugin root path
         $this->parent->setPath('extension_root', $path);
 
         $manifest = $this->parent->getPath('extension_root') . '/' . $name . '.xml';
-
-        // Load the language file
-        $language = JFactory::getLanguage();
-        $language->load('com_jce_' . trim(implode('_', $parts)), JPATH_SITE);
 
         if (file_exists($manifest)) {
             $xml = WFXMLHelper::getXML($manifest);
@@ -315,14 +327,17 @@ class WFInstallerPlugin extends JObject {
                 }
             }
 
-            $plugin = new StdClass();
-            $plugin->name = $name;
-            $plugin->icon = (string) $xml->icon;
-            $plugin->path = $this->parent->getPath('extension_root');
+            // remove form profile
+            if ($xml->icon) {
+                $plugin = new StdClass();
+                $plugin->name = $name;
+                $plugin->icon = (string) $xml->icon;
+                $plugin->path = $this->parent->getPath('extension_root');
 
-            wfimport('admin.models.plugins');
-            $model = new WFModelPlugins();
-            $model->postInstall('uninstall', $plugin, $this);
+                wfimport('admin.models.plugins');
+                $model = new WFModelPlugins();
+                $model->postInstall('uninstall', $plugin, $this);
+            }
         } else {
             JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_MANIFEST_ERROR'));
             $retval = false;

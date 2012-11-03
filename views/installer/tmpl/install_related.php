@@ -24,7 +24,7 @@ defined('_JEXEC') or die('RESTRICTED');
 <?php foreach ($this->related as $related) : ?>
             <tr>
                 <td width="20px" align="center"><input type="checkbox" name="rid[]" value="<?php echo $related->id; ?>" /></td>
-                <td><span class="bold"><?php echo WFText::_($related->name); ?></span></td>
+                <td><?php echo WFText::_($related->name); ?></td>
                 <td align="center"><?php echo @$related->version != '' ? $related->version : '&nbsp;'; ?></td>
                 <td align="center"><?php echo @$related->creationdate != '' ? $related->creationdate : '&nbsp;'; ?></td>
                 <td>

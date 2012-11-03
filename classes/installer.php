@@ -212,13 +212,16 @@ class WFInstaller extends JObject {
                 if (!is_null($manifest)) {
                     // If the root method attribute is set to upgrade, allow file overwrite
                     if ((string) $manifest->attributes()->method == 'upgrade') {
-                        $this->installer->upgrade      = true;
-                        $this->installer->overwrite    = true;
+                        if (method_exists($this->installer, 'setUpgrade')) {
+                            $this->installer->setUpgrade(true);
+                        }
+  
+                        $this->installer->setOverwrite(true);
                     }
 
                     // If the overwrite option is set, allow file overwriting
                     if ((string) $manifest->attributes()->overwrite == 'true') {
-                        $this->installer->overwrite = true;
+                        $this->installer->setOverwrite(true);
                     }
 
                     // Set the manifest object and path
