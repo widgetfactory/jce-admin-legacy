@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.3.0beta" />
-    <property description="Component Version" name="version_package" value="230beta" />
+    <property description="Component Version" name="version" value="2.3.0beta2" />
+    <property description="Component Version" name="version_package" value="230beta2" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
@@ -204,13 +204,13 @@
         </copy>
 	
 	<!-- Create Language Package -->
-        <fileset dir="${component_site_export_dir}/editor/tiny_mce/" id="tinymcelanguages_root">
+        <!--fileset dir="${component_site_export_dir}/editor/tiny_mce/" id="tinymcelanguages_root">
             <include name="langs/en*.js" />
-        </fileset>
+        </fileset-->
 		
-        <fileset dir="${component_site_export_dir}/editor/tiny_mce/" id="tinymcelanguages_theme">
+        <!--fileset dir="${component_site_export_dir}/editor/tiny_mce/" id="tinymcelanguages_theme">
             <include name="themes/advanced/langs/en*.js" />
-        </fileset>
+        </fileset-->
 		
         <copy file="${component_export_dir}/language/en-GB/en-GB.com_jce.xml" tofile="${language_export_dir}/language/en-GB/en-GB.com_jce.xml" />
         <copy file="${component_export_dir}/language/en-GB/en-GB.com_jce.xml" todir="${language_export_dir}" />
@@ -221,10 +221,10 @@
         <copy todir="${language_export_dir}/administrator/language/en-GB">
             <fileset refid="component_admin_lang" />
         </copy>
-        <copy todir="${language_export_dir}/components/com_jce/editor/tiny_mce">
+        <!--copy todir="${language_export_dir}/components/com_jce/editor/tiny_mce">
             <fileset refid="tinymcelanguages_root" />
             <fileset refid="tinymcelanguages_theme" />
-        </copy>
+        </copy-->
 		
         <zip destfile="${language_export_dir}/jce_lang_${version_package}.zip" basedir="${language_export_dir}">
             <zipfileset dir="${language_export_dir}">
