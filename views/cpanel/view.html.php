@@ -20,8 +20,8 @@ class WFViewCpanel extends WFView {
 
         $mainframe = JFactory::getApplication();
 
-        $model      = $this->getModel();
-        $version    = $model->getVersion();
+        $model = $this->getModel();
+        $version = $model->getVersion();
 
         $component = WFExtensionHelper::getComponent();
 
@@ -39,13 +39,13 @@ class WFViewCpanel extends WFView {
                 'updates_available' => WFText::_('WF_UPDATES_AVAILABLE')
             )
         );
-        
+
         JHtml::_('behavior.modal');
 
         $this->addScript('components/com_jce/media/js/cpanel.js?version=' . $model->getVersion());
 
         $this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.CPanel.init(' . json_encode($options) . ')});');
-        
+
         // load styles
         $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/cpanel.css');
 
@@ -59,6 +59,46 @@ class WFViewCpanel extends WFView {
 
         WFToolbarHelper::help('cpanel.about');
 
+        $views = array('config', 'profiles', 'installer', 'browser', 'mediabox');
+
+        $icons = array();
+
+        foreach ($views as $view) {
+            // check if its allowed...
+            if (WFModel::authorize($view) === false) {
+                continue;
+            }
+            
+            $attribs        = array('target="_self"');
+            $title          = 'WF_' . strtoupper($view);
+            $description    = 'WF_' . strtoupper($view) . '_DESC';
+            $link           = 'index.php?option=com_jce&amp;view=' . $view;
+
+            if ($view == 'browser') {
+                $link = WFModel::getBrowserLink();
+                
+                if (empty($link)) {
+                    continue;
+                }
+                
+                $options        = str_replace('"', "'", json_encode(array('width' => 780, 'height' => 560)));
+                $rel            = str_replace('"', "'", json_encode(array('handler' => 'iframe', 'size' => array('x' => 780, 'y' => 560))));
+                
+                $attribs        = array('target="_blank"', 'class="browser modal"', 'rel="' . $rel . '"', 'data-options="' . $options . '"');
+                
+                $title          = 'WF_' . strtoupper($view) . '_TITLE';
+                $description    = 'WF_CPANEL_' . strtoupper($view);
+            }
+
+            // if its mediabox, check the plugin is installed and enabled
+            if ($view == 'mediabox' && !JPluginHelper::isEnabled('system', 'jcemediabox')) {
+                continue;
+            }
+
+            $icons[] = '<li class="cpanel-icon wf-tooltip" title="' . WFText::_($title) . '::' . WFText::_($description) . '"><a href="' . $link . '"' . implode(' ', $attribs) . '><span class="' . $view . '"></span>' . WFText::_($title) . '</a></li>';
+        }
+
+        $this->assign('icons', $icons);
         $this->assignRef('model', $model);
         $this->assignRef('installer', $installer);
         $this->assignRef('params', $params);
