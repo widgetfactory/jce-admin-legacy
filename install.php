@@ -735,7 +735,9 @@ abstract class WFInstall {
             $site . '/editor/extensions/browser/js/search.js',
             $site . '/editor/extensions/browser/search.php',
             // remove dilg language file from theme (incorporated into main dlg file)
-            $site . '/editor/tiny_mce/themes/advanced/langs/en_dlg.js'
+            $site . '/editor/tiny_mce/themes/advanced/langs/en_dlg.js',
+            // remove old jquery UI
+            $site . '/editor/libraries/jquery/js/jquery-ui-1.9.0.custom.min.js'
         );
 
         foreach ($files as $file) {
