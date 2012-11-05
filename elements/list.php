@@ -45,7 +45,7 @@ class WFElementList extends WFElement {
             $text       = (string) $option;
             $disabled   = (string) $option->attributes()->disabled ? true : false;
 
-            $text = preg_match('#[^\d]#', $text) ? WFText::_($text) : $text;
+            $text = is_numeric($text) ? $text : WFText::_($text);
 
             if (is_array($value)) {
                 $key = array_search($val, $value);
