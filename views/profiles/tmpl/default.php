@@ -21,11 +21,11 @@ defined('_JEXEC') or die('RESTRICTED');
                 <button id="filter_go" onclick="this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>"><i class="icon-search"></i>&nbsp;<?php echo WFText::_('WF_LABEL_SEARCH'); ?></button>
                 <button id="filter_reset" onclick="document.getElementById('search').value='';this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_CLEAR'); ?>"><i class="icon-remove"></i>&nbsp;<?php echo WFText::_('WF_LABEL_CLEAR'); ?></button>
             </div>
-            <div class="filter-search fltrt btn-group pull-right hidden-phone">
+            <div class="filter-search fltrt btn-group pull-right visible-desktop">
                 <div class="upload-container btn-group pull-right">
                     <label for="import" class="element-invisible"><?php echo WFText::_('WF_PROFILES_IMPORT'); ?></label>
                     <div class="input-append upload_button_container">
-                        <input type="file" name="import" size="30" id="upload" accept="application/xml" placeholder="" />
+                        <input type="file" name="import" size="30" id="upload" accept="application/xml" placeholder="<?php echo WFText::_('WF_PROFILES_IMPORT'); ?>" />
                         <button id="upload_button" class="btn upload-import"><i class="icon-arrow-up"></i>&nbsp;<?php echo WFText::_('WF_PROFILES_IMPORT_IMPORT'); ?></button>
                     </div>
                 </div>
