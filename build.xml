@@ -294,7 +294,7 @@
                 <contains text="http://tinymce.moxiecode.com/license" />          
                 <include name="**/*.js" />
                 <exclude name="**/**-min.js" />
-                <exclude name="**/jquery/**.js" />
+                <exclude name="**/jquery/**" />
                 <exclude name="**/tiny_mce.js" />
                 <exclude name="**/tiny_mce_popup.js" />
                 <exclude name="**/codemirror/**.js" />
@@ -308,7 +308,7 @@
             <fileset dir="${component_export_dir}">                
                 <include name="**/*.js" />
                 <exclude name="**/**-min.js" />
-                <exclude name="**/jquery/**.js" />
+                <exclude name="**/jquery/**" />
                 <exclude name="**/tiny_mce.js" />
                 <exclude name="**/tiny_mce_popup.js" />
                 <exclude name="**/codemirror/**.js" /> 
