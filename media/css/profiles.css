@@ -6,7 +6,7 @@
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- */
+*/
 @import url("../../../../../components/com_jce/editor/libraries/css/select.css");
 @import url("colorpicker.css");
 @import url("extensions.css");
@@ -15,93 +15,93 @@
 
 
 #profile-list a {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 table#profiles_restrictions p {
-	margin : 0 0 5px 0;
-	padding : 0;
+    margin : 0 0 5px 0;
+    padding : 0;
 }
 table#profiles_restrictions p label, table#profiles_restrictions p input {
-	vertical-align : middle;
+    vertical-align : middle;
 }
 table#profiles_restrictions p button {
-	margin : 5px 5px 0 0;
+    margin : 5px 5px 0 0;
 }
 div#plugin_params h3 span.defaultSkin span.mceIcon, div#plugin_params h3 img {
-	display: inline-block;
-	vertical-align:middle;
-	margin: 0 10px 0 0;
+    display: inline-block;
+    vertical-align:middle;
+    margin: 0 10px 0 0;
 }
 div#plugin_params h3.plugin_params_visible {
-	display : block;
+    display : block;
 }
 div#plugin_params h3.plugin_params_hidden {
-	display : none;
+    display : none;
 }
 input#components-all, input#components-select, label[for="components-all"], label[for="components-select"] {
-	clear: none;
-	float: none;
-	display: inline;
-	margin: 0 5px 0 0;
+    clear: none;
+    float: none;
+    display: inline;
+    margin: 0 5px 0 0;
 }
 #jce a.ui-button span.icon-add, #jce a.ui-button span.icon-remove, #jce a.ui-button span.icon-legend {
-	left: 0;
-	margin-top: -10px;
-	width: 20px;
-	height: 20px;
-	padding: 0;
+    left: 0;
+    margin-top: -10px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
 }
 #jce #search {
-	width: 200px;
+    width: 200px;
 }
 
 #jce span.profiles-enable,  #jce span.profiles-disable {
-	background: url(../img/tick.png) no-repeat 0 0;
-	width: 20px;
-	height: 20px;
-	display: inline-block;
-	cursor: pointer;
+    background: url(../img/tick.png) no-repeat 0 0;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    cursor: pointer;
 }
 #jce span.profiles-disable {
-	background: url(../img/error.png) no-repeat 0 0;
+    background: url(../img/error.png) no-repeat 0 0;
 }
 #jce span.profiles-enable.loading,  #jce span.profiles-disable.loading {
-	background : url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center;
+    background : url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center;
 }
 #jce input[type="radio"] + label {
-	display: inline;
+    display: inline;
 }
 
 div#plugin_params span.mceIcon {
-	display: inline-block;
-	vertical-align: middle;
-	margin: 0 2px 0 0;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 2px 0 0;
 }
 
 div#plugin_params fieldset {
-	margin-left: 0;
+    margin-left: 0;
 }
 div#plugin_params h2 {
-	font-size: 1.5em;
-	padding: 0 0.1em
+    font-size: 1.5em;
+    padding: 0 0.1em
 }
 
 #jce #tabs h2 {
-	margin: 0 0 0.8em 0;
+    margin: 0 0 0.8em 0;
 }
 
 #jce span.browser {
-	width: 20px;
-	height: 20px;
-	background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -960px;
-	cursor: pointer;
-	display: inline-block;
-	vertical-align:middle;
+    width: 20px;
+    height: 20px;
+    background: transparent url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -960px;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align:middle;
 }
 
 html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-nav {
-	border-width: 0 0 0 1px;
+    border-width: 0 0 0 1px;
     float: right;
     padding: 0 0.2em 0 0.1em;
 }
@@ -111,11 +111,11 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-selected {
     margin-right: -1px;
 }
 html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-nav li {
-	margin: 0 1px 0.2em 0;
-	border-left: 0 none;
+    margin: 0 1px 0.2em 0;
+    border-left: 0 none;
 }
 html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
-	margin: 0 13em 0 0;
+    margin: 0 13em 0 0;
 }
 
 #jce #tabs-setup ul li span.list {
@@ -277,12 +277,26 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     margin : 0 10px;
 }
 
-.ui-bootstrap #jce div.tab-pane.tabbable.tabs-left ul li a {
+.ui-bootstrap #jce div.tab-pane.tabbable.tabs-left ul li > a {
     max-width: 100px;
     padding-bottom: 20px;
     padding-top: 20px;
     white-space: pre-wrap;
     cursor: pointer;
+
+    background-color : #F5F5F5;
+    border-color : #eee #ddd #eee #eee;
+
+    -webkit-box-shadow: inset -1px 0px 1px px rgba(0, 0, 0, 0.05);
+    box-shadow: inset -1px 0px 1px px rgba(0, 0, 0, 0.05);
+}
+
+.ui-bootstrap #jce div.tab-pane.tabbable.tabs-left ul li.active > a {
+    background-color : #fff;
+    border-color : #eee #fff #eee #eee;
+    
+    box-shadow: none;
+    -webkit-box-shadow: none;
 }
 
 #jce #tabs ul li span.tabs-label {
