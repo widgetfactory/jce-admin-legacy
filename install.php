@@ -820,6 +820,50 @@ abstract class WFInstall {
                 }
             }
         }
+        
+        if (version_compare($version, '2.2.9', '<')) {
+            $profiles = self::getProfiles();
+            $profile = JTable::getInstance('Profiles', 'WFTable');
+
+            if (!empty($profiles)) {
+                foreach ($profiles as $item) {
+                    $profile->load($item->id);
+                    
+                    $buttons = array('buttons' => array());
+                    
+                    if (strpos($profile->rows, 'numlist') !== false) {
+                        $buttons['buttons'][] = 'numlist';
+                        
+                        $profile->rows = str_replace('numlist', 'lists', $profile->rows);
+                    }
+                    
+                    if (strpos($profile->rows, 'bullist') !== false) {
+                        $buttons['buttons'][] = 'bullist';
+                        
+                        if (strpos($profile->rows, 'lists') === false) {
+                            $profile->rows = str_replace('bullist', 'lists', $profile->rows);
+                        }
+                    }
+                    // remove bullist and numlist
+                    $profile->rows = str_replace(array('bullist', 'numlist'), '', $profile->rows);
+                    // replace multiple commas with a single one
+                    $profile->rows = preg_replace('#,+#', ',', $profile->rows);
+                    // fix rows
+                    $profile->rows = str_replace(',;', ';', $profile->rows);
+                    
+                    if (!empty($buttons['buttons'])) {
+                        $profile->plugins .= ',lists';
+                        
+                        $data = json_decode($profile->params, true);
+                        $data['lists'] = $buttons;
+                        
+                        $profile->params = json_encode($data);
+                        
+                        $profile->store();
+                    }
+                }
+            }
+        }
 
         // Cleanup JQuery
         $path = $site . '/editor/libraries/js/jquery';

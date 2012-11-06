@@ -481,7 +481,15 @@ class WFModelEditor extends JModel {
 
         if (is_object($profile)) {
             $plugins = explode(',', $profile->plugins);
-            $plugins = array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'core', 'code', 'dragupload', 'format', 'lists', 'wordcount'), $plugins));
+            $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'dragupload', 'format'), $plugins));
+            
+            if (in_array('lists', $plugins)) {
+                $plugins[] = 'advlist';
+            }
+            
+            if ($wf->getParam('editor.path', 1, 1, 'boolean')) {
+                $plugins[] = 'wordcount';
+            }
 
             foreach ($plugins as $plugin) {
                 $path = WF_EDITOR_PLUGINS . '/' . $plugin;
