@@ -301,4 +301,5 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
 
 #jce #tabs ul li span.tabs-label {
     margin : 5px 0;
+    display : block;
 }
