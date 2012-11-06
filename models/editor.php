@@ -495,8 +495,15 @@ class WFModelEditor extends WFModelBase {
 
         if (is_object($this->profile)) {
             $plugins = explode(',', $this->profile->plugins);
-            $plugins = array_unique(array_merge(array('advlist', 'autolink', 'cleanup', 'core', 'code', 'dragupload', 'format', 'lists', 'wordcount'), $plugins));
-            $installed = array();
+            $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'dragupload', 'format'), $plugins));
+            
+            if (in_array('lists', $plugins)) {
+                $plugins[] = 'advlist';
+            }
+            
+            if ($wf->getParam('editor.path', 1, 1, 'boolean')) {
+                $plugins[] = 'wordcount';
+            }
 
             foreach ($plugins as $plugin) {
                 $path = WF_EDITOR_PLUGINS . '/' . $plugin;
