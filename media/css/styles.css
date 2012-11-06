@@ -422,12 +422,14 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 }
 
 @media (max-width: 979px) {
-    input#upload_text, input.upload_text {
-        width : 200px
-    }
-    
     #jce #profiles-list th:first-child + th + th + th {
-        width : 15%;
+        width : 20%;
+    }
+}
+
+@media (max-width: 767px) {
+    #jce #profiles-list th:first-child + th + th + th {
+        width : 30%;
     }
 }
 
