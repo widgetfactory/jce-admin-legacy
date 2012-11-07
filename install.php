@@ -714,8 +714,6 @@ abstract class WFInstall {
             $admin . '/media/css/help.css',
             $admin . '/media/css/select.css',
             $admin . '/media/css/tips.css',
-            // remove installer class
-            $admin . '/classes/installer.php',
             // remove legend model
             $admin . '/models/legend.php',
             // remove extension adapter
