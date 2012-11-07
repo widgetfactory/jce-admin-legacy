@@ -360,6 +360,11 @@ abstract class WFInstall {
                     $row->rows = implode(';', $rows);
 
                     $names = array('anchor');
+                    
+                    // add lists
+                    if (preg_match('#(numlist|bullist)#', $row->rows)) {
+                        $names[] = 'lists';
+                    }
 
                     // transfer plugin ids to names
                     foreach (explode(',', $group->plugins) as $id) {
@@ -380,7 +385,32 @@ abstract class WFInstall {
                     // convert params to JSON
                     $params = self::paramsToObject($group->params);
                     $data = new StdClass();
+                    
+                    // Add lists plugin
+                    $buttons = array();
+                    
+                    if (strpos($row->rows, 'numlist') !== false) {
+                        $buttons[] = 'numlist';
+                        // replace "numlist" with "lists"
+                        $row->rows = str_replace('numlist', 'lists', $row->rows);
+                    }
+                    
+                    if (strpos($row->rows, 'bullist') !== false) {
+                        $buttons[] = 'bullist';
+                        // replace "bullist" with "lists"
+                        if (strpos($row->rows, 'lists') === false) {
+                            $row->rows = str_replace('bullist', 'lists', $row->rows);
+                        }
+                    }
+                    // remove bullist and numlist
+                    $row->rows = str_replace(array('bullist', 'numlist'), '', $row->rows);
 
+                    // add lists buttons parameter
+                    if (!empty($buttons)) {
+                        $params->lists_buttons = $buttons;
+                    }
+                    
+                    // convert parameters
                     foreach ($params as $key => $value) {
                         $parts = explode('_', $key);
 
