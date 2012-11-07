@@ -494,6 +494,8 @@ class WFModelEditor extends WFModelBase {
         $return = array();
 
         if (is_object($this->profile)) {
+            $wf = WFEditor::getInstance();
+            
             $plugins = explode(',', $this->profile->plugins);
             $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'dragupload', 'format'), $plugins));
             
