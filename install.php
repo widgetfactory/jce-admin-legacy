@@ -1230,9 +1230,12 @@ abstract class WFInstall {
         } else {
             $db->setQuery('DESCRIBE ' . $table);
             $fields = $db->loadResultArray();
+
+            // we need to check keys not values
+            $fields = array_flip($fields);
         }
 
-        return in_array($column, (array) $fields);
+        return array_key_exists($column, $fields);
     }
 
 }
