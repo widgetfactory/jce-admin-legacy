@@ -152,12 +152,12 @@
             <exclude name=".settings" />
             <exclude name=".buildpath" />
             <exclude name=".externalToolBuilders/" />
-            <exclude name="**.project" />
+            <exclude name="**/.project" />
             <exclude name="**.settings" />
             <exclude name="*.settings" />
             <exclude name="**.settings/" />
             <exclude name="**.buildpath" />
-            <exclude name="**.externalToolBuilders/" />
+            <exclude name="**/.externalToolBuilders/" />
             <exclude name="changelog.txt" />
             <exclude name="README" />
 			
