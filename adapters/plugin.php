@@ -33,13 +33,13 @@ class WFInstallerPlugin extends JObject {
     private function setManifest() {
         $manifest = $this->parent->getManifest();
 
-        $values = array('name', 'version', 'description', 'install.script', 'uninstall.script', 'icon');
+        $values = array('name', 'description', 'install.script', 'uninstall.script', 'icon');
 
         foreach ($values as $value) {
             $this->parent->set($value, WFXMLHelper::getElement($manifest, $value));
         }
 
-        $attributes = array('plugin', 'group', 'type', 'folder', 'row');
+        $attributes = array('version', 'plugin', 'group', 'type', 'folder', 'row', 'extension');
 
         foreach ($attributes as $attribute) {
             $this->set($attribute, WFXMLHelper::getAttribute($manifest, $attribute));
@@ -73,7 +73,7 @@ class WFInstallerPlugin extends JObject {
 
         // JCE Plugin
         if (!empty($plugin) || !empty($extension)) {
-            if (version_compare((string) $this->parent->get('version'), '2.0.0', '<')) {
+            if (version_compare((string) $this->get('version'), '2.0', '<')) {
                 $this->parent->abort(WFText::_('WF_INSTALLER_INCORRECT_VERSION'));
                 return false;
             }
