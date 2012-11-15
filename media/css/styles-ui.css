@@ -11,6 +11,10 @@
 
 #jce {
     font-size: 11px;
+    border-radius : 10px;
+    -moz-border-radius : 10px;
+    -webkit-border-radius: 10px;
+    border : 1px solid #DDDDDD
 }
 
 .icon-48-logo {
@@ -134,9 +138,9 @@ div#jce label input {
     font-family: Verdana,Arial,sans-serif;
     font-size: 1em;
     margin : 5px;
-    
+
     clear : none;
-    
+
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -526,22 +530,22 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 }
 
 #jce table tfoot td, table tfoot th {
-	text-align:center;
+    text-align:center;
 }
 
 #jce .jgrid span.state {
-	display:inline-block;
-	height:12px;
-	width: 12px;
-	vertical-align: middle;
+    display:inline-block;
+    height:12px;
+    width: 12px;
+    vertical-align: middle;
 }
 #jce .jgrid span.text {
-	display: none;
+    display: none;
 }
 #jce a.saveorder {
-	display: inline-block;
-	float: none;
-	vertical-align: middle;
+    display: inline-block;
+    float: none;
+    vertical-align: middle;
 }
 
 #jce div.limit select {

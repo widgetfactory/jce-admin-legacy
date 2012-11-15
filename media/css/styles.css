@@ -11,11 +11,6 @@
     font-size : 12px;
     padding: 10px;
     background-color: #FFFFFF;
-    border-radius : 10px;
-    -moz-border-radius : 10px;
-    -webkit-border-radius: 10px;
-    
-    border : 1px solid #DDDDDD
 }
 
 #jce .ui-addselect {
