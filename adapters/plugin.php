@@ -64,12 +64,12 @@ class WFInstallerPlugin extends JObject {
 
         $this->setManifest();
 
-        $plugin     = $this->get('plugin');
-        $group      = $this->get('group');
-        $type       = $this->get('type');
-        $folder     = $this->get('folder');
+        $plugin = $this->get('plugin');
+        $group = $this->get('group');
+        $type = $this->get('type');
+        $folder = $this->get('folder');
 
-        $extension  = $this->get('extension');
+        $extension = $this->get('extension');
 
         // JCE Plugin
         if (!empty($plugin) || !empty($extension)) {
@@ -89,11 +89,11 @@ class WFInstallerPlugin extends JObject {
                 require_once(JPATH_LIBRARIES . '/joomla/installer/adapters/plugin.php');
                 // create adapter
                 $adapter = new JInstallerPlugin($this->parent, $db);
-                
+
                 if (method_exists($adapter, 'loadLanguage')) {
                     $adapter->loadLanguage($this->parent->getPath('source'));
                 }
-                
+
                 // set adapter
                 $this->parent->setAdapter('plugin', $adapter);
                 // isntall
@@ -267,7 +267,7 @@ class WFInstallerPlugin extends JObject {
                 break;
             case 'extension':
                 $parts[] = $name;
-                $path = JPATH_COMPONENT_SITE . '/editor/extensions/' . $name;
+                $path = dirname(JPATH_COMPONENT_SITE . '/editor/extensions/' . implode('/', $parts));
                 // load language file
                 $language->load('com_jce_' . trim(implode('_', $parts)), JPATH_SITE);
                 break;
@@ -276,6 +276,7 @@ class WFInstallerPlugin extends JObject {
         // Set the plugin root path
         $this->parent->setPath('extension_root', $path);
 
+        // set manifest path
         $manifest = $this->parent->getPath('extension_root') . '/' . $name . '.xml';
 
         if (file_exists($manifest)) {
@@ -293,6 +294,11 @@ class WFInstallerPlugin extends JObject {
             if ((int) $xml->attributes()->core == 1) {
                 JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . JText::sprintf('WF_INSTALLER_WARNCOREPLUGIN', WFText::_((string) $xml->name)));
                 return false;
+            }
+
+            if ($type == 'extension') {
+                $this->parent->removeFiles($xml->files, -1);
+                JFile::delete($manifest);
             }
 
             // Remove all media and languages as well
@@ -342,10 +348,20 @@ class WFInstallerPlugin extends JObject {
             JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_MANIFEST_ERROR'));
             $retval = false;
         }
-        // remove the plugin folder
-        if (!JFolder::delete($this->parent->getPath('extension_root'))) {
-            JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_PLUGIN_FOLDER_ERROR'));
-            $retval = false;
+        // set plugin path
+        $path = $this->parent->getPath('extension_root');
+        
+        // set extension path
+        if ($type == 'extension') {
+            $path = $this->parent->getPath('extension_root') . '/' . $name;
+        }
+
+        if (JFolder::exists($path)) {
+            // remove the plugin folder
+            if (!JFolder::delete($path)) {
+                JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_PLUGIN_FOLDER_ERROR'));
+                $retval = false;
+            }
         }
 
         return $retval;
