@@ -398,6 +398,13 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
     padding:0;
 }
 
+#jce .jgrid span.state {
+    display:inline-block;
+    height:12px;
+    width: 12px;
+    vertical-align: middle;
+}
+
 input.placeholder, textarea.placeholder {
     color: #bbb;
 }

@@ -8,6 +8,11 @@
  * other free or open source software licenses.
  */
 (function($) {
+    var $tmp = document.createElement('div');
+    
+    $.support.borderRadius = (function() {
+        return typeof $tmp.style['borderRadius'] !== 'undefined';
+    })();
 
     if (typeof Joomla === 'undefined') {
         Joomla = {};
@@ -29,6 +34,65 @@
         
         return SqueezeBox.open(el, o);
     };
+    
+    $.fn.checkbox = function() {
+        if ($.support.borderRadius) { 
+            
+            if ($(this).hasClass('ui-checkbox-element')) {
+                return;
+            }
+            
+            var n = this, css = {};
+            
+            $.each(['marginTop', 'marginRight', 'marginBottom', 'marginLeft'], function(i, k) {
+                css[k] = $(n).css(k);
+            });
+            
+            // Custom checkbox
+            $(this).addClass('ui-checkbox-element').wrap('<span class="ui-checkbox" />').click(function() {
+                $(this).parent().toggleClass('checked', this.checked);
+            }).on('check', function() {
+                $(this).parent().toggleClass('checked', this.checked);
+            }).on('disable', function() {
+                $(this).parent().toggleClass('disabled', this.disabled);
+            }).each(function() {
+                $(this).parent().toggleClass('checked', this.checked).toggleClass('disabled', this.disabled).css(css);
+            });
+        }
+
+        return this;
+    };
+    
+    $.fn.radio = function() {
+        if ($.support.borderRadius) { 
+            
+            if ($(this).hasClass('ui-radio-element')) {
+                return;
+            }
+            
+            var n = this, css = {};
+            
+            $.each(['marginTop', 'marginRight', 'marginBottom', 'marginLeft'], function(i, k) {
+                css[k] = $(n).css(k);
+            });
+            
+            // Custom Radio list
+            $(this).addClass('ui-radio-element').wrap('<span class="ui-radio" />').click(function() {
+                $(this).parent().toggleClass('checked', this.checked);
+                
+                $('input[type="radio"][name="' + $(this).attr('name') + '"]').not(this).parent().toggleClass('checked', !this.checked);
+                
+            }).on('check', function() {
+                $(this).parent().toggleClass('checked', this.checked);
+            }).on('disable', function() {
+                $(this).parent().toggleClass('disabled', this.disabled);
+            }).each(function() {
+                $(this).parent().toggleClass('checked', this.checked).toggleClass('disabled', this.disabled).css(css);
+            });
+        }
+
+        return this;
+    };
 
     $.jce = {
 
@@ -40,12 +104,6 @@
 
             // add ui-jce class to body
             $('body').addClass('ui-jce');
-            
-            /*$('input[type="checkbox"]').each(function() {
-               $(this).wrap('<span class="ui-icon ui-icon-shadow ui-icon-checkbox" />'); 
-            }).click(function() {
-                $(this.parentNode).toggleClass('ui-icon-checkbox-on', this.checked);
-            });*/
             
             $('a.dialog').click( function(e) { 
                 self.createDialog(e, {
@@ -88,9 +146,13 @@
                         primary : 'ui-icon-arrowthick-1-n'
                     }
                 });
-
-                // Table striping
-                $('div#jce tbody tr:odd').addClass('odd');
+                
+                if (!$.support.leadingWhitespace) {
+                    // Table striping
+                    $('#profiles-list tr:odd').addClass('odd');
+                    // First and last
+                    $('#profiles-list tr:last-child').addClass('last');
+                }
             }
 
             // Tips
@@ -99,7 +161,7 @@
             });
             
             $('th input[type="checkbox"]', $('table.adminlist')).click(function() {
-                var n = $('td input[type="checkbox"]', $('table.adminlist')).prop('checked', this.checked);
+                var n = $('td input[type="checkbox"]', $('table.adminlist')).prop('checked', this.checked).trigger('check');
                
                 $('input[name="boxchecked"]').val($(n).filter(':checked').length);
             });
@@ -108,7 +170,7 @@
                 var bc = $('input[name="boxchecked"]').val();
                 var n  = $('td input[type="checkbox"]', $('table.adminlist')).length;
                 
-                $('th input[type="checkbox"]', $('table.adminlist')).prop('checked', bc == n);
+                $('th input[type="checkbox"]', $('table.adminlist')).prop('checked', bc == n).trigger('check');
             });
 
             // IE
@@ -134,6 +196,101 @@
             this._formWidgets();
             
             $('label.radio').addClass('inline');
+            
+            // Sortable Profiles list
+            $('#profiles-list tbody').sortable({
+                handle  : 'span.sortable-handle',
+                helper  : function(e, tr) {
+                    var $cells  = tr.children();
+                    var $helper = tr.clone();
+                    $helper.children().each(function(i){
+                        $(this).width($cells.eq(i).width());
+                    });
+                    return $helper;
+                },
+                stop : function(e, ui) {
+                    var n = this;
+                    
+                    // set the task
+                    $('input[name="task"]').val('saveorder');
+                    
+                    // check all cid[] inputs and serialize
+                    var cid = $('input[name^="cid"]', n).prop('checked', true).serialize();
+                    
+                    // uncheck cid[] inputs
+                    $('input[name^="cid"]', n).prop('checked', false);
+                    
+                    // disable sortables
+                    $('#profiles-list tbody').sortable('disable');
+                    
+                    $(ui.item).addClass('busy');
+                    
+                    function end() {
+                        // enable sortables
+                        $('#profiles-list tbody').sortable('enable');
+                            
+                        $(ui.item).removeClass('busy');
+                    }
+                    
+                    // get order
+                    var order = [];
+                    
+                    $('tr', n).each(function(i) {
+                        order.push('order[]=' + i);
+                    });
+                    
+                    // send to server
+                    $.ajax({
+                        type    : 'POST',
+                        url     : 'index.php',
+                        data    : $('input[name]', '#adminForm').not('input[name^="order"]').serialize() + '&' + cid + '&' + order.join('&') + '&tmpl=component',
+                        success : function() {
+                            end();
+                            
+                            // update order
+                            $('tr', n).each(function(i) {
+                                $('input[name^="order"]', this).val(i + 1);
+                                
+                                $('input[id^="cb"]', this).attr('id', 'cb' + i);
+                            });
+                            
+                            // IE < 9
+                            if (!$.support.leadingWhitespace) {
+                                // Table striping
+                                $('#profiles-list tr').removeClass('odd').filter(':odd').addClass('odd');
+                                // First and last
+                                $('#profiles-list tr').removeClass('last').last().addClass('last');
+                            }
+                        },
+                        error : function() {
+                            end();
+                        }
+                    });
+                }
+            });
+            
+            $('span.order-up a', '#profiles-list').click(function(e) {
+                $('input[name^=cid]', $(this).parents('tr')).prop('checked', true);
+                $('input[name="task"]').val('orderup');
+                
+                $('#adminForm').submit();
+                
+                e.preventDefault();
+            });
+            
+            $('span.order-down a', '#profiles-list').click(function(e) {
+                $('input[name^=cid]', $(this).parents('tr')).prop('checked', true);
+                $('input[name="task"]').val('orderdown');
+                
+                $('#adminForm').submit();
+                
+                e.preventDefault();
+            });
+            
+        // custom checkbox
+        //$('input[type="checkbox"]').checkbox();
+        // custom radio
+        //$('input[type="radio"]').radio();
         },
 
         createDialog : function(e, o) {
@@ -146,7 +303,10 @@
                 data = o.options;
             }
             
-            data = data || {width : 640, height : 480};
+            data = data || {
+                width : 640, 
+                height : 480
+            };
             
             return Joomla.modal(e.target, o.src, data.width, data.height);
         },

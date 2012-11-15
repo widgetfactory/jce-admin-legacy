@@ -604,5 +604,46 @@ class WFModelProfiles extends WFModel {
 
         return $span;
     }
+    
+    public function saveOrder($cid, $order) {
+        $db     = JFactory::getDBO();
+        $total  = count($cid);
+        
+        JArrayHelper::toInteger($cid, array(0));
+        JArrayHelper::toInteger($order, array(0));
+
+        $row = JTable::getInstance('profiles', 'WFTable');
+        $conditions = array();
+
+        // update ordering values
+        for ($i = 0; $i < $total; $i++) {
+            $row->load((int) $cid[$i]);
+            if ($row->ordering != $order[$i]) {
+                $row->ordering = $order[$i];
+                if (!$row->store()) {
+                    return false;
+                }
+                // remember to updateOrder this group
+                $condition = ' ordering > -10000 AND ordering < 10000';
+                $found = false;
+                foreach ($conditions as $cond) {
+                    if ($cond[1] == $condition) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found)
+                    $conditions[] = array($row->id, $condition);
+            }
+        }
+
+        // execute updateOrder for each group
+        foreach ($conditions as $cond) {
+            $row->load($cond[0]);
+            $row->reorder($cond[1]);
+        }
+        
+        return true;
+    }
 
 }

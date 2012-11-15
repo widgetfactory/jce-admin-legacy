@@ -20,7 +20,7 @@
     background-color:#DDD;
 }
 
-#jce fieldset textarea {
+#jce textarea, #jce fieldset textarea {
     padding: 2px;
     width: 300px;
 }
@@ -45,9 +45,9 @@ div#jce label input {
     font-family: Verdana,Arial,sans-serif;
     font-size: 1em;
     margin : 5px;
-    
+
     clear : none;
-    
+
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -156,13 +156,22 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
     padding: 0;
     background-repeat: no-repeat;
     background-position: 98% center;
-    padding: 2px;
+    padding: 4px;
     border : 1px solid #ccc;
     border-radius : 3px;
     -moz-border-radius : 3px;
     -webkit-border-radius : 3px;
     background-color: #fff;
 }
+
+#jce ul.widget-checklist.sortable li, #jce ul.widget-checklist.sortable li label {
+    cursor : move;
+}
+
+#jce ul.widget-checklist.sortable li label {
+    margin: 0 0 0 20px;
+}
+
 #jce ul.widget-checklist li.flash {
     background-image: url('../img/flash.gif');
 }
@@ -193,18 +202,19 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
 #jce ul.widget-checklist.sortable li label.widget-checklist-h4 {font-weight:bolder; font-size: 1em}
 #jce ul.widget-checklist.sortable li label.widget-checklist-h5 {font-weight:bolder; font-size: .83em}
 #jce ul.widget-checklist.sortable li label.widget-checklist-h6 {font-weight:bolder; font-size: .75em}
-#jce ul.widget-checklist.sortable li label.widget-checklist-span {display: inline; float:none; width : inherit; margin : inherit;}
+#jce ul.widget-checklist.sortable li label.widget-checklist-span {display: inline; float:none; width : inherit;}
 
 #jce ul.widget-checklist.sortable li input {
     margin : 5px 10px;
+    vertical-align:middle;
 }
-#jce ul.widget-checklist.sortable li, ul.widget-checklist.sortable li label {
+/*#jce ul.widget-checklist.sortable li, ul.widget-checklist.sortable li label {
     cursor: move;
 }
 #jce ul.widget-checklist li span {
     vertical-align:middle;
     line-height:20px;
-}
+}*/
 #jce span.viewbox, #jce span.checkbox {
     cursor:pointer;
     display: inline-block;
@@ -344,30 +354,25 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 
 #jce input[name="order[]"] {
     width : 30px;
+    display: block;
+    margin: auto;
+    float: right;
 }
 
 #jce a.saveorder.pull-right {
     float : none;
 }
 
-#jce td.order span {
+#jce td.order span.order-up, #jce td.order span.order-down {
     display: inline-block;
-    min-width: 24px;
+    float: left;
+    margin: 5px 5px 0 0;
 }
 
-#jce .jgrid span.state {
-	display:inline-block;
-	height:12px;
-	width: 12px;
-	vertical-align: middle;
-}
-#jce .jgrid span.text {
-	display: none;
-}
 #jce a.saveorder {
-	display: inline-block;
-	float: none;
-	vertical-align: middle;
+    display: inline-block;
+    float: none;
+    vertical-align: middle;
 }
 
 #jce div.limit select {
@@ -390,45 +395,146 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
     overflow: hidden;
 }
 
-#jce .ui-icon-checkbox {
-    border: 1px solid #CCCCCC;
+#jce .ui-checkbox, #jce .ui-radio {
+    border: 2px solid #ccc;
+    border-radius: 3px;
     cursor: pointer;
     display: inline-block;
-    padding: 6px;
+    height: 10px;
+    line-height: 10px;
+    /*margin: 0 10px 3px 0;*/
     position: relative;
+    vertical-align: middle;
+    width: 10px;
+    background-color: #fff;
 }
 
-#jce .ui-icon-checkbox input[type="checkbox"] {
-    opacity     : 0;
-    position    : absolute;
-    top : -7px;
-    left : -6px;
+#jce .ui-checkbox.disabled, #jce .ui-radio.disabled {
+    opacity : 0.5;
+    cursor: default;
+}
+
+#jce .ui-checkbox.checked:before {
+    content : "";
+    width: 13px;
+    height: 11px;
+    display: inline-block;    
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAALCAYAAACksgdhAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA/ppVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ1dWlkOjY1RTYzOTA2ODZDRjExREJBNkUyRDg4N0NFQUNCNDA3IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkFFRDU2NUNDRkU5QzExRTFCNkYwODQ2MzkzQkU0QzU4IiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkFFRDU2NUNCRkU5QzExRTFCNkYwODQ2MzkzQkU0QzU4IiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIElsbHVzdHJhdG9yIENTNiAoTWFjaW50b3NoKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjAxODAxMTc0MDcyMDY4MTE4MDgzRUZFRDQ2NDFEODMyIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAyODAxMTc0MDcyMDY4MTE4MDgzRTdGNDQzQTE0MUI2Ii8+IDxkYzp0aXRsZT4gPHJkZjpBbHQ+IDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVsdCI+Z2x5cGhpY29uc19oYWxmbGluZ3M8L3JkZjpsaT4gPC9yZGY6QWx0PiA8L2RjOnRpdGxlPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PtCEoh0AAACLSURBVHjaYvj//z8DISwrKy0AxAtANIjPCCLwATk5GQEgdQCI9YH4IhA74NWEpgEGFuLUhEMD2CYmqAIDIN4AVYhXw6NHTz4wAj1nAFXAD5UIAOINuDSAOCxA3ADVwABVeB/NpSgaQADkvASoBDaAoQGsCSrggEUjVg0wmxiwaMSpAQzwxTwuDBBgABDrfcvq+ba5AAAAAElFTkSuQmCC);
+}
+
+.ui-bootstrap #jce .ui-checkbox.checked:before{
+    content: "G";
+    font-family: 'IcoMoon';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: normal;
+    height: 8px;
+    line-height: 4px;
+    vertical-align: middle;
+    width: 8px;
+    background-image : none;
+    color : #333;
+}
+
+
+#jce .ui-radio {
+    border-radius: 100%;
+    width: 12px;
+    height: 12px;
+}
+
+#jce .ui-radio.checked:before {
+    content : "";
+    border-radius: 100%;
+    width: 8px;
+    height: 8px;
+    background-color : #333;
+    display: inline-block;
+    margin : 2px;
+}
+
+#jce .ui-checkbox input[type="checkbox"], #jce .ui-radio input[type="radio"] {
+    left: -1px;
+    opacity: 0;
+    position: absolute;
+    top: -1px;
+    margin : 0 !important;
+    outline: 0 none !important;
+    z-index: 1;
+
+    width : 13px;
+    height : 13px;
+
+    min-height : 13px;
+
+    -webkit-appearance: none;
+    -moz-appearance:    none;
+    appearance:         none;
+    
+    cursor: pointer;
 }
 
 #jce #profiles-list th:first-child {
-    width : 2%;
-}
-
-#jce #profiles-list th:first-child + th + th {
-    width : 5%;
-}
-
-#jce #profiles-list th:first-child + th + th + th {
-    width : 10%;
-}
-
-#jce #profiles-list th:first-child + th + th + th + th {
     width : 1%;
 }
 
+#jce #profiles-list th:first-child + th {
+    width : 2%;
+}
+
+#jce #profiles-list th:first-child + th + th + th {
+    width : 5%;
+    text-align: center;
+}
+
+#jce #profiles-list td:first-child + td + td + td {
+    text-align: center;
+}
+
+#jce #profiles-list th:first-child + th + th + th + th {
+    width : 12%;
+    text-align: center;
+}
+
+#jce #profiles-list th:first-child + th + th + th + th + th {
+    width : 1%;
+}
+
+#jce #profiles-list tr:first-child span.order-up, 
+#jce #profiles-list tr:last-child span.order-down,
+#jce #profiles-list tr.first span.order-up,
+#jce #profiles-list tr.last span.order-down {
+    display: none;
+}
+
+#jce #profiles-list tr.ui-sortable-helper {
+    border : 1px solid #DDDDDD;
+    background: #fff;
+    opacity : 0.8;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+}
+
+#jce #profiles-list tr.busy {
+    opacity : 0.5;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+}
+
+#jce #profiles-list tr.ui-sortable-helper td {
+    border : 0 none;
+}
+
+#jce #profiles-list span.sortable-handle {
+    cursor: move;
+}
+
 @media (max-width: 979px) {
-    #jce #profiles-list th:first-child + th + th + th {
+    #jce #profiles-list th:first-child + th + th + th + th {
         width : 20%;
     }
 }
 
 @media (max-width: 767px) {
-    #jce #profiles-list th:first-child + th + th + th {
+    #jce #profiles-list th:first-child + th + th + th + th {
         width : 30%;
     }
 }

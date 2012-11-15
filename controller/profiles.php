@@ -241,45 +241,17 @@ class WFControllerProfiles extends WFController {
         JRequest::checkToken() or jexit('RESTRICTED');
 
         $cid = JRequest::getVar('cid', array(0), 'post', 'array');
-        JArrayHelper::toInteger($cid, array(0));
-
-        $db = JFactory::getDBO();
-        $total = count($cid);
         $order = JRequest::getVar('order', array(0), 'post', 'array');
-        JArrayHelper::toInteger($order, array(0));
 
-        $cid = JRequest::getVar('cid', array(0), 'post', 'array');
-        JArrayHelper::toInteger($cid, array(0));
-
-        $row = JTable::getInstance('profiles', 'WFTable');
-        $conditions = array();
-
-        // update ordering values
-        for ($i = 0; $i < $total; $i++) {
-            $row->load((int) $cid[$i]);
-            if ($row->ordering != $order[$i]) {
-                $row->ordering = $order[$i];
-                if (!$row->store()) {
-                    JError::raiseError(500, $db->getErrorMsg());
-                }
-                // remember to updateOrder this group
-                $condition = ' ordering > -10000 AND ordering < 10000';
-                $found = false;
-                foreach ($conditions as $cond) {
-                    if ($cond[1] == $condition) {
-                        $found = true;
-                        break;
-                    }
-                }
-                if (!$found)
-                    $conditions[] = array($row->id, $condition);
-            }
+        if (!empty($cid)) {
+            $model  = $this->getModel('profiles', 'WFModel');
+            $result = $model->saveOrder($cid, $order);
         }
 
-        // execute updateOrder for each group
-        foreach ($conditions as $cond) {
-            $row->load($cond[0]);
-            $row->reorder($cond[1]);
+        // ajax request
+        if (JRequest::getWord('tmpl') === 'component') {
+            echo (int) $result;
+            JFactory::getApplication()->close();
         }
 
         $msg = WFText::_('WF_PROFILES_ORDERING_SAVED');

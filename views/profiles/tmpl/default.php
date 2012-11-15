@@ -35,6 +35,7 @@ defined('_JEXEC') or die('RESTRICTED');
         <table id="profiles-list" class="adminlist table table-striped" style="position: relative;">
             <thead>
                 <tr>
+                    <th></th>
                     <th>
                         <input type="checkbox" value="" />
                     </th>
@@ -59,7 +60,7 @@ defined('_JEXEC') or die('RESTRICTED');
             </thead>
             <tfoot>
                 <tr>
-                    <td colspan="5"><?php echo $this->pagination->getListFooter(); ?></td>
+                    <td colspan="6"><?php echo $this->pagination->getListFooter(); ?></td>
                 </tr>
             </tfoot>
             <tbody>
@@ -80,6 +81,11 @@ defined('_JEXEC') or die('RESTRICTED');
                     $profile = JTable::getInstance('profiles', 'WFTable');
                     ?>
                     <tr>
+                        <td class="order nowrap center hidden-phone">
+                            <span class="sortable-handle ui-icon ui-icon-grip-dotted-vertical">
+                                <i class="icon-menu"></i>
+                            </span>
+                        </td>
                         <td align="center">
                             <?php echo $checked; ?>
                         </td>
@@ -100,10 +106,10 @@ defined('_JEXEC') or die('RESTRICTED');
                         </td>
                         <td class="order" align="center">
                             <span class="order-up">
-                                <?php echo $this->pagination->orderUpIcon($i, true, 'orderup', 'WF_PROFILES_ORDER_UP', $row->ordering); ?>
+                                <a title="<?php echo WFText::_('WF_PROFILES_MOVE_UP');?>" href="#" class="btn btn-micro jgrid"><span class="state uparrow"></span><i class="icon-uparrow"></i></a>
                             </span>
                             <span class="order-down">
-                                <?php echo $this->pagination->orderDownIcon($i, $n, true, 'orderdown', 'WF_PROFILES_ORDER_DOWN', $row->ordering); ?>
+                                <a title="<?php echo WFText::_('WF_PROFILES_MOVE_DOWN');?>" href="#" class="btn btn-micro jgrid"><span class="state downarrow"></span><i class="icon-downarrow"></i></a>
                             </span>
                             <?php $disabled = $n > 1 ? '' : 'disabled="disabled"'; ?>
                             <input type="text" name="order[]" size="5" value="<?php echo $row->ordering; ?>" <?php echo $disabled ?> class="text_area" style="text-align: center" />
