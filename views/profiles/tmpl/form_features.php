@@ -127,12 +127,6 @@ if (strpos($theme, '.') === false) {
             </span>	
         </li>
     </ul>
-    <!--  Legend -->	
-    <!--div>
-        <a class="dialog legend" id="layout-legend" data-options="{'width': 750, 'height': 600}" target="_blank" title="<?php echo WFText::_('WF_LEGEND_TITLE'); ?>" href="index.php?option=com_jce&tmpl=component&view=legend">
-            <?php echo WFText::_('WF_PROFILES_LEGEND'); ?>
-        </a>
-    </div-->
     <input type="hidden" name="rows" value="<?php echo $this->profile->rows; ?>" />
     <input type="hidden" name="plugins" value="<?php echo $this->profile->plugins; ?>" />
 </fieldset>
