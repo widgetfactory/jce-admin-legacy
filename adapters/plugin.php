@@ -49,6 +49,7 @@ class WFInstallerPlugin extends JObject {
 
         // attribute
         foreach (array(
+    'version',
     'group',
     'type',
     'plugin',
@@ -56,7 +57,13 @@ class WFInstallerPlugin extends JObject {
     'editable',
     'row'
         ) as $item) {
-            $this->set($item, WFXMLHelper::getAttribute($manifest, $item));
+            $name = $item;
+            
+            if ($item == 'version') {
+               $name = 'install_version'; 
+            }
+            
+            $this->set($name, WFXMLHelper::getAttribute($manifest, $item));
         }
 
         // elements
@@ -96,7 +103,7 @@ class WFInstallerPlugin extends JObject {
 
         // JCE Plugin
         if (!empty($plugin)) {
-            if (version_compare($this->version, '2.0.0', '<')) {
+            if (version_compare($this->install_version, '2.0.0', '<')) {
                 $this->parent->abort(WFText::_('WF_INSTALLER_INCORRECT_VERSION'));
                 return false;
             }
@@ -250,8 +257,8 @@ class WFInstallerPlugin extends JObject {
                 $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote('Default') . ' OR id = 1');
             } else {
                 $query = 'SELECT id'
-                . ' FROM #__wf_profiles'
-                . ' WHERE name = ' . $db->Quote('Default') . ' OR id = 1';
+                        . ' FROM #__wf_profiles'
+                        . ' WHERE name = ' . $db->Quote('Default') . ' OR id = 1';
             }
             $db->setQuery($query);
             $id = $db->loadResult();
