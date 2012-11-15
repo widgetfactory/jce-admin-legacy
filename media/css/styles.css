@@ -356,7 +356,6 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
     width : 30px;
     display: block;
     margin: auto;
-    float: right;
 }
 
 #jce a.saveorder.pull-right {
@@ -367,6 +366,10 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
     display: inline-block;
     float: left;
     margin: 5px 5px 0 0;
+}
+
+#jce td.order span.order-up {
+    margin-left: 15%;
 }
 
 #jce a.saveorder {
@@ -492,7 +495,7 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 }
 
 #jce #profiles-list th:first-child + th + th + th + th {
-    width : 12%;
+    width : 10%;
     text-align: center;
 }
 
@@ -502,9 +505,8 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 
 #jce #profiles-list tr:first-child span.order-up, 
 #jce #profiles-list tr:last-child span.order-down,
-#jce #profiles-list tr.first span.order-up,
 #jce #profiles-list tr.last span.order-down {
-    display: none;
+    visibility : hidden;
 }
 
 #jce #profiles-list tr.ui-sortable-helper {
