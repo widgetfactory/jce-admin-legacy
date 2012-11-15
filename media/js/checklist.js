@@ -102,8 +102,8 @@
             // Add checkboxes
             $('<input type="checkbox" />').addClass('checkbox inline').prop('checked', n.selected).prop('disabled', n.disabled).click(function() {                
                 // add check and trigger
-                $(this).trigger('checkbox:check', this.checked);
-            }).appendTo(li).on('checkbox:check', function(e, state) {             
+                $(this).trigger('checklist:check', this.checked);
+            }).appendTo(li).on('checklist:check', function(e, state) {             
                 // Trigger serialization
                 self.setValue(el, ul);
                 
@@ -114,7 +114,7 @@
                 
                 // trigger callback
                 self.options.onCheck.call(self, [this, n]);
-            });
+            });//.checkbox();
             
             // Add label
             $(li).append('<label class="checkbox inline widget-checklist-' + n.value + '" title="' + n.name + '">' + n.name + '</label>');

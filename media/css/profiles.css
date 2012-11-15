@@ -261,11 +261,9 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     padding: 10px 5px;
 }
 
-#jce div.tabs-plugin-parameters input[type="checkbox"] {
+#jce div.tabs-plugin-parameters input[type="checkbox"], #jce div.tabs-plugin-parameters .ui-checkbox {
     margin : 5px 7px;
-    vertical-align: inherit;
     background-color: #fff;
-    padding: 2px;
 }
 
 #jce div.tabs-plugin-parameters a[href^="http"] {
@@ -277,7 +275,7 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     margin : 0 10px;
 }
 
-.ui-bootstrap #jce div.tab-pane.tabbable.tabs-left ul li > a {
+.ui-bootstrap #jce div.tab-pane.tabbable.tabs-left ul li a:first-child {
     max-width: 100px;
     padding-bottom: 20px;
     padding-top: 20px;

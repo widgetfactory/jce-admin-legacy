@@ -42,11 +42,11 @@
             
             var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
             
-            if ($('body').hasClass('ui-bootstrap')) {
+            if ($('body').hasClass('ui-bootstrap')) {  
                 // Tabs
-                $('ul.nav-tabs > li > a[href]', '#tabs').click(function (e) {
-                    e.preventDefault();
+                $('#tabs ul.nav-tabs > li > a').click(function (e) {                    
                     $(this).tab('show');
+                    e.preventDefault();
                 });
                 
                 // Editor Tabs
@@ -77,12 +77,12 @@
             }
 
             $('input.checkbox-list-toggle-all').click(function() {                                                
-                $('input[type="checkbox"]', '#user-groups').prop('checked', this.checked);
+                $('input[type="checkbox"]', '#user-groups').prop('checked', this.checked).trigger('check');
             });
             
             // Components select
             $('input[name="components-select"]').click( function() {
-                $('input[type="checkbox"]', '#components').prop('disabled', (this.value == 'all')).filter(':checked').prop('checked', false);
+                $('input[type="checkbox"]', '#components').prop('disabled', (this.value == 'all')).trigger('disable').filter(':checked').prop('checked', false).trigger('check');
             });
 
             // Editable Selects
@@ -128,15 +128,6 @@
                     self.setRows();
                 }
             });
-
-            /*$('input.autocomplete').each( function() {
-                var el = this, v = $(el).attr('placeholder') || '';
-                $(el).removeAttr('placeholder');
-                $(el).autocomplete({
-                    source: v.split(',') || []
-                });
-            });*/
-
 
             $('#paramseditorwidth').change( function() {
                 var v = $(this).val() || 600, s = v + 'px';
@@ -285,6 +276,11 @@
                     return v;
                 });
             });
+            
+            // custom checkbox
+            //$('input[type="checkbox"]').checkbox();
+            // custom radio
+            //$('input[type="radio"]').radio();
         },
         
         validate : function() {
@@ -356,7 +352,7 @@
                 var $parent     = $(this).parents('li.sortableListItem').first();
                 var $target     = $('ul.sortableList', '#profileLayoutTable').not($parent.parent());
                 
-                $parent.hide().appendTo($target).show('slow');
+                $parent.appendTo($target);
             	
                 $(this).empty();
             	
