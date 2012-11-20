@@ -100,7 +100,15 @@ class WFElementList extends WFElement {
         
         // pattern data attribute for editable select input box
         if ((string) $node->attributes()->parent) {
-            $attribs[] = 'data-parent="' . preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . (string) $node->attributes()->parent . '"';
+            $prefix = preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name);
+            
+            $items = array();
+            
+            foreach(explode(';', (string) $node->attributes()->parent) as $item) {
+                $items[] = $prefix . $item;
+            }
+            
+            $attribs[] =  'data-parent="' . implode(';', $items) . '"';
         }
 
         // multiple lists
