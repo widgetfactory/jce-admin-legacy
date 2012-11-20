@@ -376,38 +376,56 @@
         },
         
         _setDependants : function() {
-            $('[data-parent]').each(function() {
+            $('input[data-parent], select[data-parent]').each(function() {
                 var el = this, data = $(this).data('parent');
                 
                 // hide the element by default
                 $(this).parent().hide();
                 
-                // get the parent selector and value
-                var s = /([\w\.]+)\[([\w,]+)\]/.exec(data);
+                $.each(data.split(';'), function(i, s) {
+                    // get the parent selector and value
+                    s = /([\w\.]+)\[([\w,]+)\]/.exec(s);
                 
-                if (s) {
-                    var  k = s[1], v = s[2].split(',');
- 
-                    // set parent onchange
-                    $('#params' + k.replace(/[^\w]+/g, '')).change(function() {
-                        var state = $.inArray(this.value, v) != -1;                        
-
-                        if (state) {
-                            $(el).parent().show();
-                        } else {
-                            $(el).parent().hide();
-                        }
+                    if (s) {
+                        var  k = s[1], v = s[2].split(',');
                         
-                        $(el).trigger('visibility:toggle', state);
-                    // set function when element is toggled itself    
-                    }).on('visibility:toggle', function(e, state) {
-                        if (state) {
-                            $(el).parent().show();
-                        } else {
-                            $(el).parent().hide();
-                        }
-                    }).change();
-                }
+                        // clean id
+                        k = k.replace(/[^\w]+/g, '');
+                        
+                        // create namespaced event name
+                        var ev = 'change.' + k;
+ 
+                        // set parent onchange
+                        $('#params' + k).on(ev, function() {                                                    
+                            var state = $.inArray(this.value, v) != -1; 
+
+                            if (state) {
+                                // remove marker
+                                $(el).removeClass('child-of-' + k);
+                                
+                                // if not still hidden by another "parent"
+                                if (el.className.indexOf('child-of-') === -1) {
+                                   $(el).parent().show(); 
+                                }
+                                
+                            } else {
+                                $(el).parent().hide(); 
+                                
+                                // set marker
+                                $(el).addClass('child-of-' + k);
+                            }
+                        
+                            $(el).trigger('visibility:toggle', state);
+                        // set function when element is toggled itself    
+                        }).on('visibility:toggle', function(e, state) {
+                            if (state) {
+                                $(el).parent().show();
+                            } else {
+                                $(el).parent().hide();
+                            }
+                        }).trigger(ev);
+                    }
+                });
             });
         }
     };    
