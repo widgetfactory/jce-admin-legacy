@@ -202,7 +202,7 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
 #jce ul.widget-checklist.sortable li label.widget-checklist-span {display: inline; float:none; width : inherit;}
 
 #jce ul.widget-checklist.sortable li input {
-    margin : 5px 10px;
+    margin : 2px 5px;
     vertical-align:middle;
 }
 /*#jce ul.widget-checklist.sortable li, ul.widget-checklist.sortable li label {
@@ -475,11 +475,15 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 }
 
 #jce #profiles-list th:first-child {
-    width : 1%;
+    width : 20px;
+}
+
+#jce #profiles-list tr td:first-child i.icon-menu {
+    font-size : 13px;
 }
 
 #jce #profiles-list th:first-child + th {
-    width : 2%;
+    width : 20px;
 }
 
 #jce #profiles-list th:first-child + th + th + th {
@@ -492,7 +496,7 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 }
 
 #jce #profiles-list th:first-child + th + th + th + th {
-    width : 10%;
+    width : 150px;
     text-align: center;
 }
 
@@ -524,18 +528,6 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 
 #jce #profiles-list span.sortable-handle {
     cursor: move;
-}
-
-@media (max-width: 979px) {
-    #jce #profiles-list th:first-child + th + th + th + th {
-        width : 20%;
-    }
-}
-
-@media (max-width: 767px) {
-    #jce #profiles-list th:first-child + th + th + th + th {
-        width : 30%;
-    }
 }
 
 #tabs .tab-disabled {

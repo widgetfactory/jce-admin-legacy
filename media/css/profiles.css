@@ -123,6 +123,10 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     display: inline-block;
 }
 
+#jce #tabs-setup ul li span.list div {
+    margin : 5px 0;
+}
+
 #jce input.checkbox-list-toggle-all {
     /*margin : 2px 6px;*/
 }
