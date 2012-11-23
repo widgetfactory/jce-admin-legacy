@@ -533,3 +533,7 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 #tabs .tab-disabled {
     display : none !important;
 }
+
+#jce table.adminlist td.order {
+    width : inherit;
+}
