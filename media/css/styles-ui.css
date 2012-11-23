@@ -585,3 +585,15 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
     position: absolute;
     width: 1px;
 }*/
+span.state {
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    cursor: pointer;
+}
+span.downarrow {
+    background-image: url("../../../../images/downarrow.png");
+}
+span.uparrow {
+    background-image: url("../../../../images/uparrow.png");
+}
