@@ -597,3 +597,11 @@ span.downarrow {
 span.uparrow {
     background-image: url("../../../../images/uparrow.png");
 }
+
+#jce input[name="import_input"]:-moz-placeholder {
+    color : #fff;
+}
+
+#jce input[name="import_input"]::-webkit-input-placeholder {
+    color : #fff;
+}
