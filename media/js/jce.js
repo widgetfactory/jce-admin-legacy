@@ -379,8 +379,10 @@
             $('input[data-parent], select[data-parent]').each(function() {
                 var el = this, data = $(this).data('parent');
                 
+                var p = $(this).parents('li:first');
+                
                 // hide the element by default
-                $(this).parent().hide();
+                $(p).hide();
                 
                 $.each(data.split(';'), function(i, s) {
                     // get the parent selector and value
@@ -405,11 +407,11 @@
                                 
                                 // if not still hidden by another "parent"
                                 if (el.className.indexOf('child-of-') === -1) {
-                                   $(el).parent().show(); 
+                                    $(p).show(); 
                                 }
                                 
                             } else {
-                                $(el).parent().hide(); 
+                                $(p).hide(); 
                                 
                                 // set marker
                                 $(el).addClass('child-of-' + k);
