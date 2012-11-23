@@ -62,7 +62,7 @@ if (strpos($theme, '.') === false) {
                     <ul class="sortableList <?php echo $position; ?>">
                         <?php for ($i = 1; $i <= count($this->rows); $i++) : ?>
                             <li class="sortableListItem">
-                                <div class="sortableRow mceToolbar">
+                                <span class="sortableRow mceToolbar">
                                     <?php for ($x = 1; $x <= count($this->rows); $x++) : ?>
                                         <?php if ($i == $x) : ?>
                                             <?php foreach (explode(',', $this->rows[$x]) as $icon) : ?>
@@ -79,7 +79,7 @@ if (strpos($theme, '.') === false) {
                                         endif;
                                     endfor;
                                     ?>
-                                </div>
+                                </span>
                                 <span class="sortableRowHandle"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
                                 <span class="sortableOption"></span>
                             </li>
@@ -100,7 +100,7 @@ if (strpos($theme, '.') === false) {
                 <ul class="sortableList">
                     <?php for ($i = 1; $i <= 5; $i++) :?>
                         <li class="sortableListItem">
-                            <div class="sortableRow mceToolbar">
+                            <span class="sortableRow mceToolbar">
                                 <?php if ($i == 5) :
                                     for ($x = 1; $x <= 10; $x++) :
                                 ?>
@@ -117,7 +117,7 @@ if (strpos($theme, '.') === false) {
                                     endif;
                                 endforeach;
                                 ?>
-                            </div>
+                            </span>
                             <span class="sortableRowHandle"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
                             <span class="sortableOption"></span>
                         </li>

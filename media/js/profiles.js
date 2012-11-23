@@ -30,6 +30,13 @@
         }
     };
     
+    $.support.multipleBackground = function() {
+        var div = document.createElement('div');
+        
+        $(div).css('background:url(https://),url(https://),red url(https://)');
+        return (/(url\s*\(.*?){3}/).test(div.background);
+    };
+    
     // Create Profiles object
     $.jce.Profiles = {
         
@@ -277,10 +284,19 @@
                 });
             });
             
-            // custom checkbox
-            //$('input[type="checkbox"]').checkbox();
-            // custom radio
-            //$('input[type="radio"]').radio();
+            if ($.support.multipleBackground) {
+                $('#jce').addClass('multiplebg');          
+            } else {
+                // fix for CSS3 selectors
+                $('.mceSplitButton .mceIcon').not('.mceIconLayer').each(function() {                   
+                    $('<span/>').insertAfter(this);
+                });  
+            }
+            
+        // custom checkbox
+        //$('input[type="checkbox"]').checkbox();
+        // custom radio
+        //$('input[type="radio"]').radio();
         },
         
         validate : function() {
@@ -360,8 +376,8 @@
                 self.setPlugins();
             });
 
-            $('div.sortableRow').sortable({
-                connectWith	: 'div.sortableRow',
+            $('span.sortableRow').sortable({
+                connectWith	: 'span.sortableRow',
                 tolerance	: 'pointer',
                 update: function(event, ui) {
                     self.setRows();

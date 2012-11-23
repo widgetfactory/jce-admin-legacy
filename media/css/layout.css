@@ -110,7 +110,7 @@ html {
     margin: 0 0 1px 0;
     height: 28px;
 }
-#jce ul.sortableList li.sortableListItem div.sortableRow {
+#jce ul.sortableList li.sortableListItem span.sortableRow {
     white-space: nowrap;
     padding: 0px 3px;
     height: 26px;
@@ -121,23 +121,25 @@ html {
     letter-spacing: normal;
     word-spacing: normal;
     position: relative;
+    
+    display: block;
 }
-#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem {
+#jce ul.sortableList li.sortableListItem span.sortableRow span.sortableRowItem {
     /* Prevent spacing in inline-block spans */
     font-size: 0;
     letter-spacing: normal;
     word-spacing: normal;
 }
-#jce ul.sortableList.mceLeft li.sortableListItem div.sortableRow {
+#jce ul.sortableList.mceLeft li.sortableListItem span.sortableRow {
     text-align: left;
 }
-#jce ul.sortableList.mceCenter li.sortableListItem div.sortableRow {
+#jce ul.sortableList.mceCenter li.sortableListItem span.sortableRow {
     text-align: center;
 }
-#jce ul.sortableList.mceRight li.sortableListItem div.sortableRow {
+#jce ul.sortableList.mceRight li.sortableListItem span.sortableRow {
     text-align: right;
 }
-#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem {
+#jce ul.sortableList li.sortableListItem span.sortableRow span.sortableRowItem {
     cursor: move;
     display: inline-block;
     height: 20px;
@@ -148,16 +150,16 @@ html {
     position: relative;
 }
 
-#jce.ie8 ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem {
+#jce.ie8 ul.sortableList li.sortableListItem span.sortableRow span.sortableRowItem {
     float : left;
 }
 
-#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem.spacer {
+#jce ul.sortableList li.sortableListItem span.sortableRow span.sortableRowItem.spacer {
     min-width: 0px;
     margin: 3px 0 0;
     clear: none;
 }
-#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem img {
+#jce ul.sortableList li.sortableListItem span.sortableRow span.sortableRowItem img {
     border: 0;
     padding: 0;
     margin: 0
