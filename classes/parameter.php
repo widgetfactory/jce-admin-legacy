@@ -487,7 +487,7 @@ class WFParameter {
     }
 
     private function _cleanAttribute($matches) {
-        return $matches[1] . '="' . preg_replace('#([^a-z0-9_-]+)#i', '', $matches[2]) . '"';
+        return $matches[1] . '="' . preg_replace('#([^\w]+)#i', '', $matches[2]) . '"';
     }
 
     public function render($name = 'params', $group = '_default', $exclude = array()) {
