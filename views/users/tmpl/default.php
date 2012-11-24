@@ -27,10 +27,10 @@ defined('_JEXEC') or die('RESTRICTED');
         </fieldset>
         <div class="clr clearfix"></div>
         <div class="container">
-            <table id="profiles-list" class="adminlist table table-striped" style="position: relative;">
+            <table id="users-list" class="adminlist table table-striped" style="position: relative;">
                 <thead>
                     <tr>
-                        <th width="20px" class="title" align="center">
+                        <th class="title">
                             <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
                         </th>
                         <th class="title">
