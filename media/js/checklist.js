@@ -114,7 +114,7 @@
                 
                 // trigger callback
                 self.options.onCheck.call(self, [this, n]);
-            });//.checkbox();
+            });
             
             // Add label
             $(li).append('<label class="checkbox inline widget-checklist-' + n.value + '" title="' + n.name + '">' + n.name + '</label>');
