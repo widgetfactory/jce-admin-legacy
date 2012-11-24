@@ -287,10 +287,13 @@
                 e.preventDefault();
             });
             
-        // custom checkbox
-        //$('input[type="checkbox"]').checkbox();
-        // custom radio
-        //$('input[type="radio"]').radio();
+            $(document).ready(function() {
+                // custom checkbox
+                $('input[type="checkbox"]').checkbox();
+                // custom radio
+                $('input[type="radio"]').radio();
+            });
+        
         },
 
         createDialog : function(e, o) {
