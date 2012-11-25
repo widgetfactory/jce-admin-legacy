@@ -17,7 +17,7 @@ defined('_JEXEC') or die('RESTRICTED');
                 <label for="search" class="element-invisible"><?php echo WFText::_('WF_LABEL_SEARCH'); ?></label>
                 <input type="text" name="search" id="search" size="30" value="<?php echo $this->lists['search']; ?>" class="text_area" onchange="document.adminForm.submit();" placeholder="" />
             </div>
-            <div class="btn-group hidden-phone fltlft">
+            <div class="btn-group fltlft">
                 <button id="filter_go" onclick="this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>"><i class="icon-search"></i>&nbsp;<?php echo WFText::_('WF_LABEL_SEARCH'); ?></button>
                 <button id="filter_reset" onclick="document.getElementById('search').value='';this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_CLEAR'); ?>"><i class="icon-remove"></i>&nbsp;<?php echo WFText::_('WF_LABEL_CLEAR'); ?></button>
             </div>
@@ -35,7 +35,7 @@ defined('_JEXEC') or die('RESTRICTED');
         <table id="profiles-list" class="adminlist table table-striped" style="position: relative;">
             <thead>
                 <tr>
-                    <th></th>
+                    <th class="hidden-phone"></th>
                     <th>
                         <input type="checkbox" value="" />
                     </th>
