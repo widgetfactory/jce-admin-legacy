@@ -17,13 +17,13 @@ defined('_JEXEC') or die('RESTRICTED');
             <label for="profile_name" class="wf-tooltip" title="<?php echo WFText::_('WF_PROFILES_NAME') . '::' . WFText::_('WF_PROFILES_NAME_DESC'); ?>">
                 <?php echo WFText::_('WF_PROFILES_NAME'); ?>
             </label>
-            <input class="text_area required" type="text" name="name" id="profile_name" size="35" value="<?php echo $this->profile->name; ?>" />
+            <input class="text_area required" type="text" name="name" id="profile_name" value="<?php echo $this->profile->name; ?>" />
         </li>
         <li>
             <label for="profile_description" class="wf-tooltip" title="<?php echo WFText::_('WF_PROFILES_DESCRIPTION') . '::' . WFText::_('WF_PROFILES_DESCRIPTION_DESC'); ?>">
                 <?php echo WFText::_('WF_PROFILES_DESCRIPTION'); ?>
             </label>
-            <input class="text_area" type="text" name="description" id="profile_description" size="100" value="<?php echo $this->profile->description; ?>" />
+            <input class="text_area" type="text" name="description" id="profile_description" value="<?php echo $this->profile->description; ?>" />
         </li>
         <li>
             <label for="profile_published" class="wf-tooltip" title="<?php echo WFText::_('WF_PROFILES_ENABLED') . '::' . WFText::_('WF_PROFILES_ENABLED_DESC'); ?>">
