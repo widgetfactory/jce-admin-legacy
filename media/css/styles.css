@@ -537,3 +537,28 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 #jce table.adminlist td.order {
     width : inherit;
 }
+
+#jce #profiles-list th:first-child + th {
+    width : 20px;
+}
+
+#jce #profiles-list th:first-child + th + th + th {
+    width : 5%;
+    text-align: center;
+}
+
+#jce #profiles-list td:first-child + td + td + td {
+    text-align: center;
+}
+
+#jce #profiles-list th:first-child + th + th + th + th + th {
+    width : 1%;
+}
+
+/* Mobile stuff */
+@media (max-width: 767px) {
+    #sbox-window {
+        max-width : 560px;
+        left : 5px !important;
+    }
+}
