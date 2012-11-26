@@ -30,12 +30,12 @@
         }
     };
     
-    $.support.multipleBackground = function() {
+    /*$.support.multipleBackground = function() {
         var div = document.createElement('div');
         
         $(div).css('background:url(https://),url(https://),red url(https://)');
         return (/(url\s*\(.*?){3}/).test(div.background);
-    };
+    };*/
     
     // Create Profiles object
     $.jce.Profiles = {
@@ -284,14 +284,12 @@
                 });
             });
             
-            if ($.support.multipleBackground) {
+            /*if ($.support.multipleBackground) {
                 $('#jce').addClass('multiplebg');          
             } else {
                 // fix for CSS3 selectors
-                $('.mceSplitButton .mceIcon').not('.mceIconLayer').each(function() {                   
-                    $('<span/>').insertAfter(this);
-                });  
-            }
+                $('span.mceSplitButton span.mceIcon').not('span.mceIconLayer').after('<span/>');
+            }*/
             
         // custom checkbox
         //$('input[type="checkbox"]').checkbox();
