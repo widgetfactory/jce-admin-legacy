@@ -390,16 +390,6 @@
                 placeholder	: 'sortableRowItem sortable-highlight'
             }).disableSelection();
             
-            if (!$.support.leadingWhitespace) {
-                // fix for CSS3 selectors
-                
-                $('.mceSplitButton .mceIcon').not('.mceIconLayer').each(function() {                   
-                    $('<span/>').insertAfter(this);
-                });              
-            } else {
-                $('#jce').addClass('multiplebg');
-            }
-            
             this._fixLayout();
         },
 
