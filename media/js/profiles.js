@@ -406,7 +406,7 @@
         setRows : function() {
             var rows = [];
 
-            $('div.sortableRow:has(span)', '#toolbar_container').each( function() {
+            $('span.sortableRow:has(span)', '#toolbar_container').each( function() {
                 rows.push($.map($('span.sortableRowItem', this), function(el) {
                     return $(el).data('name');
                 }).join(','));
@@ -431,7 +431,7 @@
         setPlugins: function() {
             var self = this, plugins = [];
 
-            $('div.sortableRow span.plugin', '#toolbar_container').each( function() {
+            $('span.sortableRow span.plugin', '#toolbar_container').each( function() {
                 plugins.push($(this).data('name'));
             });
 
