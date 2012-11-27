@@ -1094,7 +1094,7 @@ class WFModelEditor extends WFModelBase {
         $data = array();
 
         foreach ((array) $files as $file) {
-            $ini = parse_ini_file($file, true);
+            $ini = @parse_ini_file($file, true);
 
             if ($ini && is_array($ini)) {
                 // filter keys by regular expression
