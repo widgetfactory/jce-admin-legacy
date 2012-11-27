@@ -998,7 +998,7 @@ abstract class WFInstall {
             if ($installer->install($source . '/' . $folder)) {
 
                 if (method_exists($installer, 'loadLanguage')) {
-                    $installer->loadLanguage($source . '/' . $folder);
+                    $installer->loadLanguage();
                 }
 
                 if ($installer->message) {
