@@ -78,7 +78,7 @@
 
         createElement: function(el, ul, n) {
             // Create elements
-            var self = this, d = document, li = d.createElement('li'), plugin;
+            var self = this, d = document, li = d.createElement('li'), plugin, button, toolbar;
 
             $(li).attr({
                 title: n.value
@@ -92,11 +92,10 @@
                     plugin = s[1];
                 } 
             }
-            
-            var $toolbar    = $('span.profileLayoutContainerToolbar ul', '#profileLayoutTable');
-            
-            if (plugin) {
-                var $parent = $('span[data-name="' + plugin + '"]', $toolbar);
+
+            if (plugin) {                
+                toolbar = $('span.profileLayoutContainerToolbar ul', '#profileLayoutTable');
+                button  = $('span[data-button="' + n.value + '"]', toolbar);
             }
 
             // Add checkboxes
@@ -108,8 +107,8 @@
                 self.setValue(el, ul);
                 
                 // if button list and plugin name set
-                if (plugin) {
-                    $('span.mce_' + n.value, $parent).parent().toggle(state);
+                if (button) {
+                    $(button).toggle(state);
                 }
                 
                 // trigger callback
@@ -120,20 +119,18 @@
             $(li).append('<label class="checkbox inline widget-checklist-' + n.value + '" title="' + n.name + '">' + n.name + '</label>');
 
                         
-            if ($(el).hasClass('buttonlist')) {                
-                $('label', li).prepend('<span class="mceButton mceSplitButton"><span class="mceIcon mce_' + n.value + '"></span></span>');
+            if (button && $(el).hasClass('buttonlist')) {                                
+                $('label', li).before($(button).clone());
             }
         },
 
         setValue: function(el, ul) {
-            var $list = $('li', ul);
-
-            var x = $.map($('input[type="checkbox"]:checked', $list), function(n) {
-                return $(n).parent('li').attr('title');
+            var x = $.map($('input[type="checkbox"]:checked', $('li', ul)), function(n) {
+                return $(n).parents('li:first').attr('title');
             });
 
             if (el.nodeName == 'SELECT') {                
-                $('option', el).each(function() {
+                $('option', el).each(function() {                    
                     $(this).prop('selected', $.inArray(this.value, x) != -1);
                 })                
             } else {
