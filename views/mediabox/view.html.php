@@ -87,8 +87,8 @@ class WFViewMediabox extends WFView {
 
         $this->addScriptDeclaration('jQuery(document).ready(function($){$("input.color").colorpicker(' . json_encode($options) . ');});');
 
-        WFToolbarHelper::save();
         WFToolbarHelper::apply();
+        WFToolbarHelper::save();
         WFToolbarHelper::help('mediabox.config');
 
         parent::display($tpl);

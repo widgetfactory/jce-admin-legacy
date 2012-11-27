@@ -39,8 +39,8 @@ class WFViewConfig extends WFView
         $this->assignRef('params', 	$params);
         $this->assignRef('client', 	$client);
 
-        WFToolbarHelper::save();
         WFToolbarHelper::apply();
+        WFToolbarHelper::save();
         WFToolbarHelper::help('config.about');
         
         parent::display($tpl);

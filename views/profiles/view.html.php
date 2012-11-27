@@ -123,8 +123,8 @@ class WFViewProfiles extends WFView {
 
                 //JToolBarHelper::title(WFText::_('WF_PROFILES_TITLE').' : '.WFText::_('WF_PROFILES_LIST'), 'profiles.png' );
 
-                WFToolbarHelper::editListX();
                 WFToolbarHelper::addNewX();
+                WFToolbarHelper::editListX();
                 WFToolbarHelper::custom('copy', 'copy.png', 'copy_f2.png', 'WF_PROFILES_COPY', true);
                 WFToolbarHelper::export();
 
@@ -542,8 +542,8 @@ class WFViewProfiles extends WFView {
                 }
 
                 // set buttons
-                WFToolbarHelper::save();
                 WFToolbarHelper::apply();
+                WFToolbarHelper::save();
                 WFToolbarHelper::cancel('cancelEdit', 'Close');
                 WFToolbarHelper::help('profiles.edit');
 
