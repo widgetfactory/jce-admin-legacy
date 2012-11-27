@@ -75,10 +75,11 @@
 		
         <languages folder="administrator/language/en-GB">
             <language tag="en-GB">en-GB.com_jce.ini</language>
-            <language tag="en-GB">en-GB.com_jce.menu.ini</language>
             <language tag="en-GB">en-GB.com_jce.sys.ini</language>
             <language tag="en-GB">en-GB.plg_editors_jce.ini</language>
             <language tag="en-GB">en-GB.plg_editors_jce.sys.ini</language>
+            <language tag="en-GB">en-GB.plg_quickicon_jcefilebrowser.ini</language>
+            <language tag="en-GB">en-GB.plg_quickicon_jcefilebrowser.sys.ini</language>
         </languages>
 		
     </administration>
