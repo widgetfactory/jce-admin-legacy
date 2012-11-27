@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.3.0beta3" />
-    <property description="Component Version" name="version_package" value="230beta3" />
+    <property description="Component Version" name="version" value="2.3.0RC1" />
+    <property description="Component Version" name="version_package" value="230RC1" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
@@ -47,18 +47,13 @@
                 <include name="jce.php" />
                 <include name="jce.xml" />
                 <include name="legacy.xml" />
-            </fileset>
-            <fileset dir="${component_admin_lang}">
-                <include name="en-GB.plg_editors_jce.ini" />
-                <include name="en-GB.plg_editors_jce.sys.ini" />
-            </fileset>
+            </fileset>        
         </copy>
 		
         <copy todir="${component_admin_export_dir}/packages/modules">
             <fileset dir="../../modules/mod_jcefilebrowser">
                 <include name="mod_jcefilebrowser.php" />
                 <include name="mod_jcefilebrowser.xml" />
-                <include name="index.html" />
             </fileset>
         </copy>
 		
@@ -66,11 +61,6 @@
             <fileset dir="../../../plugins/quickicon/jcefilebrowser">
                 <include name="jcefilebrowser.php" />
                 <include name="jcefilebrowser.xml" />
-                <include name="index.html" />
-            </fileset>
-            <fileset dir="${component_admin_lang}">
-                <include name="en-GB.plg_quickicon_jcefilebrowser.ini" />
-                <include name="en-GB.plg_quickicon_jcefilebrowser.sys.ini" />
             </fileset>
         </copy>
 		
@@ -197,6 +187,7 @@
             <exclude name="editor/tiny_mce/plugins/mediamanager/**" />
             <exclude name="editor/tiny_mce/plugins/templatemanager/**" />
             <exclude name="editor/tiny_mce/plugins/jbtype/**" />
+            <exclude name="editor/tiny_mce/plugins/microdata/**" />
             
             <!-- Unit Test -->
             <exclude name="editor/tiny_mce/tests/**" />
