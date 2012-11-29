@@ -8,6 +8,91 @@
  * other free or open source software licenses.
  */
 (function($) {
+    var $tmp = document.createElement('div');
+    
+    $.support.borderRadius = (function() {
+        return typeof $tmp.style['borderRadius'] !== 'undefined';
+    })();
+
+    if (typeof Joomla === 'undefined') {
+        Joomla = {};
+    }
+    
+    Joomla.modal = function(el, url, width, height) {
+        var o = {
+            'handler' : 'iframe',
+            'size' : {
+                x : width,
+                y : height
+            },
+            'url' : url
+        };
+        
+        if (typeof SqueezeBox.open === 'undefined') {
+            return SqueezeBox.fromElement(el, o);
+        }
+        
+        return SqueezeBox.open(el, o);
+    };
+    
+    $.fn.checkbox = function() {
+        if ($.support.borderRadius) { 
+            
+            if ($(this).hasClass('ui-checkbox-element')) {
+                return;
+            }
+            
+            var n = this, css = {};
+            
+            $.each(['marginTop', 'marginRight', 'marginBottom', 'marginLeft'], function(i, k) {
+                css[k] = $(n).css(k);
+            });
+            
+            // Custom checkbox
+            $(this).addClass('ui-checkbox-element').wrap('<span class="ui-checkbox" />').click(function() {
+                $(this).parent().toggleClass('checked', this.checked);
+            }).on('check', function() {
+                $(this).parent().toggleClass('checked', this.checked);
+            }).on('disable', function() {
+                $(this).parent().toggleClass('disabled', this.disabled);
+            }).each(function() {
+                $(this).parent().toggleClass('checked', this.checked).toggleClass('disabled', this.disabled).css(css);
+            });
+        }
+
+        return this;
+    };
+    
+    $.fn.radio = function() {
+        if ($.support.borderRadius) { 
+            
+            if ($(this).hasClass('ui-radio-element')) {
+                return;
+            }
+            
+            var n = this, css = {};
+            
+            $.each(['marginTop', 'marginRight', 'marginBottom', 'marginLeft'], function(i, k) {
+                css[k] = $(n).css(k);
+            });
+            
+            // Custom Radio list
+            $(this).addClass('ui-radio-element').wrap('<span class="ui-radio" />').click(function() {
+                $(this).parent().toggleClass('checked', this.checked);
+                
+                $('input[type="radio"][name="' + $(this).attr('name') + '"]').not(this).parent().toggleClass('checked', !this.checked);
+                
+            }).on('check', function() {
+                $(this).parent().toggleClass('checked', this.checked);
+            }).on('disable', function() {
+                $(this).parent().toggleClass('disabled', this.disabled);
+            }).each(function() {
+                $(this).parent().toggleClass('checked', this.checked).toggleClass('disabled', this.disabled).css(css);
+            });
+        }
+
+        return this;
+    };
 
     $.jce = {
 
@@ -19,46 +104,81 @@
 
             // add ui-jce class to body
             $('body').addClass('ui-jce');
+            
+            $('a.dialog').click( function(e) { 
+                self.createDialog(e, {
+                    src 	: $(this).attr('href'),
+                    options     : $(this).data('options')
+                });
+                    
+                e.preventDefault();
+            });
+            
+            // Bootstrap styles
+            if (this.options.bootstrap) {
+                // add boostrap id class
+                $('body').addClass('ui-bootstrap');
+                
+                $('input[size="100"]').addClass('input-xlarge');
+                $('input[size="50"]').addClass('input-large');
+                $('input[size="5"]').addClass('input-mini');
+                
+            } else {
+                $('body').addClass('ui-jquery');
+                
+                // Style stuff
+                $('div.icon a').addClass('ui-widget-content ui-corner-all');
+                
+                $('button#filter_go').button({
+                    icons: {
+                        primary: 'ui-icon-search'
+                    }
+                });
+
+                $('button#filter_reset').button({
+                    icons : {
+                        primary : 'ui-icon-arrowrefresh-1-e'
+                    }
+                });
+                
+                $('button.upload-import').button({
+                    icons : {
+                        primary : 'ui-icon-arrowthick-1-n'
+                    }
+                });
+                
+                if (!$.support.leadingWhitespace) {
+                    // Table striping
+                    $('#profiles-list tr:odd').addClass('odd');
+                    // First and last
+                    $('#profiles-list tr:last-child').addClass('last');
+                }
+            }
 
             // Tips
-            $('.tooltip, .hasTip').tips({
+            $('.wf-tooltip').tips({
                 parent : '#jce'
             });
-
-            // Style stuff
-            $('div.icon a').addClass('ui-widget-content ui-corner-all');
-
-            $('a.dialog').click( function(e) {                
-                self.createDialog({
-                    src 	: $(this).attr('href'),
-                    options : $(this).data('options'),
-                    modal	: $(this).hasClass('modal'),
-                    type	: /(users|help|preferences|updates|browser|legend)/.exec($(this).attr('class'))[0],
-                    title	: $(this).attr('title')
-                });
-                e.preventDefault();
+            
+            $('th input[type="checkbox"]', $('table.adminlist')).click(function() {
+                var n = $('td input[type="checkbox"]', $('table.adminlist')).prop('checked', this.checked).trigger('check');
+               
+                $('input[name="boxchecked"]').val($(n).filter(':checked').length);
+            });
+            
+            $('td input[type="checkbox"]', $('table.adminlist')).click(function() {
+                var bc = $('input[name="boxchecked"]').val();
+                var n  = $('td input[type="checkbox"]', $('table.adminlist')).length;
+                
+                $('th input[type="checkbox"]', $('table.adminlist')).prop('checked', bc == n).trigger('check');
             });
 
             // IE
             if (!$.support.cssFloat) {
                 $('#jce').addClass('ie'); 
-                // IE6
-                if (!window.XMLHttpRequest) {
-                    $('#jce').addClass('ie6');
-                    
-                    $('input:text').addClass('ie_input_text');
 
-                    $('ul.adminformlist > li, dl.adminformlist > dd').addClass('ie_adminformlist');
-                    $('ul.adminformlist > li > label:first-child, ul.adminformlist > li > span:first-child, dl.adminformlist > dd > label:first-child, dl.adminformlist > dd > span:first-child').addClass('ie_adminformlist_child');
-                } else {
-                    if (!document.querySelector) {
-                        $('#jce').addClass('ie7');
-                    }
-                }
                 // IE6 / IE7
-                if (!document.querySelector) {
-                    $('button').addClass('ie_button');
-                } else {
+                if (document.querySelector) {
                     // IE8
                     if (!$.support.leadingWhitespace) {
                         $('#jce').addClass('ie8');
@@ -68,79 +188,116 @@
                     }
                 }
             }
-
-            // Profiles list
-            // buttons
-            $('button#filter_go').button({
-                icons: {
-                    primary: 'ui-icon-search'
-                }
-            });
-
-            $('button#filter_reset').button({
-                icons : {
-                    primary : 'ui-icon-arrowrefresh-1-e'
-                }
-            });
-
-            // Table striping
-            $('div#jce tbody tr:odd').addClass('odd');
             
             // set dependant parameters
             this._setDependants();
 
             // HTML5 style form elements
             this._formWidgets();
+            
+            $('label.radio').addClass('inline');
+            
+            // Sortable Profiles list
+            $('#profiles-list tbody').sortable({
+                handle  : 'span.sortable-handle',
+                helper  : function(e, tr) {
+                    var $cells  = tr.children();
+                    var $helper = tr.clone();
+                    $helper.children().each(function(i){
+                        $(this).width($cells.eq(i).width());
+                    });
+                    return $helper;
+                },
+                stop : function(e, ui) {
+                    var n = this;
+                    
+                    // set the task
+                    $('input[name="task"]').val('saveorder');
+                    
+                    // check all cid[] inputs and serialize
+                    var cid = $('input[name^="cid"]', n).prop('checked', true).serialize();
+                    
+                    // uncheck cid[] inputs
+                    $('input[name^="cid"]', n).prop('checked', false);
+                    
+                    // disable sortables
+                    $('#profiles-list tbody').sortable('disable');
+                    
+                    $(ui.item).addClass('busy');
+                    
+                    function end() {
+                        // enable sortables
+                        $('#profiles-list tbody').sortable('enable');
+                            
+                        $(ui.item).removeClass('busy');
+                    }
+                    
+                    // get order
+                    var order = [];
+                    
+                    $('tr', n).each(function(i) {
+                        order.push('order[]=' + i);
+                    });
+                    
+                    // send to server
+                    $.ajax({
+                        type    : 'POST',
+                        url     : 'index.php',
+                        data    : $('input[name]', '#adminForm').not('input[name^="order"]').serialize() + '&' + cid + '&' + order.join('&') + '&tmpl=component',
+                        success : function() {
+                            end();
+                            
+                            // update order
+                            $('tr', n).each(function(i) {
+                                $('input[name^="order"]', this).val(i + 1);
+                                
+                                $('input[id^="cb"]', this).attr('id', 'cb' + i);
+                            });
+                            
+                            // IE < 9
+                            if (!$.support.leadingWhitespace) {
+                                // Table striping
+                                $('#profiles-list tr').removeClass('odd').filter(':odd').addClass('odd');
+                                // First and last
+                                $('#profiles-list tr').removeClass('last').last().addClass('last');
+                            }
+                        },
+                        error : function() {
+                            end();
+                        }
+                    });
+                }
+            });
+            
+            $('span.order-up a', '#profiles-list').click(function(e) {
+                $('input[name^=cid]', $(this).parents('tr')).prop('checked', true);
+                $('input[name="task"]').val('orderup');
+                
+                $('#adminForm').submit();
+                
+                e.preventDefault();
+            });
+            
+            $('span.order-down a', '#profiles-list').click(function(e) {
+                $('input[name^=cid]', $(this).parents('tr')).prop('checked', true);
+                $('input[name="task"]').val('orderdown');
+                
+                $('#adminForm').submit();
+                
+                e.preventDefault();
+            });
+            
+            $(document).ready(function() {
+                // custom checkbox
+                $('input[type="checkbox"]').checkbox();
+                // custom radio
+                $('input[type="radio"]').radio();
+            });
+        
         },
 
-        createDialog : function(o) {
-            var self = this;
-            function _fixDialog(el, settings) {
-                // opera bug?
-                if (parseFloat(el.style.height) == 0) {
-                    var h = settings.height;
-                    // get height of siblings
-                    $(el).siblings('div').each( function() {
-                        h = h - parseFloat($(this).outerHeight());
-                    });
-
-                    // remove border, padding etc.
-                    h = h - $(el).outerHeight();
-                    // set height and centre
-                    $(el).css('height', h).dialog('option', 'position', 'center');
-                }
-            }
-
-            var buttons = {};
-            var div		= document.createElement('div');
-            var loader	= document.createElement('div');
-            var iframe 	= document.createElement('iframe');
-            var title 	= o.title || '';
-
-            if (o.type == 'users') {
-                $.extend(buttons, {
-                    '$select' : function() {
-                        iframe.contentWindow.selectUsers();
-                        $(this).dialog("close");
-                    }
-
-                });
-            }
-
-            if (o.type == 'preferences') {
-                $.extend(buttons, {
-                    '$save' : function() {
-                        iframe.contentWindow.submitform('apply');
-                    },
-
-                    '$saveclose' : function() {
-                        iframe.contentWindow.submitform('save');
-                    }
-
-                });
-            }
-
-            var src = o.src, data = {};
+        createDialog : function(e, o) {
+            var self = this, data = {};
 
             // add optional settings from link
             if ($.type(o.options) == 'string') {
@@ -149,105 +306,23 @@
                 data = o.options;
             }
             
-            data = data || {};
-
-            var settings = {
-                bgiframe: true,
-                width 	: 640,
-                height	: 480,
-                modal	: o.modal || false,
-                buttons : buttons,
-                resizable: true,
-                open : function() {
-                    _fixDialog(div, settings);
-                    $(loader).addClass('loader').appendTo(div);
-
-                    $(iframe).css({
-                        width : '100%',
-                        height : '100%'
-                    }).attr({
-                        src 		: src,
-                        scrolling 	: 'auto',
-                        frameBorder : 'no'
-                    }).appendTo(div).load( function() {
-                        $(loader).hide();
-                    });
-
-                    $('button').each( function() {
-                        var h = this.innerHTML;
-                        h = h.replace(/\$([a-z]+)/, function(a, b) {
-                            return self.options.labels[b];
-                        });
-
-                        this.innerHTML = h;
-                    }).button();
-
-                }
-
+            data = data || {
+                width : 640, 
+                height : 480
             };
-
-            if (o.type == 'confirm' || o.type == 'alert') {
-                var text 	= o.text 	|| '';
-                var title 	= o.title 	|| (o.type == 'alert' ? self.options.labels.alert : '');
-
-                $.extend(settings, {
-                    width 		: 300,
-                    height		: 'auto',
-                    resizable	: false,
-                    dialogClass	: 'ui-jce',
-                    buttons : {
-                        '$ok' : function() {
-                            if (src) {
-                                if (/function\([^\)]*\)\{/.test(src)) {
-                                    $.globalEval(src);
-                                } else {
-                                    document.location.href = src;
-                                }	
-                            }
-                            $(this).dialog("close");
-                        }
-                    },
-                    open : function() {
-                        _fixDialog(div, settings);
-
-                        $(div).attr('id', 'dialog-confirm').append(text);
-
-                        $('button').each( function() {
-                            var h = this.innerHTML;
-                            h = h.replace(/\$([a-z]+)/, function(a, b) {
-                                return self.options.labels[b];
-                            });
-
-                            this.innerHTML = h;
-                        }).addClass('ui-state-default ui-corner-all');
-
-                    },
-                    
-                    close : function() {
-                        $(this).dialog('destroy');
-                    }
-
-                });
-                
-                if (o.type == 'confirm') {
-                    $.extend(settings.buttons, {
-                        '$cancel' : function() {
-                            $(this).dialog("close");
-                        }
-                    });
-                }
-            }
             
-            // add id if set
-            if (data.id) {
-                $(div).attr('id', data.id);
-            }
-
-            $(div).css('overflow', 'hidden').attr('title', title).dialog($.extend(settings, data));
+            return Joomla.modal(e.target, o.src, data.width, data.height);
         },
         
         closeDialog : function(el) {
-            $(el).dialog("close").remove();
+            //$(el).dialog("close").remove();
+            
+            var win = window.parent;
+            
+            // try squeezebox
+            if( typeof win.SqueezeBox !== 'undefined') {
+                return win.SqueezeBox.close();
+            }
         },
 
         /**
@@ -304,38 +379,58 @@
         },
         
         _setDependants : function() {
-            $('[data-parent]').each(function() {
+            $('input[data-parent], select[data-parent]').each(function() {
                 var el = this, data = $(this).data('parent');
                 
+                var p = $(this).parents('li:first');
+                
                 // hide the element by default
-                $(this).parent().hide();
+                $(p).hide();
                 
-                // get the parent selector and value
-                var s = /([\w\.]+)\[([\w,]+)\]/.exec(data);
+                $.each(data.split(';'), function(i, s) {
+                    // get the parent selector and value
+                    s = /([\w\.]+)\[([\w,]+)\]/.exec(s);
                 
-                if (s) {
-                    var  k = s[1], v = s[2].split(',');
- 
-                    // set parent onchange
-                    $('#params' + k.replace(/[^\w]+/g, '')).change(function() {
-                        var state = $.inArray(this.value, v) != -1;                        
-
-                        if (state) {
-                            $(el).parent().show();
-                        } else {
-                            $(el).parent().hide();
-                        }
+                    if (s) {
+                        var  k = s[1], v = s[2].split(',');
                         
-                        $(el).trigger('visibility:toggle', state);
-                    // set function when element is toggled itself    
-                    }).on('visibility:toggle', function(e, state) {
-                        if (state) {
-                            $(el).parent().show();
-                        } else {
-                            $(el).parent().hide();
-                        }
-                    }).change();
-                }
+                        // clean id
+                        k = k.replace(/[^\w]+/g, '');
+                        
+                        // create namespaced event name
+                        var ev = 'change.' + k;
+ 
+                        // set parent onchange
+                        $('#params' + k).on(ev, function() {                                                    
+                            var state = $.inArray(this.value, v) != -1; 
+
+                            if (state) {
+                                // remove marker
+                                $(el).removeClass('child-of-' + k);
+                                
+                                // if not still hidden by another "parent"
+                                if (el.className.indexOf('child-of-') === -1) {
+                                    $(p).show(); 
+                                }
+                                
+                            } else {
+                                $(p).hide(); 
+                                
+                                // set marker
+                                $(el).addClass('child-of-' + k);
+                            }
+                        
+                            $(el).trigger('visibility:toggle', state);
+                        // set function when element is toggled itself    
+                        }).on('visibility:toggle', function(e, state) {
+                            if (state) {
+                                $(el).parent().show();
+                            } else {
+                                $(el).parent().hide();
+                            }
+                        }).trigger(ev);
+                    }
+                });
             });
         }
     };    

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -8,17 +9,15 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die('RESTRICTED');
 
-abstract class WFBrowserHelper 
-{
-	public static function getBrowserLink($element = null, $filter = '')
-	{
-		require_once(dirname(dirname(__FILE__)) . '/models/model.php');	
-						
-		$model = JModel::getInstance('WFModel');		
-		return $model->getBrowserLink($element, $filter);
-	}
-}	
-	
+abstract class WFBrowserHelper {
+
+    public static function getBrowserLink($element = null, $filter = '') {
+        require_once(dirname(dirname(__FILE__)) . '/models/model.php');
+
+        $model = new WFModel();
+        return $model->getBrowserLink($element, $filter);
+    }
+
+}

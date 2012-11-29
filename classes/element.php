@@ -110,7 +110,7 @@ class WFElement extends JObject
                         $title = $description;
                     }
                     
-                    $output .= ' class="hasTip" title="' . $title . '">';
+                    $output .= ' class="wf-tooltip" title="' . $title . '">';
 		}
 		else
 		{

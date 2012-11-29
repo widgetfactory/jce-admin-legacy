@@ -8,17 +8,11 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die('RESTRICTED');
-
 ?>
-<dl class="adminformlist">	
-	<dt><?php echo WFText::_('WF_INSTALLER_INSTALL_DESC');?></dt>
-	<dd>
-		<label for="install" class="tooltip" title="<?php echo WFText::_('WF_INSTALLER_PACKAGE'); ?>::<?php echo WFText::_('WF_INSTALLER_PACKAGE_DESC'); ?>"><?php echo WFText::_('WF_INSTALLER_PACKAGE'); ?></label>
-		<span>
-			<input type="file" name="install" id="upload" placeholder="<?php echo $this->state->get('install.directory'); ?>" />
-			<button id="install_button"><?php echo WFText::_('WF_INSTALLER_UPLOAD'); ?></button>
-		</span>
-	</dd>
-</dl>
+<h4><?php echo WFText::_('WF_INSTALLER_INSTALL_DESC'); ?></h4>
+<div class="btn-group input-append">
+    <label for="import" class="element-invisible"><?php echo WFText::_('WF_INSTALLER_PACKAGE'); ?></label>
+    <input type="file" name="install" id="upload" accept="application/zip,application/gzip" placeholder="<?php echo $this->state->get('install.directory'); ?>" />
+    <button id="upload_button" class="btn"><i class="icon-arrow-up"></i>&nbsp;<?php echo WFText::_('WF_INSTALLER_UPLOAD'); ?></button>
+</div>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -9,41 +10,54 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die;
 
 /**
  * Renders a radio element
  */
-class WFElementRadio extends WFElement
-{
-	/**
-	 * Element name
-	 *
-	 * @var    string
-	 */
-	protected $_name = 'Radio';
+class WFElementRadio extends WFElement {
 
-	/**
-	 * Fetch a html for a radio button
-	 *
-	 * @param   string       $name          Element name
-	 * @param   string       $value         Element value
-	 * @param   JXMLElement  &$node         JXMLElement node object containing the settings for the element
-	 * @param   string       $control_name  Control name
-	 *
-	 * @return  string
-	 */
-	public function fetchElement($name, $value, &$node, $control_name)
-	{
-		$options = array();
-		foreach ($node->children() as $option)
-		{
-			$val    = (string) $option->attributes()->value;
-			$text   = (string) $option;
-			$options[] = JHtml::_('select.option', $val, $text);
-		}
+    /**
+     * Element name
+     *
+     * @var    string
+     */
+    protected $_name = 'Radio';
 
-		return JHtml::_('select.radiolist', $options, '' . $control_name . '[' . $name . ']', '', 'value', 'text', $value, $control_name . $name, true);
-	}
+    /**
+     * Fetch a html for a radio button
+     *
+     * @param   string       $name          Element name
+     * @param   string       $value         Element value
+     * @param   JXMLElement  &$node         JXMLElement node object containing the settings for the element
+     * @param   string       $control_name  Control name
+     *
+     * @return  string
+     */
+    public function fetchElement($name, $value, &$node, $control_name) {
+        $options = array();
+        foreach ($node->children() as $option) {
+            $val = (string) $option->attributes()->value;
+            $text = (string) $option;
+            $options[] = JHtml::_('select.option', $val, $text);
+        }
+        
+        $attribs = array();
+
+        // pattern data attribute for editable select input box
+        if ((string) $node->attributes()->parent) {
+            $prefix = preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name);
+            
+            $items = array();
+            
+            foreach(explode(';', (string) $node->attributes()->parent) as $item) {
+                $items[] = $prefix . $item;
+            }
+            
+            $attribs[] =  'data-parent="' . implode(';', $items) . '"';
+        }
+
+        return JHtml::_('select.radiolist', $options, $control_name . '[' . $name . ']', implode(' ', $attribs), 'value', 'text', $value, $control_name . $name, true);
+    }
+
 }

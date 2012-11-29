@@ -3,6 +3,7 @@
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -30,7 +31,7 @@ class WFModelUpdates extends WFModel {
      * Get extension versions
      * @return Array
      */
-    function getVersions() {
+    public function getVersions() {
         $db = JFactory::getDBO();
 
         $versions = array('joomla' => array(), 'jce' => array());
@@ -48,7 +49,8 @@ class WFModelUpdates extends WFModel {
             $versions['joomla']['plg_jcemediabox'] = $mediabox_xml['version'];
         }
 
-        $model = JModel::getInstance('plugins', 'WFModel');
+        wfimport('admin.models.plugins');
+        $model = new WFModelPlugins();
 
         // get all plugins
         $plugins = $model->getPlugins();
@@ -82,7 +84,7 @@ class WFModelUpdates extends WFModel {
      * Check for extension updates
      * @return String JSON string of updates
      */
-    function check() {
+    public function check() {
         $result = false;
 
         // Get all extensions and version numbers
@@ -129,7 +131,7 @@ class WFModelUpdates extends WFModel {
      * Download update
      * @return String JSON string
      */
-    function download() {
+    public function download() {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
 
@@ -146,7 +148,13 @@ class WFModelUpdates extends WFModel {
 
             // get update file
             if ($data->name && $data->url && $data->hash) {
-                $tmp = $config->getValue('config.tmp_path');
+
+                if (defined('JPATH_PLATFORM')) {
+                    $tmp = $config->get('tmp_path');
+                } else {
+                    $tmp = $config->getValue('config.tmp_path');
+                }
+
                 // create path for package file
                 $path = $tmp . '/' . basename($data->name);
                 // download file
@@ -177,10 +185,127 @@ class WFModelUpdates extends WFModel {
     }
 
     /**
+     * Method to detect the extension type from a package directory
+     *
+     * @param   string  $dir  Path to package directory
+     * @return  mixed  Extension type string or boolean false on fail
+     * 
+     * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+     */
+    public static function detectType($dir) {
+        // Search the install dir for an XML file
+        $files = JFolder::files($dir, '\.xml$', 1, true);
+
+        if (!count($files)) {
+            return false;
+        }
+
+        foreach ($files as $file) {
+            $xml = simplexml_load_file($file);
+            if (!$xml) {
+                continue;
+            }
+
+            $name = $xml->getName();
+
+            if ($name != 'extension' && $name != 'install') {
+                unset($xml);
+                continue;
+            }
+
+            $type = (string) $xml->attributes()->type;
+
+            // Free up memory
+            unset($xml);
+            return $type;
+        }
+
+        // Free up memory.
+        unset($xml);
+        return false;
+    }
+
+    /**
+     * Unpacks a file and verifies it as a Joomla element package
+     * Supports .gz .tar .tar.gz and .zip
+     *
+     * @param   string  $archive  The uploaded package filename or install directory
+     * @return  mixed  Array on success or boolean false on failure
+     * 
+     * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+     */
+    private static function unpack($archive) {
+        jimport('joomla.filesystem.file');
+        jimport('joomla.filesystem.archive');
+
+        // Temporary folder to extract the archive into
+        $tmpdir = uniqid('install_');
+
+        // Clean the paths to use for archive extraction
+        $extractdir = JPath::clean(dirname($archive) . '/' . $tmpdir);
+
+        // Do the unpacking of the archive
+        try {
+            JArchive::extract($archive, $extractdir);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        /*
+         * Let's set the extraction directory and package file in the result array so we can
+         * cleanup everything properly later on.
+         */
+        $retval['extractdir'] = $extractdir;
+        $retval['packagefile'] = $archive;
+
+        /*
+         * Try to find the correct install directory.  In case the package is inside a
+         * subdirectory detect this and set the install directory to the correct path.
+         *
+         * List all the items in the installation directory.  If there is only one, and
+         * it is a folder, then we will set that folder to be the installation folder.
+         */
+        $dirList = array_merge(JFolder::files($extractdir, ''), JFolder::folders($extractdir, ''));
+
+        if (count($dirList) == 1) {
+            if (JFolder::exists($extractdir . '/' . $dirList[0])) {
+                $extractdir = JPath::clean($extractdir . '/' . $dirList[0]);
+            }
+        }
+
+        $retval['dir'] = $extractdir;
+
+        /*
+         * Get the extension type and return the directory/type array on success or
+         * false on fail.
+         */
+        $retval['type'] = self::detectType($extractdir);
+
+        if ($retval['type']) {
+            return $retval;
+        } else {
+            return false;
+        }
+    }
+
+    private static function cleanupInstall($package, $extract) {
+        jimport('joomla.filesystem.folder');
+        jimport('joomla.filesystem.file');
+
+        if (is_dir($extract)) {
+            JFolder::delete($extract);
+        }
+
+        if (is_file($package)) {
+            JFile::delete($package);
+        }
+    }
+
+    /**
      * Install extension update
      * @return String JSON string
      */
-    function install() {
+    public function install() {
         jimport('joomla.installer.installer');
         jimport('joomla.installer.helper');
         jimport('joomla.filesystem.file');
@@ -196,40 +321,44 @@ class WFModelUpdates extends WFModel {
 
         // check for vars
         if ($file && $hash && $method) {
-            $tmp = $config->getValue('config.tmp_path');
+            if (defined('JPATH_PLATFORM')) {
+                $tmp = $config->get('tmp_path');
+            } else {
+                $tmp = $config->getValue('config.tmp_path');
+            }
             $path = $tmp . '/' . $file;
             // check if file exists
             if (JFile::exists($path)) {
                 // check hash
                 if ($hash == md5(md5_file($path))) {
-                    if ($extract = JInstallerHelper::unpack($path)) {
-                        // get new Installer instance
-                        $installer = JInstaller::getInstance();
+                    if ($extract = self::unpack($path)) {
 
-                        // set installer adapter
+                        // Install a JCE Add-on
                         if ($method == 'jce') {
-                            // create jce plugin adapter
-                            $model = JModel::getInstance('installer', 'WFModel');
-                            $installer->setAdapter($extract['type'], $model->getAdapter($extract['type']));
+                            wfimport('admin.classes.installer');
+
+                            $installer = WFInstaller::getInstance();
+
+                            // install
+                            if ($installer->install($extract['dir'])) {
+                                // installer message
+                                $result = array('error' => '', 'text' => WFText::_($installer->get('message'), $installer->get('message')));
+                            }
+                            // Install a Joomla! Extension    
+                        } else {
+                            jimport('joomla.installer.installer');
+
+                            // get new Installer instance
+                            $installer = JInstaller::getInstance();
+
+                            if ($installer->install($extract['dir'])) {
+                                // installer message
+                                $result = array('error' => '', 'text' => WFText::_($installer->get('message'), $installer->get('message')));
+                            }
                         }
 
-                        // install
-                        if ($installer->install($extract['extractdir'])) {
-                            // get destination path
-                            $path = $installer->getPath('extension_root');
-                            // get manifest
-                            $manifest = basename($installer->getPath('manifest'));
-                            // delete update manifest if any eg: _iframes_155_156.xml
-                            if ($type == 'patch' && preg_match('/^_[0-9a-z_\.-]+\.xml$/', $manifest)) {
-                                if (JFile::exists($path . '/' . $manifest)) {
-                                    @JFile::delete($path . '/' . $manifest);
-                                }
-                            }
-                            // installer message
-                            $result = array('error' => '', 'text' => WFText::_($installer->get('message'), $installer->get('message')));
-                        }
                         // cleanup package and extract dir
-                        JInstallerHelper::cleanupInstall($extract['packagefile'], $extract['extractdir']);
+                        self::cleanupInstall($extract['extractdir'], $path);
                     } else {
                         $result = array('error' => WFText::_('WF_UPDATES_ERROR_FILE_EXTRACT_FAIL'));
                     }
@@ -244,8 +373,8 @@ class WFModelUpdates extends WFModel {
     }
 
     /**
-     * @copyright		Copyright (C) 2009 Ryan Demmer. All rights reserved.
-     * @copyright 		Copyright (C) 2006-2010 Nicholas K. Dionysopoulos
+     * @copyright   Copyright (C) 2009 Ryan Demmer. All rights reserved.
+     * @copyright   Copyright (C) 2006-2010 Nicholas K. Dionysopoulos
      * @param 	String 	$url URL to resource
      * @param 	Array  	$data [optional] Array of key value pairs
      * @param 	String 	$download [optional] path to file to write to

@@ -6,7 +6,7 @@
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- */
+*/
 ul#cpanel {
     list-style: none outside none;
     margin: 0;
@@ -28,35 +28,35 @@ ul#cpanel li.cpanel-icon {
     padding: 5px;
 }
 html[dir="rtl"] ul#cpanel li.cpanel-icon {
-	float: right;
+    float: right;
 }
 
 ul#cpanel li.cpanel-icon span {
     background: url('../img/cpanel.png') no-repeat 0 0;
     display: block;
-	height: 48px;
-	margin: 15px 25px 5px;
+    height: 48px;
+    margin: 15px 25px 5px;
 }
 ul#cpanel li.cpanel-icon span.config {
-	background-position: 0 0;
+    background-position: 0 0;
 }
 ul#cpanel li.cpanel-icon span.profiles {
-	background-position: 0 -48px;
+    background-position: 0 -48px;
 }
-ul#cpanel li.cpanel-icon span.install {
-	background-position: 0 -96px;
+ul#cpanel li.cpanel-icon span.installer {
+    background-position: 0 -96px;
 }
 ul#cpanel li.cpanel-icon span.mediabox {
-	background-position: 0 -144px;
+    background-position: 0 -144px;
 }
 ul#cpanel li.cpanel-icon span.browser {
-	background-position: 0 -192px;
+    background-position: 0 -192px;
 }
 ul#cpanel li.cpanel-icon a {
     color:#666666;
     text-decoration:none;
     vertical-align:middle;
-	display: block;
+    display: block;
 }
 ul.newsfeed {
     list-style: none !important;
@@ -83,4 +83,17 @@ ul#table_status {
     line-height: 20px;
     padding: 0px 0px 0px 25px;
     display: inline-block;
+}
+
+/* Mobile stuff */
+@media (max-width: 767px) {
+    ul#cpanel li.cpanel-icon {
+        width : 80px;
+        height : 80px;
+        font-size: 8pt;
+        line-height: 11px;
+    }
+    ul#cpanel li.cpanel-icon span {
+        margin: 5px 15px 5px;
+    }
 }

@@ -8,59 +8,66 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
-defined('_JEXEC') or die('RESTRICTED');	
+defined('_JEXEC') or die('RESTRICTED');
 ?>
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
     <div id="jce">
-		<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
-			<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-				<li class="ui-state-default ui-corner-top ui-state-active tooltip" title="<?php echo JText :: _('WF_PROFILES_SETUP'). '::'. JText :: _('WF_PROFILES_SETUP_DESC');?>"><a href="#tabs-setup"><?php echo JText :: _('WF_PROFILES_SETUP');?></a></li>
-				<li class="ui-state-default ui-corner-top tooltip" title="<?php echo JText :: _('WF_PROFILES_FEATURES'). '::'. JText :: _('WF_PROFILES_FEATURES_DESC');?>"><a href="#tabs-features"><?php echo JText :: _('WF_PROFILES_FEATURES');?></a></li>
-				<li class="ui-state-default ui-corner-top tooltip" title="<?php echo JText :: _('WF_PROFILES_EDITOR_PARAMETERS'). '::'. JText :: _('WF_PROFILES_EDITOR_PARAMETERS_DESC');?>"><a href="#tabs-editor"><?php echo JText :: _('WF_PROFILES_EDITOR_PARAMETERS');?></a></li>
-				<li class="ui-state-default ui-corner-top tooltip" title="<?php echo JText :: _('WF_PROFILES_PLUGIN_PARAMETERS'). '::'. JText :: _('WF_PROFILES_PLUGIN_PARAMETERS_DESC');?>"><a href="#tabs-plugins"><?php echo JText :: _('WF_PROFILES_PLUGIN_PARAMETERS');?></a></li>
-			</ul>
-			<div id="tabs-setup" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
-				<?php echo $this->loadTemplate('setup');?>
-			</div>
-			<div id="tabs-features" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
-				<?php echo $this->loadTemplate('features');?>
-			</div>
-			<div id="tabs-editor" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
-				<ul>
-				<?php 				
-				foreach($this->profile->editor_groups as $group) :
-					echo '<li><a href="#tabs-editor-'. $group.'"><span>'. WFText::_('WF_PROFILES_EDITOR_' . strtoupper($group)). '</span></a></li>';
-				endforeach;?>
-				</ul>
-				<?php echo $this->loadTemplate('editor');?>
-			</div>
-			<div id="tabs-plugins" class="defaultSkin ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
-				<ul>
-				<?php
-				// Build tabs
-				foreach ($this->plugins as $plugin) :
-                                    if ($plugin->editable && is_file(JPATH_SITE . '/' .$plugin->path . '/' . $plugin->name.'.xml')) :					
-						$icon 	= ''; 
-						$class 	= '';
-						if ($plugin->icon) :
-							$icon = $this->model->getIcon($plugin);
-						endif;
-						
-						$class = in_array($plugin->name, explode(',', $this->profile->plugins)) ? 'ui-state-default' : 'ui-state-disabled';
-						
-						echo '<li class="' . $class . '"><a href="#tabs-plugin-'. $plugin->name.'">'. $icon .'<span class="label">'. WFText::_($plugin->title). '</span></a></li>';
-            		endif;
-				endforeach;?>
-				</ul>
-				<?php echo $this->loadTemplate('plugin');?>
-			</div>
-		</div>
-	</div>
-	<input type="hidden" name="option" value="com_jce" />
-	<input type="hidden" name="id" value="<?php echo $this->profile->id; ?>" />
-	<input type="hidden" name="cid[]" value="<?php echo $this->profile->id; ?>" />
+        <div id="tabs" class="">
+            <ul class="nav nav-tabs">
+                <li class="active wf-tooltip" title="<?php echo JText :: _('WF_PROFILES_SETUP') . '::' . JText :: _('WF_PROFILES_SETUP_DESC'); ?>"><a href="#tabs-setup"><?php echo JText :: _('WF_PROFILES_SETUP'); ?></a></li>
+                <li class="wf-tooltip" title="<?php echo JText :: _('WF_PROFILES_FEATURES') . '::' . JText :: _('WF_PROFILES_FEATURES_DESC'); ?>"><a href="#tabs-features"><?php echo JText :: _('WF_PROFILES_FEATURES'); ?></a></li>
+                <li class="wf-tooltip" title="<?php echo JText :: _('WF_PROFILES_EDITOR_PARAMETERS') . '::' . JText :: _('WF_PROFILES_EDITOR_PARAMETERS_DESC'); ?>"><a href="#tabs-editor"><?php echo JText :: _('WF_PROFILES_EDITOR_PARAMETERS'); ?></a></li>
+                <li class="wf-tooltip" title="<?php echo JText :: _('WF_PROFILES_PLUGIN_PARAMETERS') . '::' . JText :: _('WF_PROFILES_PLUGIN_PARAMETERS_DESC'); ?>"><a href="#tabs-plugins"><?php echo JText :: _('WF_PROFILES_PLUGIN_PARAMETERS'); ?></a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tabs-setup" class="tab-pane active">
+                    <?php echo $this->loadTemplate('setup'); ?>
+                </div>
+                <div id="tabs-features" class="tab-pane">
+                    <?php echo $this->loadTemplate('features'); ?>
+                </div>
+                <div id="tabs-editor" class="tab-pane tabbable tabs-left">
+                    <ul class="nav nav-tabs">
+                        <?php
+                        $x = 0;
+                        foreach ($this->profile->editor_groups as $group) :                            
+                            echo '<li><a href="#tabs-editor-' . $group . '"><span>' . WFText::_('WF_PROFILES_EDITOR_' . strtoupper($group)) . '</span></a></li>';
+                            $x++;
+                        endforeach;
+                        ?>
+                    </ul>
+                    <?php echo $this->loadTemplate('editor'); ?>
+                </div>
+                <div id="tabs-plugins" class="tab-pane tabbable tabs-left">
+                    <ul class="nav nav-tabs">
+                        <?php
+                        // Build tabs
+                        foreach ($this->plugins as $plugin) :
+                            if ($plugin->editable && is_file(JPATH_SITE . '/' . $plugin->path . '/' . $plugin->name . '.xml')) :
+                                $icon   = '';
+                                $class  = '';
+                                if ($plugin->icon) :
+                                    $icon = $this->model->getIcon($plugin);
+                                endif;
+
+                                $class = in_array($plugin->name, explode(',', $this->profile->plugins)) ? '' : 'tab-disabled';
+
+                                echo '<li class="defaultSkin ' . $class . '" data-name="' . $plugin->name . '"><a href="#tabs-plugin-' . $plugin->name . '">' . $icon . '<span class="tabs-label">' . WFText::_($plugin->title) . '</span></a></li>';
+                            endif;
+                        endforeach;
+                        ?>
+                    </ul>
+                    <div class="tab-content">
+                        <?php echo $this->loadTemplate('plugin'); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="option" value="com_jce" />
+    <input type="hidden" name="id" value="<?php echo $this->profile->id; ?>" />
+    <input type="hidden" name="cid[]" value="<?php echo $this->profile->id; ?>" />
     <input type="hidden" name="view" value="profiles" />
-	<input type="hidden" name="task" value="" />
-	<?php echo JHTML::_('form.token'); ?>
+    <input type="hidden" name="task" value="" />
+<?php echo JHTML::_('form.token'); ?>
 </form>

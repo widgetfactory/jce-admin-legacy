@@ -15,9 +15,9 @@ defined('_JEXEC') or die('RESTRICTED');
 define('WF_JOOMLA15', version_compare(JVERSION, '1.6', '<'));
 
 // define JQuery version
-define('WF_JQUERY', '1.7.2');
+define('WF_JQUERY', '1.8.2');
 // define JQuery UI version
-define('WF_JQUERYUI', '1.8.21');
+define('WF_JQUERYUI', '1.9.1');
 
 // Some shortcuts to make life easier
 
@@ -26,10 +26,10 @@ define('WF_ADMINISTRATOR',     JPATH_ADMINISTRATOR . '/components/com_jce');
 // JCE Site Component
 define('WF_SITE',              JPATH_SITE . '/components/com_jce');
 // JCE Plugin
-if (WF_JOOMLA15) {
-    define('WF_PLUGIN',        JPATH_SITE . '/plugins/editors');
-} else {
+if (JPATH_PLATFORM) {
     define('WF_PLUGIN',        JPATH_SITE . '/plugins/editors/jce');
+} else {
+    define('WF_PLUGIN',        JPATH_SITE . '/plugins/editors');   
 }
 // JCE Editor
 define('WF_EDITOR',            WF_SITE . '/editor');
@@ -43,5 +43,13 @@ define('WF_EDITOR_LIBRARIES',  WF_EDITOR . '/libraries');
 define('WF_EDITOR_CLASSES',    WF_EDITOR_LIBRARIES . '/classes');
 // JCE Editor Extensions
 define('WF_EDITOR_EXTENSIONS', WF_EDITOR . '/extensions');
+
+// define use of INI lang
+define('WF_INI_LANG', 1);
+
+// required for some plugins
+if (!defined('DS')) {
+    define('DS', DIRECTORY_SEPARATOR);
+}
 
 ?>

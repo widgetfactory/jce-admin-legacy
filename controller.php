@@ -11,9 +11,9 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.application.component.controller');
+wfimport('admin.classes.controller');
 
-class WFController extends JController {
+class WFController extends WFControllerBase {
 
     /**
      * Custom Constructor
@@ -29,7 +29,7 @@ class WFController extends JController {
 
     private function loadMenu() {
         $view = JRequest::getWord('view', 'cpanel');
-        
+
         wfimport('admin.models.model');
 
         JSubMenuHelper::addEntry(WFText::_('WF_CPANEL'), 'index.php?option=com_jce&view=cpanel', $view == 'cpanel');
@@ -76,27 +76,37 @@ class WFController extends JController {
                 'base_path' => dirname(__FILE__)
             );
         }
-
-        $view = parent::getView($name, $type, $prefix, $config);
-
-        $document = JFactory::getDocument();
-        $document->setTitle(WFText::_('WF_ADMINISTRATION') . ' :: ' . WFText::_('WF_' . strtoupper($name)));
-
+        
         $model = $this->getModel($name);
 
-        // jquery versions
-        $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
-        $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/jquery/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
+        $view = parent::getView($name, $type, $prefix, $config);
+        $document = JFactory::getDocument();
+        
+        $bootstrap  = class_exists('JHtmlBootstrap');
+        $jquery     = class_exists('JHtmlJquery'); 
+        
+        $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/global.css?version=' . $model->getVersion());
+        
+        // using JUI...
+        if (!$bootstrap || !$jquery) {
+            $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/styles-ui.css?version=' . $model->getVersion());
 
-        // jQuery noConflict
-        $document->addScriptDeclaration('jQuery.noConflict();');
+            // JQuery UI
+            $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
+            // jQuery noConflict
+            $view->addScriptDeclaration('jQuery.noConflict();');
+        }
+        
+        // JQuery UI
+        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
+        // JQuery Touch Punch
+        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery.ui.touch-punch.min.js?version=' . $model->getVersion());
 
         $scripts = array();
 
         switch ($name) {
             case 'help':
-                $scripts[] = 'help.js';
-
+                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/help.js?version=' . $model->getVersion());
                 break;
             default:
                 // load Joomla! core javascript
@@ -111,13 +121,9 @@ class WFController extends JController {
                 $params = WFParameterHelper::getComponentParams();
                 $theme = $params->get('preferences.theme', 'jce');
 
-                $scripts = array_merge(array(
-                    'tips.js',
-                    'html5.js'
-                        ));
-
-                // Load admin scripts
-                $document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js?version=' . $model->getVersion());
+                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/tips.js');
+                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/html5.js');
+                $view->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js');
 
                 $options = array(
                     'labels' => array(
@@ -128,10 +134,12 @@ class WFController extends JController {
                         'saveclose' => WFText::_('WF_LABEL_SAVECLOSE'),
                         'alert' => WFText::_('WF_LABEL_ALERT'),
                         'required' => WFText::_('WF_MESSAGE_REQUIRED')
-                    )
+                    ),
+                    'bootstrap' => $bootstrap
                 );
 
-                $document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');
+                $view->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');
+                //$document->addCustomTag('<script type="text/javascript">jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});</script>');
 
                 $view->addHelperPath(dirname(__FILE__) . '/helpers');
                 $this->addModelPath(dirname(__FILE__) . '/models');
@@ -150,19 +158,48 @@ class WFController extends JController {
             $view->setModel($model, true);
         }
 
-        // Load site scripts
-        foreach ($scripts as $script) {
-            $document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/' . $script . '?version=' . $model->getVersion());
-        }
-
-        require_once(dirname(__FILE__) . '/helpers/system.php');
-
-        $app = JFactory::getApplication();
-        $app->registerEvent('onAfterRender', 'WFSystemHelper');
-
         $view->assignRef('document', $document);
 
         return $view;
+    }
+    
+    protected function getStyles()
+    {
+        jimport('joomla.filesystem.folder');
+        jimport('joomla.filesystem.file');
+        
+        wfimport('admin.helpers.extension');
+        
+        $view = JRequest::getCmd('view', 'cpanel');
+
+        $component 	= WFExtensionHelper::getComponent();        
+        $params 	= new WFParameter($component->params);
+        
+        $theme  	= $params->get('preferences.theme', 'jce');
+        $site_path      = JPATH_COMPONENT_SITE . '/editor/libraries/css';
+	$admin_path     = JPATH_COMPONENT_ADMINISTRATOR . '/media/css';
+        
+        // Load styles
+        $styles = array();
+        
+        if (!JFolder::exists($site_path  . '/jquery/' . $theme)) {
+            $theme = 'jce';
+        }
+        
+        if (JFolder::exists($site_path . '/jquery/' . $theme)) {
+            $files = JFolder::files($site_path . '/jquery/' . $theme, '\.css');
+            
+            foreach ($files as $file) {
+                //$styles[] = 'components/com_jce/editor/libraries/css/jquery/' . $theme . '/' . $file;
+            }
+        }
+
+		// admin global css
+        $styles = array_merge($styles, array(
+            'administrator/components/com_jce/media/css/global.css'
+        ));
+        
+        return $styles;
     }
 
     public function pack() {
@@ -194,9 +231,8 @@ class WFController extends JController {
             return;
         }
 
-        // add models path
-        JModel::addIncludePath(dirname(__FILE__) . '/models');
-        $profiles = JModel::getInstance('profiles', 'WFModel');
+        wfimport('admin.models.profiles');
+        $profiles = new WFModelProfiles();
 
         $state = $profiles->checkTable();
 
@@ -227,13 +263,12 @@ class WFController extends JController {
         $type = JRequest::getWord('type', 'tables');
 
         switch ($type) {
-            case 'tables' :
-                // add models path
-                JModel::addIncludePath(dirname(__FILE__) . '/models');
-                $profiles = JModel::getInstance('profiles', 'WFModel');
+            case 'tables' :                
+                wfimport('admin.models.profiles');
+                $profiles = new WFModelProfiles();
 
                 $profiles->installProfiles();
-                
+
                 $this->setRedirect(JRoute::_('index.php?option=com_jce&view=cpanel', false));
 
                 break;
@@ -267,7 +302,7 @@ class WFController extends JController {
 
         return true;
     }
-    
+
     private static function _redirect($msg = '', $state = '') {
         $app = JFactory::getApplication();
 

@@ -65,7 +65,7 @@ class WFModelPreferences extends WFModel {
 				
 				$html[] = '<h3><a href="#"><span>' . str_repeat('<span> &rsaquo; </span> ', $curLevel = $group->level) . $group->text . '</span></a></h3>';
 				$html[] = '<div>';
-				$html[] =			'<table border="0" cellspacing="1">';
+				$html[] =			'<table border="0" cellspacing="1" class="adminlist table table-striped">';
 				$html[] =				'<thead>';
 				$html[] =					'<tr>';
 				$html[] =						'<th><span>' . WFText::_('WF_RULES_ACTION') . '</span></th>';
@@ -111,7 +111,7 @@ class WFModelPreferences extends WFModel {
 	protected function getActions()
 	{
 		$file 		= JPATH_COMPONENT_ADMINISTRATOR . '/access.xml';			
-		$xml 		= WFXMLElement::getXML($file);
+		$xml 		= WFXMLElement::load($file);
 		
 		$actions 	= array();
 		

@@ -11,19 +11,23 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
+wfimport('admin.classes.model');
 wfimport('admin.classes.text');
 wfimport('admin.helpers.xml');
 wfimport('admin.helpers.extension');
 wfimport('editor.libraries.classes.token');
 wfimport('editor.libraries.classes.editor');
 
-if (!defined('WF_INI_LANG')) {
-    define('WF_INI_LANG', 0);
-}
-
 jimport('joomla.application.component.model');
 
-class WFModelEditor extends JModel {
+class WFModelEditor extends WFModelBase {
+
+    /**
+     * Profile object
+     *
+     * @var    object
+     */
+    private $profile = null;
 
     /**
      * Array of linked scripts
@@ -53,7 +57,6 @@ class WFModelEditor extends JModel {
      */
     protected $javascript = array();
 
-    
     private function addScript($url) {
         $this->scripts[] = $url;
     }
@@ -70,10 +73,17 @@ class WFModelEditor extends JModel {
         $this->styles[] = $text;
     }
 
+    public function __construct() {
+        $wf = WFEditor::getInstance();
+
+        $this->profile = $wf->getProfile();
+    }
+
     public function buildEditor() {
         // get document
         $document = JFactory::getDocument();
 
+        // get an editor instance
         $wf = WFEditor::getInstance();
 
         // get current component
@@ -92,14 +102,11 @@ class WFModelEditor extends JModel {
         // settings array for jce, tinymce etc
         $init = array();
 
-        $profile = $wf->getProfile();
+        // if a profile is set
+        if (is_object($this->profile)) {
+            jimport('joomla.filesystem.folder');
 
-        if ($profile) {
-            // get jqueryui theme
-            $dialog_theme = $wf->getParam('editor.dialog_theme', 'jce');
-            $dialog_theme_css = JFolder::files(WF_EDITOR_LIBRARIES . '/css/jquery/' . $dialog_theme, '\.css$');
-
-            $settings = array_merge($settings, array('theme' => 'advanced', 'component_id' => $component_id, 'plugins' => $this->getPlugins()), $this->getToolbar($profile->rows));
+            $settings = array_merge($settings, array('theme' => 'advanced', 'component_id' => $component_id, 'plugins' => $this->getPlugins()), $this->getToolbar());
 
             // Theme and skins
             $theme = array(
@@ -113,7 +120,7 @@ class WFModelEditor extends JModel {
             );
 
             // set rows key to apss to plugin config
-            $settings['rows'] = $profile->rows;
+            $settings['rows'] = $this->profile->rows;
 
             foreach ($theme as $k => $v) {
                 $settings['theme_advanced_' . $k] = $wf->getParam('editor.' . $k, $v[0], $v[1], $v[2]);
@@ -127,7 +134,6 @@ class WFModelEditor extends JModel {
             $settings['height'] = $wf->getParam('editor.height');
 
             // 'Look & Feel'
-            $settings['jquery_ui'] = JURI::root(true) . '/components/com_jce/editor/libraries/css/jquery/' . $dialog_theme . '/' . basename($dialog_theme_css[0]);
 
             $skin = explode('.', $wf->getParam('editor.toolbar_theme', 'default', 'default'));
             $settings['skin'] = $skin[0];
@@ -166,25 +172,13 @@ class WFModelEditor extends JModel {
         $query[$token] = 1;
 
         // set compression
-        if ($compress['javascript']) {
-            $this->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=pack&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
-        } else {
-            $this->addScript($this->getURL(true) . '/tiny_mce/tiny_mce.js?version=' . $version);
-
-            if (array_key_exists('language_load', $settings)) {
-                // language
-                $this->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=loadlanguages&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
-            }
-
-            // Editor
-            $this->addScript($this->getURL(true) . '/libraries/js/editor.js?version=' . $version);
-        }
-        // set compression
         if ($compress['css']) {
             $this->addStyleSheet(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=pack&type=css&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
         } else {
             // CSS
             $this->addStyleSheet($this->getURL(true) . '/libraries/css/editor.css?version=' . $version);
+
+            //$this->addStyleSheet($this->getURL(true) . '/libraries/bootstrap/css/bootstrap.css?version=' . $version);
             // get plugin styles
             $this->getPluginStyles($settings);
 
@@ -193,6 +187,20 @@ class WFModelEditor extends JModel {
 
             if (!empty($fonts)) {
                 $this->addStyleDeclaration($fonts);
+            }
+        }
+
+        // set compression
+        if ($compress['javascript']) {
+            $this->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=pack&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
+        } else {
+            $this->addScript($this->getURL(true) . '/tiny_mce/tiny_mce.js?version=' . $version);
+            // Editor
+            $this->addScript($this->getURL(true) . '/libraries/js/editor.js?version=' . $version);
+
+            if (array_key_exists('language_load', $settings)) {
+                // language
+                $this->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=loadlanguages&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
             }
         }
 
@@ -260,7 +268,7 @@ class WFModelEditor extends JModel {
 
         $this->addScriptDeclaration("\n\t\ttry{WFEditor.init(" . implode(',', $init) . ");}catch(e){console.debug(e);}\n");
 
-        if ($profile) {
+        if (is_object($this->profile)) {
             if ($wf->getParam('editor.callback_file')) {
                 $this->addScript(JURI::root(true) . '/' . $wf->getParam('editor.callback_file'));
             }
@@ -280,10 +288,10 @@ class WFModelEditor extends JModel {
 
     private function getOutput() {
         $document = JFactory::getDocument();
-        
-        $end    = $document->_getLineEnd();
-        $tab    = $document->_getTab();
-        
+
+        $end = $document->_getLineEnd();
+        $tab = $document->_getTab();
+
         $output = '';
 
         foreach ($this->stylesheets as $stylesheet) {
@@ -328,6 +336,7 @@ class WFModelEditor extends JModel {
             foreach ((array) $settings['plugins'] as $plugin) {
                 $path = WF_EDITOR_PLUGINS . '/' . $plugin;
 
+                // if english file exists then the installed language file should too 
                 if (JFile::exists($path . '/langs/en.js') && !JFile::exists($path . '/langs/' . $language . '.js')) {
                     $plugins[] = $plugin;
                 }
@@ -389,21 +398,27 @@ class WFModelEditor extends JModel {
      * @param string  The number of rows
      * @return The row array
      */
-    private function getToolbar($toolbar) {
+    private function getToolbar() {
         wfimport('admin.models.plugins');
         $model = new WFModelPlugins();
 
         $wf = WFEditor::getInstance();
-
-        $db = JFactory::getDBO();
-
         $rows = array('theme_advanced_buttons1' => '', 'theme_advanced_buttons2' => '', 'theme_advanced_buttons3' => '');
 
+        // we need a profile object and some defined rows
+        if (!is_object($this->profile) || empty($this->profile->rows)) {
+            return $rows;
+        }
+
+        // get plugins
         $plugins = $model->getPlugins();
+        // get core commands
         $commands = $model->getCommands();
 
+        // merge plugins and commands
         $icons = array_merge($commands, $plugins);
-        $lists = explode(';', $toolbar);
+        // create an array of rows
+        $lists = explode(';', $this->profile->rows);
 
         // backwards compatability map
         $map = array(
@@ -471,30 +486,29 @@ class WFModelEditor extends JModel {
      * @return string list
      */
     private function getPlugins() {
-        $db = JFactory::getDBO();
-        $wf = WFEditor::getInstance();
-
         jimport('joomla.filesystem.file');
 
         $return = array();
-        $profile = $wf->getProfile();
 
-        if (is_object($profile)) {
-            $plugins = explode(',', $profile->plugins);
+        if (is_object($this->profile)) {
+            $wf = WFEditor::getInstance();
+
+            $plugins = explode(',', $this->profile->plugins);
             $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'dragupload', 'format'), $plugins));
             
+            // add advlists plugin if lists are loaded
             if (in_array('lists', $plugins)) {
                 $plugins[] = 'advlist';
             }
             
-            if ($wf->getParam('editor.path', 1, 1, 'boolean')) {
+            // Load wordcount if path is enabled
+            if ($wf->getParam('editor.path', 1)) {
                 $plugins[] = 'wordcount';
             }
 
             foreach ($plugins as $plugin) {
                 $path = WF_EDITOR_PLUGINS . '/' . $plugin;
-
-                // check plugin is correctly installed and is a tinymce plugin
+                // check plugin is correctly installed and is a tinymce plugin, ie: it has an editor_plugin.js file
                 if (JFile::exists($path . '/editor_plugin.js')) {
                     $return[] = $plugin;
                 }
@@ -644,19 +658,16 @@ class WFModelEditor extends JModel {
             }
         }
 
-        // Joomla! 1.5
-        if (WF_JOOMLA15) {
-            $query = 'SELECT menuid as id, template' . ' FROM #__templates_menu' . ' WHERE client_id = 0';
+        $query = $db->getQuery(true);
 
-            $db->setQuery($query);
-            $templates = $db->loadObjectList();
-            // Joomla! 1.6+
+        if (is_object($query)) {
+            $query->select('id, template')->from('#__template_styles')->where(array('client_id = 0', 'home = 1'));
         } else {
-            $query = 'SELECT id, template' . ' FROM #__template_styles' . ' WHERE client_id = 0' . ' AND home = 1';
-
-            $db->setQuery($query);
-            $templates = $db->loadObjectList();
+            $query = 'SELECT menuid as id, template' . ' FROM #__templates_menu' . ' WHERE client_id = 0';
         }
+
+        $db->setQuery($query);
+        $templates = $db->loadObjectList();
 
         $assigned = array();
 
@@ -723,8 +734,11 @@ class WFModelEditor extends JModel {
             case 1 :
                 // Joomla! 1.5 standard
                 $file = 'template.css';
+                $css = array();
 
-                $css = JFolder::files($path, '(base|core|template|template_css)\.css$', false, true);
+                if (JFolder::exists($path)) {
+                    $css = JFolder::files($path, '(base|core|template|template_css)\.css$', false, true);
+                }
 
                 if (!empty($css)) {
                     // use the first result
@@ -908,7 +922,8 @@ class WFModelEditor extends JModel {
         $suffix = JRequest::getWord('suffix', '');
         $component_id = JRequest::getInt('component_id', 0);
 
-        if ($wf->checkUser()) {
+        // if a profile is set
+        if ($this->profile) {
             $themes = 'advanced';
             $plugins = $this->getPlugins();
         }
@@ -923,7 +938,10 @@ class WFModelEditor extends JModel {
             case 'language' :
                 $files = array();
 
-                if (!WF_INI_LANG) {
+                if (WF_INI_LANG) {
+                    $data = $this->loadLanguages(array(), array(), '(^dlg$|_dlg$)', true);
+                    $packer->setText($data);
+                } else {
                     // Add core languages
                     foreach ($languages as $language) {
                         $file = WF_EDITOR . '/' . "tiny_mce/langs/" . $language . ".js";
@@ -1012,6 +1030,15 @@ class WFModelEditor extends JModel {
 
                 // add Editor file
                 $files[] = WF_EDITOR . '/libraries/js/editor.js';
+
+                if (WF_INI_LANG) {
+                    wfimport('admin.classes.language');
+
+                    $parser = new WFLanguageParser();
+                    $data = $parser->load();
+                    $packer->setContentEnd($data);
+                }
+
                 break;
             case 'css' :
                 $context = JRequest::getWord('context', 'editor');
@@ -1064,7 +1091,7 @@ class WFModelEditor extends JModel {
                     $fonts = trim(self::getCustomFonts($this->getStyleSheets(true)));
 
                     if (!empty($fonts)) {
-                        $packer->getContentEnd($fonts);
+                        $packer->setContentEnd($fonts);
                     }
                 }
                 break;
@@ -1074,151 +1101,12 @@ class WFModelEditor extends JModel {
         $packer->pack();
     }
 
-    protected static function processLanguageINI($files, $section = array(), $filter = '') {
-        $data = array();
+    public function loadLanguages() {
+        wfimport('admin.classes.language');
 
-        foreach ((array) $files as $file) {
-            $ini = parse_ini_file($file, true);
-
-            if ($ini && is_array($ini)) {
-                // filter keys by regular expression
-                if ($filter) {
-                    foreach (array_keys($ini) as $key) {
-                        if (preg_match('#' . $filter . '#', $key)) {
-                            unset($ini[$key]);
-                        }
-                    }
-                }
-                // only include these keys
-                if (!empty($section)) {
-                    $ini = array_intersect_key($ini, array_flip($section));
-                }
-
-                $data = array_merge($data, $ini);
-            }
-        }
-
-        $output = '';
-
-        if (!empty($data)) {
-
-            $x = 0;
-
-            foreach ($data as $key => $strings) {
-
-                if (is_array($strings)) {
-                    $output .= '"' . strtolower($key) . '":{';
-
-                    $i = 0;
-
-                    foreach ($strings as $k => $v) {
-                        if (is_numeric($v)) {
-                            $v = (float) $v;
-                        } else {
-                            $v = '"' . $v . '"';
-                        }
-                        // skip hex colors
-                        if (preg_match('#^(?:[0-9A-F]{3}){1,2}$#', $k) === false) {
-                            $k = strtolower($k);
-                        }
-                        
-                        if (strpos($k, 'HEX_') !== false) {
-                            $k = strtoupper(str_replace('HEX_', '', $k));
-                        }
-
-                        $output .= '"' . $k . '":' . $v . ',';
-
-                        $i++;
-                    }
-                    // remove last comma
-                    rtrim(trim($output), ',');
-
-                    $output .= "},";
-
-                    $x++;
-                }
-            }
-            // remove last comma
-            rtrim(trim($output), ',');
-        }
-        return $output;
-    }
-
-    public function loadLanguages($files = array(), $section = array(), $filter = '', $includeplugins = false) {
-        // check token
-        WFToken::checkToken('GET') or die('RESTRICTED');
-
-        $wf = WFEditor::getInstance();
-
-        // get the language file
-        $language = JFactory::getLanguage();
-
-        $path = JPATH_SITE . '/language/' . $language->getTag();
-
-        // if no file set
-        if (empty($files)) {
-            // Add English language
-            $files[] = JPATH_SITE . '/language/en-GB/en-GB.com_jce.ini';
-
-            // non-english language
-            if ($language->getTag() !== 'en-GB') {
-                if (is_dir($path)) {
-                    $file = $path . '/' . $language->getTag() . '.com_jce.ini';
-
-                    if (is_file($file)) {
-                        $files[] = $file;
-                    }
-                }
-            }
-
-            if ($includeplugins) {
-                $plugins = $this->getPlugins();
-
-                foreach ($plugins as $plugin) {
-                    // add English file
-                    $ini = JPATH_SITE . '/language/en-GB/en-GB.com_jce_' . $plugin . '.ini';
-
-                    if (is_file($ini)) {
-                        $files[] = $ini;
-                    }
-
-                    // non-english language
-                    if ($language->getTag() !== 'en-GB') {
-                        $ini = JPATH_SITE . '/language/' . $language->getTag() . '/' . $language->getTag() . '.com_jce_' . $plugin . '.ini';
-
-                        if (is_file($ini)) {
-                            $files[] = $ini;
-                        }
-                    }
-                }
-            }
-        }
-
-        $data = self::processLanguageINI($files, $section, $filter);
-
-        if ($data) {
-            $output = 'tinyMCE.addI18n({"' . $wf->getLanguage() . '":{';
-            $output .= rtrim(trim($data), ',');
-            $output .= '}});';
-
-            ob_start();
-
-            header("Content-type: application/javascript; charset: UTF-8");
-            header("Vary: Accept-Encoding");
-
-            // expires after 7 days
-            $expires = 60 * 60 * 24 * 7;
-
-            header("Cache-Control: maxage=" . $expires);
-
-            // Handle proxies
-            header("Expires: " . gmdate("D, d M Y H:i:s", time() + $expires) . " GMT");
-
-            echo $output;
-
-            exit(ob_get_clean());
-        }
-        exit();
+        $parser = new WFLanguageParser();
+        $data   = $parser->load();
+        $parser->output($data);
     }
 
     public function getToken($id) {

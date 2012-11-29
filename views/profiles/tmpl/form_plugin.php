@@ -36,20 +36,20 @@ foreach ($this->plugins as $plugin) :
                 $params->addElementPath($path . '/elements');
             }
 
-            $class = in_array($plugin->name, explode(',', $this->profile->plugins)) ? 'tabs-plugin-parameters' : 'tabs-plugin-parameters ui-tabs-hidden';
+            $class  = in_array($plugin->name, explode(',', $this->profile->plugins)) ? 'tabs-plugin-parameters' : '';
             $groups = $params->getGroups();
 
             if (count($groups)) :
                 $count++;
                 ?>
-                <div id="tabs-plugin-<?php echo $plugin->name; ?>" data-name="<?php echo $plugin->name; ?>" class="<?php echo $class; ?>">
+                <div id="tabs-plugin-<?php echo $plugin->name; ?>" data-name="<?php echo $plugin->name; ?>" class="tab-pane <?php echo $class; ?>">
                     <h2><?php echo WFText::_($plugin->title); ?></h2>
                     <?php
                     // Draw parameters
                     foreach ($groups as $group) :
-                        echo '<fieldset class="adminform panelform"><legend>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group)) . '</legend>';
+                        echo '<fieldset class="adminform panelform">';
+                        echo '<legend>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group)) . '</legend>';
                         echo '<p>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group) . '_DESC') . '</p>';
-                        //echo $params->render('params[' . $plugin->name . '][' . $group . ']', $group);
                         echo $params->render('params[' . $plugin->name . ']', $group);
                         echo '</fieldset>';
                     endforeach;

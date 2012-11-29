@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -8,7 +9,6 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die('RESTRICTED');
 
 /**
@@ -18,84 +18,82 @@ defined('_JEXEC') or die('RESTRICTED');
  * @subpackage	Plugins
  * @since 1.5
  */
-class WFControllerInstaller extends WFController
-{	
-	/**
-	 * Custom Constructor
-	 */
-	function __construct( $default = array())
-	{		
-		parent::__construct();
-		
-		$this->registerTask( 'disable', 'enable' );
-				
-		$language = JFactory::getLanguage();		
-		$language->load( 'com_installer', JPATH_ADMINISTRATOR );
-	}
+class WFControllerInstaller extends WFController {
 
-	/**
-	 * Install an extension
-	 *
-	 * @access	public
-	 * @return	void
-	 * @since	1.5
-	 */
-	function install()
-	{
-		// Check for request forgeries
-		JRequest::checkToken() or jexit( 'RESTRICTED' );
+    /**
+     * Custom Constructor
+     */
+    function __construct($default = array()) {
+        parent::__construct();
 
-		$model = $this->getModel('installer');
+        $this->registerTask('disable', 'enable');
 
-		if ($model->install()) {
-			$cache =JFactory::getCache('mod_menu');
-			$cache->clean();
-		}
+        $language = JFactory::getLanguage();
+        $language->load('com_installer', JPATH_ADMINISTRATOR);
+    }
 
-		$view = $this->getView();
-		$view->setModel($model, true);
+    /**
+     * Install an extension
+     *
+     * @access	public
+     * @return	void
+     * @since	1.5
+     */
+    function install() {
+        // Check for request forgeries
+        JRequest::checkToken() or jexit('RESTRICTED');
+
+        $model = $this->getModel('installer');
+
+        if ($model->install()) {
+            $cache = JFactory::getCache('mod_menu');
+            $cache->clean();
+        }
+
+        $view = $this->getView();
+        $view->setModel($model, true);
         $view->display();
-	}
+    }
 
-	/**
-	 * Remove (uninstall) an extension
-	 *
-	 * @static
-	 * @param	array	An array of identifiers
-	 * @return	boolean	True on success
-	 * @since 1.0
-	 */
-	function remove()
-	{
-		// Check for request forgeries
-		JRequest::checkToken() or jexit( 'RESTRICTED' );
+    /**
+     * Remove (uninstall) an extension
+     *
+     * @static
+     * @param	array	An array of identifiers
+     * @return	boolean	True on success
+     * @since 1.0
+     */
+    function remove() {
+        // Check for request forgeries
+        JRequest::checkToken() or jexit('RESTRICTED');
 
-		$model 		= $this->getModel('installer');
-		
-		$items = array(
-			'plugin'		=>	JRequest::getVar('pid', array (), '', 'array'),
-			'extension'		=>	JRequest::getVar('eid', array (), '', 'array'),
-			'language'		=>	JRequest::getVar('lid', array (), '', 'array'),
-			'related'		=>	JRequest::getVar('rid', array (), '', 'array')
-		);
-		
-		// Uninstall the chosen extensions
-		foreach ($items as $type => $ids) {
-			if (count($ids)) {
-				foreach ($ids as $id) {
-					if ($id) {
-						if ($model->remove($id, $type)) {
-							$cache =JFactory::getCache('mod_menu');
-							$cache->clean();
-						}
-					}
-				}
-			}
-		}
+        $model = $this->getModel('installer');
 
-		$view = $this->getView();
-		$view->setModel($model, true);
+        $items = array(
+            'plugin'    => JRequest::getVar('pid', array(), '', 'array'),
+            'language'  => JRequest::getVar('lid', array(), '', 'array'),
+            'related'   => JRequest::getVar('rid', array(), '', 'array')
+        );
+
+        // Uninstall the chosen extensions
+        foreach ($items as $type => $ids) {
+            if (count($ids)) {
+                foreach ($ids as $id) {
+                    if ($id) {
+                        if ($model->remove($id, $type)) {
+                            $cache = JFactory::getCache('mod_menu');
+                            $cache->clean();
+                        }
+                    }
+                }
+            }
+        }
+
+        $view = $this->getView();
+        $view->setModel($model, true);
         $view->display();
-	}
+    }
+
 }
+
 ?>

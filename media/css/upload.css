@@ -7,7 +7,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-span.upload_button_container {
+#jce div.upload_button_container {
     position: relative;
     overflow: hidden;
     float: left;
@@ -15,26 +15,26 @@ span.upload_button_container {
     min-height: 20px;
     vertical-align: middle;
 }
-span.upload_input_container {
+#jce div.upload_input_container {
     position: relative;
     overflow: hidden;
     float: left;
     vertical-align: middle;
 }
-span.upload_button_container input[type="text"] {
-	padding: 2px;
+#jce div.upload_button_container input[type="text"] {
+
 }
-span.upload_button_container input[type="file"] {
+#jce div.upload_button_container input[type="file"] {
     position	: absolute;
     top			: 0;
     right		: 0;
-    font-size	: 20px;
+    font-size   : 20px;
     padding		: 0;
     margin		: 0;
-    height 		: 26px;
+    min-height 		: 24px;
 }
-#jce span.upload_button_container button {
-    margin-left: 5px;
+#jce div.upload_button_container button {
+    /*margin-left: 5px;*/
 }
 #jce button span.browse, #jce button span.import {
     left: 0;
@@ -76,21 +76,30 @@ html[dir="rtl"] #jce label[for="import"] {
 	float: right;
 }
 #jce input.upload_text {
-	float: left;
-    color: #888;
-    height: 24px;
+    /*float: left;
+    color: #888;*/
 }
 #jce input.upload_text.upload_file {
-    color: #888;
+    /*color: #888;*/
 }
 #jce input.upload_text.placeholder {
-    color: #888;
+    color: #BBBBBB;
 }
 
-#jce span.upload_button_container > span {
-    left : 5px;
+#jce div.upload_button_container span.upload-input-wrapper {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    width: 100%;
+    
+    left: 3px;
+    top: -1px;
 }
 
-html[dir="rtl"] #jce span.upload_button_container > span {
+#jce div.upload_button_container > span {
+    left : 0;
+}
+
+html[dir="rtl"] #jce div.upload_button_container > span {
     right : 2px;
 }

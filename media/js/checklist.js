@@ -78,7 +78,7 @@
 
         createElement: function(el, ul, n) {
             // Create elements
-            var self = this, d = document, li = d.createElement('li'), check = d.createElement('span'), plugin;
+            var self = this, d = document, li = d.createElement('li'), plugin, button, toolbar;
 
             $(li).attr({
                 title: n.value
@@ -92,71 +92,47 @@
                     plugin = s[1];
                 } 
             }
-            
-            var $toolbar    = $('span.profileLayoutContainerToolbar ul', '#profileLayoutTable');
-            
-            if (plugin) {
-                var $parent = $('span[data-name="' + plugin + '"]', $toolbar);
+
+            if (plugin) {                
+                toolbar = $('span.profileLayoutContainerToolbar ul', '#profileLayoutTable');
+                button  = $('span[data-button="' + n.value + '"]', toolbar);
             }
 
             // Add checkboxes
-            $(check).addClass('checkbox').addClass( function() {
-                return n.selected ? 'checked' : '';
-            }).click( function() {
-                
-                if ($(this).hasClass('disabled')) {
-                    return;
-                } 
+            $('<input type="checkbox" />').addClass('checkbox inline').prop('checked', n.selected).prop('disabled', n.disabled).click(function() {                
                 // add check and trigger
-                $(this).toggleClass('checked').trigger('checkbox:check', $(this).hasClass('checked'));
-            }).appendTo(li).on('checkbox:check', function(e, state) {             
+                $(this).trigger('checklist:check', this.checked);
+            }).appendTo(li).on('checklist:check', function(e, state) {             
                 // Trigger serialization
                 self.setValue(el, ul);
                 
                 // if button list and plugin name set
-                if (plugin) {
-                    $('span.mce_' + n.value, $parent).parent().toggle(state);
+                if (button) {
+                    $(button).toggle(state);
                 }
                 
                 // trigger callback
                 self.options.onCheck.call(self, [this, n]);
             });
             
-            // initialise
-            $(check).trigger('checkbox:check', $(check).hasClass('checked'));
-            
-            // disable
-            if (n.disabled) {
-                $(check).addClass('disabled');
-            }
-
-            // Add name
-            $(li).append('<span class="widget-checklist-' + n.value + '" title="' + n.name + '">' + n.name + '</span>');
+            // Add label
+            $(li).append('<label class="checkbox inline widget-checklist-' + n.value + '" title="' + n.name + '">' + n.name + '</label>');
 
                         
-            if ($(el).hasClass('buttonlist')) {                
-                $('span.widget-checklist-' + n.value, li).prepend('<span class="mceButton mceSplitButton"><span class="mceIcon mce_' + n.value + '"></span></span>');
+            if (button && $(el).hasClass('buttonlist')) {                                
+                $('label', li).before($(button).clone());
             }
         },
 
         setValue: function(el, ul) {
-            var $list = $('li', ul);
-
-            var x = $.map($('span.checked', $list), function(n) {
-                return $(n).parent('li').attr('title');
+            var x = $.map($('input[type="checkbox"]:checked', $('li', ul)), function(n) {
+                return $(n).parents('li:first').attr('title');
             });
 
-            if (el.nodeName == 'SELECT') {
-                $(el).empty();                
-                
-                $.each($list, function(i, item) {
-                    var v = $(item).attr('title');
-                    var o = document.createElement('option');
-                	
-                    $(o).attr({
-                        'value' : v
-                    }).prop('selected', !($.inArray(v, x) == -1)).appendTo(el);
-                });                
+            if (el.nodeName == 'SELECT') {                
+                $('option', el).each(function() {                    
+                    $(this).prop('selected', $.inArray(this.value, x) != -1);
+                })                
             } else {
                 el.value = x.join(',');
             }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
@@ -8,11 +9,9 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.application.component.view');
-
+wfimport('admin.classes.view');
 
 /**
  * Extension Manager Default View
@@ -20,42 +19,44 @@ jimport('joomla.application.component.view');
  * @package		JCE
  * @since		1.5
  */
-class WFViewPreferences extends JView
-{
-    function display($tpl = null)
-    {        
-        $db =JFactory::getDBO();
+class WFViewPreferences extends WFView {
+
+    function display($tpl = null) {
+        $db = JFactory::getDBO();
 
         $client = JRequest::getWord('client', 'admin');
-		$model = $this->getModel();
-        
-        $this->document->setTitle(WFText::_('WF_PREFERENCES_TITLE'));		
-		$this->document->addStyleSheet('templates/system/css/system.css');
- 
- 		$component 	= WFExtensionHelper::getComponent();
-        $xml 		= JPATH_COMPONENT.'/models/preferences.xml';
-        
+        $model = $this->getModel();
+
+        $this->document->setTitle(WFText::_('WF_PREFERENCES_TITLE'));
+        $this->document->addStyleSheet('templates/system/css/system.css');
+
+        $component = WFExtensionHelper::getComponent();
+        $xml = JPATH_COMPONENT . '/models/preferences.xml';
+
         // get params definitions
         $params = new WFParameter($component->params, $xml, 'preferences');
-        $params->addElementPath(JPATH_COMPONENT.'/elements');
-        
+        $params->addElementPath(JPATH_COMPONENT . '/elements');
+
         if (WFModel::authorize('admin')) {
-        	$form = $model->getForm('permissions');
+            $form = $model->getForm('permissions');
         } else {
-        	$form = null;
+            $form = null;
         }
 
-        $this->assignRef('params', $params);		
-		$this->assignRef('permissons', $form);
-
-		$this->document->addScript('components/com_jce/media/js/preferences.js?version=' . $model->getVersion());
-		
-        if (JRequest::getInt('close') == 1) {
-        	$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Preferences.close();});');
-        } else {
-        	$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Preferences.init();});');	
-		}
+        $this->assignRef('params', $params);
+        $this->assignRef('permissons', $form);
         
+        $this->addStyleSheet('components/com_jce/media/css/preferences.css?version=' . $model->getVersion());
+
+        $this->addScript('components/com_jce/media/js/preferences.js?version=' . $model->getVersion());
+
+        if (JRequest::getInt('close') == 1) {
+            $this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Preferences.close();});');
+        } else {
+            $this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Preferences.init();});');
+        }
+
         parent::display($tpl);
     }
+
 }

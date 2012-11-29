@@ -44,7 +44,9 @@ class WFModelProfiles extends WFModel {
      * @return 
      */
     public function getExtensions($plugin) {
-        $model = JModel::getInstance('plugins', 'WFModel');
+        wfimport('admin.models.plugins');
+
+        $model = new WFModelplugins();
 
         $extensions = array();
         $supported = array();
@@ -54,7 +56,7 @@ class WFModelProfiles extends WFModel {
         $manifest = WF_EDITOR_PLUGINS . '/' . $plugin . '/' . $plugin . '.xml';
 
         if (is_file($manifest)) {
-            $xml = WFXMLElement::getXML($manifest);
+            $xml = WFXMLElement::load($manifest);
 
             // get the plugin xml file    
             if ($xml) {
@@ -85,7 +87,9 @@ class WFModelProfiles extends WFModel {
     }
 
     public function getPlugins($plugins = array()) {
-        $model = JModel::getInstance('plugins', 'WFModel');
+        wfimport('admin.models.plugins');
+
+        $model = new WFModelplugins();
 
         $commands = array();
 
@@ -106,18 +110,7 @@ class WFModelProfiles extends WFModel {
     public function getUserGroups($area) {
         $db = JFactory::getDBO();
 
-        if (WF_JOOMLA15) {
-            $front = array(
-                '19',
-                '20',
-                '21'
-            );
-            $back = array(
-                '23',
-                '24',
-                '25'
-            );
-        } else {
+        if (defined('JPATH_PLATFORM')) {
             jimport('joomla.access.access');
 
             $query = $db->getQuery(true);
@@ -129,7 +122,11 @@ class WFModelProfiles extends WFModel {
             }
 
             $db->setQuery($query);
-            $groups = $db->loadResultArray();
+            if (method_exists($db, 'loadColumn')) {
+                $groups = $db->loadColumn();
+            } else {
+                $groups = $db->loadResultArray();
+            }
 
             $front = array();
             $back = array();
@@ -153,6 +150,17 @@ class WFModelProfiles extends WFModel {
                     }
                 }
             }
+        } else {
+            $front = array(
+                '19',
+                '20',
+                '21'
+            );
+            $back = array(
+                '23',
+                '24',
+                '25'
+            );
         }
 
         switch ($area) {
@@ -202,6 +210,7 @@ class WFModelProfiles extends WFModel {
 	        `types` varchar(255) NOT NULL,
 	        `components` text NOT NULL,
 	        `area` tinyint(3) NOT NULL,
+                `device` varchar(255) NOT NULL,
 	        `rows` text NOT NULL,
 	        `plugins` text NOT NULL,
 	        `published` tinyint(3) NOT NULL,
@@ -335,7 +344,7 @@ class WFModelProfiles extends WFModel {
 
         JTable::addIncludePath(dirname(dirname(__FILE__)) . '/tables');
 
-        $xml = WFXMLElement::getXML($file);
+        $xml = WFXMLElement::load($file);
 
         if ($xml) {
             $n = 0;
@@ -436,7 +445,7 @@ class WFModelProfiles extends WFModel {
         $mainframe = JFactory::getApplication();
         $file = JPATH_COMPONENT . '/models/profiles.xml';
 
-        $xml = WFXMLElement::getXML($file);
+        $xml = WFXMLElement::load($file);
 
         if ($xml) {
             foreach ($xml->profiles->children() as $profile) {
@@ -594,6 +603,47 @@ class WFModelProfiles extends WFModel {
         }
 
         return $span;
+    }
+    
+    public function saveOrder($cid, $order) {
+        $db     = JFactory::getDBO();
+        $total  = count($cid);
+        
+        JArrayHelper::toInteger($cid, array(0));
+        JArrayHelper::toInteger($order, array(0));
+
+        $row = JTable::getInstance('profiles', 'WFTable');
+        $conditions = array();
+
+        // update ordering values
+        for ($i = 0; $i < $total; $i++) {
+            $row->load((int) $cid[$i]);
+            if ($row->ordering != $order[$i]) {
+                $row->ordering = $order[$i];
+                if (!$row->store()) {
+                    return false;
+                }
+                // remember to updateOrder this group
+                $condition = ' ordering > -10000 AND ordering < 10000';
+                $found = false;
+                foreach ($conditions as $cond) {
+                    if ($cond[1] == $condition) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found)
+                    $conditions[] = array($row->id, $condition);
+            }
+        }
+
+        // execute updateOrder for each group
+        foreach ($conditions as $cond) {
+            $row->load($cond[0]);
+            $row->reorder($cond[1]);
+        }
+        
+        return true;
     }
 
 }

@@ -56,3 +56,36 @@
 html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 	float: right;
 }
+
+#jce #tabs {
+    margin : 10px 0;
+}
+#jce fieldset {
+    margin : 0 0 10px 0;
+}
+
+#jce div.install-message {
+    background: #fff;
+    border : 1px solid #ccc;
+    padding : 10px;
+    margin : 0 0 10px;
+}
+
+#jce div.install-message h2.success,
+#jce div.install-message h2.error {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAA/ElEQVR42r2WSw3EMAxEy6AQAqEQAqUQCmEhBMJCWCiBUAiBkPXBUqWx00kurvQuXcVvM3U+W+99CnmSkIE0O36meBFuoXvob4VJR4JdB/dFirBTkUoOoa4IgCocVmQl7SWeDIxibSjDuKoz4JpolEtozsx2T1TIv7LwNMoj0u6alqzLkorsbEhcGPdPOCFGmJWK4IPeXGK/KchMPS+2siIBDi8hdWwZXman6EUlT5e5NX2RX/Q7I1kSkXU1loxF55soYWEmITOyzYDrYkUyagbS3iDjErceXbAoIxKyYMkWBLKPlfAtKGRTDTsmQg6+kKM8+nISf90Ku0D+AZuTX+E9pD0pAAAAAElFTkSuQmCC);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    color: black;
+    line-height: 28px;
+    padding: 0 30px;
+    vertical-align: middle;
+}
+
+#jce div.install-message h2.error {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAA5klEQVR42sWWQRHEIAxF6wAJlVAJSFkJlYIEJCClEpCAhOw/5MAkZEL3kO3Mu3Tm5zefFDiIaAs8J8iCc1e/U7yADsigg+KZWgaJxfSSApJrxCYXeAD9AmsvbaRNhhWPWiM71iHNZFzPQnBvDMoNxqKztDIqzldp/DTKZMTTZZhwp20SyY9rIJlmPI1WN7cRZ51MqoqJY9RdsZFY0D4Va4AElSFBg8ast4qtyHVz8XUnOLJ4mVmgI7KpQqNqOkbCzDX5v9EnLLqwYQgZ77AfNmwLCtlUw46JkIMv5CiPvpzEX7fCLpBfzJ0lkTq3HI0AAAAASUVORK5CYII=);
+}
+
+#jce div.install-message {
+    margin : 5px 0;
+}

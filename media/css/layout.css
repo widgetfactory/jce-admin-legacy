@@ -110,7 +110,7 @@ html {
     margin: 0 0 1px 0;
     height: 28px;
 }
-#jce ul.sortableList li.sortableListItem div.sortableRow {
+#jce ul.sortableList li.sortableListItem span.sortableRow {
     white-space: nowrap;
     padding: 0px 3px;
     height: 26px;
@@ -121,23 +121,25 @@ html {
     letter-spacing: normal;
     word-spacing: normal;
     position: relative;
+    
+    display: block;
 }
-#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem {
+#jce ul.sortableList li.sortableListItem span.sortableRow span.sortableRowItem {
     /* Prevent spacing in inline-block spans */
     font-size: 0;
     letter-spacing: normal;
     word-spacing: normal;
 }
-#jce ul.sortableList.mceLeft li.sortableListItem div.sortableRow {
+#jce ul.sortableList.mceLeft li.sortableListItem span.sortableRow {
     text-align: left;
 }
-#jce ul.sortableList.mceCenter li.sortableListItem div.sortableRow {
+#jce ul.sortableList.mceCenter li.sortableListItem span.sortableRow {
     text-align: center;
 }
-#jce ul.sortableList.mceRight li.sortableListItem div.sortableRow {
+#jce ul.sortableList.mceRight li.sortableListItem span.sortableRow {
     text-align: right;
 }
-#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem {
+#jce ul.sortableList li.sortableListItem span.sortableRow span.sortableRowItem {
     cursor: move;
     display: inline-block;
     height: 20px;
@@ -147,44 +149,36 @@ html {
     font-size : 0;
     position: relative;
 }
-#jce.ie7 ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem {
-    font-size : 0.01em;
-}
 
-#jce.ie8 ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem {
+#jce.ie8 ul.sortableList li.sortableListItem span.sortableRow span.sortableRowItem {
     float : left;
 }
 
-#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem.ui-state-highlight {
-    border-style: dashed;
-    min-width: 5px;
-}
-#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem.spacer {
+#jce ul.sortableList li.sortableListItem span.sortableRow span.sortableRowItem.spacer {
     min-width: 0px;
     margin: 3px 0 0;
     clear: none;
 }
-#jce ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem img {
+#jce ul.sortableList li.sortableListItem span.sortableRow span.sortableRowItem img {
     border: 0;
     padding: 0;
     margin: 0
 }
-#jce ul.sortableList li.sortableListItem.ui-state-highlight, 
-#jce ul.sortableList li.sortableRowItem.ui-state-highlight, 
-#jce span.profileLayoutContainer span.sortableContainer.ui-state-highlight {
-    border: 1px dashed #CCCCCC;
+/* Sortable Highlight */
+#jce ul.sortableList span.sortableRowItem.sortable-highlight {
+    min-width: 5px;
 }
-#jce span.profileLayoutContainer span.sortableContainer.ui-state-highlight {
+#jce ul.sortableList li.sortableListItem.sortable-highlight, 
+#jce ul.sortableList span.sortableRowItem.sortable-highlight {
+    border: 1px dashed #9FBBDD;
+}
+#jce span.profileLayoutContainer span.sortableContainer.sortable-highlight {
     display: block;
 }
-#jce span.profileLayoutContainer span.sortableContainer.ui-state-highlight:first-child {
+#jce span.profileLayoutContainer span.sortableContainer.sortable-highlight:first-child {
     margin: 0 0 1px 0;
 }
-#jce span.sortableRowItem.ui-sortable-helper {
-    opacity: 0.8;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-    filter: alpha(opacity=80);
-}
+
 #jce span.sortableRowItem span.mceButton {
     cursor: move;
     height: auto;
@@ -204,10 +198,25 @@ html {
     display: block;
     float: right;
 }
+
 #jce span.sortableRowHandle span.ui-icon {
     margin: 5px 0 0;
     cursor: move;
+    
+    background-image: url("../../../../../components/com_jce/editor/libraries/jquery/css/images/ui-icons_222222_256x240.png");
+    height: 16px;
+    width: 16px;
+    
+    background-repeat: no-repeat;
+    display: block;
+    overflow: hidden;
+    text-indent: -99999px;
 }
+
+#jce span.sortableRowHandle span.ui-icon.ui-icon-arrowthick-2-n-s {
+    background-position: -128px -48px;
+}
+
 #jce span.sortableContainerHandle {
     border: 1px solid #CCC;
     cursor: move;
@@ -261,22 +270,3 @@ html[dir="rtl"] #jce span.sortableOption {
     display: inline-block;
     margin: 0 0 10px 8px;
 }
-/* IE7 */
-#jce.ie7 span.sortableHandle {
-    position: absolute;
-    right: 20px;
-}
-#jce.ie7 span.widthMarker {
-    margin-top: -20px;
-}
-#jce.ie7 ul.sortableList li.sortableListItem {
-    clear: none;
-    float: none;
-}
-#jce.ie7 ul.sortableList li.sortableListItem div.sortableRow {
-    font-size: 0.01em;
-}
-#jce.ie7 ul.sortableList li.sortableListItem div.sortableRow span.sortableRowItem {
-    vertical-align: baseline;
-}
-

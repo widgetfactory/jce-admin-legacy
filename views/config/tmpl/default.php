@@ -11,7 +11,7 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 ?>
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
     <div id="jce">
             <div>
                 <?php foreach($this->params->getGroups() as $group): ?>

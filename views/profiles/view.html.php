@@ -11,9 +11,9 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.application.component.view');
+wfimport('admin.classes.view');
 
-class WFViewProfiles extends JView {
+class WFViewProfiles extends WFView {
 
     public function display($tpl = null) {
         $app = JFactory::getApplication();
@@ -51,7 +51,7 @@ class WFViewProfiles extends JView {
                 $where = array();
 
                 if ($search) {
-                    $where[] = 'LOWER( p.name ) LIKE ' . $db->Quote('%' . $db->getEscaped($search, true) . '%', false);
+                    $where[] = 'LOWER( p.name ) LIKE ' . $db->Quote('%' . method_exists($db, 'escape') ? $db->escape($search, true) : $db->getEscaped($search, true) . '%', false);
                 }
                 if ($filter_state) {
                     if ($filter_state == 'P') {
@@ -123,20 +123,20 @@ class WFViewProfiles extends JView {
 
                 //JToolBarHelper::title(WFText::_('WF_PROFILES_TITLE').' : '.WFText::_('WF_PROFILES_LIST'), 'profiles.png' );
 
-                WFToolbarHelper::editListX();
                 WFToolbarHelper::addNewX();
+                WFToolbarHelper::editListX();
                 WFToolbarHelper::custom('copy', 'copy.png', 'copy_f2.png', 'WF_PROFILES_COPY', true);
                 WFToolbarHelper::export();
 
                 if (count($rows) > 1) {
                     WFToolbarHelper::publishList();
                     WFToolbarHelper::unpublishList();
-                    WFToolbarHelper::deleteList();
+                    WFToolbarHelper::deleteList('', 'remove', 'WF_PROFILES_DELETE');
                 }
                 WFToolbarHelper::help('profiles.about');
 
                 $options = array(
-                    'button' => 'upload_button',
+                    'button' => '#upload_button',
                     'task' => 'import',
                     'labels' => array(
                         'browse' => WFText::_('WF_LABEL_BROWSE'),
@@ -144,14 +144,19 @@ class WFViewProfiles extends JView {
                     )
                 );
 
-                $this->document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
-                $this->document->addScriptDeclaration('jQuery(document).ready(function($){$(":file").upload(' . json_encode($options) . ')});');
+                $this->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
+                $this->addScriptDeclaration('jQuery(document).ready(function($){$(\'input[type="file"]\').upload(' . json_encode($options) . ')});');
+                
+                // load styles
+                $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/upload.css');
 
                 $this->setLayout('default');
                 break;
             case 'apply':
             case 'add':
             case 'edit':
+                JHtml::_('behavior.modal');
+
                 // Load media   
                 $scripts = array(
                     'profiles.js',
@@ -161,11 +166,14 @@ class WFViewProfiles extends JView {
                 );
                 // Load scripts
                 foreach ($scripts as $script) {
-                    $this->document->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/' . $script . '?version=' . $model->getVersion());
+                    $this->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/' . $script . '?version=' . $model->getVersion());
                 }
-
-                $this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
-                $this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/select.js?version=' . $model->getVersion());
+                
+                $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
+                $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/select.js?version=' . $model->getVersion());
+                
+                // load styles
+                $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/profiles.css');
 
                 $cid = JRequest::getVar('cid', array(0), '', 'array');
                 JArrayHelper::toInteger($cid, array(0));
@@ -254,8 +262,24 @@ class WFViewProfiles extends JView {
                 }
 
                 $order = JHTML::_('list.genericordering', $query);
-                $lists['ordering'] = JHTML::_('select.genericlist', $order, 'ordering', 'class="inputbox" size="1"', 'value', 'text', intval($row->ordering));
-                $lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $row->published);
+                $lists['ordering']  = JHTML::_('select.genericlist', $order, 'ordering', 'class="inputbox" size="1"', 'value', 'text', intval($row->ordering));
+                
+                $lists['published'] = '';
+                
+                $options = array(
+                    1 => WFText::_('WF_OPTION_YES'),
+                    0 => WFTEXT::_('WF_OPTION_NO')
+                );
+                
+                foreach($options as $value => $text) {
+                    $checked = '';
+                    
+                    if ($value == $row->published) {
+                        $checked = ' checked="checked"';
+                    }
+                    
+                    $lists['published'] .= '<label class="radio inline"><input type="radio" id="published-' . $value . '" name="published" value="' . $value . '"' . $checked . ' />' . $text . '</label>';
+                }
 
                 $exclude = array(
                     'com_admin',
@@ -315,26 +339,73 @@ class WFViewProfiles extends JView {
 
                 foreach ($options as $option) {
                     $checked = in_array($option->value, explode(',', $row->components)) ? ' checked="checked"' : '';
-                    $lists['components'] .= '<li><input type="checkbox" name="components[]" value="' . $option->value . '"' . $checked . $disabled . ' /><label>' . JText::_($option->text) . '</label></li>';
+                    $lists['components'] .= '<li><input type="checkbox" name="components[]" value="' . $option->value . '"' . $checked . $disabled . ' /><label class="checkbox">' . JText::_($option->text) . '</label></li>';
                 }
 
                 $lists['components'] .= '</ul>';
 
                 // components select
-                $options = array();
-                $options[] = JHTML::_('select.option', 'all', WFText::_('WF_PROFILES_COMPONENTS_ALL'));
-                $options[] = JHTML::_('select.option', 'select', WFText::_('WF_PROFILES_COMPONENTS_SELECT'));
+                $options = array(
+                    'all'       => WFText::_('WF_PROFILES_COMPONENTS_ALL'),
+                    'select'    => WFText::_('WF_PROFILES_COMPONENTS_SELECT')
+                );
 
-                $lists['components-select'] = JHTML::_('select.radiolist', $options, 'components-select', 'class="inputbox"', 'value', 'text', $row->components ? 'select' : 'all', false);
+                $lists['components-select'] = '';
+                
+                foreach($options as $value => $text) {
+                    $checked = '';
+                    
+                    if ($row->components) {
+                        if ($value == 'select') {
+                            $checked = ' checked="checked"';
+                        }
+                    } else {
+                        if ($value == 'all') {
+                            $checked = ' checked="checked"';
+                        }
+                    }
+                    
+                    $lists['components-select'] .= '<label class="radio inline"><input type="radio" id="components-select-' . $value . '" name="components-select" value="' . $value . '"' . $checked . ' />' . $text . '</label>';
+                }
 
                 // area
-                $options = array();
-                $options[] = JHTML::_('select.option', '', '-- ' . WFText::_('WF_PROFILES_AREA_SELECT') . ' --');
-                $options[] = JHTML::_('select.option', 0, WFText::_('WF_PROFILES_AREA_BOTH'));
-                $options[] = JHTML::_('select.option', 1, WFText::_('WF_PROFILES_AREA_FRONTEND'));
-                $options[] = JHTML::_('select.option', 2, WFText::_('WF_PROFILES_AREA_BACKEND'));
+                $options = array(
+                    1 => WFText::_('WF_PROFILES_AREA_FRONTEND'),
+                    2 => WFText::_('WF_PROFILES_AREA_BACKEND')      
+                );
+                
+                $lists['area'] = '';
+                
+                foreach($options as $value => $text) {
+                    $checked = '';
+                    
+                    if (!isset($row->area) || empty($row->area) || in_array($value, explode(',', $row->area))) {
+                        $checked = ' checked="checked"';
+                    }
+                    
+                    $lists['area'] .= '<label class="checkbox inline"><input type="checkbox" name="area[]" value="' . $value . '"'. $checked .' />' . $text . '</label>'; 
+                }
 
-                $lists['area'] = JHTML::_('select.genericlist', $options, 'area', 'class="inputbox levels" size="1"', 'value', 'text', $row->area);
+                // device
+                $options = array(
+                    'desktop'   => WFText::_('WF_PROFILES_DEVICE_DESKTOP'),
+                    'tablet'    => WFText::_('WF_PROFILES_DEVICE_TABLET'),
+                    'phone'    => WFText::_('WF_PROFILES_DEVICE_PHONE')
+                );
+                
+                $lists['device'] = '<div class="">';
+                
+                foreach($options as $value => $text) {
+                    $checked = '';
+                    
+                    if (!isset($row->device) || empty($row->device) || in_array($value, explode(',', $row->device))) {
+                        $checked = ' checked="checked"';
+                    }
+                    
+                    $lists['device'] .= '<label class="checkbox inline"><input type="checkbox" name="device[]" value="' . $value . '"'. $checked .' />' . $text . '</label>'; 
+                }
+                
+                $lists['device'] .= '</div>';
 
                 // user types from profile
                 $query = $db->getQuery(true);
@@ -396,7 +467,7 @@ class WFViewProfiles extends JView {
 
                 foreach ($options as $option) {
                     $checked = in_array($option->value, explode(',', $row->types)) ? ' checked="checked"' : '';
-                    $lists['usergroups'] .= '<li><input type="checkbox" name="usergroups[]" value="' . $option->value . '"' . $checked . ' /><label>' . $option->text . '</label></li>';
+                    $lists['usergroups'] .= '<li><input type="checkbox" name="usergroups[]" value="' . $option->value . '"' . $checked . ' /><label class="checkbox">' . $option->text . '</label></li>';
                 }
 
                 $lists['usergroups'] .= '</ul>';
@@ -447,7 +518,7 @@ class WFViewProfiles extends JView {
                     $files = JFolder::files($theme, 'ui([\w\.]*)\.css$');
 
                     foreach ($files as $file) {
-                        $this->document->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/tiny_mce/themes/advanced/skins/' . basename($theme) . '/' . $file);
+                        $this->addStyleSheet(JURI::root(true) . '/components/com_jce/editor/tiny_mce/themes/advanced/skins/' . basename($theme) . '/' . $file);
                     }
                 }
 
@@ -460,7 +531,8 @@ class WFViewProfiles extends JView {
 
                 $options = WFToolsHelper::getOptions($params);
 
-                $this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Profiles.init(' . json_encode($options) . ')});');
+                //$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Profiles.init(' . json_encode($options) . ')});');
+                $this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Profiles.init(' . json_encode($options) . ')});');
 
                 // set toolbar
                 if ($row->id) {
@@ -470,8 +542,8 @@ class WFViewProfiles extends JView {
                 }
 
                 // set buttons
-                WFToolbarHelper::save();
                 WFToolbarHelper::apply();
+                WFToolbarHelper::save();
                 WFToolbarHelper::cancel('cancelEdit', 'Close');
                 WFToolbarHelper::help('profiles.edit');
 

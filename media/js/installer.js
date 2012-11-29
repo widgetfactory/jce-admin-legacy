@@ -8,22 +8,57 @@
  * other free or open source software licenses.
  */
 (function($) {
+    Joomla.submitbutton = submitbutton = function(button) {		
+        try {
+            Joomla.submitform(button);
+        } catch(e) {
+            submitform(button);
+        }
+    };
+    
     $.jce.Installer = {
         init : function(options) {
-            // Tabs
-            $('#tabs').tabs();
-
-            $('button#install_button').button({
-                icons : {
-                    primary : 'icon-install'
-                }
+            
+            $(":file").upload(options);
+            
+            if ($('body').hasClass('ui-bootstrap')) {
+                // Tabs
+                $('#tabs ul li a').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+            } else {
+                $('#tabs').tabs();
+                
+                $('button#upload_button').button({
+                    icons : {
+                        primary : 'icon-install'
+                    }
+                });
+                
+                $('#upload_button_container button').button({
+                    icons : {
+                        primary : 'icon-browse'
+                    }
+                });
+            }
+            
+            var n = $('#tabs-plugins, #tabs-extensions, #tabs-languages, #tabs-related').find('input[type="checkbox"]');
+            
+            $(n).click(function() {               
+                $('input[name="boxchecked"]').val($(n).filter(':checked').length); 
             });
 
-            $('button.install_uninstall').button({
-                icons : {
-                    primary : 'icon-remove'
-                }
-            }).click( function(e) {
+            $('#upload_button').click( function(e) {
+                //if ($('div#tabs input:checkbox:checked').length) {
+                $(this).addClass('loading');
+                $('input[name="task"]').val('install');
+                $('form[name="adminForm"]').submit();
+                //}
+                e.preventDefault();
+            });
+
+            $('button.install_uninstall').click( function(e) {
                 if ($('div#tabs input:checkbox:checked').length) {
                     $(this).addClass('ui-state-loading');
                     $('input[name="task"]').val('remove');
@@ -31,7 +66,6 @@
                 }
                 e.preventDefault();
             });
-
         }
     };
 })(jQuery);

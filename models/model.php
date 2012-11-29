@@ -11,16 +11,16 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.application.component.model');
+require_once(dirname(dirname(__FILE__)) . '/classes/model.php');
 
-class WFModel extends JModel {
+class WFModel extends WFModelBase {
 
     public static function authorize($task) {
         $user = JFactory::getUser();
-        
+
         // Joomla! 1.7+
         if (method_exists('JUser', 'getAuthorisedViewLevels')) {
-            $action = ($task == 'admin' || $task == 'manage') ? 'core.' . $task : 'jce.' . $task; 
+            $action = ($task == 'admin' || $task == 'manage') ? 'core.' . $task : 'jce.' . $task;
             if (!$user->authorise($action, 'com_jce')) {
                 return false;
             }
@@ -52,7 +52,7 @@ class WFModel extends JModel {
      */
     public function getVersion() {
         $xml = WFXMLHelper::parseInstallManifest(JPATH_ADMINISTRATOR . '/components/com_jce/jce.xml');
-		
+
         // return cleaned version number or date
         $version = preg_replace('/[^0-9a-z]/i', '', $xml['version']);
         if (!$version) {
@@ -100,18 +100,30 @@ class WFModel extends JModel {
     }
 
     public function getBrowserLink($element = null, $filter = '') {
-        require_once(JPATH_SITE . '/components/com_jce/editor/libraries/classes/token.php');
+        // load base classes
+        require_once(JPATH_ADMINISTRATOR . '/components/com_jce/includes/base.php');
 
-        $token = WFToken::getToken();
+        // set $url as empty string
+        $url = '';
 
-        $url = 'index.php?option=com_jce&view=editor&layout=plugin&plugin=browser&standalone=1&' . $token . '=1';
+        wfimport('editor.libraries.classes.editor');
+        wfimport('editor.libraries.classes.token');
+        
+        $wf = WFEditor::getInstance();
 
-        if ($element) {
-            $url .= '&element=' . $element;
-        }
+        // cehck teh current user is in a profile
+        if ($wf->getProfile('browser')) {
+            $token = WFToken::getToken();
 
-        if ($filter) {
-            $url .= '&filter=' . $filter;
+            $url = 'index.php?option=com_jce&view=editor&layout=plugin&plugin=browser&standalone=1&' . $token . '=1';
+
+            if ($element) {
+                $url .= '&element=' . $element;
+            }
+
+            if ($filter) {
+                $url .= '&filter=' . $filter;
+            }
         }
 
         return $url;

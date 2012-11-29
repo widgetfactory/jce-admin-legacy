@@ -11,15 +11,15 @@
 
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.application.component.view');
+wfimport('admin.classes.view');
 
-class WFViewUpdates extends JView
+class WFViewUpdates extends WFView
 {
     function display($tpl = null)
     {
         $model =$this->getModel();
 		
-		$this->document->addScript('components/com_jce/media/js/update.js?version=' . $model->getVersion());
+		$this->addScript('components/com_jce/media/js/update.js?version=' . $model->getVersion());
 		
 		$options = array(
 			'language' => array(
@@ -41,7 +41,10 @@ class WFViewUpdates extends JView
 		
 		$options  = json_encode($options);
 		
-		$this->document->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Update.init('.$options.');});');
+		$this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Update.init('.$options.');});');
+                
+                // load styles
+                $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/updates.css');
         
         parent::display($tpl);
     }

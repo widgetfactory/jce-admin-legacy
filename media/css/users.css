@@ -1,0 +1,26 @@
+html {
+    overflow: auto;
+}
+body {
+    height : 500px;
+}
+
+#jce #users-list th:first-child {
+    width : 20px;
+    text-align: center;
+}
+
+#jce #users-list td:first-child {
+    text-align: center;
+}
+
+#jce > div.container + div.btn-group {
+    position : absolute;
+    right : 10px;
+    bottom : 0;
+}
+
+#jce > div.container {
+    height : 420px;
+    overflow: auto;
+}

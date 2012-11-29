@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 ?>
-<table cellspacing="1">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th width="20" align="center">&nbsp;</th>
@@ -27,7 +27,7 @@ defined('_JEXEC') or die('RESTRICTED');
 	foreach ($this->languages as $language) : ?>
 		<tr<?php echo $language->style;?>>
 			<td width="20" align="center"><input type="checkbox" name="lid[]" value="<?php echo $language->language;?>" <?php echo $language->cbd;?>/></td>
-			<td><span class="bold"><?php echo $language->name; ?></span></td>
+			<td><?php echo $language->name; ?></td>
 			<td align="center"><?php echo @$language->version != '' ? $language->version : '&nbsp;'; ?></td>
 			<td align="center"><?php echo @$language->creationdate != '' ? $language->creationdate : '&nbsp;'; ?></td>
 			<td>

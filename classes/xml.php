@@ -13,6 +13,10 @@ defined('_JEXEC') or die('RESTRICTED');
 
 class WFXMLElement extends SimpleXMLElement {
 
+    public static function getXML($data) {
+        return self::load($data);
+    }
+    
     /**
      * Reads a XML file.
      *
@@ -20,7 +24,7 @@ class WFXMLElement extends SimpleXMLElement {
      *
      * @return mixed WFXMLElement on success | false on error.
      */
-    public static function getXML($data) {
+    public static function load($data) {
         // Disable libxml errors and allow to fetch error information as needed
         libxml_use_internal_errors(true);
 

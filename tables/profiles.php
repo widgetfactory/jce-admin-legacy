@@ -46,7 +46,7 @@ class WFTableProfiles extends JTable
 	 *
 	 * @var int
 	 */
-	var $area = 0;
+	var $area = null;
         
         /**
 	 *

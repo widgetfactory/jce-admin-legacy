@@ -31,6 +31,10 @@ class WFElementText extends WFElement {
         $attributes = array();
 
         foreach ($node->attributes() as $k => $v) {
+            if ($k === 'parent') {
+                continue;
+            }
+            
             if ($v != '') {
                 $attributes[$k] = (string) $v;
             }
@@ -62,7 +66,15 @@ class WFElementText extends WFElement {
         
         // pattern data attribute for editable select input box
         if ((string) $node->attributes()->parent) {
-            $attributes['data-parent'] = preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name) . (string) $node->attributes()->parent;
+            $prefix = preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name);
+            
+            $items = array();
+            
+            foreach(explode(';', (string) $node->attributes()->parent) as $item) {
+                $items[] = $prefix . $item;
+            }
+            
+            $attributes['data-parent'] = implode(';', $items);
         }
 
         $html .= '<input';

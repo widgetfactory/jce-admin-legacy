@@ -11,13 +11,14 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
+wfimport('admin.classes.controller');
 wfimport('admin.classes.error');
 wfimport('admin.helpers.xml');
 wfimport('admin.helpers.extension');
 
-class WFControllerEditor extends JController {
+class WFControllerEditor extends WFControllerBase {
 
-    function execute($task) {
+    public function execute($task) {
         // Load language
         $language = JFactory::getLanguage();
         $language->load('com_jce', JPATH_ADMINISTRATOR);
@@ -27,25 +28,18 @@ class WFControllerEditor extends JController {
 
         if ($layout) {
             switch ($layout) {
-                case 'editor':                    
+                case 'editor':
                     if ($task == 'pack' || $task == 'loadlanguages') {
-                        jimport('joomla.application.component.model');
+                        wfimport('admin.models.editor');
+                        $model = new WFModelEditor();
 
-                        JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
-
-                        require_once(WF_EDITOR_CLASSES . '/editor.php');
-
-                        $model = JModel::getInstance('editor', 'WFModel');
-                        
                         if ($task == 'loadlanguages') {
-                            if (method_exists($model, 'loadLanguages')) {
-                                $model->loadLanguages(array(), array(), '(^dlg$|_dlg$)', true);
-                            }
+                            $model->loadLanguages();
                         } else {
                             $model->pack();
-                        } 
+                        }
                     }
-                    
+
                     break;
                 case 'theme':
                     $theme = JRequest::getWord('theme');
@@ -59,21 +53,9 @@ class WFControllerEditor extends JController {
                     break;
                 case 'plugin':
                     $file = basename(JRequest::getCmd('file', $plugin));
-                    
-                    // external plugin folder
-                    $path = JPATH_PLUGINS . '/jce/' . $plugin;
-                    
-                    // check external path first
-                    if (is_dir($path)) {
-                        // check enabled
-                        if (JPluginHelper::isEnabled('jce', $plugin) === false) {
-                            $path = WF_EDITOR_PLUGINS . '/' . $plugin;
-                        }
-                    } else {
-                        $path = WF_EDITOR_PLUGINS . '/' . $plugin;
-                    }
+                    $path = WF_EDITOR_PLUGINS . '/' . $plugin;
 
-                    if (is_dir($path) && file_exists($path . '/' . $file . '.php')) {
+                    if (is_dir($path) && file_exists($path . '/' . $file . '.php')) {                        
                         include_once($path . '/' . $file . '.php');
                     } else {
                         throw new InvalidArgumentException('File ' . $file . ' not found!');

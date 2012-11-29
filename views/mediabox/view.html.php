@@ -11,9 +11,9 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.application.component.view');
+wfimport('admin.classes.view');
 
-class WFViewMediabox extends JView {
+class WFViewMediabox extends WFView {
 
     function getParams($data) {
 
@@ -25,9 +25,8 @@ class WFViewMediabox extends JView {
             $xml = JPATH_PLUGINS . '/system/jcemediabox/jcemediabox.xml';
 
             $params = new WFParameter($data, $xml, '', array('control' => 'config:fields:fieldset'));
-            
             $params->addElementPath(JPATH_PLUGINS . '/system/jcemediabox/elements');
-
+            
             $groups = array();
             $array  = array();
 
@@ -68,8 +67,8 @@ class WFViewMediabox extends JView {
         $this->assignRef('params', $params);
         $this->assignRef('client', $client);
 
-        $this->document->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
-        $this->document->addStyleSheet('components/com_jce/media/css/colorpicker.css?version=' . $model->getVersion());
+        $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
+        $this->addStyleSheet('components/com_jce/media/css/colorpicker.css?version=' . $model->getVersion());
 
         $options = array(
             'template_colors' => WFToolsHelper::getTemplateColors(),
@@ -86,10 +85,10 @@ class WFViewMediabox extends JView {
             )
         );
 
-        $this->document->addScriptDeclaration('jQuery(document).ready(function($){$("input.color").colorpicker(' . json_encode($options) . ');});');
+        $this->addScriptDeclaration('jQuery(document).ready(function($){$("input.color").colorpicker(' . json_encode($options) . ');});');
 
-        WFToolbarHelper::save();
         WFToolbarHelper::apply();
+        WFToolbarHelper::save();
         WFToolbarHelper::help('mediabox.config');
 
         parent::display($tpl);

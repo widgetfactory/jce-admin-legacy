@@ -19,7 +19,7 @@ class WFModelPlugins extends WFModel {
     public function getCommands() {
         //$xml  = JFactory::getXMLParser('Simple');
         $file = dirname(__FILE__) . '/commands.xml';
-        $xml = WFXMLElement::getXML($file);
+        $xml = WFXMLElement::load($file);
 
         $commands = array();
 
@@ -52,7 +52,7 @@ class WFModelPlugins extends WFModel {
         $plugins = array();
 
         // get core xml
-        $xml = WFXMLElement::getXML(dirname(__FILE__) . '/plugins.xml');
+        $xml = WFXMLElement::load(dirname(__FILE__) . '/plugins.xml');
 
         if ($xml) {
 
@@ -91,7 +91,7 @@ class WFModelPlugins extends WFModel {
             $file = $folder . '/' . $name . '.xml';
 
             if (is_file($file)) {
-                $xml = WFXMLElement::getXML($folder . '/' . $name . '.xml');
+                $xml = WFXMLElement::load($folder . '/' . $name . '.xml');
 
                 if ($xml) {
                     $params = $xml->params;
@@ -153,7 +153,7 @@ class WFModelPlugins extends WFModel {
             $object->description = '';
             $object->id = $object->folder . '.' . $object->name;
 
-            $xml = WFXMLElement::getXML($file);
+            $xml = WFXMLElement::load($file);
 
             if ($xml) {
                 $plugins = (string) $xml->plugins;
@@ -215,7 +215,7 @@ class WFModelPlugins extends WFModel {
             $profile->plugins = implode(',', $plugins);
 
             if ($plugin->icon) {
-                if (!in_array($plugin, preg_split('/[;,]+/', $profile->rows))) {
+                if (in_array($plugin->name, preg_split('/[;,]+/', $profile->rows)) === false) {
                     // get rows as array	
                     $rows = explode(';', $profile->rows);
                     // get key (row number)
@@ -231,7 +231,47 @@ class WFModelPlugins extends WFModel {
                 }
 
                 if (!$profile->store()) {
-                    return false;
+                    JError::raiseWarning(100, 'WF_INSTALLER_PLUGIN_PROFILE_ERROR');
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static function removeFromProfile($id, $plugin) {
+        JTable::addIncludePath(dirname(dirname(__FILE__)) . '/tables');
+        // Add to Default Group
+        $profile = JTable::getInstance('profiles', 'WFTable');
+
+        if ($profile->load($id)) {
+            // Add to plugins list
+            $plugins = explode(',', $profile->plugins);
+
+            if (!in_array($plugin->name, $plugins)) {
+                $plugins[] = $plugin->name;
+            }
+
+            $profile->plugins = implode(',', $plugins);
+
+            if ($plugin->icon) {
+                // check if its in the profile
+                if (in_array($plugin->name, preg_split('/[;,]+/', $profile->rows))) {
+                    $lists = array();
+                    foreach (explode(';', $profile->rows) as $list) {
+                        $icons = explode(',', $list);
+                        foreach ($icons as $k => $v) {
+                            if ($plugin->name == $v) {
+                                unset($icons[$k]);
+                            }
+                        }
+                        $lists[] = implode(',', $icons);
+                    }
+                    $profile->rows = implode(';', $lists);
+                }
+
+                if (!$profile->store()) {
+                    JError::raiseWarning(100, JText::sprintf('WF_INSTALLER_REMOVE_FROM_GROUP_ERROR', $plugin->name));
                 }
             }
         }
@@ -240,66 +280,70 @@ class WFModelPlugins extends WFModel {
     }
 
     /**
-     * Enable the installed plugin and add it to the editor toolbar
-     * @param object $plugin Plugin object
-     * @return boolean
+     * Add index.html files to each folder
+     * @access private
      */
-    public static function installPostflight($name, $installer) {
+    private static function addIndexfiles($path) {
+        jimport('joomla.filesystem.folder');
+        jimport('joomla.filesystem.file');
+
+        // get the base file
+        $file = dirname(dirname(__FILE__)) . '/index.html';
+
+        if (is_file($file) && is_dir($path)) {
+
+            JFile::copy($file, $path . '/' . basename($file));
+
+            // admin component
+            $folders = JFolder::folders($path, '.', true, true);
+
+            foreach ($folders as $folder) {
+                JFile::copy($file, $folder . '/' . basename($file));
+            }
+        }
+    }
+
+    public static function postInstall($route, $plugin, $installer) {
         $db = JFactory::getDBO();
 
         jimport('joomla.filesystem.folder');
 
-        $plugin = JTable::getInstance('extension');
-        // find the plugin
-        $id = $plugin->find(array('type' => 'plugin', 'folder' => 'jce', 'element' => $name));
-
         // load the plugin and enable
-        if ($id) {
-            $plugin->load($id);
+        if (isset($plugin->row) && $plugin->row > 0) {
+            $query = $db->getQuery(true);
 
-            // plugin is installed
-            if ($plugin->extension_id) {
-                $plugin->publish(1);
+            if (is_object($query)) {
+                $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote('Default') . ' OR id = 1');
+            } else {
+                $query = 'SELECT id'
+                        . ' FROM #__wf_profiles'
+                        . ' WHERE name = ' . $db->Quote('Default') . ' OR id = 1';
+            }
 
-                $legacy = JPATH_SITE . '/components/com_jce/editor/tiny_mce/plugins/' . $name;
+            $db->setQuery($query);
+            $id = $db->loadResult();
 
-                // remove old version
-                if (JFolder::exists($legacy)) {
-                    @JFolder::delete($legacy);
-                }
-
-                // get manifest from installer
-                $xml = $installer->manifest;
-
-                if ($xml) {
-                    $plugin->row    = (string) $xml->attributes()->row;
-                    $plugin->icon   = (string) $xml->icon;
-                    $plugin->name   = (string) $plugin->element;
-
-                    // Install plugin install default profile layout if a row is set
-                    if (is_numeric($plugin->row) && (int) $plugin->row) {
-                        $query = $db->getQuery(true);
-
-                        if (is_object($query)) {
-                            $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote('Default'));
-                        } else {
-                            $query = 'SELECT id'
-                            . ' FROM #__wf_profiles'
-                            . ' WHERE name = ' . $db->Quote('Default');
-                        }
-
-                        $db->setQuery($query);
-                        $id = $db->loadResult();
-
-                        if ($id) {
-                            return self::addToProfile($id, $plugin);
-                        }
-                    }
+            if ($id) {
+                if ($route == 'install') {
+                    // add to profile
+                    self::addToProfile($id, $plugin);
+                } else {
+                    // remove from profile
+                    self::removeFromProfile($id, $plugin);
                 }
             }
         }
 
-        return false;
+        if ($route == 'install') {
+            if ($plugin->type == 'extension') {
+                $plugin->path = $plugin->path . '/' . $plugin->name;
+            }
+
+            // add index.html files
+            self::addIndexfiles($plugin->path);
+        }
+
+        return true;
     }
 
 }

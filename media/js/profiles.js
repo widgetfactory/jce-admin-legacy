@@ -8,10 +8,6 @@
  * other free or open source software licenses.
  */
 (function($) {
-    if (typeof Joomla === 'undefined') {
-        Joomla = {};
-    }
-	
     Joomla.submitbutton = submitbutton = function(button) {
         // Cancel button
         if (button == "cancelEdit") {
@@ -34,6 +30,13 @@
         }
     };
     
+    /*$.support.multipleBackground = function() {
+        var div = document.createElement('div');
+        
+        $(div).css('background:url(https://),url(https://),red url(https://)');
+        return (/(url\s*\(.*?){3}/).test(div.background);
+    };*/
+    
     // Create Profiles object
     $.jce.Profiles = {
         
@@ -43,60 +46,56 @@
             var self = this;
             
             $.extend(true, this.options, options);
-
-            // Tabs
-            $('#tabs').tabs();
             
-            $('input.checkbox-list-toggle-all').click(function() {                
-                $('input', this.parentNode.parentNode).prop('checked', this.checked);
+            var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
+            
+            if ($('body').hasClass('ui-bootstrap')) {  
+                // Tabs
+                $('#tabs ul.nav-tabs > li > a').click(function (e) {                    
+                    $(this).tab('show');
+                    e.preventDefault();
+                });
+                
+                // Editor Tabs
+                $("#tabs-editor > ul.nav-tabs li a:first").tab('show');
+                // Plugin tabs
+                $("#tabs-plugins > ul.nav-tabs li a:first").tab('show');
+                
+            } else {
+                $('#tabs').tabs();
+                
+                // users list
+                $('a#users-add').button({
+                    icons : {
+                        primary : 'ui-icon-person'
+                    }
+                });
+                
+                $("#tabs-editor").tabs({
+                    selected : -1
+                }).addClass('ui-tabs-vertical ui-helper-clearfix');
+                
+                $("#tabs-plugins").tabs({
+                    'activate' : $('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first', '#tabs-plugins').index()
+                }).addClass('ui-tabs-vertical ui-helper-clearfix');
+                
+                // make vertical tabs
+                $("#tabs-editor ul.ui-tabs-nav > li, #tabs-plugins ul.ui-tabs-nav > li").removeClass('ui-corner-top').addClass('ui-corner-' + dir);
+            }
+
+            $('input.checkbox-list-toggle-all').click(function() {                                                
+                $('input[type="checkbox"]', '#user-groups').prop('checked', this.checked).trigger('check');
             });
             
             // Components select
             $('input[name="components-select"]').click( function() {
-                $('input[type="checkbox"]', '#components').prop('disabled', (this.value == 'all')).filter(':checked').prop('checked', false);
-            });
-
-            // users list
-            $('a#users-add').button({
-                icons : {
-                    primary : 'icon-add'
-                }
-            });
-
-            $('a#users-remove').button({
-                icons : {
-                    primary : 'icon-remove'
-                }
-            }).click( function(e) {
-                e.preventDefault();
-                $('select#users').children(':selected').remove();
-                return false;
-            });
-
-            $('a#layout-legend').button({
-                icons : {
-                    primary : 'icon-legend'
-                }
+                $('input[type="checkbox"]', '#components').prop('disabled', (this.value == 'all')).trigger('disable').filter(':checked').prop('checked', false).trigger('check');
             });
 
             // Editable Selects
 
             $( "select.editable, select.combobox" ).combobox(options.combobox);
-
-            // Editor Tabs
-            $("#tabs-editor").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
-
-            $("#tabs-plugins").tabs({
-                selected : -1
-            }).addClass('ui-tabs-vertical ui-helper-clearfix');
             
-            var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
-            
-            // make vertical tabs
-            $("#tabs-editor ul.ui-tabs-nav > li, #tabs-plugins ul.ui-tabs-nav > li").removeClass('ui-corner-top').addClass('ui-corner-' + dir);
-            
-            $("#tabs-plugins").tabs('select', $('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first', '#tabs-plugins').index());
-
             // Color Picker
             $('input.color').colorpicker(options.colorpicker);
 
@@ -136,15 +135,6 @@
                     self.setRows();
                 }
             });
-
-            $('input.autocomplete').each( function() {
-                var el = this, v = $(el).attr('placeholder') || '';
-                $(el).removeAttr('placeholder');
-                $(el).autocomplete({
-                    source: v.split(',') || []
-                });
-            });
-
 
             $('#paramseditorwidth').change( function() {
                 var v = $(this).val() || 600, s = v + 'px';
@@ -293,6 +283,18 @@
                     return v;
                 });
             });
+            
+            /*if ($.support.multipleBackground) {
+                $('#jce').addClass('multiplebg');          
+            } else {
+                // fix for CSS3 selectors
+                $('span.mceSplitButton span.mceIcon').not('span.mceIconLayer').after('<span/>');
+            }*/
+            
+        // custom checkbox
+        //$('input[type="checkbox"]').checkbox();
+        // custom radio
+        //$('input[type="radio"]').radio();
         },
         
         validate : function() {
@@ -300,21 +302,17 @@
         	
             $(':input.required').each(function() {
                 if ($(this).val() === '') {
-                    required.push('<li>' + $('label[for="' + this.id + '"]').html() + '</li>');
+                    var parent = $(this).parents('div.tab-pane').get(0);
+                    
+                    required.push("\n" + $('#tabs ul li a[href=#' + parent.id + ']').html() + ' - ' + $.trim($('label[for="' + this.id + '"]').html()));
                 }
             });
         	
             if (required.length) {
-                var msg = '<p>' + $.jce.options.labels.required + '</p>';
-                msg += '<ul>';
-                msg += required.join('');
-                msg += '</ul>';
+                var msg = $.jce.options.labels.required;
+                msg += required.join(',');
         		
-                $.jce.createDialog({
-                    type  : 'alert',
-                    text  : msg,
-                    modal : true
-                });
+                alert(msg);
       		
                 return false;
             }
@@ -353,7 +351,11 @@
                     self.setRows();
                     self.setPlugins();
                 },
-                placeholder	: 'sortableListItem ui-state-highlight'
+                start : function(event, ui) {
+                    $(ui.placeholder).width($(ui.item).width());
+                },
+                placeholder : 'sortableListItem sortable-highlight',
+                opacity : 0.8
             }).disableSelection();
             
             $('span.sortableOption').hover(function() {
@@ -361,9 +363,10 @@
             }, function() {
                 $(this).empty();
             }).click(function() {
-                var $parent = $(this).parent();
-                var $target = $('ul.sortableList', '#profileLayoutTable').not($parent.parent());
-                $parent.hide().appendTo($target).show('slow');
+                var $parent     = $(this).parents('li.sortableListItem').first();
+                var $target     = $('ul.sortableList', '#profileLayoutTable').not($parent.parent());
+                
+                $parent.appendTo($target);
             	
                 $(this).empty();
             	
@@ -371,8 +374,8 @@
                 self.setPlugins();
             });
 
-            $('div.sortableRow').sortable({
-                connectWith	: 'div.sortableRow',
+            $('span.sortableRow').sortable({
+                connectWith	: 'span.sortableRow',
                 tolerance	: 'pointer',
                 update: function(event, ui) {
                     self.setRows();
@@ -383,18 +386,9 @@
                 start : function(event, ui) {
                     $(ui.placeholder).width($(ui.item).width());
                 },
-                placeholder	: 'sortableRowItem ui-state-highlight'
+                opacity : 0.8,
+                placeholder	: 'sortableRowItem sortable-highlight'
             }).disableSelection();
-            
-            if (!$.support.leadingWhitespace) {
-                // fix for CSS3 selectors
-                
-                $('.mceSplitButton .mceIcon').not('.mceIconLayer').each(function() {                   
-                    $('<span/>').insertAfter(this);
-                });              
-            } else {
-                $('#jce').addClass('multiplebg');
-            }
             
             this._fixLayout();
         },
@@ -402,7 +396,7 @@
         setRows : function() {
             var rows = [];
 
-            $('div.sortableRow:has(span)', '#toolbar_container').each( function() {
+            $('span.sortableRow:has(span)', '#toolbar_container').each( function() {
                 rows.push($.map($('span.sortableRowItem', this), function(el) {
                     return $(el).data('name');
                 }).join(','));
@@ -427,7 +421,7 @@
         setPlugins: function() {
             var self = this, plugins = [];
 
-            $('div.sortableRow span.plugin', '#toolbar_container').each( function() {
+            $('span.sortableRow span.plugin', '#toolbar_container').each( function() {
                 plugins.push($(this).data('name'));
             });
 
@@ -442,39 +436,21 @@
         },
 
         setParams : function(plugins) {
-            var $tabs = $('div#tabs-plugins');
+            var $tabs = $('div#tabs-plugins > ul.nav.nav-tabs > li');
 
-            $('div.ui-tabs-panel', 'div#tabs-plugins').each( function(i) {
+            $tabs.removeClass('tab-disabled ui-state-disabled').removeClass('active ui-tabs-active ui-state-active').each( function(i) {
                 var name = $(this).data('name');
 
                 var s = $.inArray(name, plugins) != -1;
                 // disable forms in tab panel
-                $(':input[name]', this).prop('disabled', !s);
+                $('input[name], select[name]', this).prop('disabled', !s);
 
-                if (!s) {
-                    if ($tabs.tabs('option', 'selected') == i) {
-                        var n = 0, x = $tabs.tabs('option', 'disabled');
-
-                        while (i == n) {
-                            n++;
-
-                            if ($.inArray(n, x) != -1) {
-                                n++;
-                            }
-                        }
-
-                        // select another tab if current tab is this one
-                        $tabs.tabs('select', n);
-                    }
-
-                    // disable the tabs
-                    $tabs.tabs('disable', i);
-
-                } else {
-                    $tabs.tabs('enable', i);
+                if (!s) {                    
+                    $(this).addClass('tab-disabled');
                 }
             });
-
+            
+            $tabs.not('.tab-disabled').first().addClass('active ui-tabs-active ui-state-active');
         }
 
     };

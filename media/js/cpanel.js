@@ -32,23 +32,35 @@
                         $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="updates"><a title="' + options.labels.updates + '" class="dialog updates" href="index.php?option=com_jce&amp;view=updates&amp;tmpl=component">' + options.labels.updates_available + '</a></span></li>');
 
                         $('a.dialog.updates', 'div#jce ul.adminformlist').click( function(e) {
-                            $.jce.createDialog({
-                            	width	: 760,
-                            	height	: 540,
+                            $.jce.createDialog(e, {
                                 src 	: $(this).attr('href'),
-                                options : $(this).data('options'),
-                                modal	: true,
-                                type	: 'updates',
-                                title	: $(this).attr('title')
+                                options : {
+                                    'width'   : 780,
+                                    'height'  : 560
+                                }
                             });
                             e.preventDefault();
                         });
-
                     }
                 });
 
             }
-
+            // Open config/preferences dialog
+            $('#newsfeed_enable').click(function(e) {
+                $('#toolbar-options button').click(); 
+                
+                $('#toolbar-popup-options a, #toolbar-config a').each(function() {
+                    $.jce.createDialog(this, {
+                        src 	: $(this).attr('href'),
+                        options : {
+                            'width'   : 780,
+                            'height'  : 560
+                        }
+                    });
+                });
+                
+                e.preventDefault();
+            });
         }
     };
 })(jQuery);

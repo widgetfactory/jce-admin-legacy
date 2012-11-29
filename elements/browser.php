@@ -51,6 +51,19 @@ class WFElementBrowser extends WFElement {
         $attributes['type'] = 'text';
         $attributes['name'] = $control;
         $attributes['id'] = preg_replace('#[^a-z0-9_-]#i', '', $control_name . $name);
+        
+        // pattern data attribute for editable select input box
+        if ((string) $node->attributes()->parent) {
+            $prefix = preg_replace(array('#^params#', '#([^\w]+)#'), '', $control_name);
+            
+            $items = array();
+            
+            foreach(explode(';', (string) $node->attributes()->parent) as $item) {
+                $items[] = $prefix . $item;
+            }
+            
+            $attributes['data-parent'] = implode(';', $items);
+        }
 
         $filter = isset($attributes['data-filter']) ? $attributes['data-filter'] : '';
 
@@ -65,15 +78,16 @@ class WFElementBrowser extends WFElement {
         $html .= ' />';
 
         $options = array(
-            'width' => 765,
-            'height' => 480,
-            'modal' => true,
-            'id' => $attributes['id'] . '_browser'
+            'width'     => 780,
+            'height'    => 560,
+            'modal'     => true,
+            'id'        => $attributes['id'] . '_browser'
         );
+        
+        wfimport('admin.models.model');
+        $model = new WFModel();
 
-        $model = JModel::getInstance('WFModel');
-
-        $html .= '<a href="' . $model->getBrowserLink($attributes['id'], $filter) . '" class="dialog browser" target="_blank" data-options=\'' . json_encode($options) . '\' title="' . WFText::_('WF_BROWSER_TITLE') . '"><span class="browser"></span></a>';
+        $html .= '<a href="' . $model->getBrowserLink($attributes['id'], $filter) . '" class="dialog browser" target="_blank" data-options="' . str_replace('"', "'", json_encode($options)) . '" title="' . WFText::_('WF_BROWSER_TITLE') . '"><span class="browser"></span></a>';
 
         return $html;
     }

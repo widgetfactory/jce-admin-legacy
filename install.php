@@ -51,7 +51,7 @@ abstract class WFInstall {
                             $table->delete((int) $menuid);
                         }
                     }
-                    
+
                     // Rebuild the whole tree
                     $table->rebuild();
                 }
@@ -352,14 +352,13 @@ abstract class WFInstall {
                                     }
                                 }
                             }
-
                             $icons[] = $icon;
                         }
                         $rows[] = implode(',', $icons);
                     }
                     // re-assign rows
                     $row->rows = implode(';', $rows);
-                    
+
                     $names = array('anchor');
                     
                     // add lists
@@ -382,10 +381,10 @@ abstract class WFInstall {
                     }
                     // re-assign plugins
                     $row->plugins = implode(',', $names);
-                    
+
                     // convert params to JSON
                     $params = self::paramsToObject($group->params);
-                    $data   = new StdClass();
+                    $data = new StdClass();
                     
                     // Add lists plugin
                     $buttons = array();
@@ -410,7 +409,7 @@ abstract class WFInstall {
                     if (!empty($buttons)) {
                         $params->lists_buttons = $buttons;
                     }
-
+                    
                     // convert parameters
                     foreach ($params as $key => $value) {
                         $parts = explode('_', $key);
@@ -426,7 +425,7 @@ abstract class WFInstall {
                         if (isset($map[$node])) {
                             $node = $map[$node];
                         }
-                        // convert key to string
+
                         $key = implode('_', $parts);
 
                         if ($value !== '') {
@@ -457,14 +456,8 @@ abstract class WFInstall {
                             }
                         }
                     }
-
                     // re-assign params
                     $row->params = json_encode($data);
-                    
-                    // replace multiple commas with a single one
-                    $row->rows = preg_replace('#,+#', ',', $row->rows);
-                    // fix row separations
-                    $row->rows = str_replace(',;', ';', $row->rows);
 
                     // re-assign other values
                     $row->name = $group->name;
@@ -517,6 +510,8 @@ abstract class WFInstall {
                 } else {
                     // add Blogger profile
                     self::installProfile('Blogger');
+                    // add Mobile profile
+                    self::installProfile('Mobile');
                 }
             } else {
                 return false;
@@ -633,13 +628,13 @@ abstract class WFInstall {
         $query = $db->getQuery(true);
 
         if (is_object($query)) {
-            $query->select('id')->from('#__wf_profiles')->where('name = ' . $db->Quote($name));
+            $query->select('COUNT(id)')->from('#__wf_profiles')->where('name = ' . $db->Quote($name));
         } else {
             $query = 'SELECT COUNT(id) FROM #__wf_profiles WHERE name = ' . $db->Quote($name);
         }
 
         $db->setQuery($query);
-        $id = (int) $db->loadResult();
+        $id = $db->loadResult();
 
         if (!$id) {
             // Blogger
@@ -649,11 +644,20 @@ abstract class WFInstall {
 
             if ($xml) {
                 foreach ($xml->profiles->children() as $profile) {
-                    if ($profile->attributes()->name == 'Blogger') {
+                    if ((string) $profile->attributes()->name == $name) {
                         $row = JTable::getInstance('profiles', 'WFTable');
 
+                        require_once(JPATH_ADMINISTRATOR . '/components/com_jce/models/profiles.php');
+                        $groups = WFModelProfiles::getUserGroups((int) $profile->children('area'));
+
                         foreach ($profile->children() as $item) {
-                            switch ($item->getName()) {
+                            switch ((string) $item->getName()) {
+                                case 'types':
+                                    $row->types = implode(',', $groups);
+                                    break;
+                                case 'area':
+                                    $row->area = (int) $item;
+                                    break;
                                 case 'rows':
                                     $row->rows = (string) $item;
                                     break;
@@ -715,7 +719,11 @@ abstract class WFInstall {
             $site . '/editor/tiny_mce/plugins/table/langs',
             $site . '/editor/tiny_mce/plugins/xhtmlxtras/langs',
             // remove paste folder
-            $site . '/editor/tiny_mce/plugins/paste'
+            $site . '/editor/tiny_mce/plugins/paste',
+            // remove jquery
+            $site . '/editor/libraries/js/jquery',
+            // remove browser extension
+            $site . '/editor/extensions/browser'
         );
 
         foreach ($folders as $folder) {
@@ -738,10 +746,10 @@ abstract class WFInstall {
             $admin . '/media/css/help.css',
             $admin . '/media/css/select.css',
             $admin . '/media/css/tips.css',
-            // remove installer class
-            $admin . '/classes/installer.php',
             // remove legend model
             $admin . '/models/legend.php',
+            // remove extension adapter
+            $admin . '/adapters/extension.php',
             // remove error class from site (moved to admin)
             $site . '/editor/libraries/classes/error.php',
             // remove popup file
@@ -757,7 +765,9 @@ abstract class WFInstall {
             $site . '/editor/extensions/browser/js/search.js',
             $site . '/editor/extensions/browser/search.php',
             // remove dilg language file from theme (incorporated into main dlg file)
-            $site . '/editor/tiny_mce/themes/advanced/langs/en_dlg.js'
+            $site . '/editor/tiny_mce/themes/advanced/langs/en_dlg.js',
+            // remove old jquery UI
+            $site . '/editor/libraries/jquery/js/jquery-ui-1.9.0.custom.min.js'
         );
 
         foreach ($files as $file) {
@@ -857,8 +867,13 @@ abstract class WFInstall {
                 }
             }
         }
+
+        if (version_compare($version, '2.3.0beta', '<')) {
+            // add Mobile profile
+            self::installProfile('Mobile');
+        }
         
-        if (version_compare($version, '2.2.9', '<')) {
+        if (version_compare($version, '2.2.9', '<') || version_compare($version, '2.3.0beta3', '<')) {
             $profiles = self::getProfiles();
             $profile = JTable::getInstance('Profiles', 'WFTable');
 
@@ -899,17 +914,6 @@ abstract class WFInstall {
                         $profile->store();
                     }
                 }
-            }
-        }
-
-        // Cleanup JQuery
-        $path = $site . '/editor/libraries/js/jquery';
-        $files = JFolder::files($path, '\.js');
-        $exclude = array('jquery-1.7.2.min.js', 'jquery-ui-1.8.21.custom.min.js', 'jquery-ui-layout.js');
-
-        foreach ($files as $file) {
-            if (in_array(basename($file), $exclude) === false) {
-                @JFile::delete($path . '/' . $file);
             }
         }
 
@@ -996,7 +1000,7 @@ abstract class WFInstall {
             if ($installer->install($source . '/' . $folder)) {
 
                 if (method_exists($installer, 'loadLanguage')) {
-                    $installer->loadLanguage($source . '/' . $folder);
+                    $installer->loadLanguage();
                 }
 
                 if ($installer->message) {
@@ -1028,10 +1032,10 @@ abstract class WFInstall {
                         $module->store();
                     }
                 }
-                
+
                 if ($folder == 'editors') {
                     $manifest = $installer->getPath('manifest');
-                    
+
                     if (basename($manifest) == 'legacy.xml') {
                         // rename legacy.xml to jce.xml
                         JFile::move($installer->getPath('extension_root') . '/' . basename($manifest), $installer->getPath('extension_root') . '/jce.xml');

@@ -11,11 +11,11 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-jimport('joomla.installer.installer');
-jimport('joomla.installer.helper');
-
 // load base model
-require_once(dirname(__FILE__) . '/model.php');
+wfimport('admin.models.model');
+wfimport('admin.classes.installer');
+
+jimport('joomla.installer.helper');
 
 class WFModelInstaller extends WFModel {
 
@@ -30,32 +30,8 @@ class WFModelInstaller extends WFModel {
         $this->setRedirect(JRoute::_('index.php?option=com_jce&client=' . $client, false));
     }
 
-    /**
-     * Get a JCE installer adapter
-     * @param string $name adapter name eg: plugin.
-     * @return $adapter instance
-     */
-    public function getAdapter($name) {
-        // get installer instance
-        $installer = JInstaller::getInstance();
-
-        // Try to load the adapter object
-        require_once(JPATH_COMPONENT . '/adapters/' . strtolower($name) . '.php');
-
-        $class = 'WFInstaller' . ucfirst($name);
-
-        if (!class_exists($class)) {
-            return false;
-        }
-
-        $adapter = new $class($installer);
-        $adapter->parent = $installer;
-
-        return $adapter;
-    }
-
     public function install($package = null) {
-        $mainframe = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!$package) {
             $package = $this->getPackage();
@@ -68,41 +44,37 @@ class WFModelInstaller extends WFModel {
         }
 
         // Get an installer instance
-        $installer = JInstaller::getInstance();
-
-        // Set Adapter
-        $type = $package['type'];
-
-        if (!$type) {
-            $this->setState('message', 'WF_INSTALLER_NO_PACKAGE');
-            return false;
-        }
-
-        $adapter = $this->getAdapter($type);
-        $installer->setAdapter($type, $adapter);
+        $installer = WFInstaller::getInstance();
 
         // Install the package
         if (!$installer->install($package['dir'])) {
             $result = false;
+
+            $app->enqueueMessage(WFText::sprintf('WF_INSTALLER_INSTALL_ERROR'), 'error');
         } else {
             $result = true;
+
+            $app->enqueueMessage(WFText::sprintf('WF_INSTALLER_INSTALL_SUCCESS'));
         }
 
         $this->_result[] = array(
             'name' => $installer->get('name'),
-            'type' => $type,
+            'type' => $package['type'],
             'version' => $installer->get('version'),
-            'result' => $result,
-            'message' => $installer->get('message'),
-            'extension.message' => $installer->get('extension.message')
+            'result' => $result
         );
 
         $this->setState('install.result', $this->_result);
 
+        $this->setState('name', WFText::_($installer->get('name')));
+        $this->setState('message', WFText::_($installer->get('message')));
+        $this->setState('extension.message', $installer->get('extension.message'));
+        $this->setState('result', $result);
+
         // Cleanup the install files
         if (!is_file($package['packagefile'])) {
             $config = JFactory::getConfig();
-            $package['packagefile'] = $config->getValue('config.tmp_path') . '/' . $package['packagefile'];
+            $package['packagefile'] = $config->get('tmp_path') . '/' . $package['packagefile'];
         }
         if (is_file($package['packagefile'])) {
             JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
@@ -111,38 +83,25 @@ class WFModelInstaller extends WFModel {
     }
 
     public function remove($id, $type) {
-        $mainframe = JFactory::getApplication();
-
-        $installer = JInstaller::getInstance();
+        $app = JFactory::getApplication();
 
         // Use Joomla! Installer class for related extensions
         if ($type == 'related') {
-            $table = WF_JOOMLA15 ? 'plugin' : 'extension';
-
-            $row = JTable::getInstance($table);
-            // get extension data not returned by uninstall method
-            $row->load($id);
-            // get manifest
-            $manifest = WF_JOOMLA15 ? JPATH_PLUGINS . $row->folder . '/' . $row->element . '.xml' : JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . '/' . $row->element . '.xml';
-
-            if (file_exists($manifest)) {
-                $xml = WFXMLHelper::parseInstallManifest($manifest);
-
-                if ($xml) {
-                    $installer->set('name', $xml['name']);
-                    $installer->set('version', $xml['version']);
-                }
-            }
-
+            jimport('joomla.installer.installer');
+            $installer = JInstaller::getInstance();
             $result = $installer->uninstall('plugin', $id);
         } else {
-            // Set Adapter
-            $adapter = $this->getAdapter($type);
-            $installer->setAdapter($type, $adapter);
+            $installer = WFInstaller::getInstance();
+
+            $installer->setAdapter($type);
             $result = $installer->uninstall($type, $id);
         }
 
-        $result = $result ? true : false;
+        if (!$result) {
+            $app->enqueueMessage(WFText::sprintf('WF_INSTALLER_UNINSTALL_ERROR'), 'error');
+        } else {
+            $app->enqueueMessage(WFText::sprintf('WF_INSTALLER_UNINSTALL_SUCCESS'));
+        }
 
         $this->_result[] = array(
             'name' => $installer->get('name'),
@@ -151,6 +110,8 @@ class WFModelInstaller extends WFModel {
             'result' => $result
         );
 
+        $this->setState('name', WFText::_($installer->get('name')));
+        $this->setState('result', $result);
         $this->setState('install.result', $this->_result);
 
         return $result;
@@ -163,6 +124,7 @@ class WFModelInstaller extends WFModel {
     private function getPackage() {
         $config = JFactory::getConfig();
         jimport('joomla.filesystem.file');
+        jimport('joomla.filesystem.archive');
 
         // set standard method
         $upload = true;
@@ -192,6 +154,12 @@ class WFModelInstaller extends WFModel {
             }
         }
 
+        if (defined('JPATH_PLATFORM')) {
+            $tmp = $config->get('tmp_path');
+        } else {
+            $tmp = $config->getValue('config.tmp_path');
+        }
+
         // uploaded file
         if ($upload && $file['tmp_name'] && $file['name']) {
             // check extension
@@ -200,7 +168,7 @@ class WFModelInstaller extends WFModel {
                 return false;
             }
 
-            $dest = $config->getValue('config.tmp_path') . '/' . $file['name'];
+            $dest = $tmp . '/' . $file['name'];
             $src = $file['tmp_name'];
             // upload file
             JFile::upload($src, $dest);
@@ -209,6 +177,9 @@ class WFModelInstaller extends WFModel {
             $dest = JPath::clean($path);
         }
 
+        // set install method
+        JRequest::setVar('install_method', 'install');
+
         // Unpack the package file
         if (preg_match('/\.(zip|tar|gz|gzip|tgz|tbz2|bz2|bzip2)/i', $dest)) {
             // Make sure that zlib is loaded so that the package can be unpacked
@@ -216,7 +187,26 @@ class WFModelInstaller extends WFModel {
                 JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WARNINSTALLZLIB'));
                 return false;
             }
-            $package = JInstallerHelper::unpack($dest);
+
+            $package = JPath::clean(dirname($dest) . '/' . uniqid('install_'));
+
+            if (!JArchive::extract($dest, $package)) {
+                JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_EXTRACT'));
+                return false;
+            }
+
+            if (JFolder::exists($package)) {
+                $type = self::detectType($package);
+            }
+
+            return array(
+                'manifest' => null,
+                'packagefile' => null,
+                'extractdir' => null,
+                'dir' => $package,
+                'type' => $type
+            );
+
             // might be a directory
         } else {
             if (!is_dir($dest)) {
@@ -225,28 +215,51 @@ class WFModelInstaller extends WFModel {
             }
 
             // Detect the package type
-            $type = @JInstallerHelper::detectType($dest);
+            $type = self::detectType($dest);
 
-            $package = array(
+            return array(
+                'manifest' => null,
                 'packagefile' => null,
                 'extractdir' => null,
                 'dir' => $dest,
                 'type' => $type
             );
         }
+    }
 
-        $package['manifest'] = null;
+    private static function detectType($path) {
+        // Search the install dir for an XML file
+        $files = JFolder::files($path, '\.xml$', 1, true);
 
-        // set install method
-        JRequest::setVar('install_method', 'install');
+        if (!count($files)) {
+            return false;
+        }
 
-        return $package;
+        foreach ($files as $file) {
+            $xml = simplexml_load_file($file);
+            if (!$xml) {
+                continue;
+            }
+
+            $name = (string) $xml->getName();
+
+            if ($name != 'extension' && $name != 'install') {
+                unset($xml);
+                continue;
+            }
+
+            $type = (string) $xml->attributes()->type;
+
+            // Free up memory
+            unset($xml);
+            return $type;
+        }
+        return false;
     }
 
     public function getExtensions() {
-        $db = JFactory::getDBO();
-
-        $model = JModel::getInstance('plugins', 'WFModel');
+        wfimport('admin.models.plugins');
+        $model = new WFModelPlugins();
 
         // get an array of all installed plugins in plugins folder
         $extensions = $model->getExtensions();
@@ -255,7 +268,8 @@ class WFModelInstaller extends WFModel {
     }
 
     public function getPlugins() {
-        $model = JModel::getInstance('plugins', 'WFModel');
+        wfimport('admin.models.plugins');
+        $model = new WFModelPlugins();
 
         // get an array of all installed plugins in plugins folder
         $plugins = $model->getPlugins();
@@ -285,39 +299,39 @@ class WFModelInstaller extends WFModel {
         $params = JComponentHelper::getParams('com_jce');
 
         // pre-defined array of other plugins
-        $related = explode(',', $params->get('related_extensions', 'jcemediabox,jceutilities,mediaobject,wfmediabox'));
-
+        $related = preg_replace('#(\w+)#', "'$1'", $params->get('related_extensions', 'jcemediabox,jceutilities,mediaobject,wfmediabox'));
         $query  = $db->getQuery(true);
 
         // Joomla! 2.5
         if (is_object($query)) {
-            $query->select(array('name', 'element', 'folder'))->from('#__extensions')->where('type = ' . $db->Quote('plugin'))->order('name');
+            $query->select(array('extension_id', 'name', 'element', 'folder'))->from('#__extensions')->where(array('type = ' . $db->Quote('plugin'), 'element IN (' . $related . ')'))->order('name');
             // Joomla! 1.5    
         } else {
-            $query = 'SELECT name, element, folder FROM #__plugins ORDER BY name';
+            $query = 'SELECT id, name, element, folder FROM #__plugins WHERE element IN (' . $related . ') ORDER BY name';
         }
 
         $db->setQuery($query);
-        $rows = $db->loadObjectList() or die($db->stdErr());
+        $rows = $db->loadObjectList();
 
         $language = JFactory::getLanguage();
 
-        $numRows = count($rows);
-        for ($i = 0; $i < $numRows; $i++) {
+        $num = count($rows);
+        
+        for ($i = 0; $i < $num; $i++) {
             $row = $rows[$i];
 
-            if (in_array($row->element, $related) === false) {
-                unset($rows[$i]);
-            }
-
-            $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . '/' . $row->element . ".xml";
-
-            if (WF_JOOMLA15) {
+            if (defined('JPATH_PLATFORM')) {
+                $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . '/' . $row->element . ".xml";
+            } else {
                 $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . ".xml";
+            }
+            
+            if (isset($row->extension_id)) {
+                $row->id = $row->extension_id; 
             }
 
             if (is_file($file)) {
-                $xml = WFXMLElement::getXML($file);
+                $xml = WFXMLElement::load($file);
 
                 if ($xml) {
                     $row->title = (string) $xml->name;
@@ -334,7 +348,8 @@ class WFModelInstaller extends WFModel {
             $language->load('plg_' . trim($row->folder) . '_' . trim($row->element), JPATH_SITE);
         }
 
-        return array_values($rows);
+        //return array_values($rows);
+        return $rows;
     }
 
     public function getLanguages() {
