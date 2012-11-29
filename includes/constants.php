@@ -26,7 +26,7 @@ define('WF_ADMINISTRATOR',     JPATH_ADMINISTRATOR . '/components/com_jce');
 // JCE Site Component
 define('WF_SITE',              JPATH_SITE . '/components/com_jce');
 // JCE Plugin
-if (JPATH_PLATFORM) {
+if (defined('JPATH_PLATFORM')) {
     define('WF_PLUGIN',        JPATH_SITE . '/plugins/editors/jce');
 } else {
     define('WF_PLUGIN',        JPATH_SITE . '/plugins/editors');   
