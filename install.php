@@ -721,7 +721,9 @@ abstract class WFInstall {
             // remove paste folder
             $site . '/editor/tiny_mce/plugins/paste',
             // remove jquery
-            $site . '/editor/libraries/js/jquery'
+            $site . '/editor/libraries/js/jquery',
+            // remove browser extension
+            $site . '/editor/extensions/browser'
         );
 
         foreach ($folders as $folder) {
