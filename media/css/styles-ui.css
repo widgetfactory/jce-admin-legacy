@@ -101,7 +101,7 @@
     min-width: 30px;
 }
 
-#jce label.radio.inline, #jce label.checkbox.inline {
+#jce label.radio.inline, #jce label.checkbox.inline, #jce label.radiobtn {
     margin: 0 10px 0 0;
 }
 
@@ -128,7 +128,7 @@ div#jce button {
     font-size: 10.5px;
 }
 
-div#jce label input {
+div#jce label input, div#jce label + input[type="radio"] {
     margin: 5px 10px 5px 6px;
 }
 
