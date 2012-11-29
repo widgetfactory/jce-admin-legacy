@@ -30,17 +30,11 @@ class WFControllerEditor extends WFControllerBase {
             switch ($layout) {
                 case 'editor':
                     if ($task == 'pack' || $task == 'loadlanguages') {
-                        jimport('joomla.application.component.model');
-
-                        require_once(WF_EDITOR_CLASSES . '/editor.php');
-
                         wfimport('admin.models.editor');
                         $model = new WFModelEditor();
 
                         if ($task == 'loadlanguages') {
-                            if (method_exists($model, 'loadLanguages')) {
-                                $model->loadLanguages(array(), array(), '(^dlg$|_dlg$)', true);
-                            }
+                            $model->loadLanguages();
                         } else {
                             $model->pack();
                         }
