@@ -336,10 +336,7 @@ class WFModelEditor extends WFModelBase {
             foreach ((array) $settings['plugins'] as $plugin) {
                 $path = WF_EDITOR_PLUGINS . '/' . $plugin;
 
-                if ($plugin[0] == '-') {
-                    $path = JPATH_PLUGINS . '/jce/' . substr($plugin, 1);
-                }
-
+                // if english file exists then the installed language file should too 
                 if (JFile::exists($path . '/langs/en.js') && !JFile::exists($path . '/langs/' . $language . '.js')) {
                     $plugins[] = $plugin;
                 }
@@ -498,12 +495,14 @@ class WFModelEditor extends WFModelBase {
 
             $plugins = explode(',', $this->profile->plugins);
             $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'dragupload', 'format'), $plugins));
-
+            
+            // add advlists plugin if lists are loaded
             if (in_array('lists', $plugins)) {
                 $plugins[] = 'advlist';
             }
-
-            if ($wf->getParam('editor.path', 1, 1, 'boolean')) {
+            
+            // Load wordcount if path is enabled
+            if ($wf->getParam('editor.path', 1)) {
                 $plugins[] = 'wordcount';
             }
 
