@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 ?>
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm">
     <div id="jce">
     	<fieldset class="adminform panelform">
 			 <legend><?php echo JText :: _('WF_MEDIABOX_PARAMETERS');?></legend>
