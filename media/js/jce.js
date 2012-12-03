@@ -156,7 +156,7 @@
             }
 
             // Tips
-            $('.wf-tooltip').tips({
+            $('.wf-tooltip, .hasTip').tips({
                 parent : '#jce'
             });
             
