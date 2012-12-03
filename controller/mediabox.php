@@ -22,32 +22,15 @@ class WFControllerMediabox extends WFController {
     public function save() {
         // Check for request forgeries
         JRequest::checkToken() or die('RESTRICTED');
+        
+        $row    = WFExtensionHelper::getPlugin(null, 'jcemediabox', 'system');
 
-        $db = JFactory::getDBO();
-
-        if (WF_JOOMLA15) {
-            $row = JTable::getInstance('plugin');
-
-            $query = 'SELECT id FROM #__plugins'
-                    . ' WHERE folder = ' . $db->Quote('system')
-                    . ' AND element = ' . $db->Quote('jcemediabox')
-            ;
-            $db->setQuery($query);
-
-            $id = $db->loadResult();
-        } else {
-            // get component table
-            $row = JTable::getInstance('extension');
-
-            $id = $row->find(array(
-                'type'      => 'plugin',
-                'element'   => 'jcemediabox'
-            ));
+        $task   = $this->getTask();
+        
+        // remove id for Joomla! 2.5+
+        if ($row->extension_id) {
+            unset($row->id);
         }
-
-        $row->load($id);
-
-        $task = $this->getTask();
 
         if (!$row->bind(JRequest::get('post'))) {
             JError::raiseError(500, $row->getError());
