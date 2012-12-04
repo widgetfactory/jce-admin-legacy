@@ -9,7 +9,7 @@
  */
 #jce div.upload_button_container {
     position: relative;
-    overflow: hidden;
+    /*overflow: hidden;*/
     float: left;
     min-width: 50px;
     min-height: 20px;
@@ -17,7 +17,7 @@
 }
 #jce div.upload_input_container {
     position: relative;
-    overflow: hidden;
+    /*overflow: hidden;*/
     float: left;
     vertical-align: middle;
 }
@@ -78,6 +78,7 @@ html[dir="rtl"] #jce label[for="import"] {
 #jce input.upload_text {
     /*float: left;
     color: #888;*/
+    width : 300px;
 }
 #jce input.upload_text.upload_file {
     /*color: #888;*/
