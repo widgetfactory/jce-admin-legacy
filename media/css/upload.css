@@ -78,7 +78,7 @@ html[dir="rtl"] #jce label[for="import"] {
 #jce input.upload_text {
     /*float: left;
     color: #888;*/
-    width : 300px;
+    width : 250px;
 }
 #jce input.upload_text.upload_file {
     /*color: #888;*/
@@ -103,4 +103,12 @@ html[dir="rtl"] #jce label[for="import"] {
 
 html[dir="rtl"] #jce div.upload_button_container > span {
     right : 2px;
+}
+
+/* Mobile stuff */
+@media (max-width: 767px) {
+    
+    #jce input.upload_text {
+        width : 200px;
+    }
 }
