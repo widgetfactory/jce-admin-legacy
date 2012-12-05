@@ -89,6 +89,9 @@ class WFController extends WFControllerBase {
         
         // using JUI...
         if (!$bootstrap || !$jquery) {
+            // set device-width meta
+            $document->setMetaData('meta', 'width=device-width, initial-scale=1.0');
+            
             $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/styles-ui.css?version=' . $model->getVersion());
 
             // JQuery UI
@@ -103,9 +106,6 @@ class WFController extends WFControllerBase {
         $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery.ui.touch-punch.min.js?version=' . $model->getVersion());
 
         $scripts = array();
-        
-        // set device-width meta
-        $document->setMetaData('meta', 'width=device-width, initial-scale=1.0');
 
         switch ($name) {
             case 'help':
