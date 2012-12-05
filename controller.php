@@ -103,6 +103,9 @@ class WFController extends WFControllerBase {
         $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery.ui.touch-punch.min.js?version=' . $model->getVersion());
 
         $scripts = array();
+        
+        // set device-width meta
+        $document->setMetaData('meta', 'width=device-width, initial-scale=1.0');
 
         switch ($name) {
             case 'help':
