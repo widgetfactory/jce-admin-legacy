@@ -131,7 +131,11 @@ class WFLanguageParser extends JObject {
 
                     if (is_file($file)) {
                         $files[] = $file;
+                    } else {
+                        $tag = 'en-GB';
                     }
+                } else {
+                    $tag = 'en-GB';
                 }
             }
 
