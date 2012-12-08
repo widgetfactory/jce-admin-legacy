@@ -625,6 +625,10 @@ span.uparrow {
     height : inherit;
 }
 
+#jce div.container {
+   width : auto; 
+}
+
 /*!
  * Bootstrap Responsive v2.1.0
  *
