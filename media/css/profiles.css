@@ -234,6 +234,7 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
 
 #jce div.buttonlist li span.mceButton, #jce div.buttonlist li span.mceSplitButton {
     margin : 0 10px 0 0;
+    vertical-align: middle;
 }
 
 #jce ul.adminformlist li div.buttonlist {
