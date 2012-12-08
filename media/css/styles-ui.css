@@ -152,7 +152,7 @@ div#jce label input, div#jce label + input[type="radio"] {
     -webkit-border-radius: 3px;
 }
 #jce ul.adminformlist {
-    display: inline-block;
+    display: inline-block !important;
     width : 100%;
 }
 /* Mission Control resets */
@@ -351,6 +351,7 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
     border: 1px solid #CCC;
     border-right-width: 0;
     border-spacing: 0;
+    border-collapse : inherit;
 }
 #jce table.table th, #jce table.table td {
     padding: 5px;
@@ -614,6 +615,14 @@ span.uparrow {
 
 #jce input[name="import_input"]:-ms-input-placeholder {
     color : #fff;
+}
+
+#jce #profiles-list th a {
+    color : #333333;
+}
+
+#jce #profiles-list td:first-child + td + td + td img {
+    height : inherit;
 }
 
 /*!

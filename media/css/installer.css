@@ -62,6 +62,7 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 }
 #jce fieldset {
     margin : 0 0 10px 0;
+    padding : 10px;
 }
 
 #jce div.install-message {
