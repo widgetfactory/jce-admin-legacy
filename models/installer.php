@@ -201,8 +201,8 @@ class WFModelInstaller extends WFModel {
 
             return array(
                 'manifest' => null,
-                'packagefile' => null,
-                'extractdir' => null,
+                'packagefile' => $dest,
+                'extractdir' => $package,
                 'dir' => $package,
                 'type' => $type
             );
