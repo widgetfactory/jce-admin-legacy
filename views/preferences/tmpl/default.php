@@ -15,6 +15,7 @@ defined('_JEXEC') or die('RESTRICTED');
         <div class="btn-group pull-right fltrgt">
         	<button class="btn" id="apply"><?php echo WFText::_('WF_LABEL_SAVE');?></button>
         	<button class="btn" id="save"><?php echo WFText::_('WF_LABEL_SAVECLOSE');?></button>
+                <button class="btn" id="cancel"><?php echo WFText::_('WF_LABEL_CANCEL');?></button>
     	</div>
     	<div class="clr clearfix"></div>
         <div id="tabs">

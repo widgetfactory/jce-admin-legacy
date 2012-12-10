@@ -31,6 +31,18 @@
                 
                 $('form').submit();
             });
+            
+            $('#cancel').button().click(function(e) {
+                var win = window.parent;
+                
+                // try squeezebox
+                if( typeof win.SqueezeBox !== 'undefined') {
+                    return win.SqueezeBox.close();
+                } else {
+                    this.close();
+                }
+                e.preventDefault();
+            });
         },
     	
         close : function() {
