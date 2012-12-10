@@ -296,7 +296,7 @@
         
         },
 
-        createDialog : function(e, o) {
+        createDialog : function(el, o) {
             var self = this, data = {};
 
             // add optional settings from link
@@ -311,7 +311,7 @@
                 height : 480
             };
             
-            return Joomla.modal(e.target, o.src, data.width, data.height);
+            return Joomla.modal(el, o.src, data.width, data.height);
         },
         
         closeDialog : function(el) {
