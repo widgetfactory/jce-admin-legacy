@@ -9,21 +9,36 @@
  */
 (function($) {
     $.jce.Preferences = {
-    	init : function() {
-    		// Tabs
-           	$('#tabs').tabs();
+        init : function() {
+            var self = this;
+                
+            // Tabs
+            $('#tabs').tabs();
            	
-           	$('#access-accordian').accordion({collapsible: true, heightStyle: "content"});
+            $('#access-accordian').accordion({
+                collapsible: true, 
+                heightStyle: "content"
+            });
            	
-           	$('.hasTip').removeClass('hasTip');
-    	},
+            $('.hasTip').removeClass('hasTip');
+            
+            $('input[name="task"]').val('apply');
+                
+            $('#apply, #save').button().click(function() {
+                if ($(this).attr('id') == 'save') {
+                    $('input[name="task"]').val('save');
+                }
+                
+                $('form').submit();
+            });
+        },
     	
-    	close : function() {
-    		this.init();
-
-    		window.setTimeout(function(){
-    			window.parent.document.location.href="index.php?option=com_jce&view=cpanel";
-    		}, 1000);
-    	}
-	};
+        close : function() {
+            this.init();
+            
+            window.setTimeout(function(){
+                window.parent.document.location.href="index.php?option=com_jce&view=cpanel";
+            }, 1000);
+        }
+    };
 })(jQuery);
