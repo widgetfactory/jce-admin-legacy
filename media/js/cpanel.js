@@ -29,17 +29,23 @@
                 // Check updates
                 $.getJSON("index.php?option=com_jce&view=updates&task=update&step=check", {}, function(r) {
                     if (r && r.length) {
-                        $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="updates"><a title="' + options.labels.updates + '" class="dialog updates" href="index.php?option=com_jce&amp;view=updates&amp;tmpl=component">' + options.labels.updates_available + '</a></span></li>');
-
-                        $('a.dialog.updates', 'div#jce ul.adminformlist').click( function(e) {
-                            $.jce.createDialog(e, {
-                                src 	: $(this).attr('href'),
-                                options : {
-                                    'width'   : 780,
-                                    'height'  : 560
-                                }
+                        var $list = $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="updates"><a title="' + options.labels.updates + '" class="updates" href="#">' + options.labels.updates_available + '</a></span></li>');
+                        
+                        $('a.updates', $list).click( function(e) {
+                            // trigger Joomla! 3.0 button
+                            $('#toolbar-updates button').click();
+                            
+                            // trigger toolbar button
+                            $('#toolbar-updates a.modal').each( function() {
+                                $.jce.createDialog(this, {
+                                    src 	: $(this).attr('href'),
+                                    options : {
+                                        'width'   : 780,
+                                        'height'  : 560
+                                    }
+                                });
+                                e.preventDefault();
                             });
-                            e.preventDefault();
                         });
                     }
                 });
@@ -47,9 +53,11 @@
             }
             // Open config/preferences dialog
             $('#newsfeed_enable').click(function(e) {
+                // trigger Joomla! 3.0 button
                 $('#toolbar-options button').click(); 
                 
-                $('#toolbar-popup-options a, #toolbar-config a').each(function() {
+                // trigger toolbar button
+                $('#toolbar-popup-options a.modal, #toolbar-config a.modal').each(function() {
                     $.jce.createDialog(this, {
                         src 	: $(this).attr('href'),
                         options : {
