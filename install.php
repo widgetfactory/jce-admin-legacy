@@ -723,7 +723,9 @@ abstract class WFInstall {
             // remove jquery
             $site . '/editor/libraries/js/jquery',
             // remove browser extension
-            $site . '/editor/extensions/browser'
+            $site . '/editor/extensions/browser',
+            // remove browser langs
+            $site . '/editor/tiny_mce/plugins/browser/langs'
         );
 
         foreach ($folders as $folder) {
