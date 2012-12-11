@@ -28,11 +28,7 @@
             'url' : url
         };
         
-        if (typeof SqueezeBox.open === 'undefined') {
-            return SqueezeBox.fromElement(el, o);
-        }
-        
-        return SqueezeBox.open(el, o);
+        return SqueezeBox.fromElement(el, o);
     };
     
     $.fn.checkbox = function() {
@@ -310,6 +306,11 @@
                 width : 640, 
                 height : 480
             };
+            
+            // if its an Event not an element, get the element from the target
+            if (!el.nodeType && el.target) {
+                el = el.target;
+            }
             
             return Joomla.modal(el, o.src, data.width, data.height);
         },
