@@ -126,7 +126,7 @@ class WFLanguageParser extends JObject {
             $files[] = JPATH_SITE . '/language/en-GB/en-GB.com_jce.ini';
 
             // non-english language
-            if ($tag !== 'en-GB') {
+            if ($tag != 'en-GB') {
                 if (is_dir($path)) {
                     $file = $path . '/' . $tag . '.com_jce.ini';
 
@@ -152,7 +152,7 @@ class WFLanguageParser extends JObject {
                     }
 
                     // non-english language
-                    if ($tag !== 'en-GB') {
+                    if ($tag != 'en-GB') {
                         $ini = JPATH_SITE . '/language/' . $tag . '/' . $tag . '.com_jce_' . $plugin . '.ini';
 
                         if (is_file($ini)) {
