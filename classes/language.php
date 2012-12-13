@@ -37,6 +37,11 @@ class WFLanguageParser extends JObject {
             $ini = @parse_ini_file($file, true);
 
             if ($ini && is_array($ini)) {
+                // only include these keys
+                if (!empty($sections)) {
+                    $ini = array_intersect_key($ini, array_flip($sections));
+                }
+                
                 // filter keys by regular expression
                 if ($filter) {
                     foreach (array_keys($ini) as $key) {
@@ -44,10 +49,6 @@ class WFLanguageParser extends JObject {
                             unset($ini[$key]);
                         }
                     }
-                }
-                // only include these keys
-                if (!empty($section)) {
-                    $ini = array_intersect_key($ini, array_flip($section));
                 }
 
                 $data = array_merge($data, $ini);
@@ -105,7 +106,7 @@ class WFLanguageParser extends JObject {
             case 'editor':
                 return '(dlg|_dlg)$';
                 break;
-            case 'plugin':
+            case 'plugin':                
                 return '';
                 break;
         }
@@ -163,7 +164,7 @@ class WFLanguageParser extends JObject {
         }
         
         $sections   = $this->get('sections');
-        $filter     = $this->get('filter');
+        $filter     = $this->getFilter();
 
         $data   = self::processLanguageINI($files, $sections, $filter);
         // shorten the tag, eg: en-GB -> en
