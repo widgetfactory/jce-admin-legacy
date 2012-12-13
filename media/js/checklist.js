@@ -130,9 +130,22 @@
             });
 
             if (el.nodeName == 'SELECT') {                
-                $('option', el).each(function() {                    
-                    $(this).prop('selected', $.inArray(this.value, x) != -1);
-                })                
+                var options = [];
+                
+                $('option', el).each(function(i) {                    
+                    var n = $.inArray(this.value, x);
+                    
+                    if (n >= 0) {
+                        $(this).prop('selected', true);
+                        options[n] = this;
+                    } else {
+                        $(this).prop('selected', false);
+                        options.push(this);
+                    }
+                });
+
+                $(el).empty().append(options);
+
             } else {
                 el.value = x.join(',');
             }
