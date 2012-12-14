@@ -65,8 +65,8 @@ class WFInstallerLanguage extends JObject {
         $folder = $this->parent->get('tag');
 
         // Set the installation target paths
-        $this->parent->setPath('extension_site', JPATH_SITE . '/' . "language" . '/' . $folder);
-        $this->parent->setPath('extension_administrator', JPATH_ADMINISTRATOR . '/' . "language" . '/' . $folder);
+        $this->parent->setPath('extension_site', JPATH_SITE . '/language/' . $folder);
+        $this->parent->setPath('extension_administrator', JPATH_ADMINISTRATOR . '/language/' . $folder);
 
         // Set overwrite flag if not set by Manifest
         $this->parent->setOverwrite(true);
@@ -94,7 +94,7 @@ class WFInstallerLanguage extends JObject {
         $this->addIndexfiles($this->parent->getPath('site'));
 
         // Set path back to site for manifest
-        $this->parent->setPath('extension_site', JPATH_SITE . '/' . "language" . '/' . $folder);
+        $this->parent->setPath('extension_site', JPATH_SITE . '/language/' . $folder);
         // Lastly, we will copy the manifest file to its appropriate place.
         if (!$this->parent->copyManifest(0)) {
             // Install failed, rollback changes
