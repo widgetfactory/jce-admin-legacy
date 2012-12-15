@@ -27,26 +27,37 @@
 
             if (options.updates) {
                 // Check updates
-                $.getJSON("index.php?option=com_jce&view=updates&task=update&step=check", {}, function(r) {
-                    if (r && r.length) {
-                        var $list = $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="updates"><a title="' + options.labels.updates + '" class="updates" href="#">' + options.labels.updates_available + '</a></span></li>');
+                $.getJSON("index.php?option=com_jce&view=updates&task=update&step=check", {}, function(r) {                    
+                    if (r) {                        
+                        if ($.type(r) == 'string') {
+                            r = $.parseJSON(r);
+                        }
                         
-                        $('a.updates', $list).click( function(e) {
-                            // trigger Joomla! 3.0 button
-                            $('#toolbar-updates button').click();
+                        if (r.error) {
+                            var $list = $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="updates error">' + r.error + '</span></li>');
+                            return false;
+                        }
+                        
+                        if (r.length) {
+                            var $list = $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="updates"><a title="' + options.labels.updates + '" class="updates" href="#">' + options.labels.updates_available + '</a></span></li>');
+                        
+                            $('a.updates', $list).click( function(e) {
+                                // trigger Joomla! 3.0 button
+                                $('#toolbar-updates button').click();
                             
-                            // trigger toolbar button
-                            $('#toolbar-updates a.modal').each( function() {
-                                $.jce.createDialog(this, {
-                                    src 	: $(this).attr('href'),
-                                    options : {
-                                        'width'   : 780,
-                                        'height'  : 560
-                                    }
+                                // trigger toolbar button
+                                $('#toolbar-updates a.modal').each( function() {
+                                    $.jce.createDialog(this, {
+                                        src 	: $(this).attr('href'),
+                                        options : {
+                                            'width'   : 780,
+                                            'height'  : 560
+                                        }
+                                    });
+                                    e.preventDefault();
                                 });
-                                e.preventDefault();
                             });
-                        });
+                        }
                     }
                 });
 

@@ -84,7 +84,9 @@ ul#table_status {
     padding: 0px 0px 0px 25px;
     display: inline-block;
 }
-
+#jce ul.adminformlist li span.updates.error {
+    background-position: 0 -1060px;
+}
 /* Mobile stuff */
 @media (max-width: 767px) {
     ul#cpanel li.cpanel-icon {

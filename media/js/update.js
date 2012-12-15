@@ -83,114 +83,126 @@
                 3 : '<span class="priority low">' + this.options.language['low'] + '</span>'
             };
 
-            $.post("index.php?option=com_jce&view=updates&task=update&step=check", {}, function(r) {
+            $.getJSON("index.php?option=com_jce&view=updates&task=update&step=check", {}, function(r) {
                 $(btn).removeClass('loading');
                 $(btn).button('enable');
 
                 $(list).empty();
 
-                if (r && r.length) {
-                    // clone check button as install but set disabled until items checked
-                    $(btn).clone().button({
-                        icons : {
-                            primary : 'icon-install'
-                        },
-                        disabled : true,
-                        label : t.options.language.install
-                    }).click( function() {
-                        t.execute(this);
-                    }).insertAfter(btn).attr({
-                        'id' : 'install-button',
-                        'disabled' : 'disabled'
-                    }).removeClass('check').addClass('install');
+                if (r) {
+                    if ($.type(r) == 'string') {
+                        r = $.parseJSON(r);
+                    }
+                    
+                    if (r.error) {
+                        $(list).html('<tr><td colspan="5" style="text-align:center;background-color:#FFCCCC;">'+ r.error +'</td></tr>');
+                        return false;
+                    }
 
-                    $.each(r, function(n, s) {
-                        // authorisation success or not required
-                        $(list).append('<tr style="cursor:pointer;"><td><span class="checkbox" data-uid="'+ s.id +'"></span></td><td>' + s.title + '</td><td align="center">' + t.options.language[s.type] + '</td><td align="center">' + s.version + '</td><td align="center">'+priority[s.priority]+'</td></tr>');
+                    if (r.length) {
+                        // clone check button as install but set disabled until items checked
+                        $(btn).clone().button({
+                            icons : {
+                                primary : 'icon-install'
+                            },
+                            disabled : true,
+                            label : t.options.language.install
+                        }).click( function() {
+                            t.execute(this);
+                        }).insertAfter(btn).attr({
+                            'id' : 'install-button',
+                            'disabled' : 'disabled'
+                        }).removeClass('check').addClass('install');
 
-                        var el = $('span[data-uid='+ s.id +']');
+                        $.each(r, function(n, s) {
+                            // authorisation success or not required
+                            $(list).append('<tr style="cursor:pointer;"><td><span class="checkbox" data-uid="'+ s.id +'"></span></td><td>' + s.title + '</td><td align="center">' + t.options.language[s.type] + '</td><td align="center">' + s.version + '</td><td align="center">'+priority[s.priority]+'</td></tr>');
 
-                        if (s.auth) {
-                            // check checkbox if forced update or high priority
-                            if (parseInt(s.forced) == 1 || s.priority == 1) {
-                                $(el).addClass('checked').addClass('disabled');
-                                $('button#install-button').button('enable');
+                            var el = $('span[data-uid='+ s.id +']');
 
-                                // disable any updates that this particular update overrides / negates eg: an equivalent patch or full version
-                                if (s.negates) {
-                                    $('span[data-uid='+ s.negates +']').removeClass('checked').addClass('disabled');
-                                }
-                            }
-                            // disable checkbox if forced update
-                            if (parseInt(s.forced) == 1) {
-                                $(el).addClass('disabled');
-                            }
-                            // check required checkbox
-                            if (s.required) {
-                                $('span[data-uid='+ s.required +']').addClass('checked');
-                            }
+                            if (s.auth) {
+                                // check checkbox if forced update or high priority
+                                if (parseInt(s.forced) == 1 || s.priority == 1) {
+                                    $(el).addClass('checked').addClass('disabled');
+                                    $('button#install-button').button('enable');
 
-                            // checkbox events
-                            $(el).click( function() {
-                                if ($(this).hasClass('disabled') || $(this).hasClass('error')) {
-   									return;
-								}
-								
-                                if ($(this).hasClass('checked')) {
-                                    $(this).removeClass('checked');
-                                } else {
-                                    $(this).addClass('checked');
-                                }
-
-                                // disable any updates that this particular update overrides / negates eg: an equivalent patch or full version
-                                if (s.negates) {
-                                    if ($(this).hasClass('checked')) {
+                                    // disable any updates that this particular update overrides / negates eg: an equivalent patch or full version
+                                    if (s.negates) {
                                         $('span[data-uid='+ s.negates +']').removeClass('checked').addClass('disabled');
-                                    } else {
-                                        $('span[data-uid='+ s.negates +']').removeClass('disabled');
                                     }
                                 }
-
-                                if ($('span.checkbox.checked', $(list)).length) {
-                                    $('button#install-button').attr('disabled', '').button('enable');
-                                } else {
-                                    $('button#install-button').attr('disabled', 'disabled').button('disable');
+                                // disable checkbox if forced update
+                                if (parseInt(s.forced) == 1) {
+                                    $(el).addClass('disabled');
                                 }
+                                // check required checkbox
+                                if (s.required) {
+                                    $('span[data-uid='+ s.required +']').addClass('checked');
+                                }
+
+                                // checkbox events
+                                $(el).click( function() {
+                                    if ($(this).hasClass('disabled') || $(this).hasClass('error')) {
+                                        return;
+                                    }
+								
+                                    if ($(this).hasClass('checked')) {
+                                        $(this).removeClass('checked');
+                                    } else {
+                                        $(this).addClass('checked');
+                                    }
+
+                                    // disable any updates that this particular update overrides / negates eg: an equivalent patch or full version
+                                    if (s.negates) {
+                                        if ($(this).hasClass('checked')) {
+                                            $('span[data-uid='+ s.negates +']').removeClass('checked').addClass('disabled');
+                                        } else {
+                                            $('span[data-uid='+ s.negates +']').removeClass('disabled');
+                                        }
+                                    }
+
+                                    if ($('span.checkbox.checked', $(list)).length) {
+                                        $('button#install-button').attr('disabled', '').button('enable');
+                                    } else {
+                                        $('button#install-button').attr('disabled', 'disabled').button('disable');
+                                    }
+                                });
+
+                            } else {
+                                $(el).addClass('disabled').addClass('alert');
+                                $(list).append('<tr><td colspan="5" style="text-align:center;background-color:#FFCCCC;">' + s.title + ' : ' + t.options.language['auth_failed'] +'</td></tr>');
+                            }
+
+                            $(info).append('<div class="update_info" id="update_info_'+ s.id +'"><h3>' + s.title + '</h3><div>' + s.text + '</div></div>');
+                            $('div#update_info_'+ s.id).hide();
+
+                            // show first list item info and select
+                            if (n == 0) {
+                                $('div#update_info_'+ s.id).fadeIn();
+                                $(el).parents('tr').addClass('selected');
+                            }
+
+                            // add info click event
+                            $(el).parents('tr').click( function() {
+                                // remove all selections
+                                $('tr.selected', $(list)).removeClass('selected');
+
+                                $(this).addClass('selected');
+
+                                $(info).children('div.update_info').hide();
+                                $('div#update_info_'+ s.id).fadeIn();
                             });
 
-                        } else {
-                            $(el).addClass('disabled').addClass('alert');
-                            $(list).append('<tr><td colspan="5" style="text-align:center;background-color:#FFCCCC;">' + s.title + ' : ' + t.options.language['auth_failed'] +'</td></tr>');
-                        }
-
-                        $(info).append('<div class="update_info" id="update_info_'+ s.id +'"><h3>' + s.title + '</h3><div>' + s.text + '</div></div>');
-                        $('div#update_info_'+ s.id).hide();
-
-                        // show first list item info and select
-                        if (n == 0) {
-                            $('div#update_info_'+ s.id).fadeIn();
-                            $(el).parents('tr').addClass('selected');
-                        }
-
-                        // add info click event
-                        $(el).parents('tr').click( function() {
-                            // remove all selections
-                            $('tr.selected', $(list)).removeClass('selected');
-
-                            $(this).addClass('selected');
-
-                            $(info).children('div.update_info').hide();
-                            $('div#update_info_'+ s.id).fadeIn();
                         });
 
-                    });
-
-                    $(list).find('tbody tr:odd').addClass('odd');
-
+                        $(list).find('tbody tr:odd').addClass('odd'); 
+                    } else {
+                        $(list).html('<tr><td colspan="5" style="text-align:center;">'+ t.options.language['no_updates'] +'</td></tr>');
+                    }
                 } else {
                     $(list).html('<tr><td colspan="5" style="text-align:center;">'+ t.options.language['no_updates'] +'</td></tr>');
                 }
-            }, 'json');
+            });
 
         },
 

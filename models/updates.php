@@ -124,7 +124,7 @@ class WFModelUpdates extends WFModel {
         // connect
         $result = $this->connect($this->url, implode('&', $req));
 
-        return $result;
+        return json_encode($result);
     }
 
     /**
@@ -386,9 +386,13 @@ class WFModelUpdates extends WFModel {
         jimport('joomla.filesystem.file');
 
         $fp = false;
-
-        $fopen = function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen');
-
+        
+        // get wrappers
+        $wrappers   = stream_get_wrappers();
+        
+        // check for support
+        $fopen      = function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen') && in_array('https', $wrappers);
+        
         // try file_get_contents first (requires allow_url_fopen)
         if ($fopen) {
             if ($download) {
@@ -398,11 +402,25 @@ class WFModelUpdates extends WFModel {
             } else {
                 $options = array('http' => array('method' => 'POST', 'timeout' => 10, 'content' => $data));
 
-                $context = stream_context_create($options);
-                return @file_get_contents($url, false, $context);
+                $context    = stream_context_create($options);
+                $result     = @file_get_contents($url, false, $context);
+                
+                if ($result === false) {
+                    return array('error' => WFText::_('Update check failed : Invalid response from update server'));
+                }
+                
+                return $result;
             }
             // Use curl if it exists
         } else if (function_exists('curl_init')) {
+            
+            // check for SSL support
+            $version        = curl_version();
+            $ssl_supported  = ($version['features'] & CURL_VERSION_SSL);
+            
+            if (!$ssl_supported) {
+                return array('error' => WFText::_('Update check failed : OpenSSL support for CURL is required'));
+            }
 
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -435,7 +453,7 @@ class WFModelUpdates extends WFModel {
 
             // file download
             if ($download && $result === false) {
-                die(json_encode(array('error' => 'TRANSFER ERROR : ' . curl_error($ch))));
+                return array('error' => 'TRANSFER ERROR : ' . curl_error($ch));
             }
 
             curl_close($ch);
