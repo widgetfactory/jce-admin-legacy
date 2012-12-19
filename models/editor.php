@@ -440,10 +440,13 @@ class WFModelEditor extends WFModelBase {
                     $item = $map[$item];
                 }
 
-                // get buttons
-                if (array_key_exists($item, $icons)) {
-                    $item = $icons[$item]->icon;
+                // check if button shold be in toolbar
+                if (array_key_exists($item, $icons) === false) {
+                    continue;
                 }
+                
+                // assign icon
+                $item = $icons[$item]->icon;
 
                 // check for custom plugin buttons
                 if (array_key_exists($name, $plugins)) {
@@ -453,7 +456,7 @@ class WFModelEditor extends WFModelBase {
                         $a = array();
 
                         foreach (explode(',', $item) as $s) {
-                            if (in_array($s, (array) $custom) || $s === "|") {
+                            if (in_array($s, (array) $custom) || $s == "|") {
                                 $a[] = $s;
                             }
                         }
