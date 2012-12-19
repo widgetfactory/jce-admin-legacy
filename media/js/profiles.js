@@ -270,12 +270,22 @@
                 }
             });
             
-            $('input:checkbox.plugins-enable-checkbox').click(function() {
-                var p = this.parentNode.parentNode, s = this.checked, name = $(this).data('name');                
-                // set value for proxy onput and trigger change                
-                $(this).prev('input[name$="\\[' + name + '\\]\\[enable\\]"]').val(s ? 1 : 0).change();
-                // disable select
-                $('select.plugins-default-select', p).children('option[value="' + name + '"]').prop('disabled', !s).parent().val(function(i, v) {                    
+            $('input.plugins-enable-checkbox').on('click', function() {
+                var s = this.checked, name = $(this).data('name'), proxy = $(this).next('input[type="hidden"]');
+                
+                // check for proxy...
+                if ($(proxy).length == 0) {
+                    // create proxy
+                    proxy = $('<input type="hidden" name="' + $(this).attr('name') + '" />').insertAfter(this);
+                    // remove attribute
+                    $(this).removeAttr('name');
+                }
+
+                // set value for proxy and trigger change                
+                $(proxy).val(s ? 1 : 0).change();
+                
+                // disable default select and reset value
+                $('select.plugins-default-select', $(this).parents('fieldset:first')).children('option[value="' + name + '"]').prop('disabled', !s).parent().val(function(i, v) {                                        
                     if (v === name) {
                         return "";
                     }
