@@ -235,7 +235,7 @@
    	<row>1</row>
    	<editable>0</editable>>
    	</command-->
-    <command>
+    <!--command>
         <title>WF_CHARMAP_TITLE</title>
         <description>WF_CHARMAP_DESC</description>
         <name>charmap</name>
@@ -243,7 +243,7 @@
         <icon>charmap</icon>
         <row>2</row>
         <editable>0</editable>
-    </command>
+    </command-->
     <command>
         <title>WF_REMOVEFORMAT_TITLE</title>
         <description>WF_REMOVEFORMAT_DESC</description>
