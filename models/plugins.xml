@@ -45,6 +45,15 @@
         <row>4</row>
         <core>1</core>
     </plugin>
+    <plugin name="charmap">
+        <name>charmap</name>
+        <title>WF_CHARMAP_TITLE</title>
+        <description>WF_CHARMAP_DESC</description>
+        <icon>charmap</icon>
+        <editable>0</editable>
+        <row>2</row>
+        <core>1</core>
+    </plugin>
     <plugin name="cleanup">
         <name>cleanup</name>
         <title>WF_CLEANUP_TITLE</title>
@@ -67,6 +76,15 @@
         <name>code</name>
         <title>WF_CODE_TITLE</title>
         <description>WF_CODE_DESC</description>
+        <icon></icon>
+        <editable>0</editable>
+        <row>0</row>
+        <core>1</core>
+    </plugin>
+    <plugin name="colorpicker">
+        <name>colorpicker</name>
+        <title>WF_COLORPICKER_TITLE</title>
+        <description>WF_COLORPICKER_DESC</description>
         <icon></icon>
         <editable>0</editable>
         <row>0</row>
