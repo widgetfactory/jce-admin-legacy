@@ -119,7 +119,7 @@ class WFModelEditor extends WFModelBase {
                 'resizing_use_cookie' => array(1, 1, 'boolean')
             );
 
-            // set rows key to apss to plugin config
+            // set rows key to pass to plugin config
             $settings['rows'] = $this->profile->rows;
 
             foreach ($theme as $k => $v) {
@@ -206,6 +206,9 @@ class WFModelEditor extends WFModelBase {
 
         // Get all optional plugin configuration options
         $this->getPluginConfig($settings);
+        
+        // remove 'rows' key from $settings
+        unset($settings['rows']);
 
         // pass compresison states to settings
         $settings['compress'] = json_encode($compress);
@@ -488,7 +491,7 @@ class WFModelEditor extends WFModelBase {
      * @access public
      * @return string list
      */
-    private function getPlugins() {
+    public function getPlugins() {
         jimport('joomla.filesystem.file');
 
         $return = array();
@@ -497,7 +500,7 @@ class WFModelEditor extends WFModelBase {
             $wf = WFEditor::getInstance();
 
             $plugins = explode(',', $this->profile->plugins);
-            $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'dragupload', 'format'), $plugins));
+            $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'colorpicker', 'dragupload', 'format'), $plugins));
             
             // add advlists plugin if lists are loaded
             if (in_array('lists', $plugins)) {
@@ -508,11 +511,15 @@ class WFModelEditor extends WFModelBase {
             if ($wf->getParam('editor.path', 1)) {
                 $plugins[] = 'wordcount';
             }
+            
+            // add legacy "charmap"
+            if (in_array('charmap', $plugins) === false && strpos($this->profile->rows, 'charmap') !== true) {
+                $plugins[] = 'charmap';
+            }
 
             foreach ($plugins as $plugin) {
-                $path = WF_EDITOR_PLUGINS . '/' . $plugin;
                 // check plugin is correctly installed and is a tinymce plugin, ie: it has an editor_plugin.js file
-                if (JFile::exists($path . '/editor_plugin.js')) {
+                if (JFile::exists(WF_EDITOR_PLUGINS . '/' . $plugin . '/editor_plugin.js')) {
                     $return[] = $plugin;
                 }
             }
