@@ -360,10 +360,15 @@ abstract class WFInstall {
                     $row->rows = implode(';', $rows);
 
                     $names = array('anchor');
-                    
+
                     // add lists
                     if (preg_match('#(numlist|bullist)#', $row->rows)) {
                         $names[] = 'lists';
+                    }
+
+                    // add charmap
+                    if (strpos($row->rows, 'charmap') !== false) {
+                        $names[] = 'charmap';
                     }
 
                     // transfer plugin ids to names
@@ -385,16 +390,16 @@ abstract class WFInstall {
                     // convert params to JSON
                     $params = self::paramsToObject($group->params);
                     $data = new StdClass();
-                    
+
                     // Add lists plugin
                     $buttons = array();
-                    
+
                     if (strpos($row->rows, 'numlist') !== false) {
                         $buttons[] = 'numlist';
                         // replace "numlist" with "lists"
                         $row->rows = str_replace('numlist', 'lists', $row->rows);
                     }
-                    
+
                     if (strpos($row->rows, 'bullist') !== false) {
                         $buttons[] = 'bullist';
                         // replace "bullist" with "lists"
@@ -409,7 +414,7 @@ abstract class WFInstall {
                     if (!empty($buttons)) {
                         $params->lists_buttons = $buttons;
                     }
-                    
+
                     // convert parameters
                     foreach ($params as $key => $value) {
                         $parts = explode('_', $key);
@@ -874,7 +879,7 @@ abstract class WFInstall {
             // add Mobile profile
             self::installProfile('Mobile');
         }
-        
+
         if (version_compare($version, '2.2.9', '<') || version_compare($version, '2.3.0beta3', '<')) {
             $profiles = self::getProfiles();
             $profile = JTable::getInstance('Profiles', 'WFTable');
@@ -882,18 +887,18 @@ abstract class WFInstall {
             if (!empty($profiles)) {
                 foreach ($profiles as $item) {
                     $profile->load($item->id);
-                    
+
                     $buttons = array('buttons' => array());
-                    
+
                     if (strpos($profile->rows, 'numlist') !== false) {
                         $buttons['buttons'][] = 'numlist';
-                        
+
                         $profile->rows = str_replace('numlist', 'lists', $profile->rows);
                     }
-                    
+
                     if (strpos($profile->rows, 'bullist') !== false) {
                         $buttons['buttons'][] = 'bullist';
-                        
+
                         if (strpos($profile->rows, 'lists') === false) {
                             $profile->rows = str_replace('bullist', 'lists', $profile->rows);
                         }
@@ -904,16 +909,32 @@ abstract class WFInstall {
                     $profile->rows = preg_replace('#,+#', ',', $profile->rows);
                     // fix rows
                     $profile->rows = str_replace(',;', ';', $profile->rows);
-                    
+
                     if (!empty($buttons['buttons'])) {
                         $profile->plugins .= ',lists';
-                        
+
                         $data = json_decode($profile->params, true);
                         $data['lists'] = $buttons;
-                        
+
                         $profile->params = json_encode($data);
-                        
+
                         $profile->store();
+                    }
+                }
+            }
+        }
+        // transfer charmap to a plugin
+        if (version_compare($version, '2.3.2', '<')) {
+            $profiles   = self::getProfiles();
+            $table      = JTable::getInstance('Profiles', 'WFTable');
+
+            if (!empty($profiles)) {
+                foreach ($profiles as $item) {
+                    $table->load($item->id);
+
+                    if (strpos($table->rows, 'charmap') !== false) {
+                        $table->plugins .= ',charmap';
+                        $table->store();
                     }
                 }
             }
