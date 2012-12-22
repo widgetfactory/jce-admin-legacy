@@ -1114,7 +1114,7 @@ class WFModelEditor extends WFModelBase {
     public function loadLanguages() {
         wfimport('admin.classes.language');
 
-        $parser = new WFLanguageParser();
+        $parser = new WFLanguageParser(array('plugins' => $this->getPlugins()));
         $data   = $parser->load();
         $parser->output($data);
     }
