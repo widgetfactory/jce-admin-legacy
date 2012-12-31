@@ -99,7 +99,7 @@ class WFModel extends WFModelBase {
         }
     }
 
-    public function getBrowserLink($element = null, $filter = '') {
+    public static function getBrowserLink($element = null, $filter = '') {
         // load base classes
         require_once(JPATH_ADMINISTRATOR . '/components/com_jce/includes/base.php');
 
