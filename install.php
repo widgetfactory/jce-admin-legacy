@@ -774,7 +774,10 @@ abstract class WFInstall {
             // remove dilg language file from theme (incorporated into main dlg file)
             $site . '/editor/tiny_mce/themes/advanced/langs/en_dlg.js',
             // remove old jquery UI
-            $site . '/editor/libraries/jquery/js/jquery-ui-1.9.0.custom.min.js'
+            $site . '/editor/libraries/jquery/js/jquery-ui-1.9.0.custom.min.js',
+            // remove "theme" files
+            $site . '/editor/libraries/classes/theme.php',
+            $site . '/editor/tiny_mce/themes/advanced/theme.php'
         );
 
         foreach ($files as $file) {
