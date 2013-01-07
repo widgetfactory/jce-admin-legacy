@@ -35,7 +35,7 @@ class WFElementSpacer extends WFElement
 	 *
 	 * @return  string
 	 */
-	public function fetchTooltip($label, $description, &$node, $control_name, $name)
+	public function fetchTooltip($label, $description, &$node, $control_name = '', $name = '')
 	{
 		return '&#160;';
 	}
