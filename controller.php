@@ -57,7 +57,7 @@ class WFController extends WFControllerBase {
      * and includes addition of the JDocument Object with required scripts and styles
      * @return object
      */
-    public function getView($name = '', $type = '', $prefix = '', $config = array()) {
+    public function getView($name = '', $type = '', $prefix = '', $config = array()) {        
         $language = JFactory::getLanguage();
         $language->load('com_jce', JPATH_ADMINISTRATOR);
 
@@ -84,15 +84,11 @@ class WFController extends WFControllerBase {
         
         $bootstrap  = class_exists('JHtmlBootstrap');
         $jquery     = class_exists('JHtmlJquery'); 
-        
-        $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/global.css?version=' . $model->getVersion());
-        
+
         // using JUI...
         if (!$bootstrap || !$jquery) {
             // set device-width meta
             $document->setMetaData('meta', 'width=device-width, initial-scale=1.0');
-            
-            $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/styles-ui.css?version=' . $model->getVersion());
 
             // JQuery UI
             $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
@@ -109,9 +105,15 @@ class WFController extends WFControllerBase {
 
         switch ($name) {
             case 'help':
-                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/help.js?version=' . $model->getVersion());
+                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/help.js?version=' . $model->getVersion());                
                 break;
             default:
+                $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/global.css?version=' . $model->getVersion());
+                
+                if (!$bootstrap || !$jquery) {
+                    $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/styles-ui.css?version=' . $model->getVersion());
+                }
+
                 // load Joomla! core javascript
                 if (method_exists('JHtml', 'core')) {
                     JHtml::core();
