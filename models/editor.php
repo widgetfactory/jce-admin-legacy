@@ -17,6 +17,7 @@ wfimport('admin.helpers.xml');
 wfimport('admin.helpers.extension');
 wfimport('editor.libraries.classes.token');
 wfimport('editor.libraries.classes.editor');
+wfimport('editor.libraries.classes.language');
 
 jimport('joomla.application.component.model');
 
@@ -75,8 +76,11 @@ class WFModelEditor extends WFModelBase {
 
     public function __construct() {
         $wf = WFEditor::getInstance();
-
-        $this->profile = $wf->getProfile();
+        
+        // set language
+        $this->language = WFLanguage::getCode(); 
+        // set profile
+        $this->profile  = $wf->getProfile();
     }
 
     public function buildEditor() {
@@ -200,13 +204,13 @@ class WFModelEditor extends WFModelBase {
 
             if (array_key_exists('language_load', $settings)) {
                 // language
-                $this->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=loadlanguages&lang=' . $wf->getLanguage() . '&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
+                $this->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=loadlanguages&lang=' . $this->language . '&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
             }
         }
 
         // Get all optional plugin configuration options
         $this->getPluginConfig($settings);
-        
+
         // remove 'rows' key from $settings
         unset($settings['rows']);
 
@@ -380,7 +384,7 @@ class WFModelEditor extends WFModelBase {
         $settings = array(
             'token' => WFToken::getToken(),
             'base_url' => JURI::root(),
-            'language' => $wf->getLanguage(),
+            'language' => $this->language,
             //'language_load'		=> false,
             'directionality' => $language->isRTL() ? 'rtl' : 'ltr',
             'theme' => 'none',
@@ -447,7 +451,7 @@ class WFModelEditor extends WFModelBase {
                 if (array_key_exists($item, $icons) === false) {
                     continue;
                 }
-                
+
                 // assign icon
                 $item = $icons[$item]->icon;
 
@@ -501,17 +505,17 @@ class WFModelEditor extends WFModelBase {
 
             $plugins = explode(',', $this->profile->plugins);
             $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'colorpicker', 'dragupload', 'format'), $plugins));
-            
+
             // add advlists plugin if lists are loaded
             if (in_array('lists', $plugins)) {
                 $plugins[] = 'advlist';
             }
-            
+
             // Load wordcount if path is enabled
             if ($wf->getParam('editor.path', 1)) {
                 $plugins[] = 'wordcount';
             }
-            
+
             // add legacy "charmap"
             if (in_array('charmap', $plugins) === false && strpos($this->profile->rows, 'charmap') !== true) {
                 $plugins[] = 'charmap';
@@ -927,7 +931,6 @@ class WFModelEditor extends WFModelBase {
 
         $themes = 'none';
         $plugins = array();
-        $languages = $wf->getLanguage();
 
         $suffix = JRequest::getWord('suffix', '');
         $component_id = JRequest::getInt('component_id', 0);
@@ -938,7 +941,6 @@ class WFModelEditor extends WFModelBase {
             $plugins = $this->getPlugins();
         }
 
-        $languages = explode(',', $languages);
         $themes = explode(',', $themes);
 
         // toolbar theme
@@ -953,36 +955,30 @@ class WFModelEditor extends WFModelBase {
                     $packer->setText($data);
                 } else {
                     // Add core languages
-                    foreach ($languages as $language) {
-                        $file = WF_EDITOR . '/' . "tiny_mce/langs/" . $language . ".js";
-                        if (!JFile::exists($file)) {
-                            $file = WF_EDITOR . '/' . "tiny_mce/langs/en.js";
-                        }
-                        $files[] = $file;
+                    $file = WF_EDITOR . '/' . "tiny_mce/langs/" . $this->language . ".js";
+                    if (!JFile::exists($file)) {
+                        $file = WF_EDITOR . '/' . "tiny_mce/langs/en.js";
                     }
+                    $files[] = $file;
 
                     // Add themes
                     foreach ($themes as $theme) {
-                        foreach ($languages as $language) {
-                            $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/" . $language . ".js";
-                            if (!JFile::exists($file)) {
-                                $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/en.js";
-                            }
-
-                            $files[] = $file;
+                        $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/" . $this->language . ".js";
+                        if (!JFile::exists($file)) {
+                            $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/en.js";
                         }
+
+                        $files[] = $file;
                     }
 
                     // Add plugins
                     foreach ($plugins as $plugin) {
-                        foreach ($languages as $language) {
-                            $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/" . $language . ".js";
-                            if (!JFile::exists($file)) {
-                                $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/en.js";
-                            }
-                            if (JFile::exists($file)) {
-                                $files[] = $file;
-                            }
+                        $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/" . $this->language . ".js";
+                        if (!JFile::exists($file)) {
+                            $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/en.js";
+                        }
+                        if (JFile::exists($file)) {
+                            $files[] = $file;
                         }
                     }
                     // reset type
@@ -998,7 +994,7 @@ class WFModelEditor extends WFModelBase {
                 if (!WF_INI_LANG) {
                     // Add core languages
                     foreach ($languages as $language) {
-                        $file = WF_EDITOR . '/' . "tiny_mce/langs/" . $language . ".js";
+                        $file = WF_EDITOR . '/' . "tiny_mce/langs/" . $this->language . ".js";
                         if (!JFile::exists($file)) {
                             $file = WF_EDITOR . '/' . "tiny_mce/langs/en.js";
                         }
@@ -1010,14 +1006,12 @@ class WFModelEditor extends WFModelBase {
                     $files[] = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/editor_template" . $suffix . ".js";
 
                     if (!WF_INI_LANG) {
-                        foreach ($languages as $language) {
-                            $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/" . $language . ".js";
-                            if (!JFile::exists($file)) {
-                                $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/en.js";
-                            }
-
-                            $files[] = $file;
+                        $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/" . $this->language . ".js";
+                        if (!JFile::exists($file)) {
+                            $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/en.js";
                         }
+
+                        $files[] = $file;
                     }
                 }
 
@@ -1026,14 +1020,12 @@ class WFModelEditor extends WFModelBase {
                     $files[] = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/editor_plugin" . $suffix . ".js";
 
                     if (!WF_INI_LANG) {
-                        foreach ($languages as $language) {
-                            $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/" . $language . ".js";
-                            if (!JFile::exists($file)) {
-                                $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/en.js";
-                            }
-                            if (JFile::exists($file)) {
-                                $files[] = $file;
-                            }
+                        $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/" . $this->language . ".js";
+                        if (!JFile::exists($file)) {
+                            $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/en.js";
+                        }
+                        if (JFile::exists($file)) {
+                            $files[] = $file;
                         }
                     }
                 }
@@ -1115,7 +1107,7 @@ class WFModelEditor extends WFModelBase {
         wfimport('admin.classes.language');
 
         $parser = new WFLanguageParser(array('plugins' => $this->getPlugins()));
-        $data   = $parser->load();
+        $data = $parser->load();
         $parser->output($data);
     }
 
