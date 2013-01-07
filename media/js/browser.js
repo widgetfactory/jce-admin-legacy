@@ -31,7 +31,7 @@
                         });
                     } else {*/
                         $.Dialog.iframe('Help', 'index.php?option=com_jce&view=help&tmpl=component&section=editor&category=browser', {
-                            width   : 760,
+                            width   : 768,
                             height  : 520
                         });
                     //}
