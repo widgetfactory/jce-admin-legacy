@@ -44,9 +44,7 @@ class WFViewHelp extends WFView {
                 break;
         }
 
-        $this->assignRef('model', $model);
-        $this->assign('orientation', $lang->isRTL() ? 'east' : 'west');
-
+        $this->assign('model', $model);
         $key = array();
 
         if ($section) {
