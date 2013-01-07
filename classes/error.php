@@ -2,7 +2,7 @@
 
 abstract class WFErrorHandler {
 
-    public static function suppressError($errno, $errstr, $errfile, $errline) {
+    public static function suppressError($errno, $errstr, $errfile, $errline, $errcontext) {
         switch ($errno) {
             default:
                 if (defined('JCE_REQUEST')) {
