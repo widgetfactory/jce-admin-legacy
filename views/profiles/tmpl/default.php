@@ -69,16 +69,17 @@ defined('_JEXEC') or die('RESTRICTED');
                 $k = 0;
                 for ($i = 0, $n = count($rows); $i < $n; $i++) {
                     $row = $rows[$i];
+                    
+                    $profile = JTable::getInstance('profiles', 'WFTable');
+                    $profile->bind($row);
 
                     $link = JRoute::_('index.php?option=com_jce&view=profiles&task=edit&cid[]=' . $row->id);
 
                     // state
-                    $state = JHTML::_('grid.published', $row, $i);
+                    $state      = JHTML::_('grid.published', $profile, $i);
 
                     // checked out
-                    $checked = JHTML::_('grid.checkedout', $row, $i);
-
-                    $profile = JTable::getInstance('profiles', 'WFTable');
+                    $checked    = JHTML::_('grid.checkedout', $profile, $i);
                     ?>
                     <tr>
                         <td class="order nowrap center hidden-phone">
