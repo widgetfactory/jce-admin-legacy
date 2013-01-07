@@ -36,9 +36,9 @@ class WFModelHelp extends WFModel {
                     $subtopics = $topic->subtopic;
                     $class = count($subtopics) ? ' class="subtopics"' : '';
 
-                    $key = $topic->attributes()->key;
-                    $title = $topic->attributes()->title;
-                    $file = $topic->attributes()->file;
+                    $key    = (string) $topic->attributes()->key;
+                    $title  = (string) $topic->attributes()->title;
+                    $file   = (string) $topic->attributes()->file;
 
                     // if file attribute load file
                     if ($file) {
@@ -53,21 +53,21 @@ class WFModelHelp extends WFModel {
                             $sub_subtopics = $subtopic->subtopic;
 
                             // if a file is set load it as sub-subtopics
-                            if ($file = $subtopic->attributes()->file) {
-                                $result .= '<dd class="subtopics">' . trim(WFText::_($subtopic->attributes()->title)) . '</dd>';
+                            if ($file = (string) $subtopic->attributes()->file) {
+                                $result .= '<dd class="subtopics">' . trim(WFText::_((string) $subtopic->attributes()->title)) . '</dd>';
                                 $result .= '<dl class="hidden">';
                                 $result .= $this->getTopics(WF_EDITOR . '/' . $file);
                                 $result .= '</dl>';
                             } else {
-                                $id = $subtopic->attributes()->key ? ' id="' . $subtopic->attributes()->key . '"' : '';
+                                $id = $subtopic->attributes()->key ? ' id="' . (string) $subtopic->attributes()->key . '"' : '';
 
                                 $class = count($sub_subtopics) ? ' class="subtopics"' : '';
-                                $result .= '<dd' . $class . $id . '>' . trim(WFText::_($subtopic->attributes()->title)) . '</dd>';
+                                $result .= '<dd' . $class . $id . '>' . trim(WFText::_((string) $subtopic->attributes()->title)) . '</dd>';
 
                                 if (count($sub_subtopics)) {
                                     $result .= '<dl class="hidden">';
                                     foreach ($sub_subtopics as $sub_subtopic) {
-                                        $result .= '<dd id="' . $sub_subtopic->attributes('key') . '">' . trim(WFText::_($sub_subtopic->attributes()->title)) . '</dd>';
+                                        $result .= '<dd id="' . (string) $sub_subtopic->attributes()->key . '">' . trim(WFText::_((string) $sub_subtopic->attributes()->title)) . '</dd>';
                                     }
                                     $result .= '</dl>';
                                 }
