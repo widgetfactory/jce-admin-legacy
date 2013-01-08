@@ -551,7 +551,7 @@ class WFModelEditor extends WFModelBase {
                     $classname = 'WF' . ucfirst($plugin) . 'PluginConfig';
 
                     // Check class and method
-                    if (class_exists($classname) && method_exists(new $classname, 'getConfig')) {
+                    if (class_exists($classname) && method_exists($classname, 'getConfig')) {
                         call_user_func_array(array($classname, 'getConfig'), array(&$settings));
                     }
                 }
@@ -578,7 +578,7 @@ class WFModelEditor extends WFModelBase {
                     $classname = 'WF' . ucfirst($plugin) . 'PluginConfig';
 
                     // Check class and method
-                    if (class_exists($classname) && method_exists(new $classname, 'getStyles')) {
+                    if (class_exists($classname) && method_exists($classname, 'getStyles')) {
                         call_user_func(array($classname, 'getStyles'));
                     }
                 }
