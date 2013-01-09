@@ -160,7 +160,7 @@
                 '</div>');
 
             // get group name
-            var name = values[0], list = values[1];
+            var name = values[0], list = values[1] || '';
 
             // Create input element if custom
             if (name == 'custom') {
@@ -256,6 +256,9 @@
             $('div.extension_list_scroll_bottom', $tmpl).click( function() {
                 self._scrollTo('bottom', $('ul.extension_list', $tmpl));
             });
+            
+            // cleanup list
+            list = list.replace(/^[;,]/, '').replace(/[;,]$/, '');
 
             // Split value by comma to get individual file extensions and build list elements
             $.each(list.split(','), function() {
@@ -479,9 +482,11 @@
                     groups.push(title + '=' + list.join(','));
                 }
             });
+            
+            var data = groups.join(';').replace(/([a-z]+)=;/g, '').replace(/^[;,]/, '').replace(/[;,]$/, '');
 
             // set value
-            $(this.element).val(groups.join(';').replace(/([a-z]+)=;/g, ''));
+            $(this.element).val(data);
         },
 
         destroy : function() {
