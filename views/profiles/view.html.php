@@ -292,6 +292,7 @@ class WFViewProfiles extends WFView {
                     'com_languages',
                     'com_jce',
                     'com_login',
+                    'com_mailto',
                     'com_menus',
                     'com_media',
                     'com_messages',
@@ -309,13 +310,13 @@ class WFViewProfiles extends WFView {
                 $query = $db->getQuery(true);
 
                 if (is_object($query)) {
-                    $query->select('element AS value, name AS text')->from('#__extensions')->where(array('type = ' . $db->Quote('component'), 'client_id = 1', 'enabled = 1'))->order('name');
+                    $query->select('element AS value, name AS text')->from('#__extensions')->where(array('type = ' . $db->Quote('component'), 'enabled = 1'))->order('name');
                 } else {
                     $query = "SELECT `option` AS value, name AS text"
-                            . " FROM #__components"
-                            . " WHERE parent = 0"
-                            . " AND enabled = 1"
-                            . " ORDER BY name";
+                    . " FROM #__components"
+                    . " WHERE parent = 0"
+                    . " AND enabled = 1"
+                    . " ORDER BY name";
                 }
 
                 $db->setQuery($query);
