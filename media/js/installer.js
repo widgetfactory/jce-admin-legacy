@@ -21,15 +21,7 @@
             
             $(":file").upload(options);
             
-            if ($('body').hasClass('ui-bootstrap')) {
-                // Tabs
-                $('#tabs ul li a').click(function (e) {
-                    e.preventDefault();
-                    $(this).tab('show');
-                });
-            } else {
-                $('#tabs').tabs();
-                
+            if ($('body').hasClass('ui-jquery')) {               
                 $('button#upload_button').button({
                     icons : {
                         primary : 'icon-install'

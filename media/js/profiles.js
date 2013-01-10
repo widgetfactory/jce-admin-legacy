@@ -49,21 +49,13 @@
             
             var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
             
-            if ($('body').hasClass('ui-bootstrap')) {  
-                // Tabs
-                $('#tabs ul.nav-tabs > li > a').click(function (e) {                    
-                    $(this).tab('show');
-                    e.preventDefault();
-                });
-                
+            if ($('body').hasClass('ui-bootstrap')) {                  
                 // Editor Tabs
                 $("#tabs-editor > ul.nav-tabs li a:first").tab('show');
                 // Plugin tabs
                 $("#tabs-plugins > ul.nav-tabs li a:first").tab('show');
                 
             } else {
-                $('#tabs').tabs();
-                
                 // users list
                 $('a#users-add').button({
                     icons : {

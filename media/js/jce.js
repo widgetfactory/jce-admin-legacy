@@ -100,16 +100,7 @@
 
             // add ui-jce class to body
             $('body').addClass('ui-jce');
-            
-            $('a.dialog').click( function(e) { 
-                self.createDialog(e, {
-                    src 	: $(this).attr('href'),
-                    options     : $(this).data('options')
-                });
-                    
-                e.preventDefault();
-            });
-            
+
             // Bootstrap styles
             if (this.options.bootstrap) {
                 // add boostrap id class
@@ -119,8 +110,17 @@
                 $('input[size="50"]').addClass('input-large');
                 $('input[size="5"]').addClass('input-mini');
                 
+                // handle basic tabs
+                $('#tabs ul li a').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+                
             } else {
                 $('body').addClass('ui-jquery');
+                
+                // handle basic tabs
+                $('#tabs').tabs();
                 
                 // Style stuff
                 $('div.icon a').addClass('ui-widget-content ui-corner-all');
@@ -150,6 +150,16 @@
                     $('#profiles-list tr:last-child').addClass('last');
                 }
             }
+            
+            // dialogs
+            $('a.dialog').click( function(e) { 
+                self.createDialog(e, {
+                    src 	: $(this).attr('href'),
+                    options     : $(this).data('options')
+                });
+                    
+                e.preventDefault();
+            });
 
             // Tips
             $('.wf-tooltip, .hasTip').tips({
