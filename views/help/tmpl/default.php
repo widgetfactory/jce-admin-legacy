@@ -16,9 +16,8 @@ defined('_JEXEC') or die('RESTRICTED');
 	<div class="span4 well">
             <div id="help-menu"><?php echo $this->model->renderTopics();?></div>
 	</div>
+        <div id="help-menu-toggle"><div class="toggle-handle"></div><div class="resize-handle"></div></div>
         <div class="span8">
-            <div id="help-menu-toggle"><div class="toggle-handle"></div></div>
-            
             <div id="help-frame"><iframe id="help-iframe" src="javascript:;" scrolling="auto" frameborder="0"></iframe></div>
 	</div>
     </div>
