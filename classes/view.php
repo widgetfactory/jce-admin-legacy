@@ -53,11 +53,21 @@ class WFView extends WFViewBase {
         $tab        = $document->_getTab();
         $end        = $document->_getLineEnd();
         
+        $model      = new WFModel();
+        
         foreach ($this->stylesheets as $style) {
+            if (strpos($style, '?version=') === false || strpos($style, '?v=') === false) {
+                $style .= '?v=' . $model->getVersion();
+            }
+
             $document->addCustomTag($tab . '<link rel="stylesheet" href="' . $style . '" type="text/css" />' . $end);
         }
         
         foreach ($this->scripts as $script) {
+            if (strpos($script, '?version=') === false || strpos($script, '?v=') === false) {
+                $script .= '?v=' . $model->getVersion();
+            }
+            
             $document->addCustomTag($tab . '<script src="' . $script . '" type="text/javascript"></script>' . $end);
         }
         
@@ -78,7 +88,7 @@ class WFView extends WFViewBase {
         parent::display($tpl);
     }
 
-    public function addScript($url) {
+    public function addScript($url) {        
         $this->scripts[] = $url;
     }
 
