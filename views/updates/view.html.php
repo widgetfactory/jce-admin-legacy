@@ -19,7 +19,7 @@ class WFViewUpdates extends WFView
     {
         $model =$this->getModel();
 		
-		$this->addScript('components/com_jce/media/js/update.js?version=' . $model->getVersion());
+		$this->addScript('components/com_jce/media/js/update.js');
 		
 		$options = array(
 			'language' => array(

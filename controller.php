@@ -91,27 +91,27 @@ class WFController extends WFControllerBase {
             $document->setMetaData('meta', 'width=device-width, initial-scale=1.0');
 
             // JQuery UI
-            $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-' . WF_JQUERY . '.min.js?version=' . $model->getVersion());
+            $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-' . WF_JQUERY . '.min.js');
             // jQuery noConflict
             $view->addScriptDeclaration('jQuery.noConflict();');
         }
-        
+
         // JQuery UI
-        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-ui-' . WF_JQUERYUI . '.custom.min.js?version=' . $model->getVersion());
+        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-ui-' . WF_JQUERYUI . '.custom.min.js');
         // JQuery Touch Punch
-        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery.ui.touch-punch.min.js?version=' . $model->getVersion());
+        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery.ui.touch-punch.min.js');
 
         $scripts = array();
 
         switch ($name) {
             case 'help':
-                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/help.js?version=' . $model->getVersion());                
+                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/help.js');                
                 break;
             default:
-                $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/global.css?version=' . $model->getVersion());
+                $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/global.css');
                 
                 if (!$bootstrap || !$jquery) {
-                    $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/styles-ui.css?version=' . $model->getVersion());
+                    $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/styles-ui.css');
                 }
 
                 // load Joomla! core javascript

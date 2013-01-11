@@ -144,7 +144,7 @@ class WFViewProfiles extends WFView {
                     )
                 );
 
-                $this->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
+                $this->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/uploads.js');
                 $this->addScriptDeclaration('jQuery(document).ready(function($){$(\'input[type="file"]\').upload(' . json_encode($options) . ')});');
                 
                 // load styles
@@ -166,11 +166,11 @@ class WFViewProfiles extends WFView {
                 );
                 // Load scripts
                 foreach ($scripts as $script) {
-                    $this->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/' . $script . '?version=' . $model->getVersion());
+                    $this->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/' . $script);
                 }
                 
-                $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
-                $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/select.js?version=' . $model->getVersion());
+                $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js');
+                $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/select.js');
                 
                 // load styles
                 $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/profiles.css');

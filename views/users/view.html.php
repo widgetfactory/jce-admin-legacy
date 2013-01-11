@@ -28,7 +28,7 @@ class WFViewUsers extends WFView {
 
         $model = $this->getModel();
 
-        $this->addScript('components/com_jce/media/js/users.js?version=' . $model->getVersion());
+        $this->addScript('components/com_jce/media/js/users.js');
 
         $filter_order       = $app->getUserStateFromRequest("$option.$view.filter_order", 'filter_order', 'a.name', 'cmd');
         $filter_order_Dir   = $app->getUserStateFromRequest("$option.$view.filter_order_Dir", 'filter_order_Dir', '', 'word');
@@ -175,10 +175,10 @@ class WFViewUsers extends WFView {
         // search filter
         $lists['search'] = $search;
 
-        $this->assignRef('user', JFactory::getUser());
-        $this->assignRef('lists', $lists);
-        $this->assignRef('items', $rows);
-        $this->assignRef('pagination', $pagination);
+        $this->assign('user', JFactory::getUser());
+        $this->assign('lists', $lists);
+        $this->assign('items', $rows);
+        $this->assign('pagination', $pagination);
         
         $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/users.css');
 

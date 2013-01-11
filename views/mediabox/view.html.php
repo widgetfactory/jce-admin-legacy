@@ -64,11 +64,11 @@ class WFViewMediabox extends WFView {
 
         $params = $this->getParams($plugin->params);
 
-        $this->assignRef('params', $params);
-        $this->assignRef('client', $client);
+        $this->assign('params', $params);
+        $this->assign('client', $client);
 
-        $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js?version=' . $model->getVersion());
-        $this->addStyleSheet('components/com_jce/media/css/colorpicker.css?version=' . $model->getVersion());
+        $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js');
+        $this->addStyleSheet('components/com_jce/media/css/colorpicker.css');
 
         $options = array(
             'template_colors' => WFToolsHelper::getTemplateColors(),

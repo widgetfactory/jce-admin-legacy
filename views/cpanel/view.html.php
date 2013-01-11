@@ -42,7 +42,7 @@ class WFViewCpanel extends WFView {
 
         JHtml::_('behavior.modal');
 
-        $this->addScript('components/com_jce/media/js/cpanel.js?version=' . $model->getVersion());
+        $this->addScript('components/com_jce/media/js/cpanel.js');
 
         $this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.CPanel.init(' . json_encode($options) . ')});');
 
@@ -99,11 +99,10 @@ class WFViewCpanel extends WFView {
         }
 
         $this->assign('icons', $icons);
-        $this->assignRef('model', $model);
-        $this->assignRef('installer', $installer);
-        $this->assignRef('params', $params);
+        $this->assign('model', $model);
+        $this->assign('params', $params);
 
-        $this->assignRef('version', $version);
+        $this->assign('version', $version);
 
         parent::display($tpl);
     }

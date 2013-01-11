@@ -35,9 +35,9 @@ class WFViewConfig extends WFView
         $params = new WFParameter($component->params, $xml, 'editor');      
         $params->addElementPath(JPATH_COMPONENT.'/elements');
         
-        $this->assignRef('model', 	$model);
-        $this->assignRef('params', 	$params);
-        $this->assignRef('client', 	$client);
+        $this->assign('model', 	$model);
+        $this->assign('params', $params);
+        $this->assign('client', $client);
 
         WFToolbarHelper::apply();
         WFToolbarHelper::save();

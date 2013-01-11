@@ -55,8 +55,8 @@ class WFViewInstaller extends WFView {
                 'alert' => WFText::_('WF_INSTALLER_FILETYPE_ERROR')
             )
         );
-        $this->addScript('components/com_jce/media/js/installer.js?version=' . $model->getVersion());
-        $this->addScript('components/com_jce/media/js/uploads.js?version=' . $model->getVersion());
+        $this->addScript('components/com_jce/media/js/installer.js');
+        $this->addScript('components/com_jce/media/js/uploads.js');
         $this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Installer.init(' . json_encode($options) . ');});');
 
         // load styles
@@ -70,20 +70,20 @@ class WFViewInstaller extends WFView {
         $languages = $model->getLanguages();
         $related = $model->getRelated();
 
-        $this->assignRef('plugins', $plugins);
-        $this->assignRef('extensions', $extensions);
-        $this->assignRef('languages', $languages);
-        $this->assignRef('related', $related);
+        $this->assign('plugins', $plugins);
+        $this->assign('extensions', $extensions);
+        $this->assign('languages', $languages);
+        $this->assign('related', $related);
 
         $result = $state->get('install.result');
 
         $this->assign('showMessage', count($result));
-        $this->assignRef('model', $model);
-        $this->assignRef('state', $state);
+        $this->assign('model', $model);
+        $this->assign('state', $state);
 
         $ftp = JClientHelper::setCredentialsFromRequest('ftp');
 
-        $this->assignRef('ftp', $ftp);
+        $this->assign('ftp', $ftp);
 
         $this->setLayout($layout);
 
