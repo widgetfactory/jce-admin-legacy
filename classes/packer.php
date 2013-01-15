@@ -158,7 +158,7 @@ class WFPacker extends JObject {
     }
 
     protected function jsmin($data) {
-        return $data;
+        return trim($data);
     }
 
     /**
