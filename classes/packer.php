@@ -128,22 +128,11 @@ class WFPacker extends JObject {
             $content .= $this->getText();
         } else {
             foreach ($files as $file) {
-                $content .= $this->getText($file);
+                $content .= $this->getText($file, $minify);
             }
         }
 
         $content .= $this->getContentEnd();
-
-        // pack javascript
-        if ($minify) {
-            if ($this->getType() == 'javascript') {
-                $content = $this->jsmin($content);
-            }
-
-            if ($this->getType() == 'css') {
-                $content = $this->cssmin($content);
-            }
-        }
 
         // Generate GZIP'd content
         if ($gzip) {
@@ -158,7 +147,7 @@ class WFPacker extends JObject {
     }
 
     protected function jsmin($data) {
-        return trim($data);
+        return $data;
     }
 
     /**
@@ -197,7 +186,7 @@ class WFPacker extends JObject {
         return '';
     }
 
-    protected function getText($file = null) {
+    protected function getText($file = null, $minify = true) {
 
         if ($file && is_file($file)) {
 
@@ -218,10 +207,19 @@ class WFPacker extends JObject {
 
                     // process urls
                     $text = preg_replace_callback('#url\s?\([\'"]?([^\'"\))]+)[\'"]?\)#', array('WFPacker', 'processPaths'), $text);
+                    
+                    if ($minify) {
+                        // minify
+                        $text = $this->cssmin($text);
+                    }
                 }
                 // make sure text ends in a semi-colon;
                 if ($this->getType() == 'javascript') {
                     $text = rtrim(trim($text), ';') . ';';
+                    
+                    if ($minify) {
+                        $text = $this->jsmin($text);
+                    }
                 }
 
                 return $text;
