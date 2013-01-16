@@ -147,7 +147,8 @@ class WFPacker extends JObject {
     }
 
     protected function jsmin($data) {
-        return $data;
+        // remove header comments
+        return preg_replace('#^\/\*[\s\S]+?\*\/#', '', $data);
     }
 
     /**
