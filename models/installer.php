@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2012 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -184,14 +184,14 @@ class WFModelInstaller extends WFModel {
         if (preg_match('/\.(zip|tar|gz|gzip|tgz|tbz2|bz2|bzip2)/i', $dest)) {
             // Make sure that zlib is loaded so that the package can be unpacked
             if (!extension_loaded('zlib')) {
-                JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WARNINSTALLZLIB'));
+                JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_WARNINSTALLZLIB'));
                 return false;
             }
 
             $package = JPath::clean(dirname($dest) . '/' . uniqid('install_'));
 
             if (!JArchive::extract($dest, $package)) {
-                JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_EXTRACT'));
+                JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_EXTRACT_ERROR'));
                 return false;
             }
 
