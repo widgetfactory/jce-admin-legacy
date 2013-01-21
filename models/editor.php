@@ -664,7 +664,7 @@ class WFModelEditor extends WFModelBase {
         $id = 0;
 
         if ($app->isSite()) {
-            $menus = JSite::getMenu();
+            $menus = $app->getMenu();
             $menu = $menus->getActive();
 
             if ($menu) {
