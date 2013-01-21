@@ -16,7 +16,7 @@ class WFControllerProfiles extends WFController {
     /**
      * Custom Constructor
      */
-    function __construct($default = array()) {
+    public function __construct($default = array()) {
         parent::__construct();
 
         $this->registerTask('apply', 'save');
@@ -89,6 +89,17 @@ class WFControllerProfiles extends WFController {
         $msg = JText::sprintf('WF_PROFILES_COPIED', $n);
         $this->setRedirect('index.php?option=com_jce&view=profiles', $msg);
     }
+    
+    private static function cleanInput($input, $method = 'string') {
+        $filter = JFilterInput::getInstance();
+        $input  = (array) $input;
+        
+        for($i = 0; $i < count($input); $i++) {
+            $input[$i] = $filter->clean($input[$i], $method);
+        }
+        
+        return $input;
+    }
 
     public function save() {
         // Check for request forgeries
@@ -101,25 +112,29 @@ class WFControllerProfiles extends WFController {
         // get components
         $components = JRequest::getVar('components', array(), 'post', 'array');
         // get usertypes
-        $types = JRequest::getVar('usergroups', array(), 'post', 'array');
+        $types      = JRequest::getVar('usergroups', array(), 'post', 'array');
         // get users
-        $users = JRequest::getVar('users', array(), 'post', 'array');
+        $users      = JRequest::getVar('users', array(), 'post', 'array');
 
         // get device
-        $device = JRequest::getVar('device', array(), 'post', 'array');
+        $device     = JRequest::getVar('device', array(), 'post', 'array');
 
         // get area
-        $area = JRequest::getVar('area', array(), 'post', 'array');
+        $area       = JRequest::getVar('area', array(), 'post', 'array');
 
         if (!$row->bind(JRequest::get('post'))) {
             JError::raiseError(500, $row->getError());
         }
+        
+        // clean and assign setup options
+        $row->types         = implode(',', self::cleanInput($types, 'int'));
+        $row->components    = implode(',', self::cleanInput($components, 'cmd'));
+        $row->users         = implode(',', self::cleanInput($users, 'int'));
+        $row->device        = implode(',', self::cleanInput($device, 'cmd'));
 
-        $row->types = implode(',', $types);
-        $row->components = implode(',', $components);
-        $row->users = implode(',', $users);
-        $row->device = implode(',', $device);
-
+        // clean area
+        $area = self::cleanInput($area, 'int');
+        
         // ugly hack for area array to integer conversion
         if (empty($area) || count($area) == 2) {
             $row->area = 0;
@@ -244,7 +259,7 @@ class WFControllerProfiles extends WFController {
         $order = JRequest::getVar('order', array(0), 'post', 'array');
 
         if (!empty($cid)) {
-            $model  = $this->getModel('profiles', 'WFModel');
+            $model = $this->getModel('profiles', 'WFModel');
             $result = $model->saveOrder($cid, $order);
         }
 
@@ -361,39 +376,49 @@ class WFControllerProfiles extends WFController {
         // Check for request forgeries
         JRequest::checkToken() or die('RESTRICTED');
 
-        $mainframe = JFactory::getApplication();
-        $tmp = $mainframe->getCfg('tmp_path');
-        $file = JRequest::getVar('import', '', 'files', 'array');
-        $input = JRequest::getVar('import_input');
-
-        $model = $this->getModel('profiles', 'WFModel');
+        $app    = JFactory::getApplication();
+        $file   = JRequest::getVar('import', '', 'files', 'array');
+        $input  = JRequest::getVar('import_input');
+        $tmp    = $app->getCfg('tmp_path');
+        $model  = $this->getModel('profiles', 'WFModel');
+        
+        $filter = JFilterInput::getInstance();
 
         jimport('joomla.filesystem.file');
+        
+        // clean input
+        $input = $filter->clean($filter, 'path');
 
         if (!is_array($file)) {
-            $mainframe->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_NOFILE'), 'error');
+            $app->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_NOFILE'), 'error');
         } else {
-            if (!$file['name'] || !$file['tmp_name']) {
-                if (JFile::exists($input)) {
-                    $this->processImport($input);
+            // check for valid uploaded file
+            if (is_uploaded_file($file['tmp_name']) && $file['name']) {
+                // create destination path
+                $destination = $tmp . '/' . $file['name'];
+                if (JFile::upload($file['tmp_name'], $destination)) {
+                    // check it exists, was uploaded properly
+                    if (JFile::exists($destination)) {
+                        // process import
+                        $model->processImport($destination);
+                    } else {
+                        $app->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_FAILED'), 'error');
+                    }
                 } else {
-                    $mainframe->enqueueMessage(WFText::_('WF_PROFILES_IMPORT_NOFILE'), 'error');
+                    $app->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_FAILED'), 'error');
                 }
             } else {
-                // Check if there was a problem uploading the file.
-                if ($file['error'] || $file['size'] < 1) {
-                    $mainframe->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_FAILED'), 'error');
-                } else {
-                    $dest = $tmp . '/' . $file['name'];
-                    if (JFile::upload($file['tmp_name'], $dest)) {
-                        if (JFile::exists($dest)) {
-                            $model->processImport($dest);
-                        } else {
-                            $mainframe->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_FAILED'), 'error');
-                        }
+                // check for file input value instead
+                if ($input) {
+                    // check file exists
+                    if (JFile::exists($input)) {
+                        // process import
+                        $model->processImport($input);
                     } else {
-                        $mainframe->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_FAILED'), 'error');
+                        $app->enqueueMessage(WFText::_('WF_PROFILES_IMPORT_NOFILE'), 'error');
                     }
+                } else {
+                    $app->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_FAILED'), 'error');
                 }
             }
         }
