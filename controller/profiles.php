@@ -89,17 +89,6 @@ class WFControllerProfiles extends WFController {
         $msg = JText::sprintf('WF_PROFILES_COPIED', $n);
         $this->setRedirect('index.php?option=com_jce&view=profiles', $msg);
     }
-    
-    private static function cleanInput($input, $method = 'string') {
-        $filter = JFilterInput::getInstance();
-        $input  = (array) $input;
-        
-        for($i = 0; $i < count($input); $i++) {
-            $input[$i] = $filter->clean($input[$i], $method);
-        }
-        
-        return $input;
-    }
 
     public function save() {
         // Check for request forgeries
@@ -109,59 +98,14 @@ class WFControllerProfiles extends WFController {
         $row = JTable::getInstance('profiles', 'WFTable');
         $task = $this->getTask();
 
-        // get components
-        $components = JRequest::getVar('components', array(), 'post', 'array');
-        // get usertypes
-        $types      = JRequest::getVar('usergroups', array(), 'post', 'array');
-        // get users
-        $users      = JRequest::getVar('users', array(), 'post', 'array');
-
-        // get device
-        $device     = JRequest::getVar('device', array(), 'post', 'array');
-
-        // get area
-        $area       = JRequest::getVar('area', array(), 'post', 'array');
-
         if (!$row->bind(JRequest::get('post'))) {
             JError::raiseError(500, $row->getError());
         }
-        
-        // clean and assign setup options
-        $row->types         = implode(',', self::cleanInput($types, 'int'));
-        $row->components    = implode(',', self::cleanInput($components, 'cmd'));
-        $row->users         = implode(',', self::cleanInput($users, 'int'));
-        $row->device        = implode(',', self::cleanInput($device, 'cmd'));
-
-        // clean area
-        $area = self::cleanInput($area, 'int');
-        
-        // ugly hack for area array to integer conversion
-        if (empty($area) || count($area) == 2) {
-            $row->area = 0;
-        } else {
-            $row->area = $area[0];
-        }
-
-        $data = new StdClass();
-        // get params array
-        $params = JRequest::getVar('params', array(), 'POST', 'array');
-
-        if (isset($params['editor'])) {
-            $data->editor = WFParameterHelper::toObject($params['editor']);
-        }
-        $plugins = explode(',', $row->plugins);
-
-        foreach ($plugins as $plugin) {
-            // add plugin params to array
-            if (isset($params[$plugin])) {
-                $data->$plugin = WFParameterHelper::toObject($params[$plugin]);
-            }
-        }
-        $row->params = json_encode($data);
 
         if (!$row->check()) {
             JError::raiseError(500, $row->getError());
         }
+        
         if (!$row->store()) {
             JError::raiseError(500, $row->getError());
         }
