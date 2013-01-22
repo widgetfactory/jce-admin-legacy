@@ -145,7 +145,7 @@ class WFModelInstaller extends WFModel {
         }
 
         // Install failed
-        if ((!$file['tmp_name'] && !$file['name']) || ($file['error'] || $file['size'] < 1)) {
+        if (!is_uploaded_file($file['tmp_name']) || !$file['tmp_name'] || !$file['name'] || $file['error'] || $file['size'] < 1) {
             $upload = false;
             // no path either!
             if (!$path) {
@@ -161,15 +161,15 @@ class WFModelInstaller extends WFModel {
         }
 
         // uploaded file
-        if ($upload && $file['tmp_name'] && $file['name']) {
+        if ($upload) {
             // check extension
             if (!preg_match('/\.(zip|tar|gz|gzip|tgz|tbz2|bz2|bzip2)$/i', $file['name'])) {
                 JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WARNINSTALLFILE'));
                 return false;
             }
 
-            $dest = $tmp . '/' . $file['name'];
-            $src = $file['tmp_name'];
+            $dest   = $tmp . '/' . $file['name'];
+            $src    = $file['tmp_name'];
             // upload file
             JFile::upload($src, $dest);
             // path to file
