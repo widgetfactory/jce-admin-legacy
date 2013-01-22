@@ -139,7 +139,7 @@ class WFModelInstaller extends WFModel {
             $upload = false;
             // no path either!
             if (!$path) {
-                JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WARNINSTALLFILE'));
+                JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_NO_FILE'));
                 return false;
             }
         }
@@ -164,7 +164,7 @@ class WFModelInstaller extends WFModel {
         if ($upload) {
             // check extension
             if (!preg_match('/\.(zip|tar|gz|gzip|tgz|tbz2|bz2|bzip2)$/i', $file['name'])) {
-                JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WARNINSTALLFILE'));
+                JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_INVALID_FILE'));
                 return false;
             }
 
