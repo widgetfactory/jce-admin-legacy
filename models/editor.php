@@ -828,10 +828,11 @@ class WFModelEditor extends WFModelBase {
             $fonts = array();
 
             foreach ($matches[1] as $match) {
+                // relative link, import
                 if (strpos($match, 'http') === false) {
                     $fonts[] = self::importFontFace(realpath($path . '/' . $match));
                 }
-
+                // add google font link
                 if (strpos($match, '://fonts.googleapis.com') !== false) {
                     array_unshift($fonts, '@import url(' . $match . ');');
                 }
