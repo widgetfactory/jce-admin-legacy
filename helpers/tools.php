@@ -46,10 +46,10 @@ abstract class WFToolsHelper {
 
         if ($data) {
             if (preg_match_all('/@import url\(([^\)]+)\)/', $data, $matches)) {
-                $template = self::getTemplates();
-
+                $templates = self::getTemplates();
+                
                 foreach ($matches[1] as $match) {
-                    $file = JPATH_SITE . '/templates/' . $template . '/css/' . $match;
+                    $file = JPATH_SITE . '/templates/' . $templates[0] . '/css/' . $match;
 
                     if ($file) {
                         self::parseColors($file);
