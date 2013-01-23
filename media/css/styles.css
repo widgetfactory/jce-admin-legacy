@@ -527,7 +527,7 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 }
 
 #jce #profiles-list span.sortable-handle {
-    cursor: move;
+    cursor: ns-resize;
 }
 
 #tabs .tab-disabled {
