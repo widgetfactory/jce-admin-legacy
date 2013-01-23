@@ -185,13 +185,6 @@ class WFModelEditor extends WFModelBase {
             //$this->addStyleSheet($this->getURL(true) . '/libraries/bootstrap/css/bootstrap.css?version=' . $version);
             // get plugin styles
             $this->getPluginStyles($settings);
-
-            // get font-face and google fonts
-            $fonts = trim(self::getCustomFonts($this->getStyleSheets(true)));
-
-            if (!empty($fonts)) {
-                $this->addStyleDeclaration($fonts);
-            }
         }
 
         // set compression
@@ -815,95 +808,6 @@ class WFModelEditor extends WFModelBase {
         }
 
         return $styles;
-    }
-
-    /**
-     * Import CSS from a file
-     * @param $data Data from file
-     * @param file File path where data comes from
-     */
-    private static function importCss($data, $path) {
-        if (preg_match_all('#@import url\([\'"]?([^\'"\)]+)[\'"]?\);#i', $data, $matches)) {
-
-            $fonts = array();
-
-            foreach ($matches[1] as $match) {
-                // relative link, import
-                if (strpos($match, 'http') === false) {
-                    $fonts[] = self::importFontFace(realpath($path . '/' . $match));
-                }
-                // add google font link
-                if (strpos($match, '://fonts.googleapis.com') !== false) {
-                    array_unshift($fonts, '@import url(' . $match . ');');
-                }
-            }
-
-            return implode("\n", $fonts);
-        }
-
-        return '';
-    }
-
-    private static function importFontFace($file) {
-        jimport('joomla.filesystem.file');
-
-        $content = '';
-
-        if (is_file($file)) {
-            $content .= @JFile::read($file);
-        }
-
-        if ($content) {
-            // @import
-            if (strpos($content, '@import') !== false) {
-                return self::importCss($content, dirname($file));
-            }
-
-            // @font-face
-            if (strpos($content, '@font-face') !== false) {
-                $font = '';
-
-                preg_match_all('#\@font-face\s*\{([^}]+)\}#', $content, $matches, PREG_SET_ORDER);
-
-                if ($matches) {
-                    $url = str_replace('\\', '/', str_replace(JPATH_SITE, JURI::root(true), dirname($file)));
-
-                    if ($url) {
-                        $url .= '/';
-                    }
-
-                    foreach ($matches as $match) {
-                        $font .= preg_replace('#url\(([\'"]?)#', 'url($1' . $url, $match[0]);
-                    }
-                }
-
-                return $font;
-            }
-        }
-
-        return '';
-    }
-
-    private static function getCustomFonts($files) {
-        $fonts = array();
-
-        foreach ((array) $files as $file) {
-            $font = self::importFontFace($file);
-
-            if ($font) {
-                if (strpos($font, '@import') !== false) {
-                    array_unshift($fonts, $font);
-                } else {
-                    $fonts[] = $font;
-                }
-            }
-        }
-
-        if (!empty($fonts)) {
-            return "/* @font-face and Google Font rules for JCE */" . "\n" . str_replace("\n\n", "\n", implode("\n", $fonts));
-        }
-
-        return '';
     }
 
     private function getURL($relative = false) {
