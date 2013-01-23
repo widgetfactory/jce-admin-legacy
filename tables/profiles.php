@@ -146,7 +146,7 @@ class WFTableProfiles extends JTable {
                     break;
                 case 'components':
                 case 'device':
-                    $value = implode(',', self::cleanInput($value, 'cmd'));
+                    $value = implode(',', self::cleanInput($value));
                     break;
                 case 'usergroups':
                     $key    = 'types';
