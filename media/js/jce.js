@@ -7,7 +7,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-(function($) {
+(function($) {    
     var $tmp = document.createElement('div');
     
     $.support.borderRadius = (function() {
@@ -299,7 +299,11 @@
                 // custom radio
                 $('input[type="radio"]').radio();
             });
-        
+            
+            // remove loader
+            $(document).ready(function() {
+                $('#jce').removeClass('loading');      
+            });
         },
 
         createDialog : function(el, o) {
