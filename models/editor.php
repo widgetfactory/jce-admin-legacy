@@ -76,11 +76,11 @@ class WFModelEditor extends WFModelBase {
 
     public function __construct() {
         $wf = WFEditor::getInstance();
-        
+
         // set language
-        $this->language = WFLanguage::getCode(); 
+        $this->language = WFLanguage::getCode();
         // set profile
-        $this->profile  = $wf->getProfile();
+        $this->profile = $wf->getProfile();
     }
 
     public function buildEditor() {
@@ -384,9 +384,7 @@ class WFModelEditor extends WFModelBase {
             'plugins' => ''
         );
 
-        if (WF_INI_LANG || $wf->getParam('editor.compress_javascript', 0)) {
-            $settings['language_load'] = false;
-        }
+        $settings['language_load'] = false;
 
         return $settings;
     }
@@ -824,12 +822,12 @@ class WFModelEditor extends WFModelBase {
     public function pack() {
         // check token
         WFToken::checkToken('GET') or die('RESTRICTED');
+        
+        wfimport('admin.classes.packer');
+        wfimport('admin.classes.language');
 
-        $wf = WFEditor::getInstance();
-
-        require_once (JPATH_COMPONENT_ADMINISTRATOR . '/classes/packer.php');
-
-        $type = JRequest::getWord('type', 'javascript');
+        $wf     = WFEditor::getInstance();
+        $type   = JRequest::getWord('type', 'javascript');
 
         // javascript
         $packer = new WFPacker(array('type' => $type));
@@ -855,40 +853,9 @@ class WFModelEditor extends WFModelBase {
             case 'language' :
                 $files = array();
 
-                if (WF_INI_LANG) {
-                    $data = $this->loadLanguages(array(), array(), '(^dlg$|_dlg$)', true);
-                    $packer->setText($data);
-                } else {
-                    // Add core languages
-                    $file = WF_EDITOR . '/' . "tiny_mce/langs/" . $this->language . ".js";
-                    if (!JFile::exists($file)) {
-                        $file = WF_EDITOR . '/' . "tiny_mce/langs/en.js";
-                    }
-                    $files[] = $file;
-
-                    // Add themes
-                    foreach ($themes as $theme) {
-                        $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/" . $this->language . ".js";
-                        if (!JFile::exists($file)) {
-                            $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/en.js";
-                        }
-
-                        $files[] = $file;
-                    }
-
-                    // Add plugins
-                    foreach ($plugins as $plugin) {
-                        $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/" . $this->language . ".js";
-                        if (!JFile::exists($file)) {
-                            $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/en.js";
-                        }
-                        if (JFile::exists($file)) {
-                            $files[] = $file;
-                        }
-                    }
-                    // reset type
-                    $type = 'javascript';
-                }
+                $data = $this->loadLanguages(array(), array(), '(^dlg$|_dlg$)', true);
+                $packer->setText($data);
+                
                 break;
             case 'javascript' :
                 $files = array();
@@ -896,55 +863,25 @@ class WFModelEditor extends WFModelBase {
                 // add core file
                 $files[] = WF_EDITOR . '/' . "tiny_mce/tiny_mce" . $suffix . ".js";
 
-                if (!WF_INI_LANG) {
-                    // Add core languages
-                    foreach ($languages as $language) {
-                        $file = WF_EDITOR . '/' . "tiny_mce/langs/" . $this->language . ".js";
-                        if (!JFile::exists($file)) {
-                            $file = WF_EDITOR . '/' . "tiny_mce/langs/en.js";
-                        }
-                        $files[] = $file;
-                    }
-                }
                 // Add themes
                 foreach ($themes as $theme) {
                     $files[] = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/editor_template" . $suffix . ".js";
-
-                    if (!WF_INI_LANG) {
-                        $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/" . $this->language . ".js";
-                        if (!JFile::exists($file)) {
-                            $file = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/langs/en.js";
-                        }
-
-                        $files[] = $file;
-                    }
                 }
 
                 // Add plugins
                 foreach ($plugins as $plugin) {
                     $files[] = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/editor_plugin" . $suffix . ".js";
-
-                    if (!WF_INI_LANG) {
-                        $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/" . $this->language . ".js";
-                        if (!JFile::exists($file)) {
-                            $file = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/langs/en.js";
-                        }
-                        if (JFile::exists($file)) {
-                            $files[] = $file;
-                        }
-                    }
                 }
 
                 // add Editor file
                 $files[] = WF_EDITOR . '/libraries/js/editor.js';
-
-                if (WF_INI_LANG) {
-                    wfimport('admin.classes.language');
-
-                    $parser = new WFLanguageParser();
-                    $data = $parser->load();
-                    $packer->setContentEnd($data);
-                }
+                
+                // parse ini language files
+                $parser = new WFLanguageParser();
+                $data = $parser->load();
+                
+                // add to packer
+                $packer->setContentEnd($data);
 
                 break;
             case 'css' :
@@ -1009,6 +946,9 @@ class WFModelEditor extends WFModelBase {
     }
 
     public function loadLanguages() {
+        // check token
+        WFToken::checkToken('GET') or die('RESTRICTED');
+
         wfimport('admin.classes.language');
 
         $parser = new WFLanguageParser(array('plugins' => $this->getPlugins()));
