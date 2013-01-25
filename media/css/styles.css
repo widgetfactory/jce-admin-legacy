@@ -11,6 +11,29 @@
     font-size : 12px;
     padding: 10px;
     background-color: #FFFFFF;
+    position: relative;
+}
+
+#jce.loading:after {
+    content : "";
+    border-radius: 10px 10px 10px 10px;
+    height: 100%;
+    top: 10px;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+    background: #FFF url('../../../../../components/com_jce/editor/tiny_mce/themes/advanced/skins/default/img/progress.gif') no-repeat center;
+    margin : -10px;
+}
+
+#loader {
+    border-radius: 10px 10px 10px 10px;
+    height: 100%;
+    margin: -10px;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+    background: #FFF url('../../../../../components/com_jce/editor/tiny_mce/themes/advanced/skins/default/img/progress.gif') no-repeat center;
 }
 
 #jce .ui-addselect {
