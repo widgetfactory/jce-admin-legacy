@@ -29,16 +29,20 @@
 		 * @param {Object} options Options object
 		 */
         _init: function() {
-            var self = this;                        
+            var self = this; 
+            
+            $(document).ready(function() {
+                self._createUploader();
+            });
                         
             // Safari needs to wait for the window to finish loading...!!!
-            if ($.browser.webkit && /Safari/.test(navigator.userAgent)) {
+            /*if ($.browser.webkit && /Safari/.test(navigator.userAgent)) {
                 $(window).load(function() {
                     self._createUploader();
                 });
             } else {
                 self._createUploader();
-            }
+            }*/
         },
 		
         _createUploader : function() {
