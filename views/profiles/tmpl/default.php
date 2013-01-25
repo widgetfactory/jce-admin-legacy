@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 ?>
 <form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-    <div id="jce">
+    <div id="jce" class="loading">
         <fieldset id="filter-bar" class="btn-toolbar">
             <div class="filter-search btn-group pull-left fltlft">
                 <label for="search" class="element-invisible"><?php echo WFText::_('WF_LABEL_SEARCH'); ?></label>

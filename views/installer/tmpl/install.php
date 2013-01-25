@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('RESTRICTED');
 ?>
 <form action="index.php" method="post" name="adminForm" enctype="multipart/form-data" class="form-horizontal">
-    <div id="jce">
+    <div id="jce" class="loading">
 <?php
 if ($this->showMessage) :
     echo $this->loadTemplate('message');
