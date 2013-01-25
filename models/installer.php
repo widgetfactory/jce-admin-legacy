@@ -154,11 +154,7 @@ class WFModelInstaller extends WFModel {
             }
         }
 
-        if (defined('JPATH_PLATFORM')) {
-            $tmp = $config->get('tmp_path');
-        } else {
-            $tmp = $config->getValue('config.tmp_path');
-        }
+        $tmp = $config->get('tmp_path');
 
         // uploaded file
         if ($upload) {
