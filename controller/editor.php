@@ -41,17 +41,8 @@ class WFControllerEditor extends WFControllerBase {
                     }
 
                     break;
-                case 'theme':
-                    $theme = JRequest::getWord('theme');
 
-                    if ($theme && is_dir(WF_EDITOR_THEMES . '/' . $theme)) {
-                        require_once(WF_EDITOR_THEMES . '/' . $theme . '/theme.php');
-                    } else {
-                        throw new InvalidArgumentException('Theme not found!');
-                    }
-
-                    break;
-                case 'plugin':
+                case 'plugin':                    
                     $file = basename(JRequest::getCmd('file', $plugin));
                     $path = WF_EDITOR_PLUGINS . '/' . $plugin;
 
