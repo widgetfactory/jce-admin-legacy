@@ -145,7 +145,7 @@ class WFModelInstaller extends WFModel {
         }
 
         // Install failed
-        if (!is_uploaded_file($file['tmp_name']) || !$file['tmp_name'] || !$file['name'] || $file['error'] || $file['size'] < 1) {
+        if (!is_uploaded_file($file['tmp_name']) || !$file['tmp_name'] || !$file['name'] || $file['error']) {
             $upload = false;
             // no path either!
             if (!$path) {
@@ -164,10 +164,19 @@ class WFModelInstaller extends WFModel {
                 return false;
             }
 
-            $dest   = $tmp . '/' . $file['name'];
+            $dest   = JPath::clean($tmp . '/' . $file['name']);
             $src    = $file['tmp_name'];
             // upload file
-            JFile::upload($src, $dest);
+            if (!JFile::upload($src, $dest)) {
+                JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_UPLOAD_FAILED'));
+                return false;
+            }
+            
+            if (!is_file($dest)) {
+                JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_UPLOAD_FAILED'));
+                return false;
+            }
+            
             // path to file
         } else {
             $dest = JPath::clean($path);
