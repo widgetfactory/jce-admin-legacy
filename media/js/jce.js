@@ -389,7 +389,7 @@
         },
         
         _setDependants : function() {
-            $('input[data-parent], select[data-parent]').each(function() {
+            $('input[data-parent], select[data-parent], textarea[data-parent]').each(function() {
                 var el = this, data = $(this).data('parent');
                 
                 var p = $(this).parents('li:first');
