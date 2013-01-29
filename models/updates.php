@@ -16,7 +16,7 @@ require_once (dirname(__FILE__) . '/model.php');
 
 class WFModelUpdates extends WFModel {
 
-    var $url = 'https://www.joomlacontenteditor.net/index.php?option=com_updates&format=raw';
+    protected static $updateURL = 'https://www.joomlacontenteditor.net/index.php?option=com_updates&format=raw';
 
     public static function canUpdate() {
         if (!function_exists('curl_init')) {
@@ -87,7 +87,7 @@ class WFModelUpdates extends WFModel {
         $result = false;
 
         // Get all extensions and version numbers
-        $data = array('task' => 'check', 'jversion' => WF_JOOMLA15 ? '1.5' : '1.7');
+        $data = array('task' => 'check', 'jversion' => WF_JOOMLA15 ? '1.5' : '2.5');
 
         wfimport('admin.helpers.extension');
 
@@ -121,9 +121,9 @@ class WFModelUpdates extends WFModel {
         }
 
         // connect
-        $result = $this->connect($this->url, implode('&', $req));
+        $result = $this->connect(self::$updateURL, implode('&', $req));
 
-        return json_encode($result);
+        return $result;
     }
 
     /**
