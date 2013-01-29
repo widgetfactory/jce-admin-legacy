@@ -33,11 +33,8 @@ class WFControllerConfig extends WFController {
         // Check for request forgeries
         JRequest::checkToken() or die('RESTRICTED');
 
-        $db = JFactory::getDBO();
-
-        $task = $this->getTask();
-
-        $client = JRequest::getWord('client', 'site');
+        $db     = JFactory::getDBO();
+        $task   = $this->getTask();
 
         // get params
         $component = WFExtensionHelper::getComponent();
