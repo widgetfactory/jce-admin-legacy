@@ -90,25 +90,116 @@ class WFControllerProfiles extends WFController {
         $this->setRedirect('index.php?option=com_jce&view=profiles', $msg);
     }
 
+    private static function clean($input, $method = 'string') {
+        $filter = JFilterInput::getInstance();
+        $input  = (array) $input;
+
+        foreach($input as $k => $v) {
+            if (is_array($v)) {
+                $input[$k] = self::clean($v, $method);
+            } else {
+                $input[$k] = $filter->clean($v, $method);
+            }
+        }
+        
+        return $input;
+    }
+
     public function save() {
         // Check for request forgeries
         JRequest::checkToken() or die('RESTRICTED');
 
         $db = JFactory::getDBO();
+        $filter = JFilterInput::getInstance();
         $row = JTable::getInstance('profiles', 'WFTable');
         $task = $this->getTask();
 
+        $result = array('error' => false);
+
         if (!$row->bind(JRequest::get('post'))) {
-            JError::raiseError(500, $row->getError());
+            JError::raiseError(500, $db->getErrorMsg());
+        }
+
+        foreach (get_object_vars($row) as $key => $value) {
+            switch ($key) {
+                case 'name':
+                case 'description':
+                    $value = $filter->clean($value);
+                    break;
+                case 'components':
+                case 'device':
+                    $value = implode(',', self::clean($value));
+                    break;
+                case 'usergroups':
+                    $key = 'types';
+                    $value = implode(',', self::clean($value, 'int'));
+                    break;
+                case 'users':
+                    $value = implode(',', self::clean($value, 'int'));
+                    break;
+                case 'area':
+                    if (empty($value) || count($value) == 2) {
+                        $value = 0;
+                    } else {
+                        $value = $value[0];
+                    }
+                    break;
+                case 'plugins':
+                    $value = preg_replace('#[^\w,]+#', '', $value);
+                    break;
+                case 'rows':
+                    $value = preg_replace('#[^\w,;]+#', '', $value);
+                    break;
+                case 'params':
+                    $json = array();
+
+                    // suhosin - params submitted as string
+                    if (is_string($value)) {
+                        $value = trim($value);
+                        parse_str(rawurldecode($value), $json);
+                    } else {
+                        if (array_key_exists('editor', $value)) {
+                            $json['editor'] = $value['editor'];
+                        }
+                        // get plugins
+                        $plugins = explode(',', $row->plugins);
+
+                        foreach ($plugins as $plugin) {
+                            // add plugin params to array
+                            if (array_key_exists($plugin, $value)) {
+                                $json[$plugin] = $value[$plugin];
+                            }
+                        }
+                    }
+                    // clean data
+                    $json = self::clean($json);
+                    
+                    // encode as json string
+                    $value = json_encode($json);
+
+                    break;
+                case 'params-string':
+                    $value = trim($value);
+
+                    parse_str(rawurldecode($value), $json);
+
+                    $key = 'params';
+                    $value = json_encode($json);
+
+                    break;
+            }
+
+            $row->$key = $value;
         }
 
         if (!$row->check()) {
-            JError::raiseError(500, $row->getError());
+            JError::raiseError(500, $db->getErrorMsg());
         }
-        
+
         if (!$row->store()) {
-            JError::raiseError(500, $row->getError());
+            JError::raiseError(500, $db->getErrorMsg());
         }
+
         $row->checkin();
 
         switch ($task) {
@@ -320,16 +411,16 @@ class WFControllerProfiles extends WFController {
         // Check for request forgeries
         JRequest::checkToken() or die('RESTRICTED');
 
-        $app    = JFactory::getApplication();
-        $file   = JRequest::getVar('import', '', 'files', 'array');
-        $input  = JRequest::getVar('import_input');
-        $tmp    = $app->getCfg('tmp_path');
-        $model  = $this->getModel('profiles', 'WFModel');
-        
+        $app = JFactory::getApplication();
+        $file = JRequest::getVar('import', '', 'files', 'array');
+        $input = JRequest::getVar('import_input');
+        $tmp = $app->getCfg('tmp_path');
+        $model = $this->getModel('profiles', 'WFModel');
+
         $filter = JFilterInput::getInstance();
 
         jimport('joomla.filesystem.file');
-        
+
         // clean input
         $input = $filter->clean($filter, 'path');
 
