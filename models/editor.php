@@ -409,9 +409,9 @@ class WFModelEditor extends WFModelBase {
         }
 
         // get plugins
-        $plugins = $model->getPlugins();
+        $plugins    = $model->getPlugins();
         // get core commands
-        $commands = $model->getCommands();
+        $commands   = $model->getCommands();
 
         // merge plugins and commands
         $icons = array_merge($commands, $plugins);
@@ -438,7 +438,7 @@ class WFModelEditor extends WFModelBase {
                     $item = $map[$item];
                 }
 
-                // check if button shold be in toolbar
+                // check if button should be in toolbar
                 if (array_key_exists($item, $icons) === false) {
                     continue;
                 }
@@ -489,38 +489,42 @@ class WFModelEditor extends WFModelBase {
     public function getPlugins() {
         jimport('joomla.filesystem.file');
 
-        $return = array();
+        static $plugins;
 
         if (is_object($this->profile)) {
-            $wf = WFEditor::getInstance();
+            if (!is_array($plugins)) {
+                $wf = WFEditor::getInstance();
 
-            $plugins = explode(',', $this->profile->plugins);
-            $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'colorpicker', 'dragupload', 'format'), $plugins));
+                $plugins = explode(',', $this->profile->plugins);
+                $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'colorpicker', 'dragupload', 'format'), $plugins));
 
-            // add advlists plugin if lists are loaded
-            if (in_array('lists', $plugins)) {
-                $plugins[] = 'advlist';
-            }
-
-            // Load wordcount if path is enabled
-            if ($wf->getParam('editor.path', 1)) {
-                $plugins[] = 'wordcount';
-            }
-
-            // add legacy "charmap"
-            if (in_array('charmap', $plugins) === false && strpos($this->profile->rows, 'charmap') !== true) {
-                $plugins[] = 'charmap';
-            }
-
-            foreach ($plugins as $plugin) {
-                // check plugin is correctly installed and is a tinymce plugin, ie: it has an editor_plugin.js file
-                if (JFile::exists(WF_EDITOR_PLUGINS . '/' . $plugin . '/editor_plugin.js')) {
-                    $return[] = $plugin;
+                // add advlists plugin if lists are loaded
+                if (in_array('lists', $plugins)) {
+                    $plugins[] = 'advlist';
                 }
+
+                // Load wordcount if path is enabled
+                if ($wf->getParam('editor.path', 1)) {
+                    $plugins[] = 'wordcount';
+                }
+
+                // add legacy "charmap"
+                if (in_array('charmap', $plugins) === false && strpos($this->profile->rows, 'charmap') !== true) {
+                    $plugins[] = 'charmap';
+                }
+
+                for ($i = 0; $i < count($plugins); $i++) {
+                    // check plugin is correctly installed and is a tinymce plugin, ie: it has an editor_plugin.js file
+                    if (!JFile::exists(WF_EDITOR_PLUGINS . '/' . $plugins[$i] . '/editor_plugin.js')) {
+                        unset($plugins[$i]);
+                    }
+                }
+                // remove empty values
+                $plugins = array_filter($plugins);
             }
         }
 
-        return $return;
+        return $plugins;
     }
 
     /**
@@ -822,12 +826,12 @@ class WFModelEditor extends WFModelBase {
     public function pack() {
         // check token
         WFToken::checkToken('GET') or die('RESTRICTED');
-        
+
         wfimport('admin.classes.packer');
         wfimport('admin.classes.language');
 
-        $wf     = WFEditor::getInstance();
-        $type   = JRequest::getWord('type', 'javascript');
+        $wf = WFEditor::getInstance();
+        $type = JRequest::getWord('type', 'javascript');
 
         // javascript
         $packer = new WFPacker(array('type' => $type));
@@ -855,7 +859,7 @@ class WFModelEditor extends WFModelBase {
 
                 $data = $this->loadLanguages(array(), array(), '(^dlg$|_dlg$)', true);
                 $packer->setText($data);
-                
+
                 break;
             case 'javascript' :
                 $files = array();
@@ -875,11 +879,11 @@ class WFModelEditor extends WFModelBase {
 
                 // add Editor file
                 $files[] = WF_EDITOR . '/libraries/js/editor.js';
-                
+
                 // parse ini language files
                 $parser = new WFLanguageParser();
                 $data = $parser->load();
-                
+
                 // add to packer
                 $packer->setContentEnd($data);
 
