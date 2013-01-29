@@ -512,13 +512,14 @@ class WFModelEditor extends WFModelBase {
                 if (in_array('charmap', $plugins) === false && strpos($this->profile->rows, 'charmap') !== true) {
                     $plugins[] = 'charmap';
                 }
-
-                for ($i = 0; $i < count($plugins); $i++) {
+                
+                foreach($plugins as $k => $v) {
                     // check plugin is correctly installed and is a tinymce plugin, ie: it has an editor_plugin.js file
-                    if (!JFile::exists(WF_EDITOR_PLUGINS . '/' . $plugins[$i] . '/editor_plugin.js')) {
-                        unset($plugins[$i]);
+                    if (!JFile::exists(WF_EDITOR_PLUGINS . '/' . $v . '/editor_plugin.js')) {
+                        unset($plugins[$k]);
                     }
                 }
+
                 // remove empty values
                 $plugins = array_filter($plugins);
             }
