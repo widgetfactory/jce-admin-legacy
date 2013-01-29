@@ -19,9 +19,78 @@
 
             return;
         }
-		
-        if ($jce.Profiles.validate()) {
-            $jce.Profiles.onSubmit();
+        // shortcut
+        var $profiles = $jce.Profiles;
+	
+        // validate form	
+        if ($profiles.validate()) {
+            
+            // trigger onSubmit callback
+            $profiles.onSubmit();
+
+            /*var args = $(':input[name^=params]:enabled', '#jce').serializeArray();
+            
+            $('input[name="task"]').val(button);
+            
+            $('#jce').addClass('loading');
+            
+            function send(from, to) {             
+                var s = $('#jce').siblings('input[type="hidden"]').serializeArray();
+                
+                s = $.merge(s, $('input[name="plugins"]'))
+                
+                var data = args.slice(from, to - s.length);
+                
+                data = $.merge(s, data);
+
+                $.ajax({
+                    type    : "POST",
+                    url     : 'index.php',
+                    data    : $.param(data),
+                    success : function(o) {
+                        if (o && o.error) {
+                            alert(o.error);
+                            return;
+                        } 
+                        
+                        from = to + 1;
+                        to   = from + 199;
+                        
+                        if (to > args.length) {
+                            to = args.length;
+                        }
+                         
+                        // end
+                        if (from >= args.length) {                            
+                            if (button == 'save') {
+                                document.location.href = 'index.php?option=com_jce&view=profiles';
+                            }
+                            
+                            $('#jce').removeClass('loading');
+                            
+                        } else {
+                            window.setTimeout( function () {
+                                send(from, to);
+                            }, 500);
+                        }
+                    }
+                });
+            }
+           
+            send(0, 199);*/
+            
+            // handle suhosin restrictions
+            if ($profiles.options.suhosin) {
+                // get parameters as serialized string
+                var args = $(':input[name^=params]:enabled', '#jce').serialize();
+            
+                // disable original
+                $(':input[name^=params]', '#jce').removeAttr('name');
+                
+                // append to form
+                $('<input type="hidden" name="params"/>').val(args).appendTo('#adminForm');
+            }
+
             try {
                 Joomla.submitform(button);
             } catch(e) {
@@ -29,13 +98,6 @@
             }
         }
     };
-    
-    /*$.support.multipleBackground = function() {
-        var div = document.createElement('div');
-        
-        $(div).css('background:url(https://),url(https://),red url(https://)');
-        return (/(url\s*\(.*?){3}/).test(div.background);
-    };*/
     
     // Create Profiles object
     $.jce.Profiles = {
@@ -286,7 +348,7 @@
                 });
             });
             
-            /*if ($.support.multipleBackground) {
+        /*if ($.support.multipleBackground) {
                 $('#jce').addClass('multiplebg');          
             } else {
                 // fix for CSS3 selectors
