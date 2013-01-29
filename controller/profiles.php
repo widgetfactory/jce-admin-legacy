@@ -90,21 +90,6 @@ class WFControllerProfiles extends WFController {
         $this->setRedirect('index.php?option=com_jce&view=profiles', $msg);
     }
 
-    private static function clean($input, $method = 'string') {
-        $filter = JFilterInput::getInstance();
-        $input  = (array) $input;
-
-        foreach($input as $k => $v) {
-            if (is_array($v)) {
-                $input[$k] = self::clean($v, $method);
-            } else {
-                $input[$k] = $filter->clean($v, $method);
-            }
-        }
-        
-        return $input;
-    }
-
     public function save() {
         // Check for request forgeries
         JRequest::checkToken() or die('RESTRICTED');
@@ -128,14 +113,14 @@ class WFControllerProfiles extends WFController {
                     break;
                 case 'components':
                 case 'device':
-                    $value = implode(',', self::clean($value));
+                    $value = implode(',', $this->cleanInput($value));
                     break;
                 case 'usergroups':
                     $key = 'types';
-                    $value = implode(',', self::clean($value, 'int'));
+                    $value = implode(',', $this->cleanInput($value, 'int'));
                     break;
                 case 'users':
-                    $value = implode(',', self::clean($value, 'int'));
+                    $value = implode(',', $this->cleanInput($value, 'int'));
                     break;
                 case 'area':
                     if (empty($value) || count($value) == 2) {
@@ -172,7 +157,7 @@ class WFControllerProfiles extends WFController {
                         }
                     }
                     // clean data
-                    $json = self::clean($json);
+                    $json = $this->cleanInput($json);
                     
                     // encode as json string
                     $value = json_encode($json);

@@ -319,7 +319,21 @@ class WFController extends WFControllerBase {
 
         return false;
     }
+    
+    public function cleanInput($input, $method = 'string') {
+        $filter = JFilterInput::getInstance();
+        $input  = (array) $input;
 
+        foreach($input as $k => $v) {
+            if (is_array($v)) {
+                $input[$k] = $this->cleanInput($v, $method);
+            } else {
+                $input[$k] = $filter->clean($v, $method);
+            }
+        }
+        
+        return $input;
+    }
 }
 
 ?>
