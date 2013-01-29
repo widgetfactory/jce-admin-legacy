@@ -41,19 +41,15 @@ class WFControllerConfig extends WFController {
 
         // get params
         $component = WFExtensionHelper::getComponent();
-        // create params object from json string
-        $params = json_decode($component->params);
+        // create params array from json string
+        $params = json_decode($component->params, true);
         // get params data
         $data   = JRequest::getVar('params', '', 'POST', 'ARRAY');
         // clean input data
         $data   = $this->cleanInput($data);
         
-        // convert to array
-        $registry = new JRegistry();
-        $registry->loadArray($data);
-        
-        // set preference object
-        $params->editor = $registry->toObject();
+        // set editor params
+        $params['editor'] = $data;
         
         // set params as JSON string
         $component->params = json_encode($params);
