@@ -70,11 +70,13 @@ class WFModelInstaller extends WFModel {
         $this->setState('message', WFText::_($installer->get('message')));
         $this->setState('extension.message', $installer->get('extension.message'));
         $this->setState('result', $result);
+        
+        $tmp = defined('JPATH_PLATFROM') ? $config->get('tmp_path') : $config->getValue('tmp_path');
 
         // Cleanup the install files
         if (!is_file($package['packagefile'])) {
             $config = JFactory::getConfig();
-            $package['packagefile'] = $config->get('tmp_path') . '/' . $package['packagefile'];
+            $package['packagefile'] = $tmp . '/' . $package['packagefile'];
         }
         if (is_file($package['packagefile'])) {
             JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
