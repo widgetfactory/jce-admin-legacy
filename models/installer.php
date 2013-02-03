@@ -154,7 +154,7 @@ class WFModelInstaller extends WFModel {
             }
         }
 
-        $tmp = $config->get('tmp_path');
+        $tmp = defined('JPATH_PLATFROM') ? $config->get('tmp_path') : $config->getValue('tmp_path');
 
         // uploaded file
         if ($upload) {
