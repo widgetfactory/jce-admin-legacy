@@ -148,11 +148,7 @@ class WFModelUpdates extends WFModel {
             // get update file
             if ($data->name && $data->url && $data->hash) {
 
-                if (defined('JPATH_PLATFORM')) {
-                    $tmp = $config->get('tmp_path');
-                } else {
-                    $tmp = $config->getValue('config.tmp_path');
-                }
+                $tmp = defined('JPATH_PLATFROM') ? $config->get('tmp_path') : $config->getValue('tmp_path');
 
                 // create path for package file
                 $path = $tmp . '/' . basename($data->name);
@@ -320,12 +316,8 @@ class WFModelUpdates extends WFModel {
 
         // check for vars
         if ($file && $hash && $method) {
-            if (defined('JPATH_PLATFORM')) {
-                $tmp = $config->get('tmp_path');
-            } else {
-                $tmp = $config->getValue('config.tmp_path');
-            }
-            $path = $tmp . '/' . $file;
+            $tmp    = defined('JPATH_PLATFROM') ? $config->get('tmp_path') : $config->getValue('tmp_path');
+            $path   = $tmp . '/' . $file;
             // check if file exists
             if (JFile::exists($path)) {
                 // check hash
