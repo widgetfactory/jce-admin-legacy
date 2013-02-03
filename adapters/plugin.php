@@ -153,11 +153,9 @@ class WFInstallerPlugin extends JObject {
         if ($install) {
             // Make sure it hasn't already been copied (this would be an error in the xml install file)
             if (!file_exists($this->parent->getPath('extension_root') . '/' . $install)) {
-                $path['src'] = $this->parent->getPath('source') . '/' . $install;
-                $path['dest'] = $this->parent->getPath('extension_root') . '/' . $install;
-                if (!$this->parent->copyFiles(array(
-                            $path
-                        ))) {
+                $path['src']    = $this->parent->getPath('source') . '/' . $install;
+                $path['dest']   = $this->parent->getPath('extension_root') . '/' . $install;
+                if (!$this->parent->copyFiles(array($path))) {
                     // Install failed, rollback changes
                     $this->parent->abort(WFText::_('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_PHP_INSTALL_FILE_ERROR'));
                     return false;
