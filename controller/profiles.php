@@ -141,6 +141,8 @@ class WFControllerProfiles extends WFController {
                     // suhosin - params submitted as string
                     if (is_string($value)) {
                         $value = trim($value);
+                        // base64 decode
+                        //$value = base64_decode($value);
                         parse_str(rawurldecode($value), $json);
                     } else {
                         if (array_key_exists('editor', $value)) {

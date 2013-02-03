@@ -8,6 +8,7 @@
  * other free or open source software licenses.
  */
 (function($) {
+
     Joomla.submitbutton = submitbutton = function(button) {
         // Cancel button
         if (button == "cancelEdit") {
@@ -28,61 +29,13 @@
             // trigger onSubmit callback
             $profiles.onSubmit();
 
-            /*var args = $(':input[name^=params]:enabled', '#jce').serializeArray();
-            
-            $('input[name="task"]').val(button);
-            
-            $('#jce').addClass('loading');
-            
-            function send(from, to) {             
-                var s = $('#jce').siblings('input[type="hidden"]').serializeArray();
-                
-                s = $.merge(s, $('input[name="plugins"]'))
-                
-                var data = args.slice(from, to - s.length);
-                
-                data = $.merge(s, data);
-
-                $.ajax({
-                    type    : "POST",
-                    url     : 'index.php',
-                    data    : $.param(data),
-                    success : function(o) {
-                        if (o && o.error) {
-                            alert(o.error);
-                            return;
-                        } 
-                        
-                        from = to + 1;
-                        to   = from + 199;
-                        
-                        if (to > args.length) {
-                            to = args.length;
-                        }
-                         
-                        // end
-                        if (from >= args.length) {                            
-                            if (button == 'save') {
-                                document.location.href = 'index.php?option=com_jce&view=profiles';
-                            }
-                            
-                            $('#jce').removeClass('loading');
-                            
-                        } else {
-                            window.setTimeout( function () {
-                                send(from, to);
-                            }, 500);
-                        }
-                    }
-                });
-            }
-           
-            send(0, 199);*/
-            
             // handle suhosin restrictions
             if ($profiles.options.suhosin) {
-                // get parameters as serialized string
+                // convert parameters to serialized string
                 var args = $(':input[name^=params]:enabled', '#jce').serialize();
+                
+                // base64 encode
+                //args = window.btoa(args);
             
                 // disable original
                 $(':input[name^=params]', '#jce').removeAttr('name');
@@ -159,30 +112,6 @@
             // Layout
             this.createLayout();
 
-            // Browser
-            /*$('input.browser').each( function() {
-                var el = this;
-
-                $('<span class="browser"></span>').click( function() {
-                    var src = 'index.php?option=com_jce&view=editor&layout=plugin&plugin=browser&standalone=1&element=' + $(el).attr('id');
-                    if ($(el).data('filter')) {
-                    	src += '&filter=' + $(el).data('filter');
-                    }
-                    $.jce.createDialog($.extend(options.dialog, {
-                        src 	: src,
-                        options : {
-                            'width'	:785,
-                            'height':450
-                        },
-                        modal	: true,
-                        type	: 'browser',
-                        id		: $(el).attr('id') + '_browser',
-                        title 	: options.browser.title || 'Browser'
-                    }));
-                }).insertAfter(this);
-
-            });*/
-
             // Check list
             $('select.checklist, input.checklist').checkList({
                 onCheck : function() {
@@ -215,8 +144,6 @@
                         v = parseInt(v);
                     }
                 }
-                
-            //$('span.profileLayoutContainerEditor', '#profileLayoutTable').height(v);
             });
             
             // Toolbar Theme
@@ -347,18 +274,6 @@
                     return v;
                 });
             });
-            
-        /*if ($.support.multipleBackground) {
-                $('#jce').addClass('multiplebg');          
-            } else {
-                // fix for CSS3 selectors
-                $('span.mceSplitButton span.mceIcon').not('span.mceIconLayer').after('<span/>');
-            }*/
-            
-        // custom checkbox
-        //$('input[type="checkbox"]').checkbox();
-        // custom radio
-        //$('input[type="radio"]').radio();
         },
         
         validate : function() {
