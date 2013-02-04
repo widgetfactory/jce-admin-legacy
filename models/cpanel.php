@@ -52,10 +52,10 @@ class WFModelCpanel extends WFModel {
             'cache_time' => $params->get('feed_cachetime', 86400)
         );
         
-        // prevent Strict Standards errors
-        error_reporting(E_ALL ^ E_STRICT);
+        // prevent Strict Standards errors in simplepie
+        error_reporting(32767 ^ 2048);
 
-        // use this directly instead of JFactory::getXMLParserto avoid the feed data error
+        // use this directly instead of JFactory::getXMLParser to avoid the feed data error
         jimport('simplepie.simplepie');
 
         if (!is_writable(JPATH_BASE . '/cache')) {
