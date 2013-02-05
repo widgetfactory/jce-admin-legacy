@@ -94,16 +94,19 @@ class WFControllerProfiles extends WFController {
         // Check for request forgeries
         JRequest::checkToken() or die('RESTRICTED');
 
-        $db = JFactory::getDBO();
-        $filter = JFilterInput::getInstance();
-        $row = JTable::getInstance('profiles', 'WFTable');
-        $task = $this->getTask();
+        $db         = JFactory::getDBO();
+        $filter     = JFilterInput::getInstance();
+        $row        = JTable::getInstance('profiles', 'WFTable');
+        $task       = $this->getTask();
 
-        $result = array('error' => false);
+        $result     = array('error' => false);
 
         if (!$row->bind(JRequest::get('post'))) {
             JError::raiseError(500, $db->getErrorMsg());
         }
+        
+        // add types from usergroups
+        $row->types = JRequest::getVar('usergroups', array(), 'post', 'array');
 
         foreach (get_object_vars($row) as $key => $value) {
             switch ($key) {
@@ -115,10 +118,7 @@ class WFControllerProfiles extends WFController {
                 case 'device':
                     $value = implode(',', $this->cleanInput($value));
                     break;
-                case 'usergroups':
-                    $key = 'types';
-                    $value = implode(',', $this->cleanInput($value, 'int'));
-                    break;
+                case 'types':
                 case 'users':
                     $value = implode(',', $this->cleanInput($value, 'int'));
                     break;
