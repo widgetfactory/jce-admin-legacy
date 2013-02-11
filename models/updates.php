@@ -131,6 +131,8 @@ class WFModelUpdates extends WFModel {
      * @return String JSON string
      */
     public function download() {
+        $app = JFactory::getApplication();
+        
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
 
@@ -147,11 +149,8 @@ class WFModelUpdates extends WFModel {
 
             // get update file
             if ($data->name && $data->url && $data->hash) {
-
-                $tmp = defined('JPATH_PLATFROM') ? $config->get('tmp_path') : $config->getValue('tmp_path');
-
                 // create path for package file
-                $path = $tmp . '/' . basename($data->name);
+                $path = $app->getCfg('tmp_path') . '/' . basename($data->name);
                 // download file
                 if ($this->connect($data->url, null, $path)) {
                     if (JFile::exists($path) && @filesize($path) > 0) {
@@ -305,7 +304,7 @@ class WFModelUpdates extends WFModel {
         jimport('joomla.installer.helper');
         jimport('joomla.filesystem.file');
 
-        $config = JFactory::getConfig();
+        $app = JFactory::getApplication();
         $result = array('error' => WFText::_('WF_UPDATES_INSTALL_ERROR'));
 
         // get vars
@@ -316,8 +315,7 @@ class WFModelUpdates extends WFModel {
 
         // check for vars
         if ($file && $hash && $method) {
-            $tmp    = defined('JPATH_PLATFROM') ? $config->get('tmp_path') : $config->getValue('tmp_path');
-            $path   = $tmp . '/' . $file;
+            $path = $app->getCfg('tmp_path') . '/' . $file;
             // check if file exists
             if (JFile::exists($path)) {
                 // check hash

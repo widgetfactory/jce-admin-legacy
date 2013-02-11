@@ -70,13 +70,11 @@ class WFModelInstaller extends WFModel {
         $this->setState('message', WFText::_($installer->get('message')));
         $this->setState('extension.message', $installer->get('extension.message'));
         $this->setState('result', $result);
-        
-        $tmp = defined('JPATH_PLATFROM') ? $config->get('tmp_path') : $config->getValue('tmp_path');
 
         // Cleanup the install files
         if (!is_file($package['packagefile'])) {
             $config = JFactory::getConfig();
-            $package['packagefile'] = $tmp . '/' . $package['packagefile'];
+            $package['packagefile'] = $app->getCfg('tmp_path') . '/' . $package['packagefile'];
         }
         if (is_file($package['packagefile'])) {
             JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
@@ -124,7 +122,7 @@ class WFModelInstaller extends WFModel {
      * @return Array $package
      */
     private function getPackage() {
-        $config = JFactory::getConfig();
+        $app = JFactory::getApplication();
         jimport('joomla.filesystem.file');
         jimport('joomla.filesystem.archive');
 
@@ -156,8 +154,6 @@ class WFModelInstaller extends WFModel {
             }
         }
 
-        $tmp = defined('JPATH_PLATFROM') ? $config->get('tmp_path') : $config->getValue('tmp_path');
-
         // uploaded file
         if ($upload) {
             // check extension
@@ -166,7 +162,7 @@ class WFModelInstaller extends WFModel {
                 return false;
             }
 
-            $dest   = JPath::clean($tmp . '/' . $file['name']);
+            $dest   = JPath::clean($app->getCfg('tmp_path') . '/' . $file['name']);
             $src    = $file['tmp_name'];
             // upload file
             if (!JFile::upload($src, $dest)) {
