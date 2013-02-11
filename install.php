@@ -11,6 +11,14 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
+// try to set time limit
+@set_time_limit(0);
+
+// try to increase memory limit
+if ((int) ini_get('memory_limit') < 32) {
+    @ini_set('memory_limit', '32M');
+}
+
 abstract class WFInstall {
 
     private static function cleanupInstall() {
@@ -77,55 +85,6 @@ abstract class WFInstall {
         $language = JFactory::getLanguage();
         $language->load('com_jce', JPATH_ADMINISTRATOR, null, true);
         $language->load('com_jce.sys', JPATH_ADMINISTRATOR, null, true);
-
-        $requirements = array();
-
-        // check PHP version
-        if (version_compare(PHP_VERSION, '5.2.4', '<')) {
-            $requirements[] = array(
-                'name' => 'PHP Version',
-                'info' => 'JCE Requires PHP version 5.2.4 or later. Your version is : ' . PHP_VERSION
-            );
-        }
-
-        // check JSON is installed
-        if (function_exists('json_encode') === false || function_exists('json_decode') === false) {
-            $requirements[] = array(
-                'name' => 'JSON',
-                'info' => 'JCE requires the <a href="http://php.net/manual/en/book.json.php" target="_blank">PHP JSON</a> extension which is not available on this server.'
-            );
-        }
-
-        // check SimpleXML
-        if (function_exists('simplexml_load_string') === false || function_exists('simplexml_load_file') === false || class_exists('SimpleXMLElement') === false) {
-            $requirements[] = array(
-                'name' => 'SimpleXML',
-                'info' => 'JCE requires the <a href="http://php.net/manual/en/book.simplexml.php" target="_blank">PHP SimpleXML</a> library which is not available on this server.'
-            );
-        }
-
-        if (!empty($requirements)) {
-            $message = '<div id="jce"><style type="text/css" scoped="scoped">' . file_get_contents(dirname(__FILE__) . '/media/css/install.css') . '</style>';
-
-            $message .= '<h2>' . JText::_('WF_ADMIN_TITLE') . ' - Install Failed</h2>';
-            $message .= '<h3>JCE could not be installed as this site does not meet <a href="http://www.joomlacontenteditor.net/support/documentation/56-editor/106-requirements" target="_blank">technical requirements</a> (see below)</h3>';
-            $message .= '<ul class="install">';
-
-            foreach ($requirements as $requirement) {
-                $message .= '<li class="error">' . $requirement['name'] . ' : ' . $requirement['info'] . '<li>';
-            }
-
-            $message .= '</ul>';
-            $message .= '</div>';
-
-            $installer->set('message', $message);
-
-            $installer->abort();
-
-            self::cleanupInstall();
-
-            return false;
-        }
 
         // get manifest
         $manifest = $installer->getManifest();
@@ -222,7 +181,7 @@ abstract class WFInstall {
             $message .= '<li class="success">' . JText::_('WF_ADMIN_DESC') . '<li>';
 
             // install packages (editor plugin, quickicon etc)
-            $packages = dirname(__FILE__) . '/packages';
+            $packages = $installer->getPath('source') . '/packages';
 
             // install additional packages
             if (is_dir($packages)) {
@@ -730,7 +689,11 @@ abstract class WFInstall {
             // remove browser extension
             $site . '/editor/extensions/browser',
             // remove browser langs
-            $site . '/editor/tiny_mce/plugins/browser/langs'
+            $site . '/editor/tiny_mce/plugins/browser/langs',
+            // remove packages
+            $admin . '/packages',
+            // remove tinymce langs
+            $site . '/editor/tiny_mce/langs',
         );
 
         foreach ($folders as $folder) {
@@ -930,8 +893,8 @@ abstract class WFInstall {
         }
         // transfer charmap to a plugin
         if (version_compare($version, '2.3.2', '<')) {
-            $profiles   = self::getProfiles();
-            $table      = JTable::getInstance('Profiles', 'WFTable');
+            $profiles = self::getProfiles();
+            $table = JTable::getInstance('Profiles', 'WFTable');
 
             if (!empty($profiles)) {
                 foreach ($profiles as $item) {
@@ -995,8 +958,6 @@ abstract class WFInstall {
     private static function installPackages($source) {
         jimport('joomla.installer.installer');
 
-        $mainframe = JFactory::getApplication();
-
         $db = JFactory::getDBO();
 
         $result = '';
@@ -1004,9 +965,9 @@ abstract class WFInstall {
         JTable::addIncludePath(JPATH_LIBRARIES . '/joomla/database/table');
 
         $packages = array(
-            'editors' => array('jce'),
+            'editor' => array('jce'),
             'quickicon' => array('jcefilebrowser'),
-            'modules' => array('mod_jcefilebrowser')
+            'module' => array('mod_jcefilebrowser')
         );
 
         foreach ($packages as $folder => $element) {
@@ -1046,22 +1007,22 @@ abstract class WFInstall {
                         $plugin->publish();
                     }
                 }
+
                 // enable module
-                if ($folder == 'modules') {
+                if ($folder == 'module') {
                     $module = JTable::getInstance('module');
 
-                    foreach ($element as $item) {
-                        $id = self::getModule($item);
+                    $id = self::getModule('mod_jcefilebrowser');
 
-                        $module->load($id);
-                        $module->position = 'icon';
-                        $module->ordering = 100;
-                        $module->published = 1;
-                        $module->store();
-                    }
+                    $module->load($id);
+                    $module->position = 'icon';
+                    $module->ordering = 100;
+                    $module->published = 1;
+                    $module->store();
                 }
 
-                if ($folder == 'editors') {
+                // rename editor manifest
+                if ($folder == 'editor') {
                     $manifest = $installer->getPath('manifest');
 
                     if (basename($manifest) == 'legacy.xml') {
