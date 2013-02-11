@@ -77,12 +77,16 @@ class WFViewCpanel extends WFView {
             if ($view == 'browser') {
                 $link = WFModel::getBrowserLink();
                 
+                $params     = JComponentHelper::getParams('com_jce');
+                $width      = $params->get('browser_width', 780);
+                $height     = $params->get('browser_height', 560);
+                
                 if (empty($link)) {
                     continue;
                 }
                 
-                $options        = str_replace('"', "'", json_encode(array('width' => 780, 'height' => 560)));
-                $rel            = str_replace('"', "'", json_encode(array('handler' => 'iframe', 'size' => array('x' => 780, 'y' => 560))));
+                $options        = str_replace('"', "'", json_encode(array('width' => $width, 'height' => $height)));
+                $rel            = str_replace('"', "'", json_encode(array('handler' => 'iframe', 'size' => array('x' => $width, 'y' => $height))));
                 
                 $attribs        = array('target="_blank"', 'class="browser modal"', 'rel="' . $rel . '"', 'data-options="' . $options . '"');
                 

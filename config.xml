@@ -18,6 +18,10 @@
             <option value="4">4</option>
             <option value="5">5</option>
         </field>
+        
+        <field name="browser_width"  type="text" size="5" default="780" label="WF_CPANEL_BROWSER_WIDTH" description="WF_CPANEL_BROWSER_WIDTH_DESC" />
+        <field name="browser_height" type="text" size="5" default="560" label="WF_CPANEL_BROWSER_HEIGHT" description="WF_CPANEL_BROWSER_HEIGHT_DESC" />
+
     </fieldset>
     <fieldset name="updates" label="WF_PREFERENCES_UPDATES">
         <field name="updates_key" type="password" size="100" default="" label="WF_UPDATES_KEY" description="WF_UPDATES_KEY_DESC" />
