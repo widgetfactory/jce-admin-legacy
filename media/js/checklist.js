@@ -72,7 +72,7 @@
                     },
                     placeholder: "ui-state-highlight"
 
-                }).disableSelection();
+                });
             }
         },
 

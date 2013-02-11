@@ -335,7 +335,7 @@
                 },
                 placeholder : 'sortableListItem sortable-highlight',
                 opacity : 0.8
-            }).disableSelection();
+            });
             
             $('span.sortableOption').hover(function() {
                 $(this).append('<span role="button"/>');
@@ -367,7 +367,7 @@
                 },
                 opacity : 0.8,
                 placeholder	: 'sortableRowItem sortable-highlight'
-            }).disableSelection();
+            });
             
             this._fixLayout();
         },
