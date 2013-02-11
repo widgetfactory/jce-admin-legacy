@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.3.2beta2" />
-    <property description="Component Version" name="version_package" value="232beta2" />
+    <property description="Component Version" name="version" value="2.3.2" />
+    <property description="Component Version" name="version_package" value="232" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
@@ -29,10 +29,9 @@
             </fileset>
         </path>
  
-        <taskdef name="jsmin"
-                 classname="net.matthaynes.jsmin.JSMin_Task"
-                 classpathref="tasks.classpath" />
+        <taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpathref="tasks.classpath" />
         <taskdef name="yuicompress" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+        <!--taskdef name="yuicompress2" classname="yuicompress.anttask.YuiCompressorTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" /-->
         
         <tstamp>
             <format property="DATE" pattern="dd MMMM yyyy" />
@@ -41,8 +40,8 @@
         <delete dir="${component_export_dir}" quiet="true" />
         <delete dir="${language_export_dir}" quiet="true" />
 
-		<!-- Copy Editor files to Component folder -->
-        <copy todir="${component_admin_export_dir}/packages/editors">
+        <!-- Copy Editor files to Component folder -->
+        <copy todir="${component_export_dir}/packages/editor">
             <fileset dir="../../../plugins/editors/jce/">
                 <include name="jce.php" />
                 <include name="jce.xml" />
@@ -50,21 +49,21 @@
             </fileset>        
         </copy>
 		
-        <copy todir="${component_admin_export_dir}/packages/modules">
+        <copy todir="${component_export_dir}/packages/module">
             <fileset dir="../../modules/mod_jcefilebrowser">
                 <include name="mod_jcefilebrowser.php" />
                 <include name="mod_jcefilebrowser.xml" />
             </fileset>
         </copy>
 		
-        <copy todir="${component_admin_export_dir}/packages/quickicon">
+        <copy todir="${component_export_dir}/packages/quickicon">
             <fileset dir="../../../plugins/quickicon/jcefilebrowser">
                 <include name="jcefilebrowser.php" />
                 <include name="jcefilebrowser.xml" />
             </fileset>
         </copy>
 		
-		<!-- Component Admin FileSet -->
+        <!-- Component Admin FileSet -->
         <fileset dir="." id="component_admin_files" defaultexcludes="yes" >			
             <exclude name="build.xml" />
             <exclude name=".project" />
@@ -79,9 +78,12 @@
             <exclude name="README" />
             <exclude name="**/nbproject" />
             <exclude name="**/nbproject/**" />
+            
+            <exclude name="pkg_jce.xml" />
+            <exclude name="install.pkg.php" />
         </fileset>
 		
-		<!-- Copy Component Admin Files -->
+        <!-- Copy Component Admin Files -->
         <copy todir="${component_admin_export_dir}/">
             <fileset refid="component_admin_files" />
         </copy>
@@ -134,7 +136,7 @@
                 value="${copyright}"/>
         </replace>
 
-	<!-- System exclusions -->
+        <!-- System exclusions -->
         <fileset dir="${component_site}" defaultexcludes="yes" id="component_site_files">
             <include name="**" />
             <exclude name="build.xml" />
@@ -158,7 +160,7 @@
             
             <exclude name="**/plupload/*.js" />
 			
-			<!-- Extension Exclusions -->
+            <!-- Extension Exclusions -->
             <exclude name="editor/extensions/popups_build.xml" />
             <exclude name="editor/extensions/filesystem/s3*" />
             <exclude name="editor/extensions/filesystem/s3/**" />
@@ -176,8 +178,10 @@
             <exclude name="editor/extensions/popups/rokbox/**" />
             <exclude name="editor/extensions/popups/highslide*" />
             <exclude name="editor/extensions/popups/highslide/**" />
+            
+            <exclude name="editor/extensions/imageeditor/**" />
 			
-			<!-- Plugin Exclusions -->
+            <!-- Plugin Exclusions -->
             <exclude name="editor/tiny_mce/plugins/caption/**" />
             <exclude name="editor/tiny_mce/plugins/emotions/**" />
             <exclude name="editor/tiny_mce/plugins/filemanager/**" />
@@ -196,15 +200,6 @@
         <copy todir="${component_site_export_dir}/">
             <fileset refid="component_site_files" />
         </copy>
-	
-	<!-- Create Language Package -->
-        <!--fileset dir="${component_site_export_dir}/editor/tiny_mce/" id="tinymcelanguages_root">
-            <include name="langs/en*.js" />
-        </fileset-->
-		
-        <!--fileset dir="${component_site_export_dir}/editor/tiny_mce/" id="tinymcelanguages_theme">
-            <include name="themes/advanced/langs/en*.js" />
-        </fileset-->
 		
         <copy file="${component_export_dir}/language/en-GB/en-GB.com_jce.xml" tofile="${language_export_dir}/language/en-GB/en-GB.com_jce.xml" />
         <copy file="${component_export_dir}/language/en-GB/en-GB.com_jce.xml" todir="${language_export_dir}" />
@@ -215,34 +210,16 @@
         <copy todir="${language_export_dir}/administrator/language/en-GB">
             <fileset refid="component_admin_lang" />
         </copy>
-        <!--copy todir="${language_export_dir}/components/com_jce/editor/tiny_mce">
-            <fileset refid="tinymcelanguages_root" />
-            <fileset refid="tinymcelanguages_theme" />
-        </copy-->
-		
-        <zip destfile="${language_export_dir}/jce_lang_${version_package}.zip" basedir="${language_export_dir}">
-            <zipfileset dir="${language_export_dir}">
-                <include name="**" />
-                <exclude name="**/*.zip" />
-            </zipfileset>
-        </zip>
-		
-	<!-- End Create Language Package -->
 	
         <delete dir="${component_site_export_dir}/.settings" includeemptydirs="true" verbose="true" failonerror="true" />
 	
-	<!-- Prepare Version Folders -->
+        <!-- Prepare Version Folders -->
 	 	
         <copy todir="${component_export_dir}">
             <fileset dir="${component_export_dir}">
                 <include name="administrator/**" />
                 <include name="components/**" />
                 <include name="language/**" />
-                <!--include name="jce.xml" />
-                <include name="legacy.xml" />
-                <include name="install.php" /-->
-                
-                <exclude name="**/install.script.php" />
             </fileset>
         </copy>
         
@@ -254,7 +231,7 @@
             </fileset>
         </copy>
 	   	
-	<!-- Convert Date and Version Tokens & compress javascript -->
+        <!-- Convert Date and Version Tokens & compress javascript -->
         <replace 
             dir="${component_export_dir}">
             <replacefilter 
@@ -275,6 +252,10 @@
             <replacefilter 
                 token="@@copyright@@" 
                 value="${copyright}"/>
+            
+            <replacefilter 
+                token="@@version_package@@" 
+                value="${version_package}"/>
         </replace>
         
         <!-- Load Header file -->
@@ -310,6 +291,12 @@
                 </not>
             </fileset>
         </jsmin>
+        
+        <!--yuicompress todir="${component_export_dir}" inputcharset="utf-8" outputcharset="utf-8" munge="true" preserveallsemicolons="true" preservestringliterals="true">
+        <fileset dir="${component_export_dir}">
+          <include name="**/*.css" />
+        </fileset>
+        </yuicompress-->
  
         <!-- Plupload --> 
         <copy file="${component_site}/editor/libraries/plupload/plupload.full.js" tofile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full-src.js" />
@@ -324,22 +311,83 @@
         <delete file="${component_export_dir}/administrator/components/com_jce/header.txt" quiet="true" />
         <delete file="${component_export_dir}/administrator/components/com_jce/header_tinymce.txt" quiet="true" />
         
-        <fileset dir="${component_export_dir}" id="zip">
+
+        <!--fileset dir="${component_export_dir}/plugins/editors" id="editor">
             <include name="jce.xml" />
-            <include name="install.php" />
+            <include name="jce.php" />
+            <include name="legacy.xml" />
+        </fileset>
+        
+        <tar destfile="${component_export_dir}/packages/plg_editors_jce_${version_package}.tar.gz" basedir="${component_export_dir}/plugins/editors" compression="gzip">
+            <fileset refid="editor" />
+        </tar>
+        
+        <zip destfile="${component_export_dir}/packages/plg_editors_jce_${version_package}.zip" basedir="${component_export_dir}/plugins/editors">
+            <fileset refid="editor" />
+        </zip>
+        
+        <fileset dir="${component_export_dir}/plugins/quickicon" id="quickicon">
+            <include name="jcefilebrowser.xml" />
+            <include name="jcefilebrowser.php" />
+        </fileset>
+        
+        <tar destfile="${component_export_dir}/packages/plg_quickicon_jce_${version_package}.tar.gz" basedir="${component_export_dir}/plugins/quickicon" compression="gzip">
+            <fileset refid="quickicon" />
+        </tar>
+        
+        <zip destfile="${component_export_dir}/packages/plg_quickicon_jce_${version_package}.zip" basedir="${component_export_dir}/plugins/quickicon">
+            <fileset refid="quickicon" />
+        </zip>
+        
+        <fileset dir="${component_export_dir}/modules" id="modules">
+            <include name="mod_jcefilebrowser.xml" />
+            <include name="mod_jcefilebrowser.php" />
+        </fileset>
+        
+        <tar destfile="${component_export_dir}/packages/mod_jce_${version_package}.tar.gz" basedir="${component_export_dir}/modules" compression="gzip">
+            <fileset refid="modules" />
+        </tar>
+        
+        <zip destfile="${component_export_dir}/packages/mod_jce_${version_package}.zip" basedir="${component_export_dir}/modules">
+            <fileset refid="modules" />
+        </zip!-->
+        
+        <fileset dir="${component_export_dir}" id="zip">            
             <include name="administrator" />
             <include name="components" />
             <include name="language" />
-            <exclude name="**/**.zip"/>
-            <exclude name="**/**.gz"/>
+            <include name="packages" />
+            <include name="jce.xml" />
+            <include name="legacy.xml" />
+            <include name="install.script.php" />
         </fileset>
 	
         <tar destfile="${component_export_dir}/com_jce_${version_package}.tar.gz" basedir="${component_export_dir}" compression="gzip" excludes="*.zip,*.gz">
-            <fileset refid="zip" />
+            <fileset refid="zip" />          
         </tar>
         
         <zip destfile="${component_export_dir}/com_jce_${version_package}.zip" basedir="${component_export_dir}" excludes="*.zip,*.gz">
             <fileset refid="zip" />
         </zip>
+        
+        <!--fileset dir="${component_export_dir}" id="package-zip">
+            <include name="packages" />
+            <include name="pkg_jce.xml" />
+            <exclude name="packages/mod_jce_${version_package}.zip"/>
+        </fileset>
+     
+        <fileset dir="${component_export_dir}" id="package-gz">
+            <include name="packages" />
+            <include name="pkg_jce.xml" />
+            <exclude name="packages/mod_jce_${version_package}.tar.gz"/>
+        </fileset>   
+
+        <zip destfile="${component_export_dir}/pkg_jce_${version_package}.zip" basedir="${component_export_dir}" excludes="*.gz">
+            <fileset refid="package-zip" />
+        </zip>   
+        
+        <tar destfile="${component_export_dir}/pkg_jce_${version_package}.tar.gz" basedir="${component_export_dir}" compression="gzip"  excludes="*.zip">
+            <fileset refid="package-gz" />
+        </tar-->    
     </target>
 </project>
