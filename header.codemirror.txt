@@ -1,0 +1,1 @@
+/*Copyright (C) 2013 by Marijn Haverbeke <marijnh@gmail.com> | https://github.com/marijnh/CodeMirror/blob/master/LICENSE*/

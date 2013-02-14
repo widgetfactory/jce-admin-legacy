@@ -30,9 +30,10 @@
         </path>
  
         <taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpathref="tasks.classpath" />
-        <taskdef name="yuicompress" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
-        <!--taskdef name="yuicompress2" classname="yuicompress.anttask.YuiCompressorTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" /-->
-        
+        <taskdef name="yuicompressor-moxiecode" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+        <taskdef name="yui-compressor" classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask" classpathref="tasks.classpath" />
+
         <tstamp>
             <format property="DATE" pattern="dd MMMM yyyy" />
         </tstamp>
@@ -260,13 +261,14 @@
         
         <!-- Load Header file -->
         
-        <loadfile property="header" srcFile="${component_admin_export_dir}/header.txt"/>
-        <loadfile property="header_tinymce" srcFile="${component_admin_export_dir}/header_tinymce.txt"/>
+        <loadfile property="header" srcFile="${component_admin_export_dir}/header.js.txt"/>
+        <loadfile property="header_tinymce" srcFile="${component_admin_export_dir}/header.tinymce.txt"/>
         <!-- JSMin -->
         
         <jsmin force="true" copyright="${header_tinymce}">
             <fileset dir="${component_export_dir}">
-                <contains text="http://tinymce.moxiecode.com/license" />          
+                <contains text="http://tinymce.moxiecode.com/license" />
+                <contains text="http://www.tinymce.com/license" />          
                 <include name="**/*.js" />
                 <exclude name="**/**-min.js" />
                 <exclude name="**/jquery/**" />
@@ -289,28 +291,82 @@
                 <not>
                     <contains text="http://tinymce.moxiecode.com/license" />
                 </not>
+                <not>
+                    <contains text="http://www.tinymce.com/license" />
+                </not>
             </fileset>
         </jsmin>
-        
-        <!--yuicompress todir="${component_export_dir}" inputcharset="utf-8" outputcharset="utf-8" munge="true" preserveallsemicolons="true" preservestringliterals="true">
-        <fileset dir="${component_export_dir}">
-          <include name="**/*.css" />
-        </fileset>
-        </yuicompress-->
  
         <!-- Plupload --> 
         <copy file="${component_site}/editor/libraries/plupload/plupload.full.js" tofile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full-src.js" />
-        <yuicompress infile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full-src.js" outfile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full.js" />
+        <yuicompressor-moxiecode infile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full-src.js" outfile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full.js" />
         <delete file="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full-src.js" quiet="true" /> 
          
         <!-- TinyMCE --> 
         <copy file="${component_site}/editor/tiny_mce/tiny_mce.js" tofile="${component_export_dir}/components/com_jce/editor/tiny_mce/tiny_mce_src.js" />
-        <yuicompress infile="${component_export_dir}/components/com_jce/editor/tiny_mce/tiny_mce_src.js" outfile="${component_export_dir}/components/com_jce/editor/tiny_mce/tiny_mce.js" />
+        <yuicompressor-moxiecode infile="${component_export_dir}/components/com_jce/editor/tiny_mce/tiny_mce_src.js" outfile="${component_export_dir}/components/com_jce/editor/tiny_mce/tiny_mce.js" />
         <delete file="${component_export_dir}/components/com_jce/editor/tiny_mce/tiny_mce_src.js" quiet="true" />
-        
-        <delete file="${component_export_dir}/administrator/components/com_jce/header.txt" quiet="true" />
-        <delete file="${component_export_dir}/administrator/components/com_jce/header_tinymce.txt" quiet="true" />
-        
+
+        <yui-compressor warn="false" charset="UTF-8" fromdir="${component_export_dir}" todir="${component_export_dir}">
+           <include name="**/*.css" />
+           <exclude name="**/bootstrap-responsive.min.css" />
+       </yui-compressor>
+       
+        <delete dir="${component_export_dir}" quiet="true">
+            <include name="**/*.css" />
+            <exclude name="**/**-min.css" />
+            <exclude name="**/bootstrap-responsive.min.css" />
+            <exclude name="**/codemirror/**" />
+            <exclude name="**/codemirror/theme/**" />
+       </delete>
+
+       <!-- Prepend header -->
+      <for param="file">
+        <path>
+            <fileset dir="${component_export_dir}">
+                <include name="**/*-min.css" />
+                <exclude name="**/bootstrap-responsive.min.css" />
+            </fileset>
+        </path>
+        <sequential>
+            <concat destfile="@{file}.tmp">
+                <fileset file="${component_admin_export_dir}/header.css.txt" />
+                <fileset file="@{file}" />
+            </concat>
+        </sequential>
+      </for>
+
+       <!-- CodeMirror -->
+       <for param="file">
+        <path>
+            <fileset dir="${component_export_dir}">
+                <include name="**/codemirror/**-min.css" />
+                <include name="**/codemirror/theme/**-min.css" />
+            </fileset>
+        </path>
+        <sequential>
+            <concat destfile="@{file}.tmp">
+                <fileset file="header.codemirror.txt" />
+                <fileset file="@{file}" />
+            </concat>
+        </sequential>
+      </for>
+      <!-- CodeMirror -->
+      
+      <move todir="${component_export_dir}" includeemptydirs="false">
+           <fileset dir="${component_export_dir}">
+               <include name="**/**-min.css.tmp" />
+           </fileset>
+           <mapper type="regexp" from="^(.*)-min\.css\.tmp$" to="\1.css" />
+      </move>
+      
+      <delete dir="${component_export_dir}" quiet="true">
+            <include name="**/**-min.css" />
+       </delete>
+      
+      <delete file="${component_export_dir}/administrator/components/com_jce/header.js.txt" quiet="true" />
+      <delete file="${component_export_dir}/administrator/components/com_jce/header.css.txt" quiet="true" />
+      <delete file="${component_export_dir}/administrator/components/com_jce/header.tinymce.txt" quiet="true" />
 
         <!--fileset dir="${component_export_dir}/plugins/editors" id="editor">
             <include name="jce.xml" />

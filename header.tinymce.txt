@@ -1,0 +1,1 @@
+@@name@@ - @@version@@ | @@date@@ | http://www.joomlacontenteditor.net | @@copyright@@ | © Copyright, Moxiecode Systems AB | http://www.tinymce.com/license
