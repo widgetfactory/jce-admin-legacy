@@ -19,7 +19,7 @@ abstract class WFToolsHelper {
         $query = $db->getQuery(true);
 
         if (is_object($query)) {
-            $query->select('template')->from('#__template_styles')->where(array('client_id = 0', 'home = 1'));
+            $query->select('template')->from('#__template_styles')->where(array("client_id = 0", "home = '1'"));
         } else {
             $query = 'SELECT template'
                     . ' FROM #__templates_menu'

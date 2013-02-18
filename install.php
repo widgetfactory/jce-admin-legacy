@@ -145,23 +145,34 @@ abstract class WFInstall {
             $state = self::installProfiles();
         }
 
+        // Add device column
         if (self::checkTableColumn('#__wf_profiles', 'device') === false) {
             $db = JFactory::getDBO();
 
-            $query = 'ALTER TABLE #__wf_profiles CHANGE `description` `description` TEXT';
-            $db->setQuery($query);
-            $db->query();
+            switch (strtolower($db->name)) {
+                case 'mysql':
+                case 'mysqli':
+                    $query = 'ALTER TABLE #__wf_profiles CHANGE `description` `description` TEXT';
+                    $db->setQuery($query);
+                    $db->query();
 
-            // Change types field to TEXT
-            $query = 'ALTER TABLE #__wf_profiles CHANGE `types` `types` TEXT';
-            $db->setQuery($query);
-            $db->query();
+                    // Change types field to TEXT
+                    $query = 'ALTER TABLE #__wf_profiles CHANGE `types` `types` TEXT';
+                    $db->setQuery($query);
+                    $db->query();
 
-            // Add device field
-            $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCHAR(255) AFTER `area`';
+                    // Add device field - MySQL
+                    $query = 'ALTER TABLE #__wf_profiles ADD `device` VARCHAR(255) AFTER `area`';
 
-            if (strtolower($db->name) == 'sqlsrv' || strtolower($db->name) == 'sqlazure') {
-                $query = 'ALTER TABLE #__wf_profiles ADD `device` NVARCHAR(250)';
+                    break;
+                case 'sqlsrv':
+                case 'sqlazure':
+                case 'sqlzure':
+                    $query = 'ALTER TABLE #__wf_profiles ADD `device` NVARCHAR(250)';
+                    break;
+                case 'postgresql':
+                    $query = 'ALTER TABLE #__wf_profiles ADD "device" character varying(255) NOT NULL';
+                    break;
             }
 
             $db->setQuery($query);

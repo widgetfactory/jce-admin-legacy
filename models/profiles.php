@@ -191,13 +191,18 @@ class WFModelProfiles extends WFModel {
         $driver = strtolower($db->name);
 
         switch ($driver) {
-            default :
-            case 'mysqli' :
+            default:
+            case 'mysql':
+            case 'mysqli':
                 $driver = 'mysql';
                 break;
             case 'sqlsrv':
-            case 'sqlazure' :
+            case 'sqlazure':
+            case 'sqlzure':
                 $driver = 'sqlsrv';
+                break;
+            case 'postgresql' :
+                $driver = 'postgresql';
                 break;
         }
         // speed up for mysql - most common
@@ -227,7 +232,47 @@ class WFModelProfiles extends WFModel {
             } else {
                 $error = $db->stdErr();
             }
-            // sqlsrv
+        // postgresql
+        } elseif ($driver == 'postgresql') {
+            $sql = 'CREATE TABLE "#__wf_profiles" (
+                "id" serial NOT NULL,
+                "name" character varying(255) NOT NULL,
+                "description" text NOT NULL,
+                "users" text NOT NULL,
+                "types" text NOT NULL,
+                "components" text NOT NULL,
+                "area" smallint NOT NULL,
+                "device" character varying(255) NOT NULL,
+                "rows" text NOT NULL,
+                "plugins" text NOT NULL,
+                "published" smallint NOT NULL,
+                "ordering" integer NOT NULL,
+                "checked_out" smallint NOT NULL,
+                "checked_out_time" timestamp without time zone NOT NULL,
+                "params" text NOT NULL,
+                PRIMARY KEY ("id")
+                );';
+            
+            $sql = $db->replacePrefix((string) $sql);
+            
+            $query = "CREATE OR REPLACE FUNCTION create_table_if_not_exists (create_sql text) 
+                RETURNS bool as $$ 
+                BEGIN 
+                    BEGIN 
+                        EXECUTE create_sql; 
+                        EXCEPTION WHEN duplicate_table THEN RETURN false; 
+                    END; 
+                    RETURN true; 
+                END; $$ 
+                LANGUAGE plpgsql; 
+                SELECT create_table_if_not_exists ('" . $sql . "');";
+            $db->setQuery($query);
+
+            if ($db->query()) {
+                return true;
+            } else {
+                $error = $db->stdErr();
+            }
         } else {
             $file = dirname(dirname(__FILE__)) . '/sql/' . $driver . '.sql';
             $error = null;
