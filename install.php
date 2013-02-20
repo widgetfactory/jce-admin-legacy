@@ -136,13 +136,13 @@ abstract class WFInstall {
                 }
             }
         }
+        
+        // install profiles etc.
+        $state = self::installProfiles();
 
         // perform upgrade
         if (version_compare($current_version, $new_version, '<')) {
             $state = self::upgrade($current_version);
-        } else {
-            // install plugins first
-            $state = self::installProfiles();
         }
 
         // Add device column
@@ -984,7 +984,7 @@ abstract class WFInstall {
         foreach ($packages as $folder => $element) {
             // Joomla! 2.5
             if (defined('JPATH_PLATFORM')) {
-                if ($folder == 'modules') {
+                if ($folder == 'module') {
                     continue;
                 }
                 // Joomla! 1.5  
