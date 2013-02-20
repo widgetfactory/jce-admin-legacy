@@ -26,10 +26,10 @@
         <folder>mediaplayer</folder>
     </media>
 	
-    <!--languages folder="language/en-GB">
+    <languages folder="language/en-GB">
         <language tag="en-GB">en-GB.com_jce.xml</language>
         <language tag="en-GB">en-GB.com_jce.ini</language>
-    </languages-->
+    </languages>
 	
 	<!-- SQL query files to execute on installation -->
     <install>
@@ -75,14 +75,14 @@
             <file>licence.txt</file>
         </files>
 		
-        <!--languages folder="administrator/language/en-GB">
+        <languages folder="administrator/language/en-GB">
             <language tag="en-GB">en-GB.com_jce.ini</language>
             <language tag="en-GB">en-GB.com_jce.sys.ini</language>
             <language tag="en-GB">en-GB.plg_editors_jce.ini</language>
             <language tag="en-GB">en-GB.plg_editors_jce.sys.ini</language>
             <language tag="en-GB">en-GB.plg_quickicon_jcefilebrowser.ini</language>
             <language tag="en-GB">en-GB.plg_quickicon_jcefilebrowser.sys.ini</language>
-        </languages-->
+        </languages>
 		
     </administration>
     <updateservers>
