@@ -69,17 +69,17 @@ class WFModelProfiles extends WFModel {
 
         foreach ($model->getExtensions() as $extension) {
             $type = $extension->folder;
-            
+
             // the plugin only supports some extensions, move along
             if (!in_array($type, $supported)) {
                 continue;
             }
-            
+
             // this extension only supports some plugins, move along
             if (!empty($extension->plugins) && !in_array($plugin, $extension->plugins)) {
                 continue;
             }
-            
+
             $extensions[$type][] = $extension;
         }
 
@@ -205,108 +205,45 @@ class WFModelProfiles extends WFModel {
                 $driver = 'postgresql';
                 break;
         }
-        // speed up for mysql - most common
-        if ($driver == 'mysql') {
-            $query = "CREATE TABLE IF NOT EXISTS `#__wf_profiles` (
-	        `id` int(11) NOT NULL AUTO_INCREMENT,
-	        `name` varchar(255) NOT NULL,
-	        `description` varchar(255) NOT NULL,
-	        `users` text NOT NULL,
-	        `types` varchar(255) NOT NULL,
-	        `components` text NOT NULL,
-	        `area` tinyint(3) NOT NULL,
-                `device` varchar(255) NOT NULL,
-	        `rows` text NOT NULL,
-	        `plugins` text NOT NULL,
-	        `published` tinyint(3) NOT NULL,
-	        `ordering` int(11) NOT NULL,
-	        `checked_out` tinyint(3) NOT NULL,
-	        `checked_out_time` datetime NOT NULL,
-	        `params` text NOT NULL,
-	        PRIMARY KEY (`id`)
-	        );";
-            $db->setQuery($query);
 
-            if ($db->query()) {
-                return true;
-            } else {
-                $error = $db->stdErr();
-            }
-        // postgresql
-        } elseif ($driver == 'postgresql') {
-            $sql = 'CREATE TABLE "#__wf_profiles" (
-                "id" serial NOT NULL,
-                "name" character varying(255) NOT NULL,
-                "description" text NOT NULL,
-                "users" text NOT NULL,
-                "types" text NOT NULL,
-                "components" text NOT NULL,
-                "area" smallint NOT NULL,
-                "device" character varying(255) NOT NULL,
-                "rows" text NOT NULL,
-                "plugins" text NOT NULL,
-                "published" smallint NOT NULL,
-                "ordering" integer NOT NULL,
-                "checked_out" smallint NOT NULL,
-                "checked_out_time" timestamp without time zone NOT NULL,
-                "params" text NOT NULL,
-                PRIMARY KEY ("id")
-                );';
-            
-            $sql = $db->replacePrefix((string) $sql);
-            
-            $query = "CREATE OR REPLACE FUNCTION create_table_if_not_exists (create_sql text) 
-                RETURNS bool as $$ 
-                BEGIN 
+        $file = dirname(dirname(__FILE__)) . '/sql/' . $driver . '.sql';
+        $error = null;
+
+        if (is_file($file)) {
+            $query = file_get_contents($file);
+
+            if ($query) {
+                // replace prefix
+                $query = $db->replacePrefix((string) $query);
+
+                // Postgresql needs special attention because of the query syntax
+                if ($driver == 'postgresql') {
+                    $query = "CREATE OR REPLACE FUNCTION create_table_if_not_exists (create_sql text) 
+                    RETURNS bool as $$ 
                     BEGIN 
-                        EXECUTE create_sql; 
-                        EXCEPTION WHEN duplicate_table THEN RETURN false; 
-                    END; 
-                    RETURN true; 
-                END; $$ 
-                LANGUAGE plpgsql; 
-                SELECT create_table_if_not_exists ('" . $sql . "');";
-            $db->setQuery($query);
+                        BEGIN 
+                            EXECUTE create_sql; 
+                            EXCEPTION WHEN duplicate_table THEN RETURN false; 
+                        END; 
+                        RETURN true; 
+                    END; $$ 
+                    LANGUAGE plpgsql; 
+                    SELECT create_table_if_not_exists ('" . $query . "');";
+                }
+                // set query
+                $db->setQuery(trim($query));
 
-            if ($db->query()) {
-                return true;
-            } else {
-                $error = $db->stdErr();
-            }
-        } else {
-            $file = dirname(dirname(__FILE__)) . '/sql/' . $driver . '.sql';
-            $error = null;
-
-            if (is_file($file)) {
-                $buffer = file_get_contents($file);
-
-                if ($buffer) {
-                    $queries = JInstallerHelper::splitSql($buffer);
-
-                    if (count($queries)) {
-                        $query = $queries[0];
-
-                        if ($query) {
-                            $db->setQuery(trim($query));
-
-                            if (!$db->query()) {
-                                $mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR') . $db->stdErr(), 'error');
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        } else {
-                            $error = 'NO SQL QUERY';
-                        }
-                    } else {
-                        $error = 'NO SQL QUERIES';
-                    }
+                if (!$db->query()) {
+                    $mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR') . $db->stdErr(), 'error');
+                    return false;
                 } else {
-                    $error = 'SQL FILE EMPTY';
+                    return true;
                 }
             } else {
-                $error = 'SQL FILE MISSING';
+                $error = 'NO SQL QUERY';
             }
+        } else {
+            $error = 'SQL FILE MISSING';
         }
 
         $mainframe->enqueueMessage(WFText::_('WF_INSTALL_TABLE_PROFILES_ERROR') . !is_null($error) ? ' - ' . $error : '', 'error');
@@ -649,11 +586,11 @@ class WFModelProfiles extends WFModel {
 
         return $span;
     }
-    
+
     public function saveOrder($cid, $order) {
-        $db     = JFactory::getDBO();
-        $total  = count($cid);
-        
+        $db = JFactory::getDBO();
+        $total = count($cid);
+
         JArrayHelper::toInteger($cid, array(0));
         JArrayHelper::toInteger($order, array(0));
 
@@ -687,7 +624,7 @@ class WFModelProfiles extends WFModel {
             $row->load($cond[0]);
             $row->reorder($cond[1]);
         }
-        
+
         return true;
     }
 
