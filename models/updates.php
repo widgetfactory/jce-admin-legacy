@@ -142,10 +142,14 @@ class WFModelUpdates extends WFModel {
 
         $id = JRequest::getInt('id');
 
-        $file = $this->connect($this->url, 'task=download&id=' . $id);
+        $data = $this->connect(self::$updateURL, 'task=download&id=' . $id);
 
-        if ($file) {
-            $data = json_decode($file);
+        if ($data) {
+            $data = json_decode($data);
+            
+            if (isset($data->error)) {
+            	return json_encode(array('error' => $data->error));
+            }
 
             // get update file
             if ($data->name && $data->url && $data->hash) {
