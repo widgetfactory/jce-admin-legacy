@@ -1143,7 +1143,7 @@ abstract class WFInstall {
         jimport('joomla.filesystem.file');
 
         // get the base file
-        $file = JPATH_ADMINISTRATOR . '/components' . 'com_jce/index.html';
+        $file = JPATH_ADMINISTRATOR . '/components/com_jce/index.html';
 
         if (is_file($file)) {
 
