@@ -367,6 +367,7 @@
       <delete file="${component_export_dir}/administrator/components/com_jce/header.js.txt" quiet="true" />
       <delete file="${component_export_dir}/administrator/components/com_jce/header.css.txt" quiet="true" />
       <delete file="${component_export_dir}/administrator/components/com_jce/header.tinymce.txt" quiet="true" />
+      <delete file="${component_export_dir}/administrator/components/com_jce/header.codemirror.txt" quiet="true" />
 
         <!--fileset dir="${component_export_dir}/plugins/editors" id="editor">
             <include name="jce.xml" />
