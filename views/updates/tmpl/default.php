@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package   	JCE
  * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
@@ -12,35 +11,22 @@
 defined('_JEXEC') or die('RESTRICTED');
 ?>
 <div id="jce">
-    <fieldset>
-        <legend><?php echo WFText::_('WF_UPDATES_AVAILABLE'); ?></legend>
-        <table class="table table-striped table-bordered ui-widget ui-widget-content" id="updates-list" cellspacing="1">
-            <thead>
-                <tr class="ui-widget-header">
-                    <th width="3%"></th>
-                    <th class="title">
-                        <?php echo WFText::_('WF_UPDATES_NAME') ?>
-                    </th>
-                    <th class="title" width="20%">
-                        <?php echo WFText::_('WF_UPDATES_TYPE') ?>
-                    </th>
-                    <th class="title" width="20%">
-                        <?php echo WFText::_('WF_UPDATES_VERSION') ?>
-                    </th>
-                    <th class="title" width="20%">
-                        <?php echo WFText::_('WF_UPDATES_PRIORITY') ?>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td colspan="5"></td></tr>
-            </tbody>
-        </table>
-    </fieldset>
-    <fieldset>
-        <legend><?php echo WFText::_('WF_UPDATES_INFO') ?></legend>
-        <div id="updates-info"></div>
-    </fieldset>
+    <h3><?php echo WFText::_('WF_UPDATES_AVAILABLE'); ?></h3>
+    <div id="updates-list">
+        <div class="row-fluid header">
+            <div class="span1 title">&nbsp;</div>
+            <div class="span5 title">
+                <?php echo WFText::_('WF_UPDATES_NAME') ?>
+            </div>
+            <div class="title span3">
+                <?php echo WFText::_('WF_UPDATES_VERSION') ?>
+            </div>
+            <div class="title span3">
+                <?php echo WFText::_('WF_UPDATES_PRIORITY') ?>
+            </div>
+        </div>
+        <div class="row-fluid body"></div>
+    </div>
     <div class="btn-group pull-right fltrgt">
         <button id="update-button" class="check btn">&nbsp;<?php echo WFText::_('WF_UPDATES_CHECK'); ?></button>
     </div>

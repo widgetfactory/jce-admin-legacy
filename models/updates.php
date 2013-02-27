@@ -132,7 +132,7 @@ class WFModelUpdates extends WFModel {
      */
     public function download() {
         $app = JFactory::getApplication();
-        
+
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
 
@@ -146,9 +146,9 @@ class WFModelUpdates extends WFModel {
 
         if ($data) {
             $data = json_decode($data);
-            
+
             if (isset($data->error)) {
-            	return json_encode(array('error' => $data->error));
+                return json_encode(array('error' => $data->error));
             }
 
             // get update file
@@ -286,19 +286,6 @@ class WFModelUpdates extends WFModel {
         }
     }
 
-    private static function cleanupInstall($package, $extract) {
-        jimport('joomla.filesystem.folder');
-        jimport('joomla.filesystem.file');
-
-        if (is_dir($extract)) {
-            JFolder::delete($extract);
-        }
-
-        if (is_file($package)) {
-            JFile::delete($package);
-        }
-    }
-
     /**
      * Install extension update
      * @return String JSON string
@@ -324,7 +311,7 @@ class WFModelUpdates extends WFModel {
             if (JFile::exists($path)) {
                 // check hash
                 if ($hash == md5(md5_file($path))) {
-                    if ($extract = self::unpack($path)) {
+                    if ($package = self::unpack($path)) {
 
                         // Install a JCE Add-on
                         if ($method == 'jce') {
@@ -333,7 +320,7 @@ class WFModelUpdates extends WFModel {
                             $installer = WFInstaller::getInstance();
 
                             // install
-                            if ($installer->install($extract['dir'])) {
+                            if ($installer->install($package['dir'])) {
                                 // installer message
                                 $result = array('error' => '', 'text' => WFText::_($installer->get('message'), $installer->get('message')));
                             }
@@ -344,14 +331,18 @@ class WFModelUpdates extends WFModel {
                             // get new Installer instance
                             $installer = JInstaller::getInstance();
 
-                            if ($installer->install($extract['dir'])) {
+                            if ($installer->install($package['dir'])) {
                                 // installer message
                                 $result = array('error' => '', 'text' => WFText::_($installer->get('message'), $installer->get('message')));
                             }
                         }
-
-                        // cleanup package and extract dir
-                        self::cleanupInstall($extract['extractdir'], $path);
+                        // Cleanup the install files
+                        if (!is_file($package['packagefile'])) {
+                            $package['packagefile'] = $app->getCfg('tmp_path') . '/' . $package['packagefile'];
+                        }
+                        if (is_file($package['packagefile'])) {
+                            JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
+                        }
                     } else {
                         $result = array('error' => WFText::_('WF_UPDATES_ERROR_FILE_EXTRACT_FAIL'));
                     }
@@ -379,13 +370,13 @@ class WFModelUpdates extends WFModel {
         jimport('joomla.filesystem.file');
 
         $fp = false;
-        
+
         // get wrappers
-        $wrappers   = stream_get_wrappers();
-        
+        $wrappers = stream_get_wrappers();
+
         // check for support
-        $fopen      = function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen') && in_array('https', $wrappers);
-        
+        $fopen = function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen') && in_array('https', $wrappers);
+
         // try file_get_contents first (requires allow_url_fopen)
         if ($fopen) {
             if ($download) {
@@ -395,22 +386,22 @@ class WFModelUpdates extends WFModel {
             } else {
                 $options = array('http' => array('method' => 'POST', 'timeout' => 10, 'content' => $data));
 
-                $context    = stream_context_create($options);
-                $result     = @file_get_contents($url, false, $context);
-                
+                $context = stream_context_create($options);
+                $result = @file_get_contents($url, false, $context);
+
                 if ($result === false) {
                     return array('error' => WFText::_('Update check failed : Invalid response from update server'));
                 }
-                
+
                 return $result;
             }
             // Use curl if it exists
         } else if (function_exists('curl_init')) {
-            
+
             // check for SSL support
-            $version        = curl_version();
-            $ssl_supported  = ($version['features'] & CURL_VERSION_SSL);
-            
+            $version = curl_version();
+            $ssl_supported = ($version['features'] & CURL_VERSION_SSL);
+
             if (!$ssl_supported) {
                 return array('error' => WFText::_('Update check failed : OpenSSL support for CURL is required'));
             }

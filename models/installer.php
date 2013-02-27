@@ -73,7 +73,6 @@ class WFModelInstaller extends WFModel {
 
         // Cleanup the install files
         if (!is_file($package['packagefile'])) {
-            $config = JFactory::getConfig();
             $package['packagefile'] = $app->getCfg('tmp_path') . '/' . $package['packagefile'];
         }
         if (is_file($package['packagefile'])) {
