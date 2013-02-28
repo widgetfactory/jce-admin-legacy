@@ -9,7 +9,6 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 defined('_JEXEC') or die('RESTRICTED');
 
 /**
@@ -19,35 +18,49 @@ defined('_JEXEC') or die('RESTRICTED');
  * @subpackage	Plugins
  * @since 1.5
  */
-class WFControllerUpdates extends WFController
-{
-	/**
-	 * Custom Constructor
-	 */
-	function __construct( $default = array())
-	{		
-		parent::__construct();
-	}
-	
-	function update()
-	{
-		$step 	= JRequest::getWord('step');		
-		$model 	=$this->getModel('updates');
+class WFControllerUpdates extends WFController {
 
-		$result = array();
-		
-		switch ($step) {
-			case 'check':
-				$result = $model->check();
-				break;
-			case 'download':
-				$result = $model->download();
-				break;
-			case 'install':
-				$result = $model->install();
-				break;
-		}
-		exit($result);
-	}
+    /**
+     * Custom Constructor
+     */
+    function __construct($default = array()) {
+        parent::__construct();
+    }
+
+    function update() {
+        $step = JRequest::getWord('step');
+        $model = $this->getModel('updates');
+
+        $result = array();
+
+        switch ($step) {
+            case 'check':
+                $result = $model->check();
+                break;
+            case 'download':
+                $result = $model->download();
+                break;
+            case 'install':
+                $result = $model->install();
+                break;
+        }
+
+        ob_start();
+
+        // set output headers
+        header('Content-Type: text/json;charset=UTF-8');
+        header('Content-Encoding: UTF-8');
+        header("Expires: Mon, 4 April 1984 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+
+        echo $result;
+
+        exit(ob_get_clean());
+    }
+
 }
+
 ?>

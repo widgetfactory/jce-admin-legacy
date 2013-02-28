@@ -29,8 +29,8 @@
                 'install_info'	: 'Install Information',
                 'check_updates'	: 'Checking for Updates...',
                 'info'          : 'Show Information',
-                'read_more'		: 'More',
-                'read_less'		: 'Less'
+                'read_more'	: 'More',
+                'read_less'	: 'Less'
             }
         },
 
@@ -53,7 +53,7 @@
         },
 
         execute : function(el) {
-            if ($(el).hasClass('check')) {
+            if ($(el).hasClass('check')) {                
                 this.check(el);
             }
 
@@ -73,20 +73,16 @@
         check : function(btn) {
             var self = this;
 
-            $('button.download').remove();
-            $('button.install').remove();
+            $('button.download, button.install').remove();
 
             var list = $('div#updates-list');
 
-            $('div.body', list).html('<div class="span12 item">' + this.translate('check_updates') + '</div>');
+            $('div.body', list).html('<div class="item">' + this.translate('check_updates') + '</div>');
 
             $(btn).addClass('loading').button('disable');
 
-            var priority = {
-                1 : '<span class="priority high">' + this.translate('high') + '</span>',
-                2 : '<span class="priority medium">' + this.translate('medium') + '</span>',
-                3 : '<span class="priority low">' + this.translate('low') + '</span>'
-            };
+            // Array of priority values
+            var priority = ['<span class="priority high">' + this.translate('high') + '</span>', '<span class="priority medium">' + this.translate('medium') + '</span>', '<span class="priority low">' + this.translate('low') + '</span>'];
 
             $.getJSON("index.php?option=com_jce&view=updates&task=update&step=check", {}, function(r) {
                 $(btn).removeClass('loading');
@@ -121,7 +117,7 @@
 
                         $.each(r, function(n, s) {
                             // authorisation success or not required
-                            $('div.body', list).append('<div class="item"><div class="span1"><span class="checkbox" data-uid="'+ s.id +'"></span></div><div class="span5">' + s.title + '</div><div class="span3">' + s.version + '</div><div class="span3">'+priority[s.priority]+'</div></div>');
+                            $('div.body', list).append('<div class="item"><div class="span1"><span class="checkbox" data-uid="'+ s.id +'"></span></div><div class="span5">' + s.title + '</div><div class="span3">' + s.version + '</div><div class="span3">'+priority[s.priority - 1]+'</div></div>');
 
                             // info...
                             var $info = $('<div class="item info">' + s.text + '</div>').appendTo($('div.body', list));
