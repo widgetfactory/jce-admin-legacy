@@ -116,7 +116,7 @@ body {
 }
 
 #jce div.row-fluid.body {
-    line-height : 20px
+    line-height : 20px;
     height: 100%;
     max-height: 410px;
     overflow-y: auto;
@@ -134,7 +134,7 @@ body {
 #jce div.row-fluid.body div.item + div.info {
     margin : -1px 0 0 0;
     border: 1px solid #eee;
-    text-align: inherit;
+    text-align: left;
     padding : 10px;
     height : 100%;
     max-height : 100px;
