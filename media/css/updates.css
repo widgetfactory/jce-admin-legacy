@@ -7,6 +7,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
+
 html {
     overflow : auto;
 }
@@ -73,6 +74,15 @@ body {
     border: 1px solid #008000;
     color : #008000;
 }
+
+#jce span.checkbox {
+    border : 0 none;
+    border-radius: none;
+    padding : 0;
+    text-shadow: none;
+    min-height : 20px;
+}
+
 #jce span.checkbox.loader, #jce span.checkbox.checked.loader, #jce span.checkbox.checked.disabled.loader {
     background: url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center center;
     cursor: default;
@@ -105,6 +115,15 @@ body {
     right: 8px;
 }
 
+#jce div.row-fluid.header {
+    padding: 0;
+    margin : 0;
+    color: #000000;
+    font-size: 1.1em;
+    font-weight: bold;
+    line-height : 30px;
+}
+
 #jce div.row-fluid div {
     vertical-align: middle;
     text-align: center;
@@ -112,7 +131,7 @@ body {
 }
 
 #jce div.row-fluid div.span5 {
-	width : 47.5%
+    width : 47.5%
 }
 
 #jce div.row-fluid.body {
@@ -143,11 +162,11 @@ body {
 }
 
 #jce div.row-fluid.body.scrolling div.item.info {
-	margin-right : -1px;
+    margin-right : -1px;
 } 
 
 #jce div.row-fluid.body div.item.error {
-	background-color: #FFCCCC;
+    background-color: #FFCCCC;
     border: 1px solid #CC0000;
     color: #CC0000;
     height: 100%;
@@ -159,7 +178,7 @@ body {
 }
 
 #jce div.row-fluid.body div.item + div.error, #jce div.row-fluid.body div.item.error:first-child {
-	text-align : center;
+    text-align : center;
 }
 
 #jce div.row-fluid.body div.item.info.expand {
@@ -170,6 +189,7 @@ body {
 #jce div.row-fluid.body div.item.info p, #jce div.row-fluid.body div.item.info ul {
     line-height: 22px;
     margin: 5px 0;
+    padding: auto;
 }
 
 #jce div.row-fluid.body div.item.info span.readmore, #jce div.row-fluid.body div.item.info span.readless {
@@ -181,17 +201,17 @@ body {
     right: 0;
 }
 #jce div.row-fluid.body div.item.info span.readmore:after {
-	margin : 0 2px;
-	content : "▼";
+    margin : 0 2px;
+    content : "▼";
 }
 #jce div.row-fluid.body div.item.info span.readless:after {
-	margin : 0 2px;
-	content : "▲";
+    margin : 0 2px;
+    content : "▲";
 }
 
 #jce div.row-fluid.body div.item span {
-   	margin: 5px 2px;
-	position: relative;
+    margin: 5px 2px;
+    position: relative;
 }
 
 #jce div.row-fluid.info {
@@ -214,4 +234,36 @@ body {
 }
 #jce div.row-fluid.header div:first-child, #jce div.row-fluid.body div.item div:first-child {
     border : 0 none;
+}
+
+/* IE8 Bootstrap stuff */
+.ie8 .row:after, .ie8 .row-fluid:after {
+    clear: both;
+}
+.ie8 .row-fluid:before, .ie8 .row-fluid:after {
+    content: "";
+    display: table;
+    line-height: 0;
+}
+.ie8 [class*="span"], .ie8 .row-fluid [class*="span"] {
+    display: block;
+    float: left;
+    min-height: 30px;
+    width: 100%;
+}
+.ie8 .row-fluid, .ie8 .span12 {
+    width: 100%;
+}
+.ie8 .row-fluid .span5 {
+    width: 47.5%;
+}
+.ie8 .row-fluid .span3 {
+    width: 22.9282%;
+}
+.ie8 .row-fluid .span1 {
+    width: 5.80111%;
+}
+
+#jce.ie8 span.priority {
+    width : 95%;
 }

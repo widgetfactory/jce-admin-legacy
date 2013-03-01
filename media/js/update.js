@@ -9,51 +9,47 @@
  */
 (function($) {
     $.jce.Update = {
-
-        updates : {},
-
-        options : {
-            language : {
-                'check' 	: 'Check for Updates',
-                'install' 	: 'Install Updates',
-                'installed'	: 'Installed',
-                'no_updates'	: 'No Updates Available',
-                'high'		: 'High',
-                'medium'	: 'Medium',
-                'low'		: 'Low',
-                'full'		: 'Full Install',
-                'patch'		: 'Patch',
-                'auth_failed'	: 'Authorisation Failed',
+        updates: {},
+        options: {
+            language: {
+                'check': 'Check for Updates',
+                'install': 'Install Updates',
+                'installed': 'Installed',
+                'no_updates': 'No Updates Available',
+                'high': 'High',
+                'medium': 'Medium',
+                'low': 'Low',
+                'full': 'Full Install',
+                'patch': 'Patch',
+                'auth_failed': 'Authorisation Failed',
                 'install_failed': 'Install Failed',
-                'update_info'	: 'Update Information',
-                'install_info'	: 'Install Information',
-                'check_updates'	: 'Checking for Updates...',
-                'info'          : 'Show Information',
-                'read_more'	: 'More',
-                'read_less'	: 'Less'
+                'update_info': 'Update Information',
+                'install_info': 'Install Information',
+                'check_updates': 'Checking for Updates...',
+                'info': 'Show Information',
+                'read_more': 'More',
+                'read_less': 'Less'
             }
         },
-
         /**
          * Initialise Updates
          * @param {Object} options
          */
-        init : function(options) {
+        init: function(options) {
             var self = this;
 
             $.extend(this.options, options);
 
             $('button#update-button').button({
-                icons : {
-                    primary : 'icon-update'
+                icons: {
+                    primary: 'icon-update'
                 }
-            }).click( function() {
+            }).click(function() {
                 self.execute(this);
             }).click();
         },
-
-        execute : function(el) {
-            if ($(el).hasClass('check')) {                
+        execute: function(el) {
+            if ($(el).hasClass('check')) {
                 this.check(el);
             }
 
@@ -61,16 +57,14 @@
                 this.download(el);
             }
         },
-                
-        translate : function(s, v) {
+        translate: function(s, v) {
             return this.options.language[s] || v;
         },
-
         /**
          * Check for updates and create list of available updates
          * @param {Object} btn Button element
          */
-        check : function(btn) {
+        check: function(btn) {
             var self = this;
 
             $('button.download, button.install').remove();
@@ -94,67 +88,75 @@
                     if ($.type(r) == 'string') {
                         r = $.parseJSON(r);
                     }
-                    
+
                     if (r.error) {
-                        $('div.body', list).html('<div class="item error">'+ r.error +'</div>');
+                        $('div.body', list).html('<div class="item error">' + r.error + '</div>');
                         return false;
                     }
 
                     if (r.length) {
                         // clone check button as install but set disabled until items checked
                         $(btn).clone().button({
-                            icons : {
-                                primary : 'icon-install'
+                            icons: {
+                                primary: 'icon-install'
                             },
-                            disabled : true,
-                            label : self.translate('install')
-                        }).click( function() {
+                            disabled: true,
+                            label: self.translate('install')
+                        }).click(function() {
                             self.execute(this);
                         }).insertAfter(btn).attr({
-                            'id' : 'install-button',
-                            'disabled' : 'disabled'
+                            'id': 'install-button',
+                            'disabled': 'disabled'
                         }).removeClass('check').addClass('install');
 
                         $.each(r, function(n, s) {
                             // authorisation success or not required
-                            $('div.body', list).append('<div class="item"><div class="span1"><span class="checkbox" data-uid="'+ s.id +'"></span></div><div class="span5">' + s.title + '</div><div class="span3">' + s.version + '</div><div class="span3">'+priority[s.priority - 1]+'</div></div>');
+                            $('div.body', list).append('<div class="item"><div class="span1"><span class="checkbox" data-uid="' + s.id + '"></span></div><div class="span5">' + s.title + '</div><div class="span3">' + s.version + '</div><div class="span3">' + priority[s.priority - 1] + '</div></div>');
 
                             // info...
                             var $info = $('<div class="item info">' + s.text + '</div>').appendTo($('div.body', list));
-                            
+
                             var $readmore = $('<span class="readmore">' + self.translate('read_more', 'More') + '</span>').click(function() {
                                 // hide others
                                 $('div.body .item', list).toggle();
-                                
+
                                 $(this).toggleClass('readmore readless').parent().toggleClass('expand').toggle().prev('.item').toggle();
-                                
+
                                 $(this).html(function() {
-                                	if ($(this).hasClass('readless')) {
-                                		return self.translate('read_less', 'Less');
-                                	} else {
-                                		return self.translate('read_more', 'More');
-                                	}
+                                    if ($(this).hasClass('readless')) {
+                                        return self.translate('read_less', 'Less');
+                                    } else {
+                                        return self.translate('read_more', 'More');
+                                    }
                                 });
-                                
+
                             }).appendTo($info);
-                            
+
+                            if (!$.support.leadingWhitespace) {
+                                $readmore.css('top', 0);
+                            }
+
                             // scroll readmore
                             $('div.body div.item.info', list).on('scroll', function() {
-                                $readmore.css('bottom', -$(this).scrollTop());
+                                if (!$.support.leadingWhitespace) {
+                                    $readmore.css('top', $(this).scrollTop());
+                                } else {
+                                    $readmore.css('bottom', -$(this).scrollTop());
+                                }
                             });
-                            
+
                             // fix width if scrollbar showing
                             var sb = $('div.body', list).get(0).clientWidth - $('div.header', list).get(0).clientWidth;
-                            
+
                             if (sb < 0) {
-                            	$('div.body', list).addClass('scrolling').children('.item').not('.info, .error').css('margin-right', sb);
+                                $('div.body', list).addClass('scrolling').children('.item').not('.info, .error').css('margin-right', sb);
                             }
-                            
+
                             if ($('div.header', list).innerWidth() > $('div.body', list).innerWidth()) {
                                 $('div.body div.item', list).css('margin-right', -10);
                             }
-                            
-                            var el = $('span[data-uid='+ s.id +']');
+
+                            var el = $('span[data-uid=' + s.id + ']');
 
                             if (s.auth) {
                                 // check checkbox if forced update or high priority
@@ -164,7 +166,7 @@
 
                                     // disable any updates that this particular update overrides / negates eg: an equivalent patch or full version
                                     if (s.negates) {
-                                        $('span[data-uid='+ s.negates +']').removeClass('checked').addClass('disabled');
+                                        $('span[data-uid=' + s.negates + ']').removeClass('checked').addClass('disabled');
                                     }
                                 }
                                 // disable checkbox if forced update
@@ -173,15 +175,15 @@
                                 }
                                 // check required checkbox
                                 if (s.required) {
-                                    $('span[data-uid='+ s.required +']').addClass('checked');
+                                    $('span[data-uid=' + s.required + ']').addClass('checked');
                                 }
 
                                 // checkbox events
-                                $(el).click( function() {
+                                $(el).click(function() {
                                     if ($(this).is('.disabled, .error, .alert')) {
                                         return;
                                     }
-								
+
                                     if ($(this).hasClass('checked')) {
                                         $(this).removeClass('checked');
                                     } else {
@@ -191,9 +193,9 @@
                                     // disable any updates that this particular update overrides / negates eg: an equivalent patch or full version
                                     if (s.negates) {
                                         if ($(this).hasClass('checked')) {
-                                            $('span[data-uid='+ s.negates +']').removeClass('checked').addClass('disabled');
+                                            $('span[data-uid=' + s.negates + ']').removeClass('checked').addClass('disabled');
                                         } else {
-                                            $('span[data-uid='+ s.negates +']').removeClass('disabled');
+                                            $('span[data-uid=' + s.negates + ']').removeClass('disabled');
                                         }
                                     }
 
@@ -206,24 +208,23 @@
 
                             } else {
                                 $(el).removeClass('disabled').addClass('alert');
-                                $('div.body', list).append('<div class="item error">' + s.title + ' : ' + self.translate('auth_failed') +'</div>');
+                                $('div.body', list).append('<div class="item error">' + s.title + ' : ' + self.translate('auth_failed') + '</div>');
                             }
                         });
                     } else {
-                        $('div.body', list).append('<div class="item">'+ self.translate('no_updates') +'</div>');
+                        $('div.body', list).append('<div class="item">' + self.translate('no_updates') + '</div>');
                     }
                 } else {
-                    $('div.body', list).append('<div class="item">'+ self.translate('no_updates') +'</div>');
+                    $('div.body', list).append('<div class="item">' + self.translate('no_updates') + '</div>');
                 }
             });
 
         },
-
         /**
          * Download selected updates
          * @param {Object} btn Button element
          */
-        download : function(btn) {
+        download: function(btn) {
             var t = this, n = 1;
 
             // get all checked updates
@@ -236,8 +237,8 @@
             $('button#update-button').button('disable');
 
             $.extend(t.updates, {
-                'joomla' 	: [],
-                'jce'		: []
+                'joomla': [],
+                'jce': []
             });
 
             $.each(s, function() {
@@ -245,18 +246,18 @@
 
                 $(el).removeClass('error').addClass('loader');
                 $.post("index.php?option=com_jce&view=updates&task=update&step=download", {
-                    'id' : uid
-                }, function(r) {                    
-                    if (r && r.error) {                    
+                    'id': uid
+                }, function(r) {
+                    if (r && r.error) {
                         // add error icon and message
-                        $(el).removeClass('loader disabled check').addClass('error').parents('div.item').next('div.item.info').replaceWith('<div class="item error">'+ r.error +'</div>');
+                        $(el).removeClass('loader disabled check').addClass('error').parents('div.item').next('div.item.info').replaceWith('<div class="item error">' + r.error + '</div>');
                     } else {
                         // download success
                         if (r.file) {
                             $(el).addClass('downloaded');
                             // set id
                             $.extend(r, {
-                                'id' : uid
+                                'id': uid
                             });
                             // store result
                             t.updates[r.installer].push(r);
@@ -273,12 +274,11 @@
             });
 
         },
-
         /**
          * Install updates
          * @param {Object} btn Button element
          */
-        install : function(btn) {
+        install: function(btn) {
             var t = this, n = 0;
             var s = $('div.body div.item span.checkbox.checked.downloaded');
 
@@ -292,7 +292,7 @@
 
                 // any left?
                 if (updates.length) {
-                    var file = updates[0], id = file.id, el = $('span[data-uid='+ id +']');
+                    var file = updates[0], id = file.id, el = $('span[data-uid=' + id + ']');
 
                     // double check to see it is a downloaded file
                     if ($(el).hasClass('downloaded')) {
@@ -300,7 +300,7 @@
                             $(el).removeClass('loader');
 
                             if (r && r.error) {
-                                $(el).removeClass('loader disabled check').addClass('error').parents('div.item').next('div.item.info').replaceWith('<div class="item error">'+ r.error +'</div>');
+                                $(el).removeClass('loader disabled check').addClass('error').parents('div.item').next('div.item.info').replaceWith('<div class="item error">' + r.error + '</div>');
                             } else {
                                 // install success
                                 $(el).addClass('tick').removeClass('check');
@@ -320,10 +320,10 @@
                                 t.updates = {};
 
                                 $('button#update-button').button('enable');
-                                
+
                                 // close
-                                window.setTimeout(function(){
-                                    window.parent.document.location.href="index.php?option=com_jce&view=cpanel";
+                                window.setTimeout(function() {
+                                    window.parent.document.location.href = "index.php?option=com_jce&view=cpanel";
                                 }, 1000);
                             }
 
