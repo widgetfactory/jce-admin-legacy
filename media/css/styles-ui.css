@@ -7,9 +7,8 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
+@import url('styles.css');
 @import url('../../../../../components/com_jce/editor/libraries/jquery/css/jquery-ui.custom.css');
-@import url('../../../../../components/com_jce/editor/libraries/css/bootstrap-responsive.min.css');
 
 #jce {
     font-size: 11px;
@@ -627,54 +626,4 @@ span.uparrow {
 
 #jce div.container {
    width : auto; 
-}
-
-/*!
- * Bootstrap Responsive v2.1.0
- *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
- */
-.visible-phone {
-    display: none !important;
-}
-.visible-tablet {
-    display: none !important;
-}
-.hidden-desktop {
-    display: none !important;
-}
-.visible-desktop {
-    display: inherit !important;
-}
-@media (min-width: 768px) and (max-width: 979px) {
-    .hidden-desktop {
-        display: inherit !important;
-    }
-    .visible-desktop {
-        display: none !important ;
-    }
-    .visible-tablet {
-        display: inherit !important;
-    }
-    .hidden-tablet {
-        display: none !important;
-    }
-}
-@media (max-width: 767px) {
-    .hidden-desktop {
-        display: inherit !important;
-    }
-    .visible-desktop {
-        display: none !important;
-    }
-    .visible-phone {
-        display: inherit !important;
-    }
-    .hidden-phone {
-        display: none !important;
-    }
 }
