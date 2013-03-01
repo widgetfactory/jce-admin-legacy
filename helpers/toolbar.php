@@ -12,6 +12,10 @@
 defined('_JEXEC') or die('RESTRICTED');
 
 abstract class WFToolbarHelper {
+    
+    public static function createClick($link, $w, $h) {
+        return "Joomla.modal(this, '" . $link . "', " . $w . ", " . $h . ");return false;";
+    }
 
     public static function help($type) {
         jimport('joomla.plugin.helper');
@@ -26,21 +30,15 @@ abstract class WFToolbarHelper {
         $link = 'index.php?option=com_jce&amp;view=help&amp;tmpl=component&amp;section=admin&category=' . $category . '&article=' . $article . '&amp;lang=' . substr($tag, 0, strpos($tag, '-'));
 
         $bar = JToolBar::getInstance('toolbar');
-
-        $options = array(
-            'size' => array(
-                'x' => 780,
-                'y' => 560
-            ),
-            'handler' => 'iframe'
-        );
+        
+        $w = 780; $h = 560;
         
         JHtml::_('behavior.modal');
         
         if (class_exists('JHtmlSidebar')) {            
-            $html  = '<button onclick="Joomla.modal(this, \''. $link .'\', 780, 560);return false;" class="btn btn-small" title="' . WFText::_('WF_HELP') . '"><i class="icon-help"></i>&nbsp;' . WFText::_('WF_HELP') . '</button>';
+            $html  = '<button onclick="' . self::createClick($link, $w, $h) . '" class="btn btn-small" title="' . WFText::_('WF_HELP') . '"><i class="icon-help"></i>&nbsp;' . WFText::_('WF_HELP') . '</button>';
         } else {
-            $html  = '<a href="' . $link . '" target="_blank" rel="' . str_replace('"', "'", json_encode($options)) . '" class="modal help" title="' . WFText::_('WF_HELP') . '">';
+            $html  = '<a href="' . $link . '" target="_blank" onclick="' . self::createClick($link, $w, $h) . '" class="help" title="' . WFText::_('WF_HELP') . '">';
             $html .= '<span class="icon-32-help" title="' . WFText::_('WF_HELP') . '"></span>' . WFText::_('WF_HELP') . '</a>';
         }
 
@@ -62,15 +60,9 @@ abstract class WFToolbarHelper {
         } else {
             $bar = JToolBar::getInstance('toolbar');
 
-            $options = array(
-                'size' => array(
-                    'x' => 780,
-                    'y' => 560
-                ),
-                'handler' => 'iframe'
-            );
+            $w = 780; $h = 560;
 
-            $html  = '<a href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component" target="_blank" rel="' . str_replace('"', "'", json_encode($options)) . '" class="modal preferences" title="' . WFText::_('WF_PREFERENCES_TITLE') . '">';
+            $html  = '<a href="index.php?option=com_jce&amp;view=preferences&amp;tmpl=component" target="_blank" onclick="' . self::createClick($link, $w, $h) . '" class="preferences" title="' . WFText::_('WF_PREFERENCES_TITLE') . '">';
             $html .= '<span class="icon-32-config icon-32-options" title="' . WFText::_('WF_PREFERENCES_TITLE') . '"></span>' . WFText::_('WF_PREFERENCES') . '</a>';
 
             $bar->appendButton('Custom', $html, 'config');
@@ -89,13 +81,7 @@ abstract class WFToolbarHelper {
     public static function updates($enabled = false) {
         $bar = JToolBar::getInstance('toolbar');
         // Add a configuration button
-        $options = array(
-            'size' => array(
-                'x' => 780,
-                'y' => 560
-            ),
-            'handler' => 'iframe'
-        );
+        $w = 780; $h = 560;
         
         $link = 'index.php?option=com_jce&amp;view=updates&amp;tmpl=component';
 
@@ -103,9 +89,9 @@ abstract class WFToolbarHelper {
             JHtml::_('behavior.modal');
 
             if (class_exists('JHtmlSidebar')) {            
-                $html  = '<button onclick="Joomla.modal(this, \''. $link .'\', 780, 560);return false;" class="btn btn-small" title="' . WFText::_('WF_UPDATES') . '"><i class="icon-upload"></i>&nbsp;' . WFText::_('WF_UPDATES') . '</button>';
+                $html  = '<button onclick="' . self::createClick($link, $w, $h) . '" class="btn btn-small" title="' . WFText::_('WF_UPDATES') . '"><i class="icon-upload"></i>&nbsp;' . WFText::_('WF_UPDATES') . '</button>';
             } else {
-                $html  = '<a href="' . $link . '" target="_blank" rel="' . str_replace('"', "'", json_encode($options)) . '" class="modal help" title="' . WFText::_('WF_UPDATES') . '">';
+                $html  = '<a href="' . $link . '" target="_blank" onclick="' . self::createClick($link, $w, $h) . '" class="updates" title="' . WFText::_('WF_UPDATES') . '">';
                 $html .= '<span class="icon-32-default icon-32-update" title="' . WFText::_('WF_HELP') . '"></span>' . WFText::_('WF_UPDATES') . '</a>';
             }
         }    

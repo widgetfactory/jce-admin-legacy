@@ -46,7 +46,7 @@
                                 $('#toolbar-updates button').click();
                             
                                 // trigger toolbar button
-                                $('#toolbar-updates a.modal').each( function() {
+                                $('#toolbar-updates a.updates').each( function() {
                                     $.jce.createDialog(this, {
                                         src 	: $(this).attr('href'),
                                         options : {

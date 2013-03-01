@@ -77,18 +77,19 @@ class WFViewCpanel extends WFView {
             if ($view == 'browser') {
                 $link = WFModel::getBrowserLink();
                 
-                $params     = JComponentHelper::getParams('com_jce');
-                $width      = $params->get('browser_width', 780);
-                $height     = $params->get('browser_height', 560);
+                $component = WFExtensionHelper::getComponent();
+
+                // get params definitions
+                $params = new WFParameter($component->params, '', 'preferences');
+                
+                $width      = (int) $params->get('browser_width', 780);
+                $height     = (int) $params->get('browser_height', 560);
                 
                 if (empty($link)) {
                     continue;
                 }
                 
-                $options        = str_replace('"', "'", json_encode(array('width' => $width, 'height' => $height)));
-                $rel            = str_replace('"', "'", json_encode(array('handler' => 'iframe', 'size' => array('x' => $width, 'y' => $height))));
-                
-                $attribs        = array('target="_blank"', 'class="browser modal"', 'rel="' . $rel . '"', 'data-options="' . $options . '"');
+                $attribs        = array('target="_blank"', 'class="browser"', 'onclick="Joomla.modal(this, \'' . $link . '\', '. $width .', '. $height .');return false;"');
                 
                 $title          = 'WF_' . strtoupper($view) . '_TITLE';
                 $description    = 'WF_CPANEL_' . strtoupper($view);
@@ -99,7 +100,7 @@ class WFViewCpanel extends WFView {
                 continue;
             }
 
-            $icons[] = '<li class="cpanel-icon wf-tooltip" title="' . WFText::_($title) . '::' . WFText::_($description) . '"><a href="' . $link . '"' . implode(' ', $attribs) . '><span class="' . $view . '"></span>' . WFText::_($title) . '</a></li>';
+            $icons[] = '<li class="cpanel-icon wf-tooltip" title="' . WFText::_($title) . '::' . WFText::_($description) . '"><a id="wf-browser-link" href="' . $link . '"' . implode(' ', $attribs) . '><span class="' . $view . '"></span>' . WFText::_($title) . '</a></li>';
         }
 
         $this->assign('icons', $icons);
