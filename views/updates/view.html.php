@@ -34,7 +34,9 @@ class WFViewUpdates extends WFView {
                 'auth_failed' => WFText::_('WF_UPDATES_AUTH_FAIL'),
                 'update_info' => WFText::_('WF_UPDATES_INFO'),
                 'install_info' => WFText::_('WF_UPDATES_INSTALL_INFO'),
-                'check_updates' => WFText::_('WF_UPDATES_CHECKING')
+                'check_updates' => WFText::_('WF_UPDATES_CHECKING'),
+                'read_more'     => WFText::_('WF_UPDATES_READMORE'),
+                'read_less'     => WFText::_('WF_UPDATES_READLESS')
             )
         );
 
