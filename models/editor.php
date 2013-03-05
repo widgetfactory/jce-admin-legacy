@@ -938,12 +938,6 @@ class WFModelEditor extends WFModelBase {
                             }
                         }
                     }
-
-                    $fonts = trim(self::getCustomFonts($this->getStyleSheets(true)));
-
-                    if (!empty($fonts)) {
-                        $packer->setContentEnd($fonts);
-                    }
                 }
                 break;
         }
