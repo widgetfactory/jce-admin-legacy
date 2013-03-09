@@ -408,9 +408,6 @@ class WFControllerProfiles extends WFController {
 
         jimport('joomla.filesystem.file');
 
-        // clean input
-        $input = $filter->clean($filter, 'path');
-
         if (!is_array($file)) {
             $app->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_NOFILE'), 'error');
         } else {
@@ -430,6 +427,9 @@ class WFControllerProfiles extends WFController {
                     $app->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_FAILED'), 'error');
                 }
             } else {
+                // clean input
+                $input = $filter->clean($input, 'path');
+
                 // check for file input value instead
                 if ($input) {
                     // check file exists
