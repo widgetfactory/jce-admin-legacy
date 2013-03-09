@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.3.2.1" />
-    <property description="Component Version" name="version_package" value="2321" />
+    <property description="Component Version" name="version" value="2.3.2.2" />
+    <property description="Component Version" name="version_package" value="2322" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
