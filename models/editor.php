@@ -799,6 +799,9 @@ class WFModelEditor extends WFModelBase {
 
         // check for existence of each file and make array of stylesheets
         foreach ($files as $file) {
+            // remove leading slash
+            $file = ltrim($file, '/');
+            
             if ($file && JFile::exists(JPATH_SITE . '/' . $file)) {
                 $stylesheets[] = $root . '/' . $file;
             }
