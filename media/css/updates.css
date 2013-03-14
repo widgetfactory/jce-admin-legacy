@@ -75,6 +75,10 @@ body {
     color : #008000;
 }
 
+#jce #updates-list div.header div:first-child span.checkbox {
+    vertical-align: middle;
+}
+
 #jce span.checkbox {
     border : 0 none;
     border-radius: none;

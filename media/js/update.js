@@ -199,10 +199,12 @@
                                         }
                                     }
 
-                                    if ($('span.checkbox.checked', $(list)).length) {
+                                    if ($('div.body span.checkbox.checked', list).length) {
                                         $('button#install-button').attr('disabled', '').button('enable');
                                     } else {
                                         $('button#install-button').attr('disabled', 'disabled').button('disable');
+                                        
+                                        $('div.header div:first-child span.checkbox', list).removeClass('checked');
                                     }
                                 });
 
@@ -211,6 +213,15 @@
                                 $('div.body', list).append('<div class="item error">' + s.title + ' : ' + self.translate('auth_failed') + '</div>');
                             }
                         });
+                        
+                        if (r.length > 1) {
+                            $('<span class="checkbox"></span>').appendTo($('div.header div:first', list)).click(function() {
+                                $('div.body span.checkbox', list).click();
+                                
+                                $(this).toggleClass('checked');
+                            });
+                        }
+                        
                     } else {
                         $('div.body', list).append('<div class="item">' + self.translate('no_updates') + '</div>');
                     }
