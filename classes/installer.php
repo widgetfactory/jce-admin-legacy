@@ -236,12 +236,12 @@ class WFInstaller extends JObject {
             }
 
             // None of the XML files found were valid install files
-            JError::addWarning(JText::_('JLIB_INSTALLER_ERROR_NOTFINDJOOMLAXMLSETUPFILE'));
+            JError::raiseWarning(JText::_('WF_INSTALLER_MANIFEST_INVALID'));
 
             return false;
         } else {
             // No XML files were found in the install folder
-            JError::addWarning(JText::_('JLIB_INSTALLER_ERROR_NOTFINDXMLSETUPFILE'));
+            JError::raiseWarning(JText::_('WF_INSTALLER_MANIFEST_LOAD_ERROR'));
             return false;
         }
     }
