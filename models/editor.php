@@ -152,19 +152,6 @@ class WFModelEditor extends WFModelBase {
             $settings['toggle_label'] = htmlspecialchars($wf->getParam('editor.toggle_label', '[Toggle Editor]', '[Toggle Editor]'));
             $settings['toggle_state'] = $wf->getParam('editor.toggle_state', 1, 1);
         }// end profile
-        //Other - user specified
-        $userParams = $wf->getParam('editor.custom_config', '');
-        $baseParams = array('mode', 'cleanup_callback', 'save_callback', 'file_browser_callback', 'urlconverter_callback', 'onpageload', 'oninit', 'editor_selector');
-
-        if ($userParams) {
-            $userParams = explode(';', $userParams);
-            foreach ($userParams as $userParam) {
-                $keys = explode(':', $userParam);
-                if (!in_array(trim($keys[0]), $baseParams)) {
-                    $settings[trim($keys[0])] = count($keys) > 1 ? trim($keys[1]) : '';
-                }
-            }
-        }
 
         // set compression states
         $compress = array('javascript' => intval($wf->getParam('editor.compress_javascript', 0)), 'css' => intval($wf->getParam('editor.compress_css', 0)));
@@ -209,6 +196,20 @@ class WFModelEditor extends WFModelBase {
 
         // pass compresison states to settings
         $settings['compress'] = json_encode($compress);
+        
+        //Other - user specified
+        $userParams = $wf->getParam('editor.custom_config', '');
+        $baseParams = array('mode', 'cleanup_callback', 'save_callback', 'file_browser_callback', 'urlconverter_callback', 'onpageload', 'oninit', 'editor_selector');
+
+        if ($userParams) {
+            $userParams = explode(';', $userParams);
+            foreach ($userParams as $userParam) {
+                $keys = explode(':', $userParam);
+                if (!in_array(trim($keys[0]), $baseParams)) {
+                    $settings[trim($keys[0])] = count($keys) > 1 ? trim($keys[1]) : '';
+                }
+            }
+        }
 
         // check for language files
         $this->checkLanguages($settings);
