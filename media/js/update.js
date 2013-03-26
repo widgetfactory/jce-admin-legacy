@@ -198,12 +198,20 @@
                                             $('span[data-uid=' + s.negates + ']').removeClass('disabled');
                                         }
                                     }
+                                    
+                                    var len = $('div.body span.checkbox.checked', list).length;
 
-                                    if ($('div.body span.checkbox.checked', list).length) {
+                                    if (len) {
                                         $('button#install-button').attr('disabled', '').button('enable');
+                                        
+                                        if (len == $('div.body span.checkbox', list).length) {
+                                        	$('div.header div:first-child span.checkbox', list).addClass('checked');
+                                        } else {
+                                        	$('div.header div:first-child span.checkbox', list).removeClass('checked');
+                                        }
+                                                                                
                                     } else {
                                         $('button#install-button').attr('disabled', 'disabled').button('disable');
-                                        
                                         $('div.header div:first-child span.checkbox', list).removeClass('checked');
                                     }
                                 });
@@ -217,8 +225,6 @@
                         if (r.length > 1) {
                             $('<span class="checkbox"></span>').appendTo($('div.header div:first', list)).click(function() {
                                 $('div.body span.checkbox', list).click();
-                                
-                                $(this).toggleClass('checked');
                             });
                         }
                         
