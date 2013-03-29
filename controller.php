@@ -150,7 +150,6 @@ class WFController extends WFControllerBase {
                 $this->addModelPath(dirname(__FILE__) . '/models');
 
                 $view->loadHelper('toolbar');
-                $view->loadHelper('tools');
                 $view->loadHelper('xml');
                 $view->loadHelper($name);
 

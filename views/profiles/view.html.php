@@ -14,6 +14,52 @@ defined('_JEXEC') or die('RESTRICTED');
 wfimport('admin.classes.view');
 
 class WFViewProfiles extends WFView {
+    
+    private function getOptions($params) {
+        wfimport('editor.libraries.classes.editor');
+        $wf = WFEditor::getInstance();
+        
+        $options = array(
+            'editableselects' => array('label' => WFText::_('WF_TOOLS_EDITABLESELECT_LABEL')),
+            'extensions' => array(
+                'labels' => array(
+                    'type_new' => WFText::_('WF_EXTENSION_MAPPER_TYPE_NEW'),
+                    'group_new' => WFText::_('WF_EXTENSION_MAPPER_GROUP_NEW'),
+                    'acrobat' => WFText::_('WF_FILEGROUP_ACROBAT'),
+                    'office' => WFText::_('WF_FILEGROUP_OFFICE'),
+                    'flash' => WFText::_('WF_FILEGROUP_FLASH'),
+                    'shockwave' => WFText::_('WF_FILEGROUP_SHOCKWAVE'),
+                    'quicktime' => WFText::_('WF_FILEGROUP_QUICKTIME'),
+                    'windowsmedia' => WFText::_('WF_FILEGROUP_WINDOWSMEDIA'),
+                    'silverlight' => WFText::_('WF_FILEGROUP_SILVERLIGHT'),
+                    'openoffice' => WFText::_('WF_FILEGROUP_OPENOFFICE'),
+                    'divx' => WFText::_('WF_FILEGROUP_DIVX'),
+                    'real' => WFText::_('WF_FILEGROUP_REAL'),
+                    'video' => WFText::_('WF_FILEGROUP_VIDEO'),
+                    'audio' => WFText::_('WF_FILEGROUP_AUDIO')
+                )
+            ),
+            'colorpicker' => array(
+                'stylesheets' => $wf->getStyleSheets(),
+                'labels' => array(
+                    'title' => WFText::_('WF_COLORPICKER_TITLE'),
+                    'picker' => WFText::_('WF_COLORPICKER_PICKER'),
+                    'palette' => WFText::_('WF_COLORPICKER_PALETTE'),
+                    'named' => WFText::_('WF_COLORPICKER_NAMED'),
+                    'template' => WFText::_('WF_COLORPICKER_TEMPLATE'),
+                    'custom' => WFText::_('WF_COLORPICKER_CUSTOM'),
+                    'color' => WFText::_('WF_COLORPICKER_COLOR'),
+                    'apply' => WFText::_('WF_COLORPICKER_APPLY'),
+                    'name' => WFText::_('WF_COLORPICKER_NAME')
+                )
+            ),
+            'browser' => array(
+                'title' => WFText::_('WF_BROWSER_TITLE')
+            )
+        );
+
+        return $options;
+    }
 
     public function display($tpl = null) {
         $app = JFactory::getApplication();
@@ -529,8 +575,9 @@ class WFViewProfiles extends WFView {
                 $this->assignRef('rows', $rows);
                 $this->assignRef('params', $params);
                 $this->assignRef('plugins', $plugins);
-
-                $options = WFToolsHelper::getOptions($params);
+                
+                // get options for various widgets
+                $options = $this->getOptions($params);
                 
                 // set suhosin flag
                 $options['suhosin'] = ini_get('suhosin.post.max_vars') && (int) ini_get('suhosin.post.max_vars') < 1000;

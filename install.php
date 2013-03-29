@@ -753,7 +753,9 @@ abstract class WFInstall {
             $site . '/editor/libraries/classes/theme.php',
             $site . '/editor/tiny_mce/themes/advanced/theme.php',
             // remove system helper
-            $admin . '/helpers/system.php'
+            $admin . '/helpers/system.php',
+            // remove tools helper
+            $admin . '/helpers/tools.php'
         );
 
         foreach ($files as $file) {
