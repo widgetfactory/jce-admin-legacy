@@ -69,16 +69,17 @@ class WFViewMediabox extends WFView {
 
         $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js');
         $this->addStyleSheet('components/com_jce/media/css/colorpicker.css');
+        
+        wfimport('editor.libraries.classes.editor');
+        $wf = WFEditor::getInstance();
 
         $options = array(
-            'template_colors' => WFToolsHelper::getTemplateColors(),
-            'custom_colors' => '',
+            'stylesheets' => $wf->getStyleSheets(),
             'labels' => array(
                 'picker' => WFText::_('WF_COLORPICKER_PICKER'),
                 'palette' => WFText::_('WF_COLORPICKER_PALETTE'),
                 'named' => WFText::_('WF_COLORPICKER_NAMED'),
                 'template' => WFText::_('WF_COLORPICKER_TEMPLATE'),
-                'custom' => WFText::_('WF_COLORPICKER_CUSTOM'),
                 'color' => WFText::_('WF_COLORPICKER_COLOR'),
                 'apply' => WFText::_('WF_COLORPICKER_APPLY'),
                 'name' => WFText::_('WF_COLORPICKER_NAME')
