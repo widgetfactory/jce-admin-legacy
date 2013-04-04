@@ -70,11 +70,10 @@ class WFViewMediabox extends WFView {
         $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js');
         $this->addStyleSheet('components/com_jce/media/css/colorpicker.css');
         
-        wfimport('editor.libraries.classes.editor');
-        $wf = WFEditor::getInstance();
+        wfimport('admin.models.editor');
 
         $options = array(
-            'stylesheets' => $wf->getStyleSheets(),
+            'stylesheets' => (array) WFModelEditor::getStyleSheets(),
             'labels' => array(
                 'picker' => WFText::_('WF_COLORPICKER_PICKER'),
                 'palette' => WFText::_('WF_COLORPICKER_PALETTE'),

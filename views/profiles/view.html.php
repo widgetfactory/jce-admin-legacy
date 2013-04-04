@@ -16,8 +16,7 @@ wfimport('admin.classes.view');
 class WFViewProfiles extends WFView {
     
     private function getOptions($params) {
-        wfimport('editor.libraries.classes.editor');
-        $wf = WFEditor::getInstance();
+        wfimport('admin.models.editor');
         
         $options = array(
             'editableselects' => array('label' => WFText::_('WF_TOOLS_EDITABLESELECT_LABEL')),
@@ -40,7 +39,7 @@ class WFViewProfiles extends WFView {
                 )
             ),
             'colorpicker' => array(
-                'stylesheets' => $wf->getStyleSheets(),
+                'stylesheets' => (array) WFModelEditor::getStyleSheets(),
                 'labels' => array(
                     'title' => WFText::_('WF_COLORPICKER_TITLE'),
                     'picker' => WFText::_('WF_COLORPICKER_PICKER'),
