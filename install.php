@@ -705,6 +705,8 @@ abstract class WFInstall {
             $admin . '/packages',
             // remove tinymce langs
             $site . '/editor/tiny_mce/langs',
+            // remove dragupload folder (ranamed to upload)
+            $site . '/editor/tiny_mce/plugins/dragupload'
         );
 
         foreach ($folders as $folder) {
