@@ -116,7 +116,7 @@ class WFPacker extends JObject {
         header("Expires: " . gmdate("D, d M Y H:i:s", time() + $expires) . " GMT");
 
         $files = $this->getFiles();
-
+        
         $encoding = self::getEncoding();
 
         $zlib = extension_loaded('zlib') && ini_get('zlib.output_compression');
@@ -186,6 +186,22 @@ class WFPacker extends JObject {
 
         return '';
     }
+    
+    protected function compileLess($string, $path) {
+        require_once(WF_ADMINISTRATOR . '/classes/lessc.inc.php');
+        
+        $less = new lessc;
+        // add file directory
+        $less->addImportDir($path);
+        // add joomla media folder
+        $less->addImportDir(JPATH_SITE . 'media');
+        
+        try {
+            return $less->compile($string);
+        } catch(Exception $e) {
+            return "/* LESS file could not be compiled due to error - " . $e->getMessage() . " */";
+        }
+    }
 
     protected function getText($file = null, $minify = true) {
 
@@ -194,6 +210,11 @@ class WFPacker extends JObject {
             if ($text = file_get_contents($file)) {
                 // process css files
                 if ($this->getType() == 'css') {
+                    
+                    // compile less files
+                    if (preg_match('#\.less$#', $file)) {                        
+                        $text = $this->compileLess($text, dirname($file));
+                    }
 
                     if (strpos($text, '@import') !== false) {
                         // store the base path of the current file
