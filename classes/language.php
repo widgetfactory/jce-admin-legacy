@@ -78,10 +78,19 @@ class WFLanguageParser extends JObject {
                         // key to lowercase
                         $k = strtolower($k);
 
+                        // get position of the section name in the key if any
+                        $pos = strpos($k, $key . '_');
+                        
+                        // remove the section name
+                        if ($pos === 0) {
+                            $k = substr($k, strlen($key) + 1);
+                        }
+                        
                         // hex colours to uppercase and remove marker
                         if (strpos($k, 'hex_') !== false) {
                             $k = strtoupper(str_replace('hex_', '', $k));
                         }
+                        
                         // create key/value pair as JSON string
                         $output .= '"' . $k . '":' . $v . ',';
 
