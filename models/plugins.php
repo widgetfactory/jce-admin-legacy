@@ -92,7 +92,11 @@ class WFModelPlugins extends WFModel {
             if (is_file($file)) {
                 $xml = WFXMLElement::load($folder . '/' . $name . '.xml');
 
-                if ($xml) {
+                if ($xml) {                    
+                    if ((string) $xml->getName() != 'extension' && (string) $xml->getName() != 'install') {
+                        continue;
+                    }
+                    
                     $params = $xml->params;
 
                     if (!isset($plugins[$name])) {
@@ -155,6 +159,10 @@ class WFModelPlugins extends WFModel {
             $xml = WFXMLElement::load($file);
 
             if ($xml) {
+                if ((string) $xml->getName() != 'extension' && (string) $xml->getName() != 'install') {
+                    continue;
+                }
+                
                 $plugins = (string) $xml->plugins;
 
                 if ($plugins) {
