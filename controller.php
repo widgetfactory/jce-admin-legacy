@@ -82,10 +82,10 @@ class WFController extends WFControllerBase {
         $view = parent::getView($name, $type, $prefix, $config);
         $document = JFactory::getDocument();
         
-        $bootstrap  = class_exists('JHtmlBootstrap');
-        $jquery     = class_exists('JHtmlJquery'); 
+        $bootstrap  = class_exists('JHtmlBootstrap', false);
+        $jquery     = class_exists('JHtmlJquery', false); 
 
-        // using JUI...
+        // not using JUI...
         if (!$bootstrap || !$jquery) {
             // set device-width meta
             $document->setMetaData('meta', 'width=device-width, initial-scale=1.0');
