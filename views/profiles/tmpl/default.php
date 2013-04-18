@@ -13,6 +13,9 @@ defined('_JEXEC') or die('RESTRICTED');
 ?>
 <form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
     <div id="jce" class="loading">
+        <div class="progress progress-striped active">
+            <div class="bar" style="width: 100%;"><?php echo JText :: _('WF_MESSAGE_LOAD');?></div>
+        </div>
         <fieldset id="filter-bar" class="btn-toolbar">
             <div class="filter-search btn-group pull-left fltlft">
                 <input type="text" name="search" id="search" size="30" value="<?php echo $this->lists['search']; ?>" class="text_area" onchange="document.adminForm.submit();" placeholder="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>" />
@@ -71,6 +74,7 @@ defined('_JEXEC') or die('RESTRICTED');
                     
                     $profile = JTable::getInstance('profiles', 'WFTable');
                     $profile->bind($row);
+                    $profile->editor = null;
 
                     $link = JRoute::_('index.php?option=com_jce&view=profiles&task=edit&cid[]=' . $row->id);
 
