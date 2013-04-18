@@ -300,6 +300,11 @@ class WFController extends WFControllerBase {
 
     public function authorize($task) {
         wfimport('admin.models.model');
+        
+        // map updates/blank/cpanel task to manage
+        if (empty($task) || $task == 'cpanel' || $task == 'updates') {
+            $task = 'manage';
+        }
 
         if (WFModel::authorize($task) === false) {
             $this->setRedirect('index.php', WFText::_('ALERTNOTAUTH'), 'error');
