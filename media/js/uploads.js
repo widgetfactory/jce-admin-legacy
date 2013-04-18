@@ -57,19 +57,11 @@
             }
 			
             // create button
-            var $button = $('<button/>').html(o.labels.browse).prepend('<i class="icon-search" />&nbsp;').addClass('upload-browse btn').button({
-                icons : {
-                    primary : 'ui-icon-search'
-                }
-            });
-
-            var $buttoncontainer = $('<div/>').addClass('upload_button_container').insertBefore(this.element).append(this.element).hover( function() {
-                $button.addClass('ui-state-hover');
-            }, function() {
-                $button.removeClass('ui-state-hover');
-            });
+            var $button = $('<button/>').html(o.labels.browse).prepend('<i class="icon-search" />&nbsp;').addClass('upload-browse btn');
+            // button container
+            var $buttoncontainer    = $('<div/>').addClass('upload_button_container').insertBefore(this.element).append(this.element);  
 			
-            var $inputcontainer = $('<div/>').addClass('upload_input_container').insertBefore($buttoncontainer);
+            var $inputcontainer     = $('<div/>').addClass('upload_input_container').insertBefore($buttoncontainer);
 			
             var $input = $('<input/>').attr({
                 'type' 		: 'text',
@@ -82,7 +74,7 @@
                 $input.prop('readonly', 'readonly').appendTo($buttoncontainer);
             }
 
-            $('<span/>').addClass('upload_clear ui-icon ui-icon-circle-close').css('opacity' , 0.15).appendTo($inputcontainer).click( function() {
+            $('<span class="upload_clear close">&times;</span>').appendTo($inputcontainer).click( function() {
                 $input.val('').focus();
                 $(self.element).val('');
             });
@@ -100,12 +92,12 @@
             $input.placeholder();
 
             // remove value on click if file input
-            $input.click( function() {
+            /*$input.click( function() {
                 if ($(self.element).val()) {
                     // reset inputs
                     $(this, self.element).val('');
                 }
-            });
+            });*/
 			
             $button.insertBefore($(this.element));
 

@@ -7,12 +7,12 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-.ui-jce #jce .ui-accordion {
-    width: auto;
-}
-
 #jce .ui-tabs-panel {
     min-height: 390px;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+#jce .fltrt {
+    float : right;
 }

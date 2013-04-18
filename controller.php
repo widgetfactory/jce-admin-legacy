@@ -82,11 +82,11 @@ class WFController extends WFControllerBase {
         $view = parent::getView($name, $type, $prefix, $config);
         $document = JFactory::getDocument();
         
-        $bootstrap  = class_exists('JHtmlBootstrap', false);
-        $jquery     = class_exists('JHtmlJquery', false); 
+        // check for bootstrap
+        $bootstrap = is_file(JPATH_LIBRARIES . '/cms/html/bootstrap.php'); 
 
         // not using JUI...
-        if (!$bootstrap || !$jquery) {
+        if (!$bootstrap) {
             // set device-width meta
             $document->setMetaData('meta', 'width=device-width, initial-scale=1.0');
 
@@ -94,6 +94,8 @@ class WFController extends WFControllerBase {
             $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-' . WF_JQUERY . '.min.js');
             // jQuery noConflict
             $view->addScriptDeclaration('jQuery.noConflict();');
+        } else {
+            JHtml::_('bootstrap.framework');
         }
 
         // JQuery UI
@@ -110,10 +112,10 @@ class WFController extends WFControllerBase {
             default:
                 $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/global.css');
                 
-                if (!$bootstrap || !$jquery) {
-                    $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/styles-ui.css');
+                if (!$bootstrap) {
+                    //$view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/styles-ui.css');
                 }
-
+                
                 // load Joomla! core javascript
                 if (method_exists('JHtml', 'core')) {
                     JHtml::core();

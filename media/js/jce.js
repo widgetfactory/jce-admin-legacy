@@ -17,6 +17,10 @@
     if (typeof Joomla === 'undefined') {
         Joomla = {};
     }
+    
+    $.support.bootstrap = (function() {
+        return $('script[src*="bootstrap"]').length > 0;
+    })();
 
     Joomla.modal = function(el, url, width, height) {
         var o = {
@@ -117,16 +121,16 @@
                     }
                 }
             }
+            
+            // add boostrap id class
+            $('body').addClass('ui-bootstrap');
 
-            // Bootstrap styles
-            if (this.options.bootstrap) {
-                // add boostrap id class
-                $('body').addClass('ui-bootstrap');
+            $('input[size="100"]').addClass('input-xlarge');
+            $('input[size="50"]').addClass('input-large');
+            $('input[size="5"]').addClass('input-mini');
 
-                $('input[size="100"]').addClass('input-xlarge');
-                $('input[size="50"]').addClass('input-large');
-                $('input[size="5"]').addClass('input-mini');
-
+            // Bootstrap plugins
+            if ($.support.bootstrap) {
                 // handle basic tabs
                 $('#tabs ul li a').click(function(e) {
                     e.preventDefault();
@@ -137,35 +141,12 @@
                 $('body').addClass('ui-jquery');
 
                 // handle basic tabs
-                $('#tabs').tabs();
-
-                // Style stuff
-                $('div.icon a').addClass('ui-widget-content ui-corner-all');
-
-                $('button#filter_go').button({
-                    icons: {
-                        primary: 'ui-icon-search'
+                $('#tabs').tabs({
+                    beforeActivate: function( event, ui ) {
+                        $(ui.oldTab).removeClass('active');
+                        $(ui.newTab).addClass('active');
                     }
                 });
-
-                $('button#filter_reset').button({
-                    icons: {
-                        primary: 'ui-icon-arrowrefresh-1-e'
-                    }
-                });
-
-                $('button.upload-import').button({
-                    icons: {
-                        primary: 'ui-icon-arrowthick-1-n'
-                    }
-                });
-
-                if (!$.support.leadingWhitespace) {
-                    // Table striping
-                    $('#profiles-list tr:odd').addClass('odd');
-                    // First and last
-                    $('#profiles-list tr:last-child').addClass('last');
-                }
             }
 
             // dialogs
@@ -260,14 +241,6 @@
 
                                 $('input[id^="cb"]', this).attr('id', 'cb' + i);
                             });
-
-                            // IE < 9
-                            if (!$.support.leadingWhitespace) {
-                                // Table striping
-                                $('#profiles-list tr').removeClass('odd').filter(':odd').addClass('odd');
-                                // First and last
-                                $('#profiles-list tr').removeClass('last').last().addClass('last');
-                            }
                         },
                         error: function() {
                             end();

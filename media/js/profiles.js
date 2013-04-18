@@ -64,31 +64,28 @@
             
             var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
             
-            if ($('body').hasClass('ui-bootstrap')) {                  
-                // Editor Tabs
-                $("#tabs-editor > ul.nav-tabs li a:first").tab('show');
-                // Plugin tabs
-                $("#tabs-plugins > ul.nav-tabs li a:first").tab('show');
-                
-            } else {
-                // users list
-                $('a#users-add').button({
-                    icons : {
-                        primary : 'ui-icon-person'
-                    }
-                });
-                
-                $("#tabs-editor").tabs({
-                    selected : -1
-                }).addClass('ui-tabs-vertical ui-helper-clearfix');
-                
-                $("#tabs-plugins").tabs({
-                    'activate' : $('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first', '#tabs-plugins').index()
-                }).addClass('ui-tabs-vertical ui-helper-clearfix');
-                
-                // make vertical tabs
-                $("#tabs-editor ul.ui-tabs-nav > li, #tabs-plugins ul.ui-tabs-nav > li").removeClass('ui-corner-top').addClass('ui-corner-' + dir);
-            }
+            // users list
+            $('a#users-add').button({
+                icons : {
+                    primary : 'ui-icon-person'
+                }
+            });
+
+            $("#tabs-editor").tabs({
+                'active' : 0,
+                beforeActivate: function( event, ui ) {
+                    $(ui.oldTab).removeClass('active');
+                    $(ui.newTab).addClass('active');
+                }
+            }).find('ul.ui-tabs-nav > li.ui-state-default:first-child').addClass('active');
+
+            $("#tabs-plugins").tabs({
+                'active' : $('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first', '#tabs-plugins').index(),
+                beforeActivate: function( event, ui ) {
+                    $(ui.oldTab).removeClass('active');
+                    $(ui.newTab).addClass('active');
+                }
+            }).find('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first').addClass('active');
 
             $('input.checkbox-list-toggle-all').click(function() {                                                
                 $('input[type="checkbox"]', '#user-groups').prop('checked', this.checked).trigger('check');
@@ -104,7 +101,7 @@
             $( "select.editable, select.combobox" ).combobox(options.combobox);
             
             // Color Picker
-            $('input.color').colorpicker(options.colorpicker);
+            $('input.color').colorpicker($.extend(options.colorpicker, {parent : '#jce'}));
 
             // Extension Mapper
             $('select.extensions, input.extensions, textarea.extensions').extensionmapper(options.extensions);

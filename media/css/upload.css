@@ -55,9 +55,9 @@
 #jce span.upload_clear {
     cursor: pointer;
     display: inline-block;
-    margin: 7px 0 0 0;
+    margin: 6px 0 0 0;
     position: absolute;
-    right: 5px;
+    right: 6px;
 }
 html[dir="rtl"] #jce span.upload_clear {
 	left : 0;
@@ -93,8 +93,9 @@ html[dir="rtl"] #jce label[for="import"] {
     overflow: hidden;
     width: 100%;
     
-    left: 3px;
-    top: -1px;
+    left: -1px;
+    top: 0;
+    cursor : pointer;
 }
 
 #jce div.upload_button_container > span {

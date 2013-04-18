@@ -56,51 +56,51 @@ class WFModelPreferences extends WFModel {
 			$actions 	= $this->getActions();
 			$groups 	= $this->getUserGroups();
 			
-			$form		= array();
+			$tabs		= array('<ul class="nav nav-tabs">');
+			$content	= array('<div class="tabs-content">');
 			
 			foreach ($groups as $group) {
 				$difLevel 	= $group->level - $curLevel;	
-					
-				$html 		= array();	
+				$html 		= array();
 				$item 		= new StdClass();
 				
-				$html[] = '<h3><a href="#"><span>' . str_repeat('<span> &rsaquo; </span> ', $curLevel = $group->level) . $group->text . '</span></a></h3>';
-				$html[] = '<div>';
-				$html[] =			'<table border="0" cellspacing="1" class="adminlist table table-striped">';
-				$html[] =				'<thead>';
-				$html[] =					'<tr>';
-				$html[] =						'<th><span>' . WFText::_('WF_RULES_ACTION') . '</span></th>';
-				$html[] =						'<th><span>' . WFText::_('WF_RULES_SELECT_SETTING') . '</span></th>';				
-				$html[] =					'</tr>';
-				$html[] =				'</thead>';
-				$html[] =				'<tbody>';
+				$tabs[] = '<li><a href="#permission-' . $curLevel . '">' . str_repeat('<span> &rsaquo; </span> ', $curLevel = $group->level) . $group->text . '</a></li>';
+				
+				$content[] = '<div id="permission-' . $curLevel . '" class="tab-pane">';
+				$content[] =			'<table border="0" cellspacing="1" class="table table-striped">';
+				$content[] =				'<thead>';
+				$content[] =					'<tr>';
+				$content[] =						'<th><span>' . WFText::_('WF_RULES_ACTION') . '</span></th>';
+				$content[] =						'<th><span>' . WFText::_('WF_RULES_SELECT_SETTING') . '</span></th>';				
+				$content[] =					'</tr>';
+				$content[] =				'</thead>';
+				$content[] =				'<tbody>';
 				
 				foreach ($actions as $action) {
-					$html[] =				'<tr>';
-					$html[] =					'<td><label class="tooltip" for="' . $action->name . '_' . $group->value . '" title="'.htmlspecialchars(WFText::_($action->title).'::'.WFText::_($action->description), ENT_COMPAT, 'UTF-8').'">' . WFText::_($action->title) . '</label></td>';
-					$html[] =					'<td>';	
-					$html[] = '<select name="params[rules][' . $action->name . '][' . $group->value . ']" id="' . $action->name . '_' . $group->value . '" title="' . WFText::sprintf('WF_RULES_SELECT_ALLOW_DENY_GROUP', WFText::_($action->title), trim($group->text)) . '">';
+					$content[] =				'<tr>';
+					$content[] =					'<td><label class="tooltip" for="' . $action->name . '_' . $group->value . '" title="'.htmlspecialchars(WFText::_($action->title).'::'.WFText::_($action->description), ENT_COMPAT, 'UTF-8').'">' . WFText::_($action->title) . '</label></td>';
+					$content[] =					'<td>';	
+					$content[] = '<select name="params[rules][' . $action->name . '][' . $group->value . ']" id="' . $action->name . '_' . $group->value . '" title="' . WFText::sprintf('WF_RULES_SELECT_ALLOW_DENY_GROUP', WFText::_($action->title), trim($group->text)) . '">';
 	
 					$assetRule = $this->checkRule($rules, $action->name, $group->value);	
 
-					$html[] = '<option value="1"' . ($assetRule === true ? ' selected="selected"' : '') . '>' . WFText::_('WF_RULES_ALLOWED') . '</option>';
-					$html[] = '<option value="0"' . ($assetRule === false ? ' selected="selected"' : '') . '>' . WFText::_('WF_RULES_DENIED') . '</option>';
+					$content[] = '<option value="1"' . ($assetRule === true ? ' selected="selected"' : '') . '>' . WFText::_('WF_RULES_ALLOWED') . '</option>';
+					$content[] = '<option value="0"' . ($assetRule === false ? ' selected="selected"' : '') . '>' . WFText::_('WF_RULES_DENIED') . '</option>';
 	
-					$html[] = '</select>&#160; ';	
-					$html[] = '</td>';	
-					$html[] = '</tr>';
+					$content[] = '</select>&#160; ';	
+					$content[] = '</td>';	
+					$content[] = '</tr>';
 				}
 
-				$html[] = '</tbody>';
-				$html[] = '</table>';
-				$html[] = '</div>';
-				 
-				$item->input = implode('', $html);
-				
-				$form[] = $item;
+				$content[] = '</tbody>';
+				$content[] = '</table>';
+				$content[] = '</div>';
 			}
+			
+			$tabs[] 	= '</ul>';
+			$content[] 	= '</div>';
 
-			return $form;
+			return implode('', array_merge($tabs, $content));
 		}
 		
 		return null;

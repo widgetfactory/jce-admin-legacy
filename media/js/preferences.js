@@ -13,12 +13,12 @@
             var self = this;
                 
             // Tabs
-            $('#tabs').tabs();
-           	
-            $('#access-accordian').accordion({
-                collapsible: true, 
-                heightStyle: "content"
-            });
+            $('#tabs, #tabs-access-permissions').tabs({
+                beforeActivate: function( event, ui ) {
+                    $(ui.oldTab).removeClass('active');
+                    $(ui.newTab).addClass('active');
+                }
+            }).find('ul.nav.nav-tabs > li:first-child').addClass('active');
            	
             $('.hasTip').removeClass('hasTip');
             

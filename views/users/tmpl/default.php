@@ -15,14 +15,13 @@ defined('_JEXEC') or die('RESTRICTED');
     <div id="jce">
         <fieldset id="filter-bar" class="btn-toolbar">
             <div class="filter-search btn-group pull-left fltlft">
-                <label for="search" class="element-invisible"><?php echo WFText::_('WF_LABEL_SEARCH'); ?></label>
-                <input type="text" name="search" id="search" size="30" value="<?php echo $this->lists['search']; ?>" class="text_area" onchange="document.adminForm.submit();" placeholder="" />
+                <input type="text" name="search" id="search" size="30" value="<?php echo $this->lists['search']; ?>" class="text_area" onchange="document.adminForm.submit();" placeholder="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>" />
             </div>
             <div class="btn-group fltlft">
                 <button id="filter_go" onclick="this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>"><i class="icon-search"></i>&nbsp;<?php echo WFText::_('WF_LABEL_SEARCH'); ?></button>
                 <button id="filter_reset" onclick="document.getElementById('search').value='';this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_CLEAR'); ?>"><i class="icon-remove"></i>&nbsp;<?php echo WFText::_('WF_LABEL_CLEAR'); ?></button>
             </div>
-            <div class="btn-group fltrgt pull-right">
+            <div class="btn-group fltrt pull-right">
                 <?php echo $this->lists['group']; ?>
             </div>
         </fieldset>
@@ -80,7 +79,7 @@ defined('_JEXEC') or die('RESTRICTED');
             </table>
         </div>
         <div class="btn-group fltrgt pull-right">
-            <button id="select" class="btn" title="<?php echo WFText::_('WF_LABEL_SELECT'); ?>"><i class="icon-apply"></i>&nbsp;<?php echo WFText::_('WF_LABEL_SELECT'); ?></button>
+            <button id="select" class="btn" title="<?php echo WFText::_('WF_LABEL_SELECT'); ?>"><i class="icon-ok"></i>&nbsp;<?php echo WFText::_('WF_LABEL_SELECT'); ?></button>
             <button id="cancel" class="btn" title="<?php echo WFText::_('WF_LABEL_CANCEL'); ?>"><i class="icon-remove"></i>&nbsp;<?php echo WFText::_('WF_LABEL_CANCEL'); ?></button>
         </div>
     </div>

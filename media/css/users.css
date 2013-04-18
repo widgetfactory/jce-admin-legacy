@@ -12,6 +12,7 @@ html {
 }
 body {
     height : 500px;
+    padding : 0;
 }
 
 #jce #users-list th:first-child {

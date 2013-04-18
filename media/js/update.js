@@ -40,11 +40,7 @@
 
             $.extend(this.options, options);
 
-            $('button#update-button').button({
-                icons: {
-                    primary: 'icon-update'
-                }
-            }).click(function() {
+            $('button#update-button').click(function() {
                 self.execute(this);
             }).click();
         },
@@ -73,14 +69,14 @@
 
             $('div.body', list).html('<div class="item">' + this.translate('check_updates') + '</div>');
 
-            $(btn).addClass('loading').button('disable');
+            $(btn).addClass('loading').prop('disabled', true);
 
             // Array of priority values
             var priority = ['<span class="priority high">' + this.translate('high') + '</span>', '<span class="priority medium">' + this.translate('medium') + '</span>', '<span class="priority low">' + this.translate('low') + '</span>'];
 
             $.getJSON("index.php?option=com_jce&view=updates&task=update&step=check", {}, function(r) {
                 $(btn).removeClass('loading');
-                $(btn).button('enable');
+                $(btn).prop('disabled', false);
 
                 $('div.body', list).empty();
 
@@ -96,18 +92,12 @@
 
                     if (r.length) {
                         // clone check button as install but set disabled until items checked
-                        $(btn).clone().button({
-                            icons: {
-                                primary: 'icon-install'
-                            },
-                            disabled: true,
-                            label: self.translate('install')
-                        }).click(function() {
+                        $(btn).clone().click(function() {
                             self.execute(this);
                         }).insertAfter(btn).attr({
                             'id': 'install-button',
                             'disabled': 'disabled'
-                        }).removeClass('check').addClass('install');
+                        }).removeClass('check').addClass('install').prop('disabled', true).html('<i class="icon-arrow-up"></i>&nbsp;' + self.translate('install'));
 
                         $.each(r, function(n, s) {
                             // authorisation success or not required
@@ -162,7 +152,7 @@
                                 // check checkbox if forced update or high priority
                                 if (parseInt(s.forced) == 1 || s.priority == 1) {
                                     $(el).addClass('checked').addClass('disabled');
-                                    $('button#install-button').button('enable');
+                                    $('button#install-button').prop('disabled', false);
 
                                     // disable any updates that this particular update overrides / negates eg: an equivalent patch or full version
                                     if (s.negates) {
@@ -202,7 +192,7 @@
                                     var len = $('div.body span.checkbox.checked', list).length;
 
                                     if (len) {
-                                        $('button#install-button').attr('disabled', '').button('enable');
+                                        $('button#install-button').attr('disabled', '').prop('disabled', false);
                                         
                                         if (len == $('div.body span.checkbox', list).length) {
                                         	$('div.header div:first-child span.checkbox', list).addClass('checked');
@@ -211,7 +201,7 @@
                                         }
                                                                                 
                                     } else {
-                                        $('button#install-button').attr('disabled', 'disabled').button('disable');
+                                        $('button#install-button').attr('disabled', 'disabled').prop('disabled', true);
                                         $('div.header div:first-child span.checkbox', list).removeClass('checked');
                                     }
                                 });
@@ -249,9 +239,9 @@
             // disable all while downloading
             $(s).addClass('disabled');
             // disable button while downloading
-            $(btn).button('disable');
+            $(btn).prop('disabled', true);
 
-            $('button#update-button').button('disable');
+            $('button#update-button').prop('disabled', true);
 
             $.extend(t.updates, {
                 'joomla': [],
@@ -336,7 +326,7 @@
                                 // clear updates
                                 t.updates = {};
 
-                                $('button#update-button').button('enable');
+                                $('button#update-button').prop('disabled', false);
 
                                 // close
                                 window.setTimeout(function() {
@@ -355,7 +345,7 @@
                 __run(n);
             } else {
                 // enable button
-                $('button#update-button').button('enable');
+                $('button#update-button').prop('disabled', false);
             }
         }
 

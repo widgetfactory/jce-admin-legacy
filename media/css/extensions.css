@@ -12,6 +12,7 @@
     margin: 5px 0 5px 215px;
     position: relative;
     /*float : left;*/
+    clear : left;
 }
 html[dir="rtl"] #jce div.extension_mapper {
     margin: 5px 215px 5px 0;
@@ -156,6 +157,7 @@ html[dir="rtl"] #jce div.extension_mapper span.checkbox.view {
     height 	: 20px;
     background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1080px;
     vertical-align: middle;
+    margin: 8px 5px;
 }
 #jce span.extension_edit.loader {
     background : url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center;

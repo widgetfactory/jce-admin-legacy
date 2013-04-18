@@ -152,11 +152,11 @@
                 '		<span class="extension_group_title"></span>' +
                 '	</div>' +
                 '	<div class="extension_list_add"><span role="button">' + this.options.labels.type_new + '</span></div>' +
-                '	<div class="extension_list_scroll_top" role="button"><span class="extension_list_scroll_top_icon ui-icon ui-icon-triangle-1-n icon-arrow-up"></span></div>'+
+                '	<div class="extension_list_scroll_top" role="button"><span class="extension_list_scroll_top_icon icon-arrow-up"></span></div>'+
                 '	<div class="extension_list_container">'+
                 '		<ul class="extension_list"></ul>'+
                 '	</div>'+
-                '	<div class="extension_list_scroll_bottom" role="button"><span class="extension_list_scroll_bottom_icon ui-icon ui-icon-triangle-1-s icon-arrow-down"></span></div>'+
+                '	<div class="extension_list_scroll_bottom" role="button"><span class="extension_list_scroll_bottom_icon icon-arrow-down"></span></div>'+
                 '</div>');
 
             // get group name

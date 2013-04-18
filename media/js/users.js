@@ -59,21 +59,13 @@
     };
     
     $(document).ready(function(){
-        $('#cancel').button({
-            icons : {
-                primary : 'ui-icon-close'
-            }
-        }).click(function(e) {
+        $('#cancel').click(function(e) {
             $.jce.Users.close();
         
             e.preventDefault();
         });
     
-        $('#select').button({
-            icons : {
-                primary : 'ui-icon-check'
-            }
-        }).click(function(e) {
+        $('#select').click(function(e) {
             $.jce.Users.select();
         
             e.preventDefault();

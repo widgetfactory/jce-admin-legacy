@@ -21,20 +21,6 @@
             
             $(":file").upload(options);
             
-            if ($('body').hasClass('ui-jquery')) {               
-                $('button#upload_button').button({
-                    icons : {
-                        primary : 'icon-install'
-                    }
-                });
-                
-                $('#upload_button_container button').button({
-                    icons : {
-                        primary : 'icon-browse'
-                    }
-                });
-            }
-            
             var n = $('#tabs-plugins, #tabs-extensions, #tabs-languages, #tabs-related').find('input[type="checkbox"]');
             
             $(n).click(function() {               

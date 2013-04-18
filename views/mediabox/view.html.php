@@ -82,7 +82,8 @@ class WFViewMediabox extends WFView {
                 'color' => WFText::_('WF_COLORPICKER_COLOR'),
                 'apply' => WFText::_('WF_COLORPICKER_APPLY'),
                 'name' => WFText::_('WF_COLORPICKER_NAME')
-            )
+            ),
+            'parent' => '#jce'
         );
 
         $this->addScriptDeclaration('jQuery(document).ready(function($){$("input.color").colorpicker(' . json_encode($options) . ');});');

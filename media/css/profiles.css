@@ -127,6 +127,10 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     margin : 5px 0;
 }
 
+#jce #tabs-setup ul li span.list > div > label {
+    margin-left : 6px;
+}
+
 #jce input.checkbox-list-toggle-all {
     /*margin : 2px 6px;*/
 }
@@ -134,8 +138,10 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     /*margin : 0 5px;*/
 }
 
-#jce #tabs-setup input.checkbox-list-toggle-all {
+#jce #tabs-setup input.checkbox-list-toggle-all, #jce #tabs-setup input#components-select-all {
     /*margin : 2px 1px;*/
+    
+    margin : 2px 10px 2px 6px;
 }
 
 #jce ul.checkbox-list {
