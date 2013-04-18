@@ -15,7 +15,7 @@
     position: relative;
 }
 
-#jce ul, #jce ol {
+#jce ul.nav.nav-tabs {
     padding : 0;
 }
 
@@ -35,7 +35,7 @@ form[name="adminForm"] #jce {
     position: absolute;
     width: 100%;
     z-index: 1000;
-    background: #FFF url('../../../../../components/com_jce/editor/tiny_mce/themes/advanced/skins/default/img/progress.gif') no-repeat center;
+    background: #FFF none;
     margin : -10px;
 }
 
@@ -665,4 +665,63 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
 #jce .icon-th:before, #jce .icon-search:before, #jce .icon-arrow-up:before, #jce .icon-remove:before, #jce .icon-user:before, #jce .icon-arrow-down:before, #jce .icon-arrow-up:before, #jce .icon-move:before {
      font-size : 0;
      content : "";
+}
+
+/*#jce .btn.loading i[class^="icon-"] {
+    background: transparent url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center center;
+    height: 20px;
+    line-height: 20px;
+    margin: -1px 0;
+    vertical-align: middle;
+    width: 20px;
+}*/
+#jce.ie9 .btn.loading i, #jce.ie8  .btn.loading i {
+    background: transparent url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center center;
+    height: 20px;
+    line-height: 20px;
+    margin: -1px 0;
+    vertical-align: middle;
+    width: 20px;
+}
+
+#jce .btn.loading i[class^="icon-"] {
+    background-position: -240px -24px; 
+    -webkit-animation: spinner 1s infinite linear; /* Safari 4+ */
+    -moz-animation:    spinner 1s infinite linear; /* Fx 5+ */
+    -o-animation:      spinner 1s infinite linear; /* Opera 12+ */
+    animation:         spinner 1s infinite linear; /* IE 10+ */
+}
+ 
+@-webkit-keyframes spinner {
+    from {-webkit-transform:rotate(0deg);}
+to {-webkit-transform:rotate(360deg);}
+}
+@-moz-keyframes spinner {
+    from {-moz-transform:rotate(0deg);}
+to {-moz-transform:rotate(360deg);}
+}
+@-o-keyframes spinner {
+    from {-o-transform:rotate(0deg);}
+to {-o-transform:rotate(360deg);}
+}
+@keyframes spinner {
+    from {transform:rotate(0deg);}
+to {transform:rotate(360deg);}
+}
+
+#jce .progress {
+    height: 25px;
+    left: 50%;
+    margin: 10px 0 10px -250px;
+    position: absolute;
+    width: 500px;
+    z-index: 10;
+    display : none;
+}
+#jce .progress .bar {
+    line-height : 25px;
+}
+
+#jce.loading .progress {
+    display: block;
 }
