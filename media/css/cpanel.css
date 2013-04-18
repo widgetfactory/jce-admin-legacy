@@ -7,6 +7,10 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
+#jce {
+    border-radius: 10px 10px 10px 10px;
+}
+
 ul#cpanel {
     list-style: none outside none;
     margin: 0;
@@ -78,15 +82,18 @@ ul#table_status {
     margin: 5px 5px 5px 0;
     display: inline-block;
 }
-#jce ul.adminformlist li span.updates {
-    background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1040px;
-    line-height: 20px;
-    padding: 0px 0px 0px 25px;
-    display: inline-block;
+#jce ul.adminformlist li a.updates {
+   color : #fff;
+   font-size : 11px;
+   line-height: 16px;
+   vertical-align: middle;
 }
-#jce ul.adminformlist li span.updates.error {
-    background-position: 0 -1060px;
+
+#jce ul.adminformlist li span.label {
+    padding : 5px;
+    margin: 5px 0;
 }
+
 /* Mobile stuff */
 @media (max-width: 767px) {
     ul#cpanel li.cpanel-icon {

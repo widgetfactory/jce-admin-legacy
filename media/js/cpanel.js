@@ -34,12 +34,12 @@
                         }
                         
                         if (r.error) {
-                            var $list = $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="updates error">' + r.error + '</span></li>');
+                            var $list = $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="label label-important"><i class="icon-exclamation-sign icon-white"></i>&nbsp;' + r.error + '</span></li>');
                             return false;
                         }
                         
                         if (r.length) {
-                            var $list = $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="updates"><a title="' + options.labels.updates + '" class="updates" href="#">' + options.labels.updates_available + '</a></span></li>');
+                            var $list = $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="label label-info"><i class="icon-info-sign icon-white"></i>&nbsp;<a title="' + options.labels.updates + '" class="updates" href="#">' + options.labels.updates_available + '</a></span></li>');
                         
                             $('a.updates', $list).click( function(e) {
                                 // trigger Joomla! 3.0 button
