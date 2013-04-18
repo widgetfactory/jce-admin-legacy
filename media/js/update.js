@@ -63,7 +63,7 @@
         check: function(btn) {
             var self = this;
 
-            $('button.download, button.install').remove();
+            $('#install-button').remove();
 
             var list = $('div#updates-list');
 
@@ -72,7 +72,7 @@
             $(btn).addClass('loading').prop('disabled', true);
 
             // Array of priority values
-            var priority = ['<span class="priority high">' + this.translate('high') + '</span>', '<span class="priority medium">' + this.translate('medium') + '</span>', '<span class="priority low">' + this.translate('low') + '</span>'];
+            var priority = ['<span class="label label-important priority">' + this.translate('high') + '</span>', '<span class="label label-warning priority">' + this.translate('medium') + '</span>', '<span class="label label-info priority">' + this.translate('low') + '</span>'];
 
             $.getJSON("index.php?option=com_jce&view=updates&task=update&step=check", {}, function(r) {
                 $(btn).removeClass('loading');
@@ -313,7 +313,7 @@
                                 $(el).addClass('tick').removeClass('check');
                                 $('div#update_info_' + id, '').append('<h3>' + t.options.language['install_info'] + '</h3><div>' + r.text + '</div>');
 
-                                $(el).parents('div.item').find('span.priority').removeClass('high medium low').addClass('installed').html(t.options.language['installed']);
+                                $(el).parents('div.item').find('span.priority').removeClass('label-warning label-important label-info').addClass('label-success').html(t.options.language['installed']);
                             }
                             // remove update
                             updates.splice(0, 1);
