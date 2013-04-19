@@ -715,7 +715,7 @@ to {transform:rotate(360deg);}
     margin: 10px 0 10px -250px;
     position: absolute;
     width: 500px;
-    z-index: 10;
+    z-index: 1001;
     display : none;
 }
 #jce .progress .bar {
