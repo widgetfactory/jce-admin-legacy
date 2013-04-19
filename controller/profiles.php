@@ -101,11 +101,28 @@ class WFControllerProfiles extends WFController {
 
         $result     = array('error' => false);
 
+        if (JRequest::getWord('mode') === "ajax") {
+            $error = null;
+            
+            if (!$row->check()) {
+                $error = $db->getErrorMsg();
+            }
+
+            if (!$row->store()) {
+                $error = $db->getErrorMsg();
+            }
+            
+            if ($error) {
+                $result['error'] = $error;
+            }
+            
+            exit(json_encode($result));
+        }
+        
         if (!$row->bind(JRequest::get('post'))) {
             JError::raiseError(500, $db->getErrorMsg());
         }
         
-        // add types from usergroups
         $row->types = JRequest::getVar('usergroups', array(), 'post', 'array');
 
         foreach (get_object_vars($row) as $key => $value) {

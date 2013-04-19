@@ -35,8 +35,10 @@
                 var args = $(':input[name^=params]:enabled', '#jce').serialize();
                 
                 // base64 encode
-                //args = window.btoa(args);
-            
+                /*if (window.bota) {
+                    args = window.btoa(args);
+                }*/
+
                 // disable original
                 $(':input[name^=params]', '#jce').removeAttr('name');
                 
@@ -58,10 +60,21 @@
         options : {},
         
         init : function(options) {
-            var self = this;
+            var self = this, init = true;
             
             $.extend(true, this.options, options);
             
+            // create save event
+            /*$('form[name="adminForm"]').bind('save', this.save);
+            
+            $(':input').change(function() {
+                if (init) {
+                    return;
+                }
+                
+                $('form[name="adminForm"]').trigger('save', this);
+            });*/
+
             var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
             
             // users list
@@ -80,12 +93,11 @@
             }).find('ul.ui-tabs-nav > li.ui-state-default:first-child').addClass('active');
 
             $("#tabs-plugins").tabs({
-                'active' : $('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first', '#tabs-plugins').index(),
                 beforeActivate: function( event, ui ) {
                     $(ui.oldTab).removeClass('active');
                     $(ui.newTab).addClass('active');
                 }
-            }).find('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first').addClass('active');
+            }).find('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first').addClass('active').children('a.ui-tabs-anchor').click();
 
             $('input.checkbox-list-toggle-all').click(function() {                                                
                 $('input[type="checkbox"]', '#user-groups').prop('checked', this.checked).trigger('check');
@@ -271,6 +283,8 @@
                     return v;
                 });
             });
+            
+            init = false;
         },
         
         validate : function() {
@@ -427,6 +441,26 @@
             });
             
             $tabs.not('.tab-disabled').first().addClass('active ui-tabs-active ui-state-active');
+        },
+                
+        save : function(event, el) {
+            $('input[name="task"]').val('apply');
+            
+            var data = $('#jce').siblings('input[type="hidden"]').add(el).serialize() + '&mode=ajax';
+            
+            // disable element
+            $(el).prop('disabled', true);
+            
+            $.ajax({
+                type    : "POST",
+                url     : 'index.php',
+                data    : data,
+                success: function() {
+                    $(el).prop('disabled', false);
+                    
+                    $('input[name="task"]').val('');
+                }
+            });
         }
 
     };
