@@ -7,6 +7,6 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-@import url('bootstrap.min.css');
-@import url("styles.css");
-@import url('../../../../../components/com_jce/editor/libraries/css/tips.css');
+@import url('../../../../../components/com_jce/editor/libraries/css/bootstrap.min.css?v=@@version@@');
+@import url("styles.css?v=@@version@@");
+@import url('../../../../../components/com_jce/editor/libraries/css/tips.css?v=@@version@@');
