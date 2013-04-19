@@ -112,10 +112,6 @@ class WFController extends WFControllerBase {
             default:
                 $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/global.css');
                 
-                if (!$bootstrap) {
-                    //$view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/styles-ui.css');
-                }
-                
                 // load Joomla! core javascript
                 if (method_exists('JHtml', 'core')) {
                     JHtml::core();
