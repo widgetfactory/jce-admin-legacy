@@ -159,7 +159,7 @@ body {
 }
 
 #jce div.row-fluid.body div.item + div.info {
-    margin : -1px 0 0 0;
+    margin-top : -1px;
     border: 1px solid #eee;
     text-align: left;
     padding : 10px;
@@ -169,9 +169,6 @@ body {
     position: relative;
 }
 
-#jce div.row-fluid.body.scrolling div.item.info {
-    margin-right : -1px;
-} 
 
 #jce div.row-fluid.body div.item.error {
     background-color: #FFCCCC;
@@ -182,7 +179,7 @@ body {
     max-height: 60px;
     padding: 5px;
     text-align: left;
-    margin : 2px 0 0 0;
+    margin-top : 2px;
 }
 
 #jce div.row-fluid.body div.item + div.error, #jce div.row-fluid.body div.item.error:first-child {
@@ -243,6 +240,7 @@ body {
 }
 #jce div.row-fluid.header div:first-child, #jce div.row-fluid.body div.item div:first-child {
     border : 0 none;
+    max-width: 40px;
 }
 
 /* IE8 Bootstrap stuff */
@@ -275,4 +273,8 @@ body {
 
 #jce.ie8 span.priority {
     width : 95%;
+}
+
+#jce div.row-fluid.body.scrolling > div {
+    margin-right: 2px;
 }

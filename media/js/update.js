@@ -139,12 +139,12 @@
                             var sb = $('div.body', list).get(0).clientWidth - $('div.header', list).get(0).clientWidth;
 
                             if (sb < 0) {
-                                $('div.body', list).addClass('scrolling').children('.item').not('.info, .error').css('margin-right', sb);
+                                $('div.body', list).addClass('scrolling');
                             }
 
-                            if ($('div.header', list).innerWidth() > $('div.body', list).innerWidth()) {
+                            /*if ($('div.header', list).innerWidth() > $('div.body', list).innerWidth()) {
                                 $('div.body div.item', list).css('margin-right', -10);
-                            }
+                            }*/
 
                             var el = $('span[data-uid=' + s.id + ']');
 
