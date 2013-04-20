@@ -16,3 +16,7 @@
 #jce .fltrt {
     float : right;
 }
+
+#jce .tab-pane table {
+    width : auto;
+}
