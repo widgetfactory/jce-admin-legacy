@@ -725,3 +725,7 @@ to {transform:rotate(360deg);}
 #jce.loading .progress {
     display: block;
 }
+
+#jce span.editable-edit {
+    margin: 10px 5px;
+}
