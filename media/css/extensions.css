@@ -84,16 +84,23 @@ html[dir="rtl"] #jce div.extension_group_container span.extension_group_title {
     border:1px solid #9FBBDD;
     cursor: pointer;
 }
-#jce div.extension_list_scroll_top span.extension_list_scroll_top_icon, #jce div.extension_list_scroll_bottom span.extension_list_scroll_bottom_icon {
-    position: relative;
-    width: 16px;
+#jce div.extension_list_scroll_top span.extension_list_scroll_top_icon, 
+#jce div.extension_list_scroll_bottom span.extension_list_scroll_bottom_icon {
+    color: #333333;
+    display: block;
+    font-size: 9px;
     height: 10px;
-    margin: 0 0 0 -8px;
-    left: 50%;
-    top : -3px;
-    vertical-align : text-top;
-    font-size : 8px;
-    text-align : center;
+    line-height: 8px;
+    margin: auto;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+}
+#jce div.extension_list_scroll_bottom span.extension_list_scroll_bottom_icon:after {
+    content: "▲"
+}
+#jce div.extension_list_scroll_top span.extension_list_scroll_top_icon:after {
+    content: "▼"
 }
 html[dir="rtl"] #jce div.extension_list_scroll_top span.extension_list_scroll_top_icon, 
 html[dir="rtl"] #jce div.extension_list_scroll_bottom span.extension_list_scroll_bottom_icon {
