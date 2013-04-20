@@ -27,7 +27,7 @@ defined('_JEXEC') or die('RESTRICTED');
         </fieldset>
         <div class="clr clearfix"></div>
         <div class="container">
-            <table id="users-list" class="adminlist table table-striped" style="position: relative;">
+            <table id="users-list" class="table table-striped" style="position: relative;">
                 <thead>
                     <tr>
                         <th class="title">
@@ -36,10 +36,10 @@ defined('_JEXEC') or die('RESTRICTED');
                         <th class="title">
                             <?php echo JHTML::_('grid.sort', 'WF_USERS_NAME', 'a.name', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                         </th>
-                        <th width="20%" class="title" >
+                        <th class="title" >
                             <?php echo JHTML::_('grid.sort', 'WF_USERS_USERNAME', 'a.username', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                         </th>
-                        <th width="20%" class="title">
+                        <th class="title">
                             <?php echo JHTML::_('grid.sort', 'WF_USERS_GROUP', 'groupname', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                         </th>
                     </tr>

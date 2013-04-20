@@ -22,16 +22,50 @@ body {
 
 #jce #users-list td:first-child {
     text-align: center;
+    width : 20px;
+}
+
+#jce #users-list th:first-child + th, #jce #users-list td:first-child + td {
+    width : 300px;
+}
+
+#jce #users-list th:first-child + th + th, #jce #users-list td:first-child + td + td {
+    width : 230px;
+}
+
+#jce #users-list th:first-child + th + th + th, #jce #users-list td:first-child + td + td + td {
+    width : 125px;
 }
 
 #jce > div.container + div.btn-group {
     position : absolute;
     right : 10px;
-    bottom : -25px;
 }
 
 #jce > div.container {
     height : 420px;
+}
+
+#jce > div.container thead, tbody {
+    display: block;
+}
+
+#jce > div.container tbody {
+    max-height: 340px;
     overflow-x: hidden;
     overflow-y: auto;
+    width: 100%;
+}
+
+#jce tfoot .container .pagination .limit {
+    float : none;
+    margin : auto;
+    height : 30px;
+    line-height : 30px;
+}
+
+#jce tfoot .container .pagination .limit select {
+    margin: 0 5px;
+    vertical-align: middle;
+    max-width: 100px;
 }
