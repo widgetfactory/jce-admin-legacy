@@ -144,10 +144,10 @@
                     }
                 });
 
-                $(el).empty().append(options);
+                $(el).empty().append(options).change();
 
             } else {
-                el.value = x.join(',');
+                $(el).val(x.join(',')).change();
             }
         }
     };
