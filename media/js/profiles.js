@@ -29,23 +29,6 @@
             // trigger onSubmit callback
             $profiles.onSubmit();
 
-            // handle suhosin restrictions
-            if ($profiles.options.suhosin) {
-                // convert parameters to serialized string
-                var args = $(':input[name^=params]:enabled', '#jce').serialize();
-                
-                // base64 encode
-                /*if (window.bota) {
-                    args = window.btoa(args);
-                }*/
-
-                // disable original
-                $(':input[name^=params]', '#jce').removeAttr('name');
-                
-                // append to form
-                $('<input type="hidden" name="params"/>').val(args).appendTo('#adminForm');
-            }
-
             try {
                 Joomla.submitform(button);
             } catch(e) {
@@ -63,17 +46,6 @@
             var self = this, init = true;
             
             $.extend(true, this.options, options);
-            
-            // create save event
-            /*$('form[name="adminForm"]').bind('save', this.save);
-            
-            $(':input').change(function() {
-                if (init) {
-                    return;
-                }
-                
-                $('form[name="adminForm"]').trigger('save', this);
-            });*/
 
             var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
             
@@ -284,6 +256,18 @@
                 });
             });
             
+            // add "edited" class to each input on change
+            $('#tabs-features :input[name], #tabs-editor :input[name], #tabs-plugins :input[name]').change(function() {
+                // skip on init
+                if (init) {
+                    return;
+                }
+                // get name as escaped string
+                var name = this.name.replace('!"#$%&()*+,./:;<=>?@[\]^`{|}~', '\\$1', 'g');
+                
+                $(this).add('[name="' + name + '"]').addClass('isdirty');
+            });
+            
             init = false;
         },
         
@@ -311,15 +295,11 @@
         },
 
         onSubmit : function() {
-            // select all users
-            //$('option', '#users').prop('selected', true);
+            // disable placeholder inputs
+            $('div#tabs-editor, div#tabs-plugins').find(':input[name].placeholder').prop('disabled', true);
             
-            $('div#tabs-editor, div#tabs-plugins').find(':input[name]').each( function() {
-                // disable placeholder values
-                if ($(this).hasClass('placeholder')) {
-                    $(this).attr('disabled', 'disabled');
-                }
-            });
+            // disable inputs not changed
+            $('#tabs-features :input[name], #tabs-editor :input[name], #tabs-plugins :input[name]').not('.isdirty').prop('disabled', true);
         },
         
         _fixLayout : function() {
@@ -391,8 +371,8 @@
                     return $(el).data('name');
                 }).join(','));
             });
-
-            $('input[name="rows"]').val(rows.join(';'));
+            // set rows and trigger change
+            $('input[name="rows"]').val(rows.join(';')).change();
         },
         
         setLayout : function() {    
@@ -419,8 +399,8 @@
                 plugins.push($(this).val());
             });
 
-            // set plugins
-            $('input[name="plugins"]').val(plugins.join(','));
+            // set plugins and trigger change
+            $('input[name="plugins"]').val(plugins.join(',')).change();
 
             this.setParams(plugins);
         },
@@ -441,28 +421,7 @@
             });
             
             $tabs.not('.tab-disabled').first().addClass('active ui-tabs-active ui-state-active');
-        },
-                
-        save : function(event, el) {
-            $('input[name="task"]').val('apply');
-            
-            var data = $('#jce').siblings('input[type="hidden"]').add(el).serialize() + '&mode=ajax';
-            
-            // disable element
-            $(el).prop('disabled', true);
-            
-            $.ajax({
-                type    : "POST",
-                url     : 'index.php',
-                data    : data,
-                success: function() {
-                    $(el).prop('disabled', false);
-                    
-                    $('input[name="task"]').val('');
-                }
-            });
         }
-
     };
 // End Groups
 })(jQuery);
