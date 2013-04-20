@@ -27,10 +27,11 @@ body {
 #jce > div.container + div.btn-group {
     position : absolute;
     right : 10px;
-    bottom : 0;
+    bottom : -25px;
 }
 
 #jce > div.container {
     height : 420px;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
