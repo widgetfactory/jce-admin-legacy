@@ -315,7 +315,7 @@
         <delete dir="${component_export_dir}" quiet="true">
             <include name="**/*.css" />
             <exclude name="**/**-min.css" />
-            <exclude name="**/bootstrap-responsive.min.css" />
+            <exclude name="**/bootstrap.min.css" />
             <exclude name="**/codemirror/**" />
             <exclude name="**/codemirror/theme/**" />
        </delete>
@@ -325,7 +325,7 @@
         <path>
             <fileset dir="${component_export_dir}">
                 <include name="**/*-min.css" />
-                <exclude name="**/bootstrap-responsive.min.css" />
+                <exclude name="**/bootstrap.min.css" />
             </fileset>
         </path>
         <sequential>
