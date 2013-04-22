@@ -34,20 +34,20 @@ defined('_JEXEC') or die('RESTRICTED');
             </div>
         </fieldset>
         <div class="clr clearfix"></div>
-        <table id="profiles-list" class="adminlist table table-striped" style="position: relative;">
+        <table id="profiles-list" class="table table-striped" style="position: relative;">
             <thead>
                 <tr>
                     <th class="hidden-phone"></th>
                     <th>
                         <input type="checkbox" value="" />
                     </th>
-                    <th class="title">
+                    <th>
                         <?php echo JHTML::_('grid.sort', 'WF_PROFILES_NAME', 'p.name', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                     </th>
-                    <th nowrap="nowrap">
+                    <th>
                         <?php echo JHTML::_('grid.sort', 'WF_PROFILES_STATE', 'p.published', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                     </th>
-                    <th nowrap="nowrap">
+                    <th>
                         <?php echo JHTML::_('grid.sort', 'WF_PROFILES_ORDERING', 'p.ordering', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                         <?php
                         if (count($this->rows) > 1) {
@@ -55,7 +55,7 @@ defined('_JEXEC') or die('RESTRICTED');
                         }
                         ?>
                     </th>
-                    <th nowrap="nowrap" class="title">
+                    <th>
                         <?php echo JHTML::_('grid.sort', 'WF_LABEL_ID', 'p.id', @$this->lists['order_Dir'], @$this->lists['order']); ?>
                     </th>
                 </tr>

@@ -527,6 +527,10 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
     cursor: pointer;
 }
 
+#jce #profiles-list {
+    margin: 0;
+}
+
 #jce #profiles-list th:first-child {
     width : 20px;
 }
@@ -588,8 +592,9 @@ html[dir="rtl"] .ui-jce .ui-tabs .ui-tabs-nav li {
     display : none !important;
 }
 
-#jce table.adminlist td.order {
+#jce table td.order {
     width : inherit;
+    text-align: center;
 }
 
 #jce #profiles-list th:first-child + th {
@@ -728,4 +733,26 @@ to {transform:rotate(360deg);}
 
 #jce span.editable-edit {
     margin: 10px 5px;
+}
+
+#jce tfoot .container .pagination .limit {
+    float : none;
+    margin : auto;
+    height : 30px;
+    line-height : 30px;
+}
+
+#jce tfoot .container .pagination .limit select {
+    margin: 0 5px;
+    vertical-align: middle;
+    max-width: 100px;
+}
+
+#jce tfoot .container .pagination .limit + .limit {
+    display: none;
+}
+
+#jce #profiles-list .sortable-highlight {
+    border : 1px dashed #ccc;
+    height : 60px;
 }

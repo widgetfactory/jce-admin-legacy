@@ -164,17 +164,17 @@
                 parent: '#jce'
             });
 
-            $('th input[type="checkbox"]', $('table.adminlist')).click(function() {
-                var n = $('td input[type="checkbox"]', $('table.adminlist')).prop('checked', this.checked).trigger('check');
+            $('th input[type="checkbox"]', $('#profiles-list, #users-list')).click(function() {
+                var n = $('td input[type="checkbox"]', $('#profiles-list, #users-list')).prop('checked', this.checked).trigger('check');
 
                 $('input[name="boxchecked"]').val($(n).filter(':checked').length);
             });
 
-            $('td input[type="checkbox"]', $('table.adminlist')).click(function() {
+            $('td input[type="checkbox"]', $('#profiles-list, #users-list')).click(function() {
                 var bc = $('input[name="boxchecked"]').val();
-                var n = $('td input[type="checkbox"]', $('table.adminlist')).length;
+                var n = $('td input[type="checkbox"]', $('#profiles-list, #users-list')).length;
 
-                $('th input[type="checkbox"]', $('table.adminlist')).prop('checked', bc == n).trigger('check');
+                $('th input[type="checkbox"]', $('#profiles-list, #users-list')).prop('checked', bc == n).trigger('check');
             });
 
             // set dependant parameters
@@ -196,6 +196,8 @@
                     });
                     return $helper;
                 },
+                placeholder: "sortable-highlight",
+                //forcePlaceholderSize : true,
                 stop: function(e, ui) {
                     var n = this;
 

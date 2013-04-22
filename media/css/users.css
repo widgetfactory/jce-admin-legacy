@@ -56,16 +56,3 @@ body {
     overflow-y: auto;
     width: 100%;
 }
-
-#jce tfoot .container .pagination .limit {
-    float : none;
-    margin : auto;
-    height : 30px;
-    line-height : 30px;
-}
-
-#jce tfoot .container .pagination .limit select {
-    margin: 0 5px;
-    vertical-align: middle;
-    max-width: 100px;
-}
