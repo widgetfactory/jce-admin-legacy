@@ -154,7 +154,7 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     word-wrap: normal;
     margin : 0;
     list-style : none;
-    min-width : 200px;
+    min-width : 250px;
 }
 
 #jce ul.checkbox-list li {
