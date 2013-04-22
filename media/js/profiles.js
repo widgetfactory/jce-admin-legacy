@@ -210,13 +210,14 @@
                 $('a.mceResize', '#statusbar_container').toggle(v == 1);
             }).change();
             
-            // toggle
+            // toggle on/off
             $('#paramseditortoggle').change(function() {
                 var v = $(this).val();
                 // show statusbar by default
                 $('#editor_toggle').toggle(v == 1);
             }).change();
             
+            // editor toggle label
             $('#paramseditortoggle_label').on('change keyup', function() {
                 if (this.value) {
                     // show statusbar by default
@@ -224,6 +225,7 @@
                 }
             });
             
+            // add onclick for user list item delete
             $('#users').click(function(e) {
                 var n = e.target;
                 
@@ -232,6 +234,7 @@
                 }
             });
             
+            // create proxy input[type="hidden"] for styled plugin enable checkbox
             $('input.plugins-enable-checkbox').on('click', function() {
                 var s = this.checked, name = $(this).data('name'), proxy = $(this).next('input[type="hidden"]');
                 
@@ -243,8 +246,8 @@
                     $(this).removeAttr('name');
                 }
 
-                // set value for proxy and trigger change                
-                $(proxy).val(s ? 1 : 0).change();
+                // set value for proxy and trigger change, add isdirty class (edited)                
+                $(proxy).val(s ? 1 : 0).change().addClass('isdirty');
                 
                 // disable default select and reset value
                 $('select.plugins-default-select', $(this).parents('fieldset:first')).children('option[value="' + name + '"]').prop('disabled', !s).parent().val(function(i, v) {                                        
@@ -254,6 +257,9 @@
                     
                     return v;
                 });
+                
+                // remove isdirty class from this element
+                $(this).removeClass('isdirty');
             });
             
             // add "edited" class to each input on change
@@ -264,7 +270,7 @@
                 }
                 // get name as escaped string
                 var name = this.name.replace('!"#$%&()*+,./:;<=>?@[\]^`{|}~', '\\$1', 'g');
-                
+                // add class to this element and any that share it's name, eg: param[]
                 $(this).add('[name="' + name + '"]').addClass('isdirty');
             });
             
