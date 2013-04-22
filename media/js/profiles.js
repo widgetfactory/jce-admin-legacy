@@ -234,34 +234,6 @@
                 }
             });
             
-            // create proxy input[type="hidden"] for styled plugin enable checkbox
-            $('input.plugins-enable-checkbox').on('click', function() {
-                var s = this.checked, name = $(this).data('name'), proxy = $(this).next('input[type="hidden"]');
-                
-                // check for proxy...
-                if ($(proxy).length == 0) {
-                    // create proxy
-                    proxy = $('<input type="hidden" name="' + $(this).attr('name') + '" />').insertAfter(this);
-                    // remove attribute
-                    $(this).removeAttr('name');
-                }
-
-                // set value for proxy and trigger change, add isdirty class (edited)                
-                $(proxy).val(s ? 1 : 0).change().addClass('isdirty');
-                
-                // disable default select and reset value
-                $('select.plugins-default-select', $(this).parents('fieldset:first')).children('option[value="' + name + '"]').prop('disabled', !s).parent().val(function(i, v) {                                        
-                    if (v === name) {
-                        return "";
-                    }
-                    
-                    return v;
-                });
-                
-                // remove isdirty class from this element
-                $(this).removeClass('isdirty');
-            });
-            
             // add "edited" class to each input on change
             $('#tabs-features :input[name], #tabs-editor :input[name], #tabs-plugins :input[name]').change(function() {
                 // skip on init
@@ -274,6 +246,35 @@
                 $(this).add('[name="' + name + '"]').addClass('isdirty');
             });
             
+            // create proxy input[type="hidden"] for styled plugin enable checkbox
+            $('input.plugins-enable-checkbox').on('click', function() {
+                var s = this.checked, name = $(this).data('name'), proxy = $(this).next('input[type="hidden"]');
+
+                // check for proxy...
+                if ($(proxy).length == 0) {
+                    // create proxy
+                    proxy = $('<input type="hidden" name="' + $(this).attr('name') + '" />').insertAfter(this);
+                }
+                
+                // trigger change event, set value, remove name
+                $(this).change().val(s ? 1 : 0).removeAttr('name');
+
+                // set value for proxy and trigger change, add isdirty class (edited)                
+                $(proxy).val(s ? 1 : 0).change();
+                
+                // disable default select and reset value
+                $('select.plugins-default-select', $(this).parents('fieldset:first')).children('option[value="' + name + '"]').prop('disabled', !s).parent().val(function(i, v) {                                        
+                    if (v === name) {
+                        return "";
+                    }
+                    
+                    return v;
+                });
+            // remove the edited class added when the input was changed
+            }).change(function() {
+                $(this).removeClass('isdirty');
+            });
+
             init = false;
         },
         
@@ -305,7 +306,7 @@
             $('div#tabs-editor, div#tabs-plugins').find(':input[name].placeholder').prop('disabled', true);
             
             // disable inputs not changed
-            $('#tabs-features :input[name], #tabs-editor :input[name], #tabs-plugins :input[name]').not('.isdirty').prop('disabled', true);
+            $('#tabs-features :input[name], #tabs-editor :input[name], #tabs-plugins :input[name]').not('.isdirty').prop('disabled', true).parents('.ui-radio, .ui-checkbox').addClass('disabled');
         },
         
         _fixLayout : function() {
