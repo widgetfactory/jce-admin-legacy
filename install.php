@@ -757,7 +757,14 @@ abstract class WFInstall {
             // remove system helper
             $admin . '/helpers/system.php',
             // remove tools helper
-            $admin . '/helpers/tools.php'
+            $admin . '/helpers/tools.php',
+            // old language files
+            $site . '/language/en-GB/en-GB.com_jce_advlink.ini',
+            $site . '/language/en-GB/en-GB.com_jce_browser.ini',
+            $site . '/language/en-GB/en-GB.com_jce_imgmanager.ini',
+            $site . '/language/en-GB/en-GB.com_jce_media.ini',
+            $site . '/language/en-GB/en-GB.com_jce_paste.ini',
+            $site . '/language/en-GB/en-GB.com_jce_spellchecker.ini'
         );
 
         foreach ($files as $file) {
