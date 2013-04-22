@@ -52,8 +52,8 @@
             });
 
             // Custom checkbox
-            $(this).addClass('ui-checkbox-element').wrap('<span class="ui-checkbox" />').click(function() {
-                $(this).parent().toggleClass('checked', this.checked);
+            $(this).addClass('ui-checkbox-element').wrap('<span class="ui-checkbox" />').click(function() {               
+                $(this).parent().not('.disabled').toggleClass('checked', this.checked);
             }).on('check', function() {
                 $(this).parent().toggleClass('checked', this.checked);
             }).on('disable', function() {
@@ -81,7 +81,7 @@
 
             // Custom Radio list
             $(this).addClass('ui-radio-element').wrap('<span class="ui-radio" />').click(function() {
-                $(this).parent().toggleClass('checked', this.checked);
+                $(this).parent().not('.disabled').toggleClass('checked', this.checked);
 
                 $('input[type="radio"][name="' + $(this).attr('name') + '"]').not(this).parent().toggleClass('checked', !this.checked);
 
