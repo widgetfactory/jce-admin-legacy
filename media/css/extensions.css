@@ -7,12 +7,12 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-#jce div.extension_mapper {
+#jce ul.adminformlist > li > div.extension_mapper {
     min-width : 200px;
-    margin: 5px 0 5px 215px;
+    margin: 5px 0 5px 220px;
     position: relative;
-    /*float : left;*/
     clear : left;
+    padding : 0;
 }
 html[dir="rtl"] #jce div.extension_mapper {
     margin: 5px 215px 5px 0;
