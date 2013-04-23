@@ -485,7 +485,7 @@ class WFParameter {
         return $element->render($node, $value, $control_name);
     }
 
-    private function _cleanAttribute($matches) {
+    private function cleanAttribute($matches) {
         return $matches[1] . '="' . preg_replace('#([^\w]+)#i', '', $matches[2]) . '"';
     }
 
@@ -508,19 +508,16 @@ class WFParameter {
 
                         if ((string) $xml->attributes()->parent) {
                             $parent = '[' . (string) $xml->attributes()->parent . '][' . $group . ']';
-                            $class = ' class="' . (string) $xml->attributes()->parent . '"';
-                            $label = (string) $xml->attributes()->parent . '_' . $group;
+                            $label  = (string) $xml->attributes()->parent . '_' . $group;
                         }
 
-                        $html .= '<div data-type="' . $group . '"' . $class . '>';
-                        $html .= '<h4>' . WFText::_('WF_' . strtoupper($label) . '_TITLE') . '</h4>';
-                        //$html .= $item->render($name . '[' . $parent . '][' . $group . ']', $group);
+                        $html .= '<div data-parameter-nested-item="' . $group . '">';
                         $html .= $item->render($name . $parent, $group);
                         $html .= '</div>';
                     }
                 } else {
-                    $label = preg_replace_callback('#(for|id)="([^"]+)"#', array($this, '_cleanAttribute'), $item[0]);
-                    $element = preg_replace_callback('#(id)="([^"]+)"#', array($this, '_cleanAttribute'), $item[1]);
+                    $label      = preg_replace_callback('#(for|id)="([^"]+)"#', array($this, 'cleanAttribute'), $item[0]);
+                    $element    = preg_replace_callback('#(id)="([^"]+)"#', array($this, 'cleanAttribute'), $item[1]);
 
                     $html .= '<li>' . $label . $element;
                 }

@@ -764,7 +764,9 @@ abstract class WFInstall {
             $site . '/language/en-GB/en-GB.com_jce_imgmanager.ini',
             $site . '/language/en-GB/en-GB.com_jce_media.ini',
             $site . '/language/en-GB/en-GB.com_jce_paste.ini',
-            $site . '/language/en-GB/en-GB.com_jce_spellchecker.ini'
+            $site . '/language/en-GB/en-GB.com_jce_spellchecker.ini',
+            // remove redundant parameter.js
+            $admin . '/media/js/parameter.js'
         );
 
         foreach ($files as $file) {

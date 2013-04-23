@@ -206,8 +206,7 @@ class WFViewProfiles extends WFView {
                 $scripts = array(
                     'profiles.js',
                     'extensions.js',
-                    'checklist.js',
-                    'parameter.js'
+                    'checklist.js'
                 );
                 // Load scripts
                 foreach ($scripts as $script) {
@@ -439,7 +438,7 @@ class WFViewProfiles extends WFView {
                     'phone'    => WFText::_('WF_PROFILES_DEVICE_PHONE')
                 );
                 
-                $lists['device'] = '<div class="">';
+                $lists['device'] = '';
                 
                 foreach($options as $value => $text) {
                     $checked = '';
@@ -450,8 +449,6 @@ class WFViewProfiles extends WFView {
                     
                     $lists['device'] .= '<label class="checkbox inline"><input type="checkbox" name="device[]" value="' . $value . '"'. $checked .' />' . $text . '</label>'; 
                 }
-                
-                $lists['device'] .= '</div>';
 
                 // user types from profile
                 $query = $db->getQuery(true);

@@ -123,7 +123,9 @@ html[dir="rtl"] #jce dl.adminformlist > dd {
     background-position: right;
 }
 #jce ul.adminformlist > li > div {
-    margin-left: 215px;
+    margin-left: 200px;
+    clear : both;
+    padding: 10px 0;
 }
 #jce ul.adminformlist > li > div h4 {
     margin-left: 10px;

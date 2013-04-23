@@ -82,9 +82,7 @@
             // Custom Radio list
             $(this).addClass('ui-radio-element').wrap('<span class="ui-radio" />').click(function() {
                 $(this).parent().not('.disabled').toggleClass('checked', this.checked);
-
                 $('input[type="radio"][name="' + $(this).attr('name') + '"]').not(this).parent().toggleClass('checked', !this.checked);
-
             }).on('check', function() {
                 $(this).parent().toggleClass('checked', this.checked);
             }).on('disable', function() {
@@ -110,7 +108,7 @@
             if (!$.support.cssFloat) {
                 $('#jce').addClass('ie');
 
-                // IE6 / IE7
+                // IE8 / 9
                 if (document.querySelector) {
                     // IE8
                     if (!$.support.leadingWhitespace) {
@@ -164,6 +162,7 @@
                 parent: '#jce'
             });
 
+            // profiles list checkboxes
             $('th input[type="checkbox"]', $('#profiles-list, #users-list')).click(function() {
                 var n = $('td input[type="checkbox"]', $('#profiles-list, #users-list')).prop('checked', this.checked).trigger('check');
 
@@ -176,9 +175,6 @@
 
                 $('th input[type="checkbox"]', $('#profiles-list, #users-list')).prop('checked', bc == n).trigger('check');
             });
-
-            // set dependant parameters
-            this._setDependants();
 
             // HTML5 style form elements
             this._formWidgets();
@@ -251,6 +247,7 @@
                 }
             });
 
+            // Profiles list order buttons
             $('span.order-up a', '#profiles-list').click(function(e) {
                 $('input[name^=cid]', $(this).parents('tr')).prop('checked', true);
                 $('input[name="task"]').val('orderup');
@@ -274,6 +271,28 @@
                 $('input[type="checkbox"]').checkbox();
                 // custom radio
                 $('input[type="radio"]').radio();
+            });
+            
+            // nested parameter sets
+            $(document).ready(function() {
+                // hide all nested parameters
+                $('[data-parameter-nested-item]').on('hide', function() {
+                    $(this).hide().find(':input').prop('disabled', true);
+                }).on('show', function() {
+                    $(this).show().find(':input').prop('disabled', false);
+                }).trigger('hide');
+                
+                // show relevant item on change, hide others
+                $(':input.parameter-nested-parent').change(function() {                    
+                    // hide all others first
+                    $(this).siblings('[data-parameter-nested-item]').trigger('hide').filter('[data-parameter-nested-item="' + this.value + '"]').trigger('show');
+                }).change();		
+            });
+            
+            // dependant parameters
+            $(document).ready(function() {
+                // set dependant parameters
+                self._setDependants();
             });
 
             // remove loader
@@ -359,9 +378,10 @@
 
             $(':input[min]').min();
         },
+                
         _setDependants: function() {
             $('input[data-parent], select[data-parent], textarea[data-parent]').each(function() {
-                var el = this, data = $(this).data('parent');
+                var el = this, data = $(this).data('parent') || '';
 
                 var p = $(this).parents('li:first');
 
@@ -372,7 +392,7 @@
                     // get the parent selector and value
                     s = /([\w\.]+)\[([\w,]+)\]/.exec(s);
 
-                    if (s) {
+                    if (s && s.length > 2) {
                         var k = s[1], v = s[2].split(',');
 
                         // clean id
