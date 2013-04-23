@@ -17,6 +17,8 @@
     };
     
     $.jce.Installer = {
+        options : {},
+        
         init : function(options) {
             
             $(":file").upload(options);
@@ -46,4 +48,10 @@
             });
         }
     };
+    
+    // run init when the doc is ready
+    $(document).ready(function()  {
+        $.jce.Installer.init();
+    });
+    
 })(jQuery);

@@ -578,7 +578,7 @@ class WFViewProfiles extends WFView {
                 // set suhosin flag
                 $options['suhosin'] = ini_get('suhosin.post.max_vars') && (int) ini_get('suhosin.post.max_vars') < 1000;
 
-                $this->addScriptDeclaration('jQuery(document).ready(function($){$.jce.Profiles.init(' . json_encode($options) . ')});');
+                $this->addScriptDeclaration('jQuery.jce.Profiles.options = ' . json_encode($options) . ';');
 
                 // set toolbar
                 if ($row->id) {

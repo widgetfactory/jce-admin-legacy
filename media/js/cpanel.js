@@ -8,8 +8,10 @@
  * other free or open source software licenses.
  */
 (function($) {
-    $.jce.CPanel = {
-        init : function(options) {
+    $.jce.Cpanel = {
+        options : {},
+        
+        init : function() {
             if (options.feed) {
                 $('ul.newsfeed').addClass('loading').html('<li>' + options.labels.feed + '</li>');
 
@@ -82,4 +84,9 @@
             });
         }
     };
+    
+    // run init when the doc is ready
+    $(document).ready(function()  {
+        $.jce.Cpanel.init();
+    });
 })(jQuery);

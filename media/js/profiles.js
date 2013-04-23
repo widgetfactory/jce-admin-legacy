@@ -42,10 +42,8 @@
         
         options : {},
         
-        init : function(options) {
+        init : function() {
             var self = this, init = true;
-            
-            $.extend(true, this.options, options);
 
             var dir = $('body').css('direction') == 'rtl' ? 'right' : 'left';
             
@@ -82,13 +80,13 @@
 
             // Editable Selects
 
-            $( "select.editable, select.combobox" ).combobox(options.combobox);
+            $( "select.editable, select.combobox" ).combobox(this.options.combobox);
             
             // Color Picker
-            $('input.color').colorpicker($.extend(options.colorpicker, {parent : '#jce'}));
+            $('input.color').colorpicker($.extend(this.options.colorpicker, {parent : '#jce'}));
 
             // Extension Mapper
-            $('select.extensions, input.extensions, textarea.extensions').extensionmapper(options.extensions);
+            $('select.extensions, input.extensions, textarea.extensions').extensionmapper(this.options.extensions);
 
             // Layout
             this.createLayout();
@@ -430,5 +428,10 @@
             $tabs.not('.tab-disabled').first().addClass('active ui-tabs-active ui-state-active');
         }
     };
-// End Groups
+    
+    // run init when the doc is ready
+    $(document).ready(function()  {
+        $.jce.Profiles.init();
+    });
+// End Profiles
 })(jQuery);

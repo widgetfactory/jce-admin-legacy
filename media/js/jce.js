@@ -97,9 +97,8 @@
 
     $.jce = {
         options: {},
-        init: function(options) {
+        init: function() {
             var self = this;
-            $.extend(true, this.options, options);
 
             // add ui-jce class to body
             $('body').addClass('ui-jce');
@@ -266,33 +265,31 @@
                 e.preventDefault();
             });
 
+            // nested parameter sets
+            $('[data-parameter-nested-item]').on('hide', function() {
+                $(this).hide().find(':input').prop('disabled', true);
+            }).on('show', function() {
+                $(this).show().find(':input').prop('disabled', false);
+            }).trigger('hide');
+
+            // show relevant item on change, hide others
+            $(':input.parameter-nested-parent').change(function() {                    
+                // hide all others first
+                $(this).siblings('[data-parameter-nested-item]').trigger('hide').filter('[data-parameter-nested-item="' + this.value + '"]').trigger('show');
+            }).change();
+
+            // dependant parameters
+            $(document).ready(function() {
+                // set dependant parameters
+                self._setDependants();
+            });
+            
+            // create styled form elements
             $(document).ready(function() {
                 // custom checkbox
                 $('input[type="checkbox"]').checkbox();
                 // custom radio
                 $('input[type="radio"]').radio();
-            });
-            
-            // nested parameter sets
-            $(document).ready(function() {
-                // hide all nested parameters
-                $('[data-parameter-nested-item]').on('hide', function() {
-                    $(this).hide().find(':input').prop('disabled', true);
-                }).on('show', function() {
-                    $(this).show().find(':input').prop('disabled', false);
-                }).trigger('hide');
-                
-                // show relevant item on change, hide others
-                $(':input.parameter-nested-parent').change(function() {                    
-                    // hide all others first
-                    $(this).siblings('[data-parameter-nested-item]').trigger('hide').filter('[data-parameter-nested-item="' + this.value + '"]').trigger('show');
-                }).change();		
-            });
-            
-            // dependant parameters
-            $(document).ready(function() {
-                // set dependant parameters
-                self._setDependants();
             });
 
             // remove loader
@@ -435,6 +432,11 @@
             });
         }
     };
+    // run init when the doc is ready
+    $(document).ready(function()  {
+        $.jce.init();
+    });
+    
 })(jQuery);
 // global shortcut
 var $jce = jQuery.jce;

@@ -141,8 +141,7 @@ class WFController extends WFControllerBase {
                     'bootstrap' => $bootstrap
                 );
 
-                $view->addScriptDeclaration('jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});');
-                //$document->addCustomTag('<script type="text/javascript">jQuery(document).ready(function($){$.jce.init(' . json_encode($options) . ');});</script>');
+                $view->addScriptDeclaration('jQuery.jce.options = ' . json_encode($options) . ';');
 
                 $view->addHelperPath(dirname(__FILE__) . '/helpers');
                 $this->addModelPath(dirname(__FILE__) . '/models');
