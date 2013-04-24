@@ -324,3 +324,8 @@ input#profile_description {
         max-width : 250px;
     }
 }
+
+a.browser {
+    display: inline-block;
+    margin : 8px 0;
+}
