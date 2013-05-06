@@ -52,7 +52,7 @@
                 icons : {
                     primary : 'ui-icon-person'
                 }
-            });
+            }).removeClass('modal');
 
             $("#tabs-editor").tabs({
                 'active' : 0,
