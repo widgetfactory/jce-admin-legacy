@@ -96,7 +96,13 @@ class WFInstallerPlugin extends JObject {
                 if (defined('JPATH_PLATFORM') && $manifest->getName() == 'install') {
                     $this->parent->abort(WFText::_('WF_INSTALLER_EXTENSION_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_INVALID_MANIFEST'));
                 } else {
-                    require_once(JPATH_LIBRARIES . '/joomla/installer/adapters/plugin.php');
+                    JLoader::import('joomla.installer.adapaters.plugin');
+                    
+                    // try cms path for Joomla 3.1
+                    if (defined('JPATH_PLATFORM')) {
+                        JLoader::import('cms.installer.adapater.plugin');
+                    }
+
                     // create adapter
                     $adapter = new JInstallerPlugin($this->parent, $db);
 
