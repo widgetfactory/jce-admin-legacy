@@ -21,7 +21,7 @@ if ((int) ini_get('memory_limit') < 32) {
 
 abstract class WFInstall {
 
-    private static function cleanupInstall() {
+    public static function cleanupInstall() {
         $path = JPATH_ADMINISTRATOR . '/components/com_jce';
 
         if (!is_file($path . '/jce.php')) {
