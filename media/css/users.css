@@ -15,6 +15,10 @@ body {
     padding : 0;
 }
 
+#jce {
+    margin: 5px;
+}
+
 #jce #users-list th:first-child {
     width : 20px;
     text-align: center;
@@ -42,8 +46,9 @@ body {
     right : 10px;
 }
 
-#jce > div.container {
-    height : 420px;
+#jce div.container {
+    height: 420px;
+    width: 100%;
 }
 
 #jce > div.container thead, tbody {
