@@ -193,7 +193,7 @@ html {
     cursor: move;
     background-color: #F0F0EE;
     text-align: center;
-    margin: -28px -19px 0 0;
+    margin: -28px -17px 0 0;
     position: relative;
     display: block;
     float: right;
@@ -202,12 +202,8 @@ html {
 #jce span.sortableRowHandle span.ui-icon {
     margin: 5px 0 0;
     cursor: move;
-    
-    background-image: url("../../../../../components/com_jce/editor/libraries/jquery/css/images/ui-icons_222222_256x240.png");
     height: 16px;
-    width: 16px;
-    
-    background-repeat: no-repeat;
+    width: 14px;
     display: block;
     overflow: hidden;
     text-indent: -99999px;
