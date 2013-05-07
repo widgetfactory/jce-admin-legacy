@@ -20,8 +20,10 @@
         options : {},
         
         init : function(options) {
+    
+            $.extend(this.options, options || {});
             
-            $(":file").upload(options);
+            $(":file").upload(this.options);
             
             var n = $('#tabs-plugins, #tabs-extensions, #tabs-languages, #tabs-related').find('input[type="checkbox"]');
             
