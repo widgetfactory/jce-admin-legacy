@@ -19,9 +19,11 @@
     $.jce.Installer = {
         options : {},
         
-        init : function(options) {
+        init : function(options) {            
             
-            $(":file").upload(options);
+            $.extend(this.options, options || {});
+            
+            $(":file").upload(this.options);
             
             var n = $('#tabs-plugins, #tabs-extensions, #tabs-languages, #tabs-related').find('input[type="checkbox"]');
             
