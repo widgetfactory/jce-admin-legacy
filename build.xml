@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.3.3RC1" />
-    <property description="Component Version" name="version_package" value="233RC1" />
+    <property description="Component Version" name="version" value="2.3.3RC2" />
+    <property description="Component Version" name="version_package" value="233RC2" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
@@ -160,6 +160,8 @@
             <exclude name="**/nbproject/**" />
             
             <exclude name="**/plupload/*.js" />
+            
+            <exclude name="**/tinymce/" />
 			
             <!-- Extension Exclusions -->
             <exclude name="editor/extensions/popups_build.xml" />
