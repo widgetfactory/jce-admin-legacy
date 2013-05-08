@@ -119,7 +119,7 @@ class WFModelEditor extends WFModelBase {
         if (is_object($this->profile)) {
             jimport('joomla.filesystem.folder');
 
-            $settings = array_merge($settings, array('theme' => 'advanced', 'component_id' => $component_id, 'plugins' => $this->getPlugins()), $this->getToolbar());
+            $settings = array_merge($settings, array('theme' => 'modern', 'component_id' => $component_id, 'plugins' => $this->getPlugins()), $this->getToolbar());
 
             // Theme and skins
             $theme = array(
@@ -148,7 +148,7 @@ class WFModelEditor extends WFModelBase {
 
             // 'Look & Feel'
 
-            $skin = explode('.', $wf->getParam('editor.toolbar_theme', 'default', 'default'));
+            $skin = explode('.', $wf->getParam('editor.toolbar_theme', 'lightgray', 'lightgray'));
             $settings['skin'] = $skin[0];
             $settings['skin_variant'] = isset($skin[1]) ? $skin[1] : '';
             $settings['body_class'] = $wf->getParam('editor.content_style_reset', $wf->getParam('editor.highcontrast', 0)) == 1 ? 'mceContentReset' : '';
@@ -183,7 +183,7 @@ class WFModelEditor extends WFModelBase {
         if ($compress['javascript']) {
             $this->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=pack&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
         } else {
-            $this->addScript($this->getURL(true) . '/tiny_mce/tiny_mce.js?version=' . $version);
+            $this->addScript($this->getURL(true) . '/tinymce/tinymce.js?version=' . $version);
             // Editor
             $this->addScript($this->getURL(true) . '/libraries/js/editor.js?version=' . $version);
 
@@ -215,9 +215,6 @@ class WFModelEditor extends WFModelBase {
                 }
             }
         }
-
-        // check for language files
-        $this->checkLanguages($settings);
 
         $output = "";
         $i = 1;
@@ -256,13 +253,7 @@ class WFModelEditor extends WFModelBase {
                     $output .= ",\n";
                 }
             }
-            // Must have 3 rows, even if 2 are blank!
-            if (preg_match('/theme_advanced_buttons([1-3])/', $k) && $v == '') {
-                $output .= "\t\t\t" . $k . ": \"\"";
-                if ($i < count($settings)) {
-                    $output .= ",\n";
-                }
-            }
+
             $i++;
         }
 
@@ -317,39 +308,6 @@ class WFModelEditor extends WFModelBase {
         }
 
         return $output;
-    }
-
-    /**
-     * Check the current language pack exists and is complete
-     * @param array $settings Settings array
-     * @return void
-     */
-    private function checkLanguages(&$settings) {
-        $plugins = array();
-        $language = $settings['language'];
-
-        // only if languages are loaded and not english
-        if (array_key_exists('language_load', $settings) === false && $language != 'en') {
-            jimport('joomla.filesystem.file');
-
-            // check main languages and reset to english
-            if (!JFile::exists(WF_EDITOR . '/tiny_mce/langs/' . $language . '.js') || !JFile::exists(WF_EDITOR_THEMES . '/advanced/langs/' . $language . '.js')) {
-                $settings['language'] = 'en';
-
-                return;
-            }
-
-            foreach ((array) $settings['plugins'] as $plugin) {
-                $path = WF_EDITOR_PLUGINS . '/' . $plugin;
-
-                // if english file exists then the installed language file should too 
-                if (JFile::exists($path . '/langs/en.js') && !JFile::exists($path . '/langs/' . $language . '.js')) {
-                    $plugins[] = $plugin;
-                }
-            }
-        }
-
-        $settings['skip_plugin_languages'] = $plugins;
     }
 
     /**
@@ -408,8 +366,8 @@ class WFModelEditor extends WFModelBase {
         wfimport('admin.models.plugins');
         $model = new WFModelPlugins();
 
-        $wf = WFEditor::getInstance();
-        $rows = array('theme_advanced_buttons1' => '', 'theme_advanced_buttons2' => '', 'theme_advanced_buttons3' => '');
+        $wf     = WFEditor::getInstance();
+        $rows   = array();
 
         // we need a profile object and some defined rows
         if (!is_object($this->profile) || empty($this->profile->rows)) {
@@ -479,7 +437,7 @@ class WFModelEditor extends WFModelBase {
             }
 
             if (!empty($buttons)) {
-                $rows['theme_advanced_buttons' . $i] = implode(',', $buttons);
+                $rows['toolbar' . $i] = implode(',', $buttons);
             }
 
             $x++;
@@ -522,8 +480,9 @@ class WFModelEditor extends WFModelBase {
                 }
 
                 foreach ($plugins as $k => $v) {
+                    $path = WF_EDITOR_PLUGINS . '/' . $v;
                     // check plugin is correctly installed and is a tinymce plugin, ie: it has an editor_plugin.js file
-                    if (!JFile::exists(WF_EDITOR_PLUGINS . '/' . $v . '/editor_plugin.js')) {
+                    if (!JFile::exists($path . '/plugin.min.js')) {
                         unset($plugins[$k]);
                     }
                 }
@@ -904,16 +863,16 @@ class WFModelEditor extends WFModelBase {
                 $files = array();
 
                 // add core file
-                $files[] = WF_EDITOR . '/' . "tiny_mce/tiny_mce" . $suffix . ".js";
+                $files[] = WF_EDITOR . '/' . "tinymce/tinymce" . $suffix . ".js";
 
                 // Add themes
                 foreach ($themes as $theme) {
-                    $files[] = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/editor_template" . $suffix . ".js";
+                    $files[] = WF_EDITOR . '/' . "tinymce/themes/" . $theme . "/editor_template" . $suffix . ".js";
                 }
 
                 // Add plugins
                 foreach ($plugins as $plugin) {
-                    $files[] = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/editor_plugin" . $suffix . ".js";
+                    $files[] = WF_EDITOR . '/' . "tinymce/plugins/" . $plugin . "/editor_plugin" . $suffix . ".js";
                 }
 
                 // add Editor file

@@ -17,10 +17,8 @@ defined('_JEXEC') or die('RESTRICTED');
             <div class="bar" style="width: 100%;"><?php echo JText :: _('WF_MESSAGE_LOAD');?></div>
         </div>
         <fieldset id="filter-bar" class="btn-toolbar">
-            <div class="filter-search btn-group pull-left fltlft">
+            <div class="input-append pull-left">
                 <input type="text" name="search" id="search" size="30" value="<?php echo $this->lists['search']; ?>" class="text_area" onchange="document.adminForm.submit();" placeholder="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>" />
-            </div>
-            <div class="btn-group fltlft">
                 <button id="filter_go" onclick="this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_SEARCH'); ?>"><i class="icon-search"></i>&nbsp;<?php echo WFText::_('WF_LABEL_SEARCH'); ?></button>
                 <button id="filter_reset" onclick="document.getElementById('search').value='';this.form.submit();" class="btn" title="<?php echo WFText::_('WF_LABEL_CLEAR'); ?>"><i class="icon-remove"></i>&nbsp;<?php echo WFText::_('WF_LABEL_CLEAR'); ?></button>
             </div>

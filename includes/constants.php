@@ -35,9 +35,9 @@ if (defined('JPATH_PLATFORM')) {
 // JCE Editor
 define('WF_EDITOR',            WF_SITE . '/editor');
 // JCE Editor Plugins
-define('WF_EDITOR_PLUGINS',    WF_EDITOR . '/tiny_mce/plugins');
+define('WF_EDITOR_PLUGINS',    WF_EDITOR . '/tinymce/plugins');
 // JCE Editor Themes
-define('WF_EDITOR_THEMES',     WF_EDITOR . '/tiny_mce/themes');
+define('WF_EDITOR_THEMES',     WF_EDITOR . '/tinymce/themes');
 // JCE Editor Libraries
 define('WF_EDITOR_LIBRARIES',  WF_EDITOR . '/libraries');
 // JCE Editor Classes
