@@ -9,11 +9,24 @@
  */
 (function($) {
     $.jce.Cpanel = {
-        options : {},
+        options : {
+            labels : {
+                feed    : 'Feed',
+                updates : 'Updates',
+                updates_available : 'Updates Available'
+            },
+            feed    : true,
+            updates : true
+        },
         
-        init : function() {
-            if (options.feed) {
-                $('ul.newsfeed').addClass('loading').html('<li>' + options.labels.feed + '</li>');
+        init : function(options) {
+            
+            $.extend(this.options, options || {});
+            
+            var o = this.options;
+            
+            if (o.feed) {
+                $('ul.newsfeed').addClass('loading').html('<li>' + o.labels.feed + '</li>');
 
                 // Get feed
                 $.getJSON("index.php?option=com_jce&view=cpanel&task=feed", {}, function(r) {
@@ -27,7 +40,7 @@
 
             }
 
-            if (options.updates) {
+            if (o.updates) {
                 // Check updates
                 $.getJSON("index.php?option=com_jce&view=updates&task=update&step=check", {}, function(r) {                    
                     if (r) {                        
@@ -36,12 +49,12 @@
                         }
                         
                         if (r.error) {
-                            var $list = $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="label label-important"><i class="icon-exclamation-sign icon-white"></i>&nbsp;' + r.error + '</span></li>');
+                            var $list = $('div#jce ul.adminformlist').append('<li><span>' + o.labels.updates + '</span><span class="label label-important"><i class="icon-exclamation-sign icon-white"></i>&nbsp;' + r.error + '</span></li>');
                             return false;
                         }
                         
                         if (r.length) {
-                            var $list = $('div#jce ul.adminformlist').append('<li><span>' + options.labels.updates + '</span><span class="label label-info"><i class="icon-info-sign icon-white"></i>&nbsp;<a title="' + options.labels.updates + '" class="updates" href="#">' + options.labels.updates_available + '</a></span></li>');
+                            var $list = $('div#jce ul.adminformlist').append('<li><span>' + o.labels.updates + '</span><span class="label label-info"><i class="icon-info-sign icon-white"></i>&nbsp;<a title="' + o.labels.updates + '" class="updates" href="#">' + o.labels.updates_available + '</a></span></li>');
                         
                             $('a.updates', $list).click( function(e) {
                                 // trigger Joomla! 3.0 button
