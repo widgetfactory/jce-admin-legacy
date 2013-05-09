@@ -11,6 +11,8 @@
     min-height: 390px;
     overflow-y: auto;
     overflow-x: hidden;
+    
+    display: none;
 }
 
 #jce .fltrt {

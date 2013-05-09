@@ -83,7 +83,7 @@
                 $('#toolbar-options button').click(); 
                 
                 // trigger toolbar button
-                $('#toolbar-popup-options a.modal, #toolbar-config a.modal').each(function() {
+                $('#toolbar-popup-options a.modal, #toolbar-config a.preferences').each(function() {
                     $.jce.createDialog(this, {
                         src 	: $(this).attr('href'),
                         options : {

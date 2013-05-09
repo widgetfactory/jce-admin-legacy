@@ -63,10 +63,12 @@ class WFModelPreferences extends WFModel {
 				$difLevel 	= $group->level - $curLevel;	
 				$html 		= array();
 				$item 		= new StdClass();
+                                
+                                $id             = $curLevel;
 				
-				$tabs[] = '<li><a href="#permission-' . $curLevel . '">' . str_repeat('<span> &rsaquo; </span> ', $curLevel = $group->level) . $group->text . '</a></li>';
+				$tabs[] = '<li><a href="#permission-' . $id . '">' . str_repeat('<span> &rsaquo; </span> ', $curLevel = $group->level) . $group->text . '</a></li>';
 				
-				$content[] = '<div id="permission-' . $curLevel . '" class="tab-pane">';
+				$content[] = '<div id="permission-' . $id . '" class="tab-pane">';
 				$content[] =			'<table border="0" cellspacing="1" class="table table-striped">';
 				$content[] =				'<thead>';
 				$content[] =					'<tr>';
