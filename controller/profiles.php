@@ -139,6 +139,8 @@ class WFControllerProfiles extends WFController {
                     break;
                 case 'components':
                 case 'device':
+                    $value = array_filter($value);
+                    
                     $value = implode(',', $this->cleanInput($value));
                     break;
                 case 'usergroups':
