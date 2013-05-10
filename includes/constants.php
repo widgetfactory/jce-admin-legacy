@@ -33,7 +33,7 @@ if (defined('JPATH_PLATFORM')) {
     define('WF_PLUGIN',        JPATH_SITE . '/plugins/editors');   
 }
 // JCE Editor
-define('WF_EDITOR',            WF_SITE . '/editor');
+define('WF_EDITOR',            WF_SITE);
 // JCE Editor Plugins
 define('WF_EDITOR_PLUGINS',    WF_EDITOR . '/tinymce/plugins');
 // JCE Editor Themes
