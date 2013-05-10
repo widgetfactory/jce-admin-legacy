@@ -39,7 +39,7 @@ abstract class WFLoader {
 
             switch ($key) {
                 case 'editor':
-                    $base = JPATH_SITE . '/components/com_jce/editor';
+                    $base = JPATH_SITE . '/components/com_jce';
                     break;
                 case 'admin':
                     $base = dirname(dirname(__FILE__));
