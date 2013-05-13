@@ -455,15 +455,18 @@ class WFViewProfiles extends WFView {
 
                 if (is_object($query)) {
                     $query->select('types')->from('#__wf_profiles')->where('id NOT IN (17,28,29,30)');
+                    
+                    $db->setQuery($query);
+                    $types = $db->loadColumn();
                 } else {
                     $query = 'SELECT types'
-                            . ' FROM #__wf_profiles'
-                            // Exclude ROOT, USERS, Super Administrator, Public Frontend, Public Backend
-                            . ' WHERE id NOT IN (17,28,29,30)';
+                    . ' FROM #__wf_profiles'
+                    // Exclude ROOT, USERS, Super Administrator, Public Frontend, Public Backend
+                    . ' WHERE id NOT IN (17,28,29,30)';
+                    
+                    $db->setQuery($query);
+                    $types = $db->loadResultArray();
                 }
-
-                $db->setQuery($query);
-                $types = $db->loadResultArray();
 
                 if (defined('JPATH_PLATFORM')) {
                     $options = array();
