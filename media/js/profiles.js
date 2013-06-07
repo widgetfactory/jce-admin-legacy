@@ -371,13 +371,16 @@
         setRows : function() {
             var rows = [];
 
-            $('span.sortableRow:has(span)', '#toolbar_container').each( function() {
+            $('span.sortableRow', '#toolbar_container').has('span.sortableRowItem').each( function() {
                 rows.push($.map($('span.sortableRowItem', this), function(el) {
                     return $(el).data('name');
                 }).join(','));
             });
+            
+            var v = rows.join(';');
+            
             // set rows and trigger change
-            $('input[name="rows"]').val(rows.join(';')).change();
+            $('input[name="rows"]').val(v).change();
         },
         
         setLayout : function() {    
