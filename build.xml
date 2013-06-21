@@ -155,7 +155,7 @@
             <exclude name="README" />
 			
             <exclude name="**.zip" />
-            <exclude name="**build.xml" />
+            <exclude name="**build.xml**" />
             <exclude name="**/nbproject" />
             <exclude name="**/nbproject/**" />
             
@@ -195,6 +195,10 @@
             <exclude name="editor/tiny_mce/plugins/templatemanager/**" />
             <exclude name="editor/tiny_mce/plugins/jbtype/**" />
             <exclude name="editor/tiny_mce/plugins/microdata/**" />
+            
+            <exclude name="editor/extensions/popups/build.xml" />
+            <exclude name="editor/extensions/filesystem/build.xml" />
+            <exclude name="editor/extensions/links/build.xml" />
             
             <!-- Unit Test -->
             <exclude name="editor/tiny_mce/tests/**" />
