@@ -146,7 +146,7 @@ class WFModelPlugins extends WFModel {
         // recursively get all extension files
         $files = JFolder::files(WF_EDITOR_EXTENSIONS, '\.xml$', true, true);
 
-        foreach ($files as $file) {
+        foreach ($files as $file) {            
             $object = new StdClass();
             $object->folder = basename(dirname($file));
             $object->manifest = $file;
@@ -156,10 +156,8 @@ class WFModelPlugins extends WFModel {
             $object->description = '';
             $object->id = $object->folder . '.' . $object->name;
 
-            $xml = WFXMLElement::load($file);
-
-            if ($xml) {
-                if ((string) $xml->getName() != 'extension' && (string) $xml->getName() != 'install') {
+            if ($xml) {                
+                if ((string) $xml->getName() != 'extension' && (string) $xml->getName() != 'install') {                    
                     continue;
                 }
                 
@@ -188,9 +186,10 @@ class WFModelPlugins extends WFModel {
                     $language = JFactory::getLanguage();
                     $language->load('com_jce_' . $object->folder . '_' . $name, JPATH_SITE);
                 }
+                
+                $object->extension = $name;
+                $extensions[] = $object;
             }
-            $object->extension = $name;
-            $extensions[] = $object;
         }
 
         return $extensions;
