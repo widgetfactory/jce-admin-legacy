@@ -766,7 +766,11 @@ abstract class WFInstall {
             $site . '/language/en-GB/en-GB.com_jce_paste.ini',
             $site . '/language/en-GB/en-GB.com_jce_spellchecker.ini',
             // remove redundant parameter.js
-            $admin . '/media/js/parameter.js'
+            $admin . '/media/js/parameter.js',
+            // remove build.xml files
+            $site . '/editor/extensions/filesystem/build.xml',
+            $site . '/editor/extensions/links/build.xml',
+            $site . '/editor/extensions/popups/build.xml'
         );
 
         foreach ($files as $file) {
