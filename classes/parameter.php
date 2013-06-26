@@ -303,15 +303,12 @@ class WFParameter {
      * @since   2.2.5
      */
     public function getGroups() {
-        if (!is_array($this->xml)) {
-
-            return false;
-        }
-
         $results = array();
         
-        foreach ($this->xml as $name => $group) {
-            $results[] = $name;//$this->getNumParams($name);
+        if (is_array($this->xml)) {
+            foreach ($this->xml as $name => $group) {
+                $results[] = $name;//$this->getNumParams($name);
+            }
         }
         
         return $results;
@@ -498,7 +495,7 @@ class WFParameter {
 
             foreach ($params as $item) {
                 //if (is_a($item, 'WFParameter')) {
-                if ($item instanceof WFParameter) {
+                if ($item instanceof WFParameter) {                    
                     foreach ($item->getGroups() as $group) {
                         $label = $group;
                         $class = '';
