@@ -155,6 +155,9 @@ class WFModelPlugins extends WFModel {
             $object->name = $name;
             $object->description = '';
             $object->id = $object->folder . '.' . $object->name;
+            
+            // get core xml
+            $xml = WFXMLElement::load($file);
 
             if ($xml) {                
                 if ((string) $xml->getName() != 'extension' && (string) $xml->getName() != 'install') {                    
