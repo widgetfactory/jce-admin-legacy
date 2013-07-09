@@ -305,11 +305,11 @@ class WFModelEditor extends WFModelBase {
         }
 
         foreach ($this->scripts as $script) {
-            $output .= $tab . '<script type="text/javascript" src="' . $script . '" data-cfasync="false"></script>' . $end;
+            $output .= $tab . '<script data-cfasync="false" type="text/javascript" src="' . $script . '"></script>' . $end;
         }
 
         foreach ($this->javascript as $script) {
-            $output .= $tab . '<script type="text/javascript" data-cfasync="false">' . $script . '</script>' . $end;
+            $output .= $tab . '<script data-cfasync="false" type="text/javascript">' . $script . '</script>' . $end;
         }
 
         foreach ($this->styles as $style) {
