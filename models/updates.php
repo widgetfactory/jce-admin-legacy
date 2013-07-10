@@ -364,7 +364,7 @@ class WFModelUpdates extends WFModel {
      * @param 	String 	$download [optional] path to file to write to
      * @return 	Mixed 	Boolean or JSON String on error
      */
-    function connect($url, $data = '', $download = '') {
+    protected function connect($url, $data = '', $download = '') {
         @error_reporting(E_ERROR);
 
         jimport('joomla.filesystem.file');
@@ -456,13 +456,6 @@ class WFModelUpdates extends WFModel {
 
         return array('error' => WFText::_('WF_UPDATES_DOWNLOAD_ERROR_NO_CONNECT'));
     }
-
-    function log($msg) {
-        jimport('joomla.error.log');
-        $log = JLog::getInstance('updates.txt');
-        $log->addEntry(array('comment' => 'LOG: ' . $msg));
-    }
-
 }
 
 ?>
