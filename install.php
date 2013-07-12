@@ -20,64 +20,6 @@ if ((int) ini_get('memory_limit') < 32) {
 }
 
 abstract class WFInstall {
-
-    public static function cleanupInstall() {
-        $path = JPATH_ADMINISTRATOR . '/components/com_jce';
-
-        if (!is_file($path . '/jce.php')) {
-            self::removePackages();
-
-            $db = JFactory::getDBO();
-
-            // cleanup menus
-            if (defined('JPATH_PLATFORM')) {
-                $query = $db->getQuery(true);
-                $query->select('id')->from('#__menu')->where(array('alias = ' . $db->Quote('jce'), 'menutype = ' . $db->Quote('main')));
-
-                $db->setQuery($query);
-                $id = $db->loadResult();
-
-                $query->clear();
-
-                if ($id) {
-                    $table = JTable::getInstance('menu');
-
-                    // delete main item
-                    $table->delete((int) $id);
-
-                    // delete children
-                    $query->select('id')->from('#__menu')->where('parent_id = ' . $db->Quote($id));
-
-                    $db->setQuery($query);
-                    $ids = $db->loadColumn();
-
-                    $query->clear();
-
-                    if (!empty($ids)) {
-                        // Iterate the items to delete each one.
-                        foreach ($ids as $menuid) {
-                            $table->delete((int) $menuid);
-                        }
-                    }
-
-                    // Rebuild the whole tree
-                    $table->rebuild();
-                }
-            } else {
-                $db->setQuery('DELETE FROM #__components WHERE `option` = ' . $db->Quote('com_jce'));
-                $db->query();
-            }
-        }
-
-        if (is_file($path . '/install.script.php')) {
-            jimport('joomla.filesystem.folder');
-            jimport('joomla.filesystem.file');
-
-            JFile::delete($path . '/install.script.php');
-            JFolder::delete($path);
-        }
-    }
-
     public static function install($installer) {
         error_reporting(E_ERROR | E_WARNING);
 
@@ -211,24 +153,6 @@ abstract class WFInstall {
 
             return false;
         }
-    }
-
-    public static function uninstall() {
-        $db = JFactory::getDBO();
-
-        // remove Profiles table if its empty
-        if ((int) self::checkTableContents('#__wf_profiles') == 0) {
-            if (method_exists($db, 'dropTable')) {
-                $db->dropTable('#__wf_profiles', true);
-            } else {
-                $query = 'DROP TABLE IF EXISTS #__wf_profiles';
-                $db->setQuery($query);
-            }
-
-            $db->query();
-        }
-        // remove packages
-        self::removePackages();
     }
 
     private static function paramsToObject($data) {
@@ -1102,59 +1026,6 @@ abstract class WFInstall {
         }
     }
 
-    /**
-     * Uninstall the editor
-     * @return boolean
-     */
-    private static function removePackages() {
-        $app = JFactory::getApplication();
-        $db = JFactory::getDBO();
-
-        jimport('joomla.module.helper');
-        jimport('joomla.installer.installer');
-
-        $plugins = array(
-            'editors' => array('jce'),
-            'quickicon' => array('jcefilebrowser')
-        );
-
-        $modules = array('mod_jcefilebrowser');
-
-        // items to remove
-        $items = array(
-            'plugin' => array(),
-            'module' => array()
-        );
-
-        foreach ($plugins as $folder => $elements) {
-            foreach ($elements as $element) {
-                $item = self::getPlugin($folder, $element);
-
-                if ($item) {
-                    $items['plugin'][] = $item;
-                }
-            }
-        }
-
-        foreach ($modules as $module) {
-            $item = self::getModule($module);
-
-            if ($item) {
-                $items['module'][] = $item;
-            }
-        }
-
-        foreach ($items as $type => $extensions) {
-            if ($extensions) {
-                foreach ($extensions as $id) {
-                    $installer = new JInstaller();
-                    $installer->uninstall($type, $id);
-                    $app->enqueueMessage($installer->message);
-                }
-            }
-        }
-    }
-
     private static function addIndexfiles($paths) {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
@@ -1250,7 +1121,11 @@ abstract class WFInstall {
             $fields = $db->getTableColumns($table);
         } else {
             $db->setQuery('DESCRIBE ' . $table);
-            $fields = $db->loadResultArray();
+            if (method_exists($db, 'loadColumn')) {
+                $fields = $db->loadColumn();
+            } else {
+                $fields = $db->loadResultArray();
+            }
 
             // we need to check keys not values
             $fields = array_flip($fields);
