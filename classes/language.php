@@ -34,7 +34,13 @@ class WFLanguageParser extends JObject {
         $data = array();
 
         foreach ((array) $files as $file) {
-            $ini = @parse_ini_file($file, true);
+            //$ini = @parse_ini_file($file, true);
+            
+            $content = file_get_contents($file);
+            
+            if ($content) {
+                $ini = @parse_ini_string($content, true);
+            }
 
             if ($ini && is_array($ini)) {
                 // only include these keys
