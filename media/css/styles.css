@@ -199,6 +199,10 @@ html[dir="rtl"] #jce dl.adminformlist > dd > span:first-child {
     -webkit-border-radius : 3px;
     background-color: #fff;
 }
+#jce ul.widget-checklist li label.checkbox {
+    padding : 0;
+    margin : 0;
+}
 
 #jce ul.widget-checklist.sortable li, #jce ul.widget-checklist.sortable li label {
     cursor : move;
