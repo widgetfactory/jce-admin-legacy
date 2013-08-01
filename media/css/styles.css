@@ -741,6 +741,10 @@ to {transform:rotate(360deg);}
     margin: 10px 5px;
 }
 
+#jce tfoot .container .pagination {
+    text-align: center;
+}
+
 #jce tfoot .container .pagination .limit {
     float : none;
     margin : auto;
