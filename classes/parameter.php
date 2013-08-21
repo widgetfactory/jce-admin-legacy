@@ -539,7 +539,7 @@ class WFParameter {
         return false;
     }
 
-    public static function mergeParams($params1, $params2, $toObject = true) {
+    public static function mergeParams($params1 = array(), $params2 = array(), $toObject = true) {
         $merged = $params1;
 
         foreach ($params2 as $key => $value) {
