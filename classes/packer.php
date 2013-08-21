@@ -107,8 +107,8 @@ class WFPacker extends JObject {
 
         header("Vary: Accept-Encoding");
 
-        // expires after 7 days
-        $expires = 60 * 60 * 24 * 7;
+        // expires after 48 hours
+        $expires = 60 * 60 * 24 * 2;
 
         header("Cache-Control: maxage=" . $expires);
 
@@ -139,7 +139,16 @@ class WFPacker extends JObject {
             header("Content-Encoding: " . $encoding);
             $content = gzencode($content, 4, FORCE_GZIP);
         }
+        
+        // get content hash
+        $hash = md5($content);
+        
+        // set etag header
+        header("ETag: \"{$hash}\"");
 
+        // set content length
+        header("Content-Length: ".strlen($content));
+        
         // stream to client
         echo $content;
 
