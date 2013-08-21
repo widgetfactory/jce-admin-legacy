@@ -169,10 +169,10 @@ class WFModelEditor extends WFModelBase {
 
         // set compression
         if ($compress['css']) {
-            $this->addStyleSheet(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=pack&type=css&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
+            $this->addStyleSheet(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=pack&type=css&component_id=' . $component_id . '&' . $token . '=1');
         } else {
             // CSS
-            $this->addStyleSheet($this->getURL(true) . '/libraries/css/editor.css?version=' . $version);
+            $this->addStyleSheet($this->getURL(true) . '/libraries/css/editor.css');
 
             //$this->addStyleSheet($this->getURL(true) . '/libraries/bootstrap/css/bootstrap.css?version=' . $version);
             // get plugin styles
@@ -181,15 +181,15 @@ class WFModelEditor extends WFModelBase {
 
         // set compression
         if ($compress['javascript']) {
-            $this->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=pack&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
+            $this->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=pack&component_id=' . $component_id . '&' . $token . '=1');
         } else {
-            $this->addScript($this->getURL(true) . '/tiny_mce/tiny_mce.js?version=' . $version);
+            $this->addScript($this->getURL(true) . '/tiny_mce/tiny_mce.js');
             // Editor
-            $this->addScript($this->getURL(true) . '/libraries/js/editor.js?version=' . $version);
+            $this->addScript($this->getURL(true) . '/libraries/js/editor.js');
 
             if (array_key_exists('language_load', $settings)) {
                 // language
-                $this->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=loadlanguages&lang=' . $this->language . '&component_id=' . $component_id . '&' . $token . '=1&version=' . $version);
+                $this->addScript(JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=loadlanguages&lang=' . $this->language . '&component_id=' . $component_id . '&' . $token . '=1');
             }
         }
 
@@ -295,16 +295,30 @@ class WFModelEditor extends WFModelBase {
     private function getOutput() {
         $document = JFactory::getDocument();
 
-        $end = $document->_getLineEnd();
-        $tab = $document->_getTab();
+        $end        = $document->_getLineEnd();
+        $tab        = $document->_getTab();
+        
+        $version    = self::getVersion();
 
         $output = '';
 
         foreach ($this->stylesheets as $stylesheet) {
+            if (strpos($stylesheet, '?') === false) {
+                $stylesheet .= '?version=' . $version;
+            } else {
+                $stylesheet .= '&version=' . $version;
+            }
+            
             $output .= $tab . '<link rel="stylesheet" href="' . $stylesheet . '" type="text/css" />' . $end;
         }
 
         foreach ($this->scripts as $script) {
+            if (strpos($script, '?') === false) {
+                $script .= '?version=' . $version;
+            } else {
+                $script .= '&version=' . $version;
+            }
+            
             $output .= $tab . '<script data-cfasync="false" type="text/javascript" src="' . $script . '"></script>' . $end;
         }
 
@@ -812,7 +826,10 @@ class WFModelEditor extends WFModelBase {
             $file = ltrim($file, '/');
 
             if ($file && JFile::exists(JPATH_SITE . '/' . $file)) {
-                $stylesheets[] = $root . '/' . $file;
+                // create hash
+                $hash = md5_file(JPATH_SITE . '/' . $file);
+                
+                $stylesheets[] = $root . '/' . $file . '?etag=' . $hash;
             }
         }
 
