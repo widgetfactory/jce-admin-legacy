@@ -141,7 +141,7 @@ class WFPacker extends JObject {
         }
         
         // get content hash
-        $hash = md5($content);
+        $hash = hash('md5', $content);
         
         // set etag header
         header("ETag: \"{$hash}\"");
