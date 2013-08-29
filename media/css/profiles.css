@@ -10,6 +10,7 @@
 @import url("../../../../../components/com_jce/editor/libraries/css/select.css");
 @import url("colorpicker.css");
 @import url("extensions.css");
+@import url("styleformat.css");
 @import url("../../../../../components/com_jce/editor/libraries/css/files.css");
 @import url("layout.css");
 
@@ -287,7 +288,7 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     margin : 0 10px;
 }
 
-.ui-bootstrap #jce div.tab-pane.tabbable.tabs-left ul li a:first-child {
+.ui-bootstrap #jce div.tab-pane.tabbable.tabs-left ul li > a:first-child {
     max-width: 100px;
     padding-bottom: 20px;
     padding-top: 20px;
