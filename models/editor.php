@@ -807,7 +807,7 @@ class WFModelEditor extends WFModelBase {
                     $files = array_merge($files, $profile_custom);
                     // overwrite global config value	
                 } else {
-                    $files = $profile_custom;
+                    $files = (array) $profile_custom;
                 }
                 break;
             // inherit global config value
@@ -826,10 +826,15 @@ class WFModelEditor extends WFModelBase {
             $file = ltrim($file, '/');
 
             if ($file && JFile::exists(JPATH_SITE . '/' . $file)) {
-                // create hash
-                $hash = md5_file(JPATH_SITE . '/' . $file);
                 
-                $stylesheets[] = $root . '/' . $file . '?etag=' . $hash;
+                $etag = "";
+                
+                if (!$absolute) {
+                    // create hash
+                    $etag = '?etag=' . md5_file(JPATH_SITE . '/' . $file);
+                }
+ 
+                $stylesheets[] = $root . '/' . $file . $etag;
             }
         }
 
