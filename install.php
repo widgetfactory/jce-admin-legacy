@@ -984,9 +984,13 @@ abstract class WFInstall {
                         JFile::move($installer->getPath('extension_root') . '/' . basename($manifest), $installer->getPath('extension_root') . '/jce.xml');
                     }
                 }
-
+                
                 // add index files
-                self::addIndexfiles(array($installer->getPath('extension_root')));
+                if ($folder == 'editor' && !defined('JPATH_PLATFORM')) {
+                    self::addIndexfiles(array($installer->getPath('extension_root') . '/jce'));
+                } else {
+                    self::addIndexfiles(array($installer->getPath('extension_root')));
+                }
             } else {
                 $result .= '<li class="error">' . JText::_($installer->message, $installer->message) . '</li>';
             }
