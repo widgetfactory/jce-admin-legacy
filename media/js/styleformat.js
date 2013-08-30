@@ -86,7 +86,7 @@
 
         // create collapsible action
         $('a.close.collapse', 'div.styleformat').on('click.collapse', function(e) {
-            $(this).siblings().not('.styleformat-item-title, .close').toggle('fast');
+            $(this).siblings().not('.styleformat-item-title, .close').toggleClass('hide');
             $(this).toggleClass('icon-chevron-up icon-chevron-down');
         });
 
@@ -112,7 +112,7 @@
             $('input, select', $item).val("");
 
             // show all
-            $('div', $item).show();
+            $('div', $item).removeClass('hide');
 
             // trigger collapse
             $('a.close.collapse', $item).removeClass('icon-chevron-down').addClass('icon-chevron-up');
@@ -133,6 +133,12 @@
                 $(ui.placeholder).height($(ui.item).height());
             },
         });
+        
+        // set chevron
+        $('a.close.collapse', 'div.styleformat-list').removeClass('icon-chevron-up').addClass('icon-chevron-down');
+
+        // hide all
+        $('div.styleformat div', 'div.styleformat-list').not('div.styleformat-item-title').addClass('hide');
     });
 })(jQuery)
 
