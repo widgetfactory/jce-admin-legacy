@@ -207,7 +207,9 @@ class WFViewProfiles extends WFView {
                     'profiles.js',
                     'extensions.js',
                     'checklist.js',
-                    'styleformat.js'
+                    'styleformat.js',
+                    'fonts.js',
+                    'blockformats.js'
                 );
                 // Load scripts
                 foreach ($scripts as $script) {
