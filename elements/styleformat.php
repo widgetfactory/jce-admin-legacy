@@ -39,7 +39,7 @@ class WFElementStyleFormat extends WFElement {
         $items      = json_decode($value, true);
         
         if (empty($items)) {
-            $items = $default;
+            $items = array($default);
             $value = array();
         }
 
