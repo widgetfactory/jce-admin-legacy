@@ -131,14 +131,16 @@
             placeholder: "styleformat-highlight",
             start: function(event, ui) {
                 $(ui.placeholder).height($(ui.item).height());
-            },
+            }
         });
         
         // set chevron
         $('a.close.collapse', 'div.styleformat-list').removeClass('icon-chevron-up').addClass('icon-chevron-down');
 
         // hide all
-        $('div.styleformat div', 'div.styleformat-list').not('div.styleformat-item-title').addClass('hide');
+        if ($('div.styleformat', 'div.styleformat-list').length > 1) {
+            $('div.styleformat div', 'div.styleformat-list').not('div.styleformat-item-title').addClass('hide');
+        }
     });
 })(jQuery)
 
