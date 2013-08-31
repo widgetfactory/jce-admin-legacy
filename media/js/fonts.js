@@ -47,7 +47,7 @@
             var $item = $('div.fontlist ul li.font-item').last().clone(true).appendTo('div.fontlist ul').removeClass('hide');
 
             // clear inputs
-            $('input', $item).val("");
+            $('input', $item).val("").first().focus();
 
             e.preventDefault();
         });

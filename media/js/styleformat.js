@@ -108,14 +108,14 @@
         $('a.close.plus', 'div.styleformat-list').click(function(e) {
             var $item = $(this).prev().clone(true).insertBefore(this).show();
 
-            // clear inputs
-            $('input, select', $item).val("");
-
             // show all
             $('div', $item).removeClass('hide');
 
             // trigger collapse
             $('a.close.collapse', $item).removeClass('icon-chevron-down').addClass('icon-chevron-up');
+            
+            // clear inputs
+            $('input, select', $item).val("").first().focus();
 
             e.preventDefault();
         });
