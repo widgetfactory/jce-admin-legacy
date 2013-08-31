@@ -803,7 +803,8 @@ class WFModelEditor extends WFModelBase {
                 
                 $etag = "";
                 
-                if (!$absolute) {
+                // add etag
+                if ($absolute === false) {
                     // create hash
                     $etag = '?etag=' . md5_file(JPATH_SITE . '/' . $file);
                 }
@@ -971,6 +972,7 @@ class WFModelEditor extends WFModelBase {
                         }
                     }
                 }
+
                 break;
         }
 
