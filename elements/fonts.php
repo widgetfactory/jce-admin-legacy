@@ -58,7 +58,7 @@ class WFElementFonts extends WFElement {
         $output[] = '<li class="font-item hide"><input type="text" value="" placeholder="' . WFText::_('WF_LABEL_NAME') . '"><input type="text" value="" placeholder="' . WFText::_('WF_LABEL_FONTS') . ', eg: arial,helvetica,sans-serif" /><a href="#" class="close">&times;</a></li>';
 
         $output[] = '</ul>';
-        $output[] = '<a href="#" class="close plus">&plus;</a>';
+        $output[] = '<a href="#" class="close plus"><span>' . WFText::_('WF_PARAM_FONTS_NEW') . '</span><span>&plus;</span></a>';
         $output[] = '<input type="hidden" name="' . $control_name . '[' . $name . ']" value="" />';
         $output[] = '</div>';
 

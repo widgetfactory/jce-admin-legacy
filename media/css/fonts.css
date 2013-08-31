@@ -26,8 +26,18 @@
     max-width: 400px;
     padding: 5px;
     position: relative;
-    text-align: right;
     width: 100%;
+}
+
+#jce div.fontlist a.plus span {
+    width : 100%;
+    max-width : 380px;
+    display: inline-block;
+}
+
+#jce div.fontlist a.plus span + span {
+    width : 20px;
+    text-align : center;
 }
 
 #jce div.fontlist ul li,

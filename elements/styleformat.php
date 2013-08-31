@@ -88,7 +88,7 @@ class WFElementStyleFormat extends WFElement {
             $output[] = implode('', $elements);
         }
         
-        $output[] = '<a href="#" class="close plus">&plus;</a>';
+        $output[] = '<a href="#" class="close plus"><span>' . WFText::_('WF_STYLEFORMAT_NEW') . '</span><span>&plus;</span></a>';
         
         // hidden field
         $output[] = '<input type="hidden" name="' . $control_name . '[' . $name . ']" value="" />';

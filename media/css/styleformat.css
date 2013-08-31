@@ -12,8 +12,18 @@
     max-width: 470px;
     padding: 10px;
     width: 100%;
-    text-align: right;
     float : none;
+}
+
+#jce div.styleformat-list a.plus span {
+    width : 100%;
+    max-width : 450px;
+    display: inline-block;
+}
+
+#jce div.styleformat-list a.plus span + span {
+    width : 20px;
+    text-align : center;
 }
 
 #jce div.styleformat-list div.styleformat a.close {
