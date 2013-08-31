@@ -694,7 +694,9 @@ abstract class WFInstall {
             // remove build.xml files
             $site . '/editor/extensions/filesystem/build.xml',
             $site . '/editor/extensions/links/build.xml',
-            $site . '/editor/extensions/popups/build.xml'
+            $site . '/editor/extensions/popups/build.xml',
+            // remove legend.css
+            $admin . '/media/css/legend.css'
         );
 
         foreach ($files as $file) {
