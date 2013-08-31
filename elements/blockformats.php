@@ -31,7 +31,7 @@ class WFElementBlockformats extends WFElement {
         if (empty($value)) {
             $data = array_keys(self::$formats);
         } else {
-            $data = explode(",", $value);
+            $data = is_array($value) ? $value : explode(",", $value);
         }
         
         $output     = array();
@@ -50,7 +50,7 @@ class WFElementBlockformats extends WFElement {
         }
 
         $output[]   = '</ul>';
-        $output[]   = '<input type="hidden" name="' . $control_name . '[' . $name . ']" value="' . $value . '" />';
+        $output[]   = '<input type="hidden" name="' . $control_name . '[' . $name . ']" value="" />';
         $output[]   = '</div>';
         
         return implode("\n", $output);
