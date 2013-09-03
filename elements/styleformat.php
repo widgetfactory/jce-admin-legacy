@@ -77,7 +77,7 @@ class WFElementStyleFormat extends WFElement {
                 $elements[] = '<div class="styleformat-item-' . $k . '">' . $this->getField($k, $v) . '</div>';
             }
             // handle
-            $elements[] = '<a href="#" class="close handle">&equiv;</a>';
+            $elements[] = '<a href="#" class="close handle">&nbsp;</a>';
             // delete button
             $elements[] = '<a href="#" class="close">&times;</a>';
             // collapse

@@ -34,10 +34,12 @@
 }
 
 #jce div.styleformat-list div.styleformat a.close.handle {
-    left: 10px;
+    left: 5px;
     top: 5px;
-    cursor: ns-resize;
-    font-size: 14pt;
+    cursor: move;
+    width : 100%;
+    max-width : 370px;
+    line-height: 20px;
 }
 
 #jce div.styleformat-list div.styleformat a.close.collapse {
@@ -130,4 +132,3 @@
     max-width: 320px;
     margin-top : 5px;
 }
-
