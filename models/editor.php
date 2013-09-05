@@ -153,7 +153,7 @@ class WFModelEditor extends WFModelBase {
             $settings['skin_variant'] = isset($skin[1]) ? $skin[1] : '';
             $settings['body_class'] = $wf->getParam('editor.content_style_reset', $wf->getParam('editor.highcontrast', 0)) == 1 ? 'mceContentReset' : '';
             $settings['body_id'] = $wf->getParam('editor.body_id', '');
-            
+
             // get stylesheets
             $stylesheets = (array) self::getStyleSheets();
             // set stylesheets as string
@@ -295,10 +295,10 @@ class WFModelEditor extends WFModelBase {
     private function getOutput() {
         $document = JFactory::getDocument();
 
-        $end        = $document->_getLineEnd();
-        $tab        = $document->_getTab();
-        
-        $version    = self::getVersion();
+        $end = $document->_getLineEnd();
+        $tab = $document->_getTab();
+
+        $version = self::getVersion();
 
         $output = '';
 
@@ -308,7 +308,7 @@ class WFModelEditor extends WFModelBase {
             } else {
                 $stylesheet .= '&version=' . $version;
             }
-            
+
             $output .= $tab . '<link rel="stylesheet" href="' . $stylesheet . '" type="text/css" />' . $end;
         }
 
@@ -318,7 +318,7 @@ class WFModelEditor extends WFModelBase {
             } else {
                 $script .= '&version=' . $version;
             }
-            
+
             $output .= $tab . '<script data-cfasync="false" type="text/javascript" src="' . $script . '"></script>' . $end;
         }
 
@@ -472,24 +472,32 @@ class WFModelEditor extends WFModelBase {
                 if (array_key_exists($name, $plugins)) {
                     $custom = $wf->getParam($name . '.buttons');
 
-                    if ($custom) {
-                        $a = array();
+                    if (!empty($custom)) {
+                        $custom = array_filter((array) $custom);
 
-                        foreach (explode(',', $item) as $s) {
-                            if (in_array($s, (array) $custom) || $s == "|") {
-                                $a[] = $s;
+                        if (empty($custom)) {
+                            $item = "";
+                        } else {
+                            $a = array();
+
+                            foreach (explode(',', $item) as $s) {
+                                if (in_array($s, $custom) || $s == "|") {
+                                    $a[] = $s;
+                                }
                             }
+                            $item = implode(',', $a);
+                            // remove leading or trailing |
+                            $item = trim($item, '|');
                         }
-                        $item = implode(',', $a);
-                        // remove leading or trailing |
-                        $item = trim($item, '|');
                     }
                 }
 
-                // remove double |
-                $item = preg_replace('#(\|,)+#', '|,', $item);
+                if (!empty($item)) {
+                    // remove double |
+                    $item = preg_replace('#(\|,)+#', '|,', $item);
 
-                $buttons[] = $item;
+                    $buttons[] = $item;
+                }
             }
 
             if (!empty($buttons)) {
@@ -645,7 +653,7 @@ class WFModelEditor extends WFModelBase {
     public function getEditorFonts() {
         return "";
     }
-    
+
     /**
      * Return the current site template name
      *
@@ -670,9 +678,9 @@ class WFModelEditor extends WFModelBase {
         if (is_object($query)) {
             $query->select('id, template')->from('#__template_styles')->where(array("client_id = 0", "home = '1'"));
         } else {
-            $query = 'SELECT menuid as id, template' 
-            . ' FROM #__templates_menu' 
-            . ' WHERE client_id = 0';
+            $query = 'SELECT menuid as id, template'
+                    . ' FROM #__templates_menu'
+                    . ' WHERE client_id = 0';
         }
 
         $db->setQuery($query);
@@ -726,8 +734,8 @@ class WFModelEditor extends WFModelBase {
         wfimport('editor.libraries.classes.editor');
         $wf = WFEditor::getInstance();
 
-        $global     = intval($wf->getParam('editor.content_css', 1));
-        $profile    = intval($wf->getParam('editor.profile_content_css', 2));
+        $global = intval($wf->getParam('editor.content_css', 1));
+        $profile = intval($wf->getParam('editor.profile_content_css', 2));
 
         switch ($global) {
             // Custom template css files
@@ -792,7 +800,7 @@ class WFModelEditor extends WFModelBase {
         $files = array_unique($files);
 
         // get the root directory
-        $root = $absolute ? JPATH_SITE : JURI::root(true);        
+        $root = $absolute ? JPATH_SITE : JURI::root(true);
 
         // check for existence of each file and make array of stylesheets
         foreach ($files as $file) {
@@ -800,15 +808,15 @@ class WFModelEditor extends WFModelBase {
             $file = ltrim($file, '/');
 
             if ($file && JFile::exists(JPATH_SITE . '/' . $file)) {
-                
+
                 $etag = "";
-                
+
                 // add etag
                 if ($absolute === false) {
                     // create hash
                     $etag = '?etag=' . md5_file(JPATH_SITE . '/' . $file);
                 }
- 
+
                 $stylesheets[] = $root . '/' . $file . $etag;
             }
         }
@@ -834,8 +842,8 @@ class WFModelEditor extends WFModelBase {
         // process less files etc.
         if (!empty($less)) {
             // create token
-            $token      = WFToken::getToken();
-            $version    = self::getVersion();
+            $token = WFToken::getToken();
+            $version = self::getVersion();
 
             return JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=compileless&' . $token . '=1&version=' . $version;
         }
@@ -997,10 +1005,10 @@ class WFModelEditor extends WFModelBase {
 
         wfimport('admin.classes.packer');
 
-        $wf     = WFEditor::getInstance();
-        $files  = self::getStyleSheetsList(true);
-        
-        if (!empty($files)) {            
+        $wf = WFEditor::getInstance();
+        $files = self::getStyleSheetsList(true);
+
+        if (!empty($files)) {
             $packer = new WFPacker(array('files' => $files, 'type' => 'css'));
             $packer->pack(false);
         }
@@ -1009,6 +1017,7 @@ class WFModelEditor extends WFModelBase {
     public function getToken($id) {
         return '<input type="hidden" id="wf_' . $id . '_token" name="' . WFToken::getToken() . '" value="1" />';
     }
+
 }
 
 ?>

@@ -9,7 +9,7 @@
  */
 (function($) {
     $.fn.checkList = function(options) {
-        this.each( function() {
+        this.each(function() {
             return $.CheckList.init(this, options);
         });
     };
@@ -17,7 +17,7 @@
     $.CheckList = {
         options: {
             valueAsClassName: false,
-            onCheck         : $.noop
+            onCheck: $.noop
         },
         /**
          * Initilaise plugin
@@ -28,24 +28,23 @@
             var self = this;
             $.extend(this.options, options);
 
-            var ul 	= document.createElement('ul');
-            var elms 	= [];
+            var ul = document.createElement('ul');
+            var elms = [];
 
             if (el.nodeName == 'SELECT') {
-                $.each($('option', el), function() {
+                $('option', el).each(function() {
                     elms.push({
-                        name		: $(this).html(),
-                        value		: $(this).val(),
-                        selected 	: $(this).prop('selected'),
-                        disabled        : $(this).prop('disabled')
+                        name    : $(this).html(),
+                        value   : $(this).val(),
+                        selected: $(this).prop('selected'),
+                        disabled: $(this).prop('disabled')
                     });
                 });
-
             } else {
                 $.each(el.value.split(','), function() {
                     elms.push({
-                        name	: this,
-                        value	: this
+                        name: this,
+                        value: this
                     });
                 });
             }
@@ -54,7 +53,7 @@
             $(el).hide();
 
             $(ul).addClass('widget-checklist').insertBefore(el);
-            
+
             if ($(el).hasClass('buttonlist')) {
                 $(ul).wrap('<div class="defaultSkin buttonlist" />');
             }
@@ -75,7 +74,6 @@
                 });
             }
         },
-
         createElement: function(el, ul, n) {
             // Create elements
             var self = this, d = document, li = d.createElement('li'), plugin, button, toolbar;
@@ -83,69 +81,71 @@
             $(li).attr({
                 title: n.value
             }).addClass('ui-widget-content ui-corner-all').appendTo(ul);
-            
+
             if ($(el).hasClass('buttonlist')) {
                 // get the plugin name
                 var name = el.name, s = name.split(/[^\w]+/);
-            
+
                 if (s && s.length > 1) {
                     plugin = s[1];
-                } 
+                }
             }
 
-            if (plugin) {                
+            if (plugin) {
                 toolbar = $('span.profileLayoutContainerToolbar ul', '#profileLayoutTable');
-                button  = $('span[data-button="' + n.value + '"]', toolbar);
+                button = $('span[data-button="' + n.value + '"]', toolbar);
             }
 
             // Add checkboxes
-            $('<input type="checkbox" />').addClass('checkbox inline').prop('checked', n.selected).prop('disabled', n.disabled).click(function() {                
+            $('<input type="checkbox" />').addClass('checkbox inline').prop('checked', n.selected).prop('disabled', n.disabled).click(function() {
                 // add check and trigger
                 $(this).trigger('checklist:check', this.checked);
-            }).appendTo(li).on('checklist:check', function(e, state) {             
+            }).appendTo(li).on('checklist:check', function(e, state) {
                 // Trigger serialization
                 self.setValue(el, ul);
-                
+
                 // if button list and plugin name set
                 if (button) {
                     $(button).toggle(state);
                 }
-                
+
                 // trigger callback
                 self.options.onCheck.call(self, [this, n]);
-            });
-            
+            }).val(n.value);
+
             // Add label
             $(li).append('<label class="checkbox inline widget-checklist-' + n.value + '" title="' + n.name + '">' + n.name + '</label>');
 
-                        
-            if (button && $(el).hasClass('buttonlist')) {                                
+
+            if (button && $(el).hasClass('buttonlist')) {
                 $('label', li).before($(button).clone());
             }
         },
-
-        setValue: function(el, ul) {
+        setValue: function(el, ul, init) {
             var x = $.map($('input[type="checkbox"]:checked', $('li', ul)), function(n) {
-                return $(n).parents('li:first').attr('title');
+                return $(n).val();
             });
 
-            if (el.nodeName == 'SELECT') {                
+            if (el.nodeName == 'SELECT') {
                 var options = [];
-                
-                $('option', el).each(function(i) {                    
+
+                $('option', el).each(function(i) {
                     var n = $.inArray(this.value, x);
-                    
+
                     if (n >= 0) {
-                        $(this).prop('selected', true);
                         options[n] = this;
+                        $(this).attr('selected', 'selected').prop('selected', true);
                     } else {
-                        $(this).prop('selected', false);
                         options.push(this);
+                        $(this).removeAttr('selected').prop('selected', false);
                     }
                 });
-
-                $(el).empty().append(options).change();
-
+                
+                if (x.length === 0) {
+                    $(el).after('<input type="hidden" name="' + el.name + '" value="" class="isdirty" />');
+                } else {
+                    $(el).empty().append(options).change().next('input[type="hidden"]').remove();
+                }                
             } else {
                 $(el).val(x.join(',')).change();
             }
