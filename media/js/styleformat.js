@@ -9,6 +9,7 @@
     }
 
     $(document).ready(function() {
+        var init = true;
 
         $('div.styleformat-list').on('update', function() {
             var list = [], v = "";
@@ -38,9 +39,11 @@
             if (list.length) {
                 v = JSON.stringify(list);
             }
-
-            // serialize and return
-            $('input[type="hidden"]', this).val(v).change();
+            
+            if (!init) {
+                // serialize and return
+                $('input[type="hidden"]', this).val(v).change();
+            }
         });
 
         /**
@@ -141,6 +144,8 @@
         if ($('div.styleformat', 'div.styleformat-list').length > 1) {
             $('div.styleformat div', 'div.styleformat-list').not('div.styleformat-item-title').addClass('hide');
         }
+        // set init flag false
+        init = false;
     });
 })(jQuery)
 
