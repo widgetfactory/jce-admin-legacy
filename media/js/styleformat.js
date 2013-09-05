@@ -147,6 +147,4 @@
         // set init flag false
         init = false;
     });
-})(jQuery)
-
-
+})(jQuery);
