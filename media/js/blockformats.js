@@ -3,7 +3,7 @@
     $(document).ready(function() {
 
         $('div.blockformats').on('update', function() {
-            var v = $('li input:checked', this).map(function() {
+            var v = $('li input[type="checkbox"]:checked', this).map(function() {
                 return this.value;
             }).get().join();
 

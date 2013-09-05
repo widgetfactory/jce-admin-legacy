@@ -31,7 +31,8 @@ class WFElementBlockformats extends WFElement {
         if (empty($value)) {
             $data = array_keys(self::$formats);
         } else {
-            $data = is_array($value) ? $value : explode(",", $value);
+            $value  = is_array($value) ? $value : explode(",", $value);
+            $data   = array_unique(array_merge($value, array_keys(self::$formats)));
         }
         
         $output     = array();
@@ -40,11 +41,11 @@ class WFElementBlockformats extends WFElement {
         $output[]   = '<ul>';
 
         // create default font structure
-        foreach(self::$formats as $format => $label) {
-            if (in_array($format, $data)) {
-                $output[] = '<li><input type="checkbox" value="' . $format . '" checked="checked" /><span class="blockformat-'. $format .'">' . $label . '</span></li>';
+        foreach($data as $format) {
+            if (in_array($format, $value)) {
+                $output[] = '<li><input type="checkbox" value="' . $format . '" checked="checked" /><span class="blockformat-'. $format .'">' . self::$formats[$format] . '</span></li>';
             } else {
-                $output[] = '<li><input type="checkbox" value="' . $format . '" /><span class="blockformat-'. $format .'">' . $label . '</span></li>';
+                $output[] = '<li><input type="checkbox" value="' . $format . '" /><span class="blockformat-'. $format .'">' . self::$formats[$format] . '</span></li>';
             }
             
         }
