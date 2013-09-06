@@ -29,7 +29,8 @@ class WFElementBlockformats extends WFElement {
     public function fetchElement($name, $value, &$node, $control_name) {
 
         if (empty($value)) {
-            $data = array_keys(self::$formats);
+            $data   = array_keys(self::$formats);
+            $value  = array();
         } else {
             $value  = is_array($value) ? $value : explode(",", $value);
             $data   = array_unique(array_merge($value, array_keys(self::$formats)));
@@ -42,7 +43,7 @@ class WFElementBlockformats extends WFElement {
 
         // create default font structure
         foreach($data as $format) {
-            if (in_array($format, $value)) {
+            if (empty($value) || in_array($format, $value)) {
                 $output[] = '<li><input type="checkbox" value="' . $format . '" checked="checked" /><span class="blockformat-'. $format .'">' . self::$formats[$format] . '</span></li>';
             } else {
                 $output[] = '<li><input type="checkbox" value="' . $format . '" /><span class="blockformat-'. $format .'">' . self::$formats[$format] . '</span></li>';
