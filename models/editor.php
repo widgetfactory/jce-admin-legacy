@@ -151,7 +151,14 @@ class WFModelEditor extends WFModelBase {
             $skin = explode('.', $wf->getParam('editor.toolbar_theme', 'default', 'default'));
             $settings['skin'] = $skin[0];
             $settings['skin_variant'] = isset($skin[1]) ? $skin[1] : '';
-            $settings['body_class'] = $wf->getParam('editor.content_style_reset', $wf->getParam('editor.highcontrast', 0)) == 1 ? 'mceContentReset' : '';
+            
+            // get body class if any
+            $body_class     = $wf->getParam('editor.body_class', '');
+            // check for editor reset
+            $content_reset  = $wf->getParam('editor.content_style_reset', $wf->getParam('editor.highcontrast', 0)) == 1 ? 'mceContentReset' : '';
+            // combine body class and reset
+            $settings['body_class'] = trim($body_class . ' ' . $content_reset);
+            // set body id
             $settings['body_id'] = $wf->getParam('editor.body_id', '');
 
             // get stylesheets
