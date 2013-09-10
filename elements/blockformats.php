@@ -46,12 +46,12 @@ class WFElementBlockformats extends WFElement {
             $value      = is_array($value) ? $value : explode(",", $value);
             $formats    = array_keys(self::$formats);
             // get formats "missing" from $value
-            $diff = array_diff($formats, $value);
+            $diff = array_diff($formats, $value);            
             // pass value to data array
             $data = $value;
 
             while (list($key, $val) = each($diff)) {
-                self::array_insert($data, $key, array($val));
+                self::array_insert($data, $key + 1, array($val));
             }
         }
 
