@@ -33,7 +33,7 @@ class WFElementBlockformats extends WFElement {
      * @param array $insert_array
      */
     protected static function array_insert(&$array, $position, $insert_array) {
-        $first_array = array_splice($array, 0, $position);
+        $first_array = array_splice($array, 0, $position);       
         $array = array_merge($first_array, $insert_array, $array);
     }
 
@@ -43,16 +43,8 @@ class WFElementBlockformats extends WFElement {
             $data = array_keys(self::$formats);
             $value = array();
         } else {
-            $value      = is_array($value) ? $value : explode(",", $value);
-            $formats    = array_keys(self::$formats);
-            // get formats "missing" from $value
-            $diff = array_diff($formats, $value);            
-            // pass value to data array
-            $data = $value;
-
-            while (list($key, $val) = each($diff)) {
-                self::array_insert($data, $key + 1, array($val));
-            }
+            $value  = is_array($value) ? $value : explode(",", $value);
+            $data   = array_unique(array_merge($value, array_keys(self::$formats)));
         }
 
         $output = array();
