@@ -310,20 +310,24 @@ class WFModelEditor extends WFModelBase {
         $output = '';
 
         foreach ($this->stylesheets as $stylesheet) {
+            $version = md5(basename($stylesheet) . $version);
+            
             if (strpos($stylesheet, '?') === false) {
-                $stylesheet .= '?version=' . $version;
+                $stylesheet .= '?etag=' . $version;
             } else {
-                $stylesheet .= '&version=' . $version;
+                $stylesheet .= '&etag=' . $version;
             }
 
             $output .= $tab . '<link rel="stylesheet" href="' . $stylesheet . '" type="text/css" />' . $end;
         }
 
         foreach ($this->scripts as $script) {
+            $version = md5(basename($script) . $version);
+            
             if (strpos($script, '?') === false) {
-                $script .= '?version=' . $version;
+                $script .= '?etag=' . $version;
             } else {
-                $script .= '&version=' . $version;
+                $script .= '&etag=' . $version;
             }
 
             $output .= $tab . '<script data-cfasync="false" type="text/javascript" src="' . $script . '"></script>' . $end;
@@ -405,6 +409,7 @@ class WFModelEditor extends WFModelBase {
 
         $settings = array(
             'token' => WFToken::getToken(),
+            'etag'  => md5($this->getVersion()),
             'base_url' => JURI::root(),
             'language' => $this->language,
             //'language_load'		=> false,
