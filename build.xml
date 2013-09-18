@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.3.4" />
-    <property description="Component Version" name="version_package" value="234" />
+    <property description="Component Version" name="version" value="2.3.4RC5" />
+    <property description="Component Version" name="version_package" value="234RC5" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
@@ -28,6 +28,8 @@
                 <include name="**/*.jar"/>
             </fileset>
         </path>
+        <!-- generate checksum of this file -->
+        <checksum file="build.xml" property="etag" />
  
         <taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpathref="tasks.classpath" />
         <taskdef name="yuicompressor-moxiecode" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
@@ -263,6 +265,10 @@
             <replacefilter 
                 token="@@version_package@@" 
                 value="${version_package}"/>
+            
+            <replacefilter 
+                token="@@etag@@" 
+                value="${etag}"/>
         </replace>
         
         <!-- Load Header file -->

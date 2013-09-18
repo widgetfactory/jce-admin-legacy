@@ -7,14 +7,14 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-@import url("../../../../../components/com_jce/editor/libraries/css/select.css");
-@import url("colorpicker.css");
-@import url("extensions.css");
-@import url("styleformat.css");
-@import url("fonts.css");
-@import url("blockformats.css");
-@import url("../../../../../components/com_jce/editor/libraries/css/files.css");
-@import url("layout.css");
+@import url("../../../../../components/com_jce/editor/libraries/css/select.css?etag=@@etag@@");
+@import url("colorpicker.css?etag=@@etag@@");
+@import url("extensions.css?etag=@@etag@@");
+@import url("styleformat.css?etag=@@etag@@");
+@import url("fonts.css?etag=@@etag@@");
+@import url("blockformats.css?etag=@@etag@@");
+@import url("../../../../../components/com_jce/editor/libraries/css/files.css?etag=@@etag@@");
+@import url("layout.css?etag=@@etag@@");
 
 
 #profile-list a {
