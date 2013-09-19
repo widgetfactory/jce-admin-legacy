@@ -857,7 +857,7 @@ class WFModelEditor extends WFModelBase {
             $token = WFToken::getToken();
             $version = self::getVersion();
 
-            return JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=compileless&' . $token . '=1&version=' . $version;
+            return JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=compileless&' . $token . '=1&etag=' . md5($version);
         }
 
         return $stylesheets;
