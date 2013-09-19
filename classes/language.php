@@ -11,8 +11,9 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-/* https://code.google.com/p/web-tom/source/browse/trunk/includes/parse_ini_string.php?spec=svn15&r=15 */
+/* https://code.google.com/p/web-tom/source/browse/trunk/includes/parse_ini_string.php */
 if (!function_exists('parse_ini_string')) {
+
     function parse_ini_string($str, $process_sections = false) {
         $lines = explode("\n", $str);
         $return = Array();
@@ -37,6 +38,7 @@ if (!function_exists('parse_ini_string')) {
         }
         return $return;
     }
+
 }
 
 class WFLanguageParser extends JObject {
@@ -64,14 +66,10 @@ class WFLanguageParser extends JObject {
         foreach ((array) $files as $file) {
             $ini = false;
 
-            if (function_exists('parse_ini_file')) {
-                $ini = @parse_ini_file($file, true);
-            } else {
-                $content = file_get_contents($file);
+            $content = file_get_contents($file);
 
-                if ($content) {
-                    $ini = @parse_ini_string($content, true);
-                }
+            if ($content) {
+                $ini = @parse_ini_string($content, true);
             }
 
             if ($ini && is_array($ini)) {
