@@ -11,36 +11,6 @@
  */
 defined('_JEXEC') or die('RESTRICTED');
 
-/* https://code.google.com/p/web-tom/source/browse/trunk/includes/parse_ini_string.php */
-if (!function_exists('parse_ini_string')) {
-
-    function parse_ini_string($str, $process_sections = false) {
-        $lines = explode("\n", $str);
-        $return = Array();
-        $inSect = false;
-        foreach ($lines as $line) {
-            $line = trim($line);
-            if (!$line || $line[0] == "#" || $line[0] == ";")
-                continue;
-            if ($line[0] == "[" && $endIdx = strpos($line, "]")) {
-                $inSect = substr($line, 1, $endIdx - 1);
-                continue;
-            }
-            if (!strpos($line, '=')) // (We don't use "=== false" because value 0 is not valid as well)
-                continue;
-
-            $tmp = explode("=", $line, 2);
-            $tmp[1] = substr($tmp[1], 1, strlen($tmp[1]) - 2);
-            if ($process_sections && $inSect)
-                $return[$inSect][trim($tmp[0])] = ltrim($tmp[1]);
-            else
-                $return[trim($tmp[0])] = ltrim($tmp[1]);
-        }
-        return $return;
-    }
-
-}
-
 class WFLanguageParser extends JObject {
 
     protected $mode = 'editor';
@@ -60,6 +30,21 @@ class WFLanguageParser extends JObject {
         $this->setProperties($config);
     }
 
+    protected static function object_to_array($data) {
+        if (is_array($data) || is_object($data)) {
+            $result = array();
+            foreach ($data as $key => $value) {
+                if (is_string($value)) {
+                    $value = str_replace(array("\n", "\r"), array('\n', '\r'), $value);
+                }
+
+                $result[$key] = self::object_to_array($value);
+            }
+            return $result;
+        }
+        return $data;
+    }
+
     protected static function processLanguageINI($files, $sections = array(), $filter = '') {
         $data = array();
 
@@ -69,7 +54,13 @@ class WFLanguageParser extends JObject {
             $content = file_get_contents($file);
 
             if ($content) {
-                $ini = @parse_ini_string($content, true);
+                if (function_exists('parse_ini_string')) {
+                    $ini = @parse_ini_string($content, true);
+                } else {
+                    $registry = JRegistryFormat::getInstance('INI');
+                    $obj = $registry->stringToObject($content, true);
+                    $ini = self::object_to_array($obj);
+                }
             }
 
             if ($ini && is_array($ini)) {
