@@ -58,7 +58,7 @@ class WFLanguageParser extends JObject {
                     $ini = @parse_ini_string($content, true);
                 } else {
                     $registry = JRegistryFormat::getInstance('INI');
-                    $obj = $registry->stringToObject($content, array('processSections' => true));
+                    $obj = $registry->stringToObject($content, true);
                     $ini = self::object_to_array($obj);
                 }
             }
