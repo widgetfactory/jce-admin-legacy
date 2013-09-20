@@ -142,7 +142,10 @@
                 });
                 
                 if (x.length === 0) {
-                    $(el).after('<input type="hidden" name="' + el.name + '" value="" class="isdirty" />');
+                    // remove "Array"
+                    el.name = el.name.replace("[]", "");
+                    
+                    $(el).removeClass('isdirty').after('<input type="hidden" name="' + el.name + '" value="" class="isdirty" />');
                 } else {
                     $(el).empty().append(options).change().next('input[type="hidden"]').remove();
                 }                
