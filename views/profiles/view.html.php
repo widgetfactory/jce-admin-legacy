@@ -96,7 +96,13 @@ class WFViewProfiles extends WFView {
                 $where = array();
 
                 if ($search) {
-                    $where[] = 'LOWER( p.name ) LIKE ' . $db->Quote('%' . method_exists($db, 'escape') ? $db->escape($search, true) : $db->getEscaped($search, true) . '%', false);
+                    if (method_exists($db, 'escape')) {
+                        $search = $db->escape($search, true);
+                    } else {
+                        $search = $db->getEscaped($search, true);
+                    }
+                    
+                    $where[] = 'LOWER( p.name ) LIKE ' . $db->Quote('%' . $search . '%', false);
                 }
                 if ($filter_state) {
                     if ($filter_state == 'P') {
