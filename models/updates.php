@@ -434,6 +434,11 @@ class WFModelUpdates extends WFModel {
             }
 
             $result = curl_exec($ch);
+            
+            // file download
+            if ($result === false) {
+                return array('error' => 'CURL ERROR : ' . curl_error($ch));
+            }
 
             // file download
             if ($download && $result === false) {
