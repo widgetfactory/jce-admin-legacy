@@ -44,10 +44,10 @@
 }
 #jce button span.browse {
     left : 0;
-    background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1100px; !important;
+    background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1100px !important;
 }
 #jce button span.import {
-    background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -480px; !important;
+    background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -480px !important;
 }
 #jce button.ui-state-loading span.ui-icon {
    background : url("../../../../../components/com_jce/editor/libraries/img/load.gif") no-repeat center;
