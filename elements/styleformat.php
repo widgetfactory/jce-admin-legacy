@@ -17,7 +17,7 @@ defined('JPATH_BASE') or die('RESTRICTED');
 class WFElementStyleFormat extends WFElement {
 
     protected $blocks = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'address', 'pre', 'blockquote', 'center', 'dir', 'fieldset', 'header', 'footer', 'article', 'section', 'hgroup', 'aside', 'nav', 'figure');
-    protected $inline = array('span', 'code', 'em', 'strong', 'samp', 'sub', 'sup');
+    protected $inline = array('span', 'code', 'em', 'strong', 'samp', 'sub', 'sup', 'dfn', 'kbd', 'var');
     protected $wrapper = array();
     protected $merge = array();
 
