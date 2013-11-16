@@ -183,8 +183,8 @@
             <exclude name="editor/extensions/popups/rokbox/**" />
             <exclude name="editor/extensions/popups/highslide*" />
             <exclude name="editor/extensions/popups/highslide/**" />
-            <exclude name="editor/extensions/mediaplayer/myriad" />
-            <exclude name="editor/extensions/mediaplayer/myriad/**" />
+            <exclude name="editor/extensions/aggregator/myriad*" />
+            <exclude name="editor/extensions/aggregator/myriad/**" />
             
             <exclude name="editor/extensions/imageeditor/**" />
 			
