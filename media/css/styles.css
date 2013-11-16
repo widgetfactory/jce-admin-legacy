@@ -124,7 +124,7 @@ html[dir="rtl"] #jce dl.adminformlist > dd {
 }
 #jce ul.adminformlist > li > div {
     margin-left: 200px;
-    clear : both;
+    clear : right;
     padding: 10px 0;
 }
 #jce ul.adminformlist > li > div h4 {
