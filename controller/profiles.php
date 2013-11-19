@@ -178,16 +178,13 @@ class WFControllerProfiles extends WFController {
                     // get plugins
                     $plugins = explode(',', $row->plugins);
                     
-                    // addigne plugin data
+                    // assign plugin data
                     foreach ($plugins as $plugin) {
                         // add plugin params to array
                         if (array_key_exists($plugin, $value)) {
                             $json[$plugin] = $value[$plugin];
                         }
                     }
-
-                    // clean data
-                    $json = $this->cleanInput($json);
 
                     // combine and encode as json string
                     $value = json_encode(self::array_merge_recursive_distinct($data, $json));
