@@ -82,7 +82,7 @@ class WFViewCpanel extends WFView {
                 // get params definitions
                 $params = new WFParameter($component->params, '', 'preferences');
                 
-                $width      = (int) $params->get('browser_width', 780);
+                $width      = (int) $params->get('browser_width', 790);
                 $height     = (int) $params->get('browser_height', 560);
                 
                 if (empty($link)) {
