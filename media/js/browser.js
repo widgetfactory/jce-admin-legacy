@@ -30,9 +30,16 @@
                             }
                         });
                     } else {*/
+                        var w = Math.max($('#browser').width(), 768), h = Math.max($('#browser').height(), 520);
+                    
                         $.Dialog.iframe('Help', 'index.php?option=com_jce&view=help&tmpl=component&section=editor&category=browser', {
-                            width   : 768,
-                            height  : 520
+                            width   : w,
+                            height  : h,
+                            onFrameLoad : function() {
+                                if ($(this).width() < 768) {
+                                    $(this).width(768);
+                                }
+                            }
                         });
                     //}
                 }
