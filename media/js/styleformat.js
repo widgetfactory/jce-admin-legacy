@@ -138,7 +138,7 @@
         });
         
         // set chevron
-        $('a.close.collapse', 'div.styleformat-list').removeClass('icon-chevron-up').addClass('icon-chevron-down');
+        //$('a.close.collapse', 'div.styleformat-list').removeClass('icon-chevron-up').addClass('icon-chevron-down');
 
         // hide all
         if ($('div.styleformat', 'div.styleformat-list').length > 1) {
