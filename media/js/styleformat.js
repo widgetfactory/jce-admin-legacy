@@ -117,8 +117,8 @@
             // trigger collapse
             $('a.close.collapse', $item).removeClass('icon-chevron-down').addClass('icon-chevron-up');
             
-            // clear inputs
-            $('input, select', $item).val("").first().focus();
+            // clear inputs and remove styles
+            $('input, select', $item).val("").removeAttr('style').removeAttr('class').first().focus();
 
             e.preventDefault();
         });
