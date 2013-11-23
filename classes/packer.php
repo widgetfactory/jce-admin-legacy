@@ -181,13 +181,18 @@ class WFPacker extends JObject {
      * @param file File path where data comes from
      * @param $data Data from file
      */
-    protected function importCss($data) {
+    protected function importCss($data) {        
         if (preg_match_all('#@import url\([\'"]?([^\'"\)]+)[\'"]?\);#i', $data, $matches)) {
 
             $data = '';
 
             foreach ($matches[1] as $match) {
-                $data .= $this->getText(realpath($this->get('_cssbase') . '/' . $match));
+                // get file path from url
+                $url = parse_url($match, PHP_URL_PATH);
+                
+                if ($url) {
+                    $data .= $this->getText(realpath($this->get('_cssbase') . '/' . $url));
+                } 
             }
 
             return $data;
