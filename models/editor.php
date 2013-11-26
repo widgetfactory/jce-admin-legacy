@@ -151,11 +151,11 @@ class WFModelEditor extends WFModelBase {
             $skin = explode('.', $wf->getParam('editor.toolbar_theme', 'default', 'default'));
             $settings['skin'] = $skin[0];
             $settings['skin_variant'] = isset($skin[1]) ? $skin[1] : '';
-            
+
             // get body class if any
-            $body_class     = $wf->getParam('editor.body_class', '');
+            $body_class = $wf->getParam('editor.body_class', '');
             // check for editor reset
-            $content_reset  = $wf->getParam('editor.content_style_reset', $wf->getParam('editor.highcontrast', 0)) == 1 ? 'mceContentReset' : '';
+            $content_reset = $wf->getParam('editor.content_style_reset', $wf->getParam('editor.highcontrast', 0)) == 1 ? 'mceContentReset' : '';
             // combine body class and reset
             $settings['body_class'] = trim($body_class . ' ' . $content_reset);
             // set body id
@@ -310,26 +310,34 @@ class WFModelEditor extends WFModelBase {
         $output = '';
 
         foreach ($this->stylesheets as $stylesheet) {
-            $version = md5(basename($stylesheet) . $version);
-            
-            if (strpos($stylesheet, '?') === false) {
-                $stylesheet .= '?etag=' . $version;
-            } else {
-                $stylesheet .= '&etag=' . $version;
+
+            // don't add hash to dynamic php url
+            if (strpos($stylesheet, 'index.php') === false) {
+                $version = md5(basename($stylesheet) . $version);
+
+                if (strpos($stylesheet, '?') === false) {
+                    $stylesheet .= '?' . $version;
+                } else {
+                    $stylesheet .= '&' . $version;
+                }
             }
 
             $output .= $tab . '<link rel="stylesheet" href="' . $stylesheet . '" type="text/css" />' . $end;
         }
 
         foreach ($this->scripts as $script) {
-            $version = md5(basename($script) . $version);
-            
-            if (strpos($script, '?') === false) {
-                $script .= '?etag=' . $version;
-            } else {
-                $script .= '&etag=' . $version;
-            }
 
+            // don't add hash to dynamic php url
+            if (strpos($script, 'index.php') === false) {
+
+                $version = md5(basename($script) . $version);
+
+                if (strpos($script, '?') === false) {
+                    $script .= '?' . $version;
+                } else {
+                    $script .= '&' . $version;
+                }
+            }
             $output .= $tab . '<script data-cfasync="false" type="text/javascript" src="' . $script . '"></script>' . $end;
         }
 
@@ -409,7 +417,7 @@ class WFModelEditor extends WFModelBase {
 
         $settings = array(
             'token' => WFToken::getToken(),
-            'etag'  => md5($this->getVersion()),
+            'etag' => md5($this->getVersion()),
             'base_url' => JURI::root(),
             'language' => $this->language,
             //'language_load'		=> false,
@@ -826,7 +834,7 @@ class WFModelEditor extends WFModelBase {
                 // add etag
                 if ($absolute === false) {
                     // create hash
-                    $etag = '?etag=' . md5_file(JPATH_SITE . '/' . $file);
+                    $etag = '?' . md5_file(JPATH_SITE . '/' . $file);
                 }
 
                 $stylesheets[] = $root . '/' . $file . $etag;
@@ -857,7 +865,7 @@ class WFModelEditor extends WFModelBase {
             $token = WFToken::getToken();
             $version = self::getVersion();
 
-            return JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=compileless&' . $token . '=1&etag=' . md5($version);
+            return JURI::base(true) . '/index.php?option=com_jce&view=editor&layout=editor&task=compileless&' . $token . '=1';
         }
 
         return $stylesheets;
@@ -921,16 +929,16 @@ class WFModelEditor extends WFModelBase {
                 $files = array();
 
                 // add core file
-                $files[] = WF_EDITOR . '/' . "tiny_mce/tiny_mce" . $suffix . ".js";
+                $files[] = WF_EDITOR . "/tiny_mce/tiny_mce" . $suffix . ".js";
 
                 // Add themes
                 foreach ($themes as $theme) {
-                    $files[] = WF_EDITOR . '/' . "tiny_mce/themes/" . $theme . "/editor_template" . $suffix . ".js";
+                    $files[] = WF_EDITOR . "/tiny_mce/themes/" . $theme . "/editor_template" . $suffix . ".js";
                 }
 
                 // Add plugins
                 foreach ($plugins as $plugin) {
-                    $files[] = WF_EDITOR . '/' . "tiny_mce/plugins/" . $plugin . "/editor_plugin" . $suffix . ".js";
+                    $files[] = WF_EDITOR . "/tiny_mce/plugins/" . $plugin . "/editor_plugin" . $suffix . ".js";
                 }
 
                 // add Editor file

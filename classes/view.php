@@ -57,7 +57,7 @@ class WFView extends WFViewBase {
         
         foreach ($this->stylesheets as $style) {
             if (strpos($style, '?version=') === false || strpos($style, '?etag=') === false) {
-                $style .= '?etag=' . md5(basename($style) . $model->getVersion());
+                $style .= '?' . md5(basename($style) . $model->getVersion());
             }
 
             $document->addCustomTag($tab . '<link rel="stylesheet" href="' . $style . '" type="text/css" />' . $end);
@@ -65,7 +65,7 @@ class WFView extends WFViewBase {
         
         foreach ($this->scripts as $script) {
             if (strpos($script, '?version=') === false || strpos($script, '?etag=') === false) {
-                $script .= '?etag=' . md5(basename($script) . $model->getVersion());
+                $script .= '?' . md5(basename($script) . $model->getVersion());
             }
             
             $document->addCustomTag($tab . '<script src="' . $script . '" type="text/javascript"></script>' . $end);
