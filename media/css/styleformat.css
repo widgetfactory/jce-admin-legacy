@@ -48,6 +48,10 @@
     font-size: 14pt;
     height: 20px;
 }
+/* fix duplicate icon in Joomla 3 */
+#jce div.styleformat-list div.styleformat a.close.collapse:before {
+    content : "";
+}
 
 #jce div.styleformat-list div.styleformat,
 #jce div.styleformat-list div.styleformat-highlight {
