@@ -16,11 +16,13 @@ defined('JPATH_BASE') or die('RESTRICTED');
  */
 class WFElementStyleFormat extends WFElement {
 
-    protected $blocks = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'address', 'pre', 'blockquote', 'center', 'dir', 'fieldset', 'header', 'footer', 'article', 'section', 'hgroup', 'aside', 'nav', 'figure');
-    protected $inline = array('span', 'code', 'em', 'strong', 'samp', 'sub', 'sup', 'dfn', 'kbd', 'var');
     protected $wrapper = array();
     protected $merge = array();
-
+    
+    protected $sections     = array('section','nav','article','aside','h1', 'h2', 'h3', 'h4', 'h5', 'h6','header','footer','address','main');
+    protected $grouping     = array('p','pre','blockquote','figure','figcaption','div');
+    protected $textlevel    = array('em','strong','small','s','cite','q','dfn','abbr','data','time','code','var','samp','kbd','sub','i','b','u','mark','ruby','rt','rp','bdi','bdo','span','wbr');
+    
     /**
      * Element type
      *
@@ -33,10 +35,10 @@ class WFElementStyleFormat extends WFElement {
         $output = array();
         
         // default item list (remove "attributes" for now)
-        $default    = array('title' => '', 'element' => '', 'selector' => '', 'classes' => '', 'styles' => '');
+        $default = array('title' => '', 'element' => '', 'selector' => '', 'classes' => '', 'styles' => '');
         
         // pass to items
-        $items      = json_decode($value, true);
+        $items = json_decode($value, true);
         
         if (empty($items)) {
             $items = array($default);
@@ -102,22 +104,30 @@ class WFElementStyleFormat extends WFElement {
             JHTML::_('select.option', '', WFText::_('WF_OPTION_NOT_SET'))
         );
         
-        $options[] = JHTML::_('select.option',  '<OPTGROUP>', WFText::_('WF_OPTION_INLINE_ELEMENTS'));
+        $options[] = JHTML::_('select.option',  '<OPTGROUP>', WFText::_('WF_OPTION_SECTION_ELEMENTS'));
 
-        foreach ($this->inline as $item) {
+        foreach ($this->sections as $item) {
             $options[] = JHTML::_('select.option', $item, $item);
         }
         
         $options[] = JHTML::_('select.option',  '</OPTGROUP>');
         
-        $options[] = JHTML::_('select.option',  '<OPTGROUP>', WFText::_('WF_OPTION_BLOCK_ELEMENTS'));
+        $options[] = JHTML::_('select.option',  '<OPTGROUP>', WFText::_('WF_OPTION_GROUPING_ELEMENTS'));
 
-        foreach ($this->blocks as $item) {
+        foreach ($this->grouping as $item) {
             $options[] = JHTML::_('select.option', $item, $item);
         }
         
         $options[] = JHTML::_('select.option',  '</OPTGROUP>');
+        
+        $options[] = JHTML::_('select.option',  '<OPTGROUP>', WFText::_('WF_OPTION_TEXT_LEVEL_ELEMENTS'));
 
+        foreach ($this->textlevel as $item) {
+            $options[] = JHTML::_('select.option', $item, $item);
+        }
+        
+        $options[] = JHTML::_('select.option',  '</OPTGROUP>');
+        
         return $options;
     }
 
@@ -132,8 +142,15 @@ class WFElementStyleFormat extends WFElement {
             case 'inline':
             case 'block':
             case 'element':
+                
+                $class = "";
+                
+                // make element editable
+                /*if ($key === "element") {
+                    $class = ' class="editable"';
+                }*/
 
-                $item[] = JHTML::_('select.genericlist', $this->elements, null, 'data-key="' . $key . '"', 'value', 'text', $value);
+                $item[] = JHTML::_('select.genericlist', $this->elements, null, 'data-key="' . $key . '"' . $class, 'value', 'text', $value);
 
                 break;
             case 'title':
