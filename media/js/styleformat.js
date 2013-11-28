@@ -97,11 +97,16 @@
         $('div.styleformat a.close', 'div.styleformat-list').not('.plus, .handle, .collapse').click(function(e) {
             // if there  is only one item, clear and hide
             if ($('div.styleformat-list div.styleformat').length === 1) {
-                $(this).parent().hide();
+                
+                // clear inputs and remove styles
+                $('input, select', this.parentNode).val("").removeAttr('style').removeAttr('class');
+                // hide
+                $(this.parentNode).hide();
                 // otherwise remove it
             } else {
-                $(this).parent().remove();
+                $(this.parentNode).remove();
             }
+            
             $('div.styleformat-list').trigger('update');
 
             e.preventDefault();
@@ -119,7 +124,7 @@
             
             // clear inputs and remove styles
             $('input, select', $item).val("").removeAttr('style').removeAttr('class').first().focus();
-
+            
             e.preventDefault();
         });
 
