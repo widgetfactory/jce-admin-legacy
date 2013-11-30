@@ -360,7 +360,7 @@ class WFModelUpdates extends WFModel {
         // get wrappers
         $wrappers = stream_get_wrappers();
         
-        return function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen') && function_exists('stream_Context_create') && in_array('https', $wrappers);
+        return function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen') && function_exists('stream_context_create') && in_array('https', $wrappers);
     }
 
     /**
