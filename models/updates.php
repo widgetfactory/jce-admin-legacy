@@ -356,6 +356,13 @@ class WFModelUpdates extends WFModel {
         return json_encode($result);
     }
 
+    private static function canfopen() {
+        // get wrappers
+        $wrappers = stream_get_wrappers();
+        
+        return function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen') && function_exists('stream_Context_create') && in_array('https', $wrappers);
+    }
+
     /**
      * @copyright   Copyright (C) 2009 Ryan Demmer. All rights reserved.
      * @copyright   Copyright (C) 2006-2010 Nicholas K. Dionysopoulos
@@ -371,14 +378,11 @@ class WFModelUpdates extends WFModel {
 
         $fp = false;
 
-        // get wrappers
-        $wrappers = stream_get_wrappers();
-
-        // check for support
-        $fopen = function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen') && in_array('https', $wrappers);
+        // certificate file (Joomla 2.5 and 3.x only)
+        $cacert = JPATH_LIBRARIES . '/joomla/http/transport/cacert.pem';
 
         // try file_get_contents first (requires allow_url_fopen)
-        if ($fopen) {
+        if (self::canfopen()) {
             if ($download) {
                 // use Joomla! installer function
                 jimport('joomla.installer.helper');
@@ -407,6 +411,11 @@ class WFModelUpdates extends WFModel {
             }
 
             $ch = curl_init($url);
+
+            if (file_exists($cacert)) {
+                @curl_setopt($ch, CURLOPT_CAINFO, $cacert);
+            }
+
             curl_setopt($ch, CURLOPT_HEADER, 0);
 
             // Pretend we are IE7, so that webservers play nice with us
@@ -434,7 +443,7 @@ class WFModelUpdates extends WFModel {
             }
 
             $result = curl_exec($ch);
-            
+
             // file download
             if ($result === false) {
                 return array('error' => 'CURL ERROR : ' . curl_error($ch));
