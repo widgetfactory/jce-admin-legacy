@@ -281,21 +281,22 @@
         
         <jsmin force="true" copyright="${header_tinymce}">
             <fileset dir="${component_export_dir}">
-                <contains text="http://tinymce.moxiecode.com/license" />
-                <contains text="http://www.tinymce.com/license" />          
-                <include name="**/*.js" />
+                        
+                <include name="**/**.js" />
                 <exclude name="**/**-min.js" />
                 <exclude name="**/jquery/**" />
                 <exclude name="**/tiny_mce.js" />
                 <exclude name="**/tiny_mce_popup.js" />
                 <exclude name="**/codemirror/**" />                
                 <exclude name="**/plupload/**" />
+                
+                <contains text="http://www.tinymce.com/license"  casesensitive="no" />  
             </fileset>
         </jsmin>
         
         <jsmin force="true" copyright="${header}">
             <fileset dir="${component_export_dir}">                
-                <include name="**/*.js" />
+                <include name="**/**.js" />
                 <exclude name="**/**-min.js" />
                 <exclude name="**/jquery/**" />
                 <exclude name="**/tiny_mce.js" />
