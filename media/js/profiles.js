@@ -65,7 +65,7 @@
                     $(ui.oldTab).removeClass('active');
                     $(ui.newTab).addClass('active');
                 }
-            }).find('ul.ui-tabs-nav > li.ui-state-default:not(.ui-state-disabled):first').addClass('active').children('a.ui-tabs-anchor').click();
+            }).find('ul.ui-tabs-nav > li.ui-state-default').not('.tab-disabled').first().addClass('active').children('a.ui-tabs-anchor').click();
 
             $('input.checkbox-list-toggle-all').click(function() {
                 $('input[type="checkbox"]', '#user-groups').prop('checked', this.checked).trigger('check');
@@ -406,7 +406,7 @@
         setParams: function(plugins) {
             var $tabs = $('div#tabs-plugins > ul.nav.nav-tabs > li');
 
-            $tabs.removeClass('tab-disabled ui-state-disabled').removeClass('active ui-tabs-active ui-state-active').each(function(i) {
+            $tabs.removeClass('tab-disabled ui-state-disabled active ui-tabs-active ui-state-active').each(function(i) {
                 var name = $(this).data('name');
 
                 var s = $.inArray(name, plugins) != -1;
@@ -418,7 +418,7 @@
                 }
             });
 
-            $tabs.not('.tab-disabled').first().addClass('active ui-tabs-active ui-state-active');
+            $tabs.not('.tab-disabled').first().addClass('active ui-tabs-active ui-state-active').children('a.ui-tabs-anchor').click();
         }
     };
 
