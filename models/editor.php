@@ -462,8 +462,8 @@ class WFModelEditor extends WFModelBase {
 
         // backwards compatability map
         $map = array(
-            'paste' => 'clipboard',
-            'spacer' => '|'
+            'paste'     => 'clipboard',
+            'spacer'    => '|'
         );
 
         $x = 0;
@@ -481,12 +481,14 @@ class WFModelEditor extends WFModelBase {
                 }
 
                 // check if button should be in toolbar
-                if (array_key_exists($item, $icons) === false) {
-                    continue;
+                if ($item !== "|") {
+                    if (array_key_exists($item, $icons) === false) {
+                        continue;
+                    }
+                    
+                    // assign icon
+                    $item = $icons[$item]->icon;
                 }
-
-                // assign icon
-                $item = $icons[$item]->icon;
 
                 // check for custom plugin buttons
                 if (array_key_exists($name, $plugins)) {
