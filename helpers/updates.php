@@ -25,18 +25,7 @@ class UpdatesHelper {
     public function check($url, $data) {
         $result = false;
 
-        if (self::hasFOPEN()) {
-            $options = array('http' => array('method' => 'POST', 'timeout' => 10, 'content' => $data));
-
-            $context = stream_context_create($options);
-            $result = @file_get_contents($url, false, $context);
-
-            if ($result === false) {
-                return array('error' => WFText::_('Update check failed : Invalid response from update server'));
-            }
-
-            return $result;
-        } else if (self::hasCURL()) {
+        if (self::hasCURL()) {
             $ch = curl_init($url);
 
             $cacert = JPATH_LIBRARIES . '/joomla/http/transport/cacert.pem';
@@ -70,9 +59,18 @@ class UpdatesHelper {
             }
 
             curl_close($ch);
+        } else if (self::hasFOPEN()) {
+            $options = array('http' => array('method' => 'POST', 'timeout' => 10, 'content' => $data));
 
-            return $result;
+            $context = stream_context_create($options);
+            $result = @file_get_contents($url, false, $context);
+
+            if ($result === false) {
+                return array('error' => WFText::_('Update check failed : Invalid response from update server'));
+            }
         }
+        
+        return $result;
     }
 
     /**
@@ -190,12 +188,14 @@ class UpdatesHelper {
         if (is_null($result)) {
             $result = function_exists('curl_init');
 
-            if ($result) {                        
+            if ($result) {    
+                $cacert = JPATH_LIBRARIES . '/joomla/http/transport/cacert.pem';
+                
                 // check for SSL support
                 $version = curl_version();
                 $ssl_supported = ($version['features'] & CURL_VERSION_SSL);
 
-                $result = (bool) $ssl_supported;
+                $result = (bool) $ssl_supported && file_exists($cacert);
             }
         }
 
