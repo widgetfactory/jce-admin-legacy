@@ -15,6 +15,14 @@ defined('_JEXEC') or die();
  */
 class UpdatesHelper {
 
+    private static function applyCACert(&$ch) {
+        $cacert = JPATH_LIBRARIES . '/joomla/http/transport/cacert.pem';
+
+        if (file_exists($cacert)) {
+            @curl_setopt($ch, CURLOPT_CAINFO, $cacert);
+        }
+    }
+
     /**
      * Fetches update information from the server using cURL or fopen
      * @param   string $url     The URL to check
@@ -28,11 +36,7 @@ class UpdatesHelper {
         if (self::hasCURL()) {
             $ch = curl_init($url);
 
-            $cacert = JPATH_LIBRARIES . '/joomla/http/transport/cacert.pem';
-
-            if (file_exists($cacert)) {
-                @curl_setopt($ch, CURLOPT_CAINFO, $cacert);
-            }
+            self::applyCACert($ch);
 
             curl_setopt($ch, CURLOPT_HEADER, 0);
             // Pretend we are Firefox, so that webservers play nice with us
@@ -44,7 +48,7 @@ class UpdatesHelper {
             // The @ sign allows the next line to fail if open_basedir is set or if safe mode is enabled
             @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
             @curl_setopt($ch, CURLOPT_MAXREDIRS, 20);
-            
+
             // add post data
             if ($data) {
                 curl_setopt($ch, CURLOPT_POST, 1);
@@ -69,7 +73,7 @@ class UpdatesHelper {
                 return array('error' => WFText::_('Update check failed : Invalid response from update server'));
             }
         }
-        
+
         return $result;
     }
 
@@ -188,9 +192,9 @@ class UpdatesHelper {
         if (is_null($result)) {
             $result = function_exists('curl_init');
 
-            if ($result) {    
+            if ($result) {
                 $cacert = JPATH_LIBRARIES . '/joomla/http/transport/cacert.pem';
-                
+
                 // check for SSL support
                 $version = curl_version();
                 $ssl_supported = ($version['features'] & CURL_VERSION_SSL);
@@ -216,11 +220,7 @@ class UpdatesHelper {
 
         $ch = curl_init($url);
 
-        $cacert = JPATH_LIBRARIES . '/joomla/http/transport/cacert.pem';
-
-        if (file_exists($cacert)) {
-            @curl_setopt($ch, CURLOPT_CAINFO, $cacert);
-        }
+        self::applyCACert($ch);
 
         if (!@curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1) && !$nofollow) {
             // Safe Mode is enabled. We have to fetch the headers and
