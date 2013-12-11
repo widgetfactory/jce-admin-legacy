@@ -48,7 +48,7 @@ class WFControllerConfig extends WFController {
         $plugin->params = json_encode($data);
         
         // remove "id"
-        if ($plugin->extension_id) {
+        if (isset($plugin->extension_id)) {
             unset($plugin->id);
         }
 
