@@ -33,6 +33,10 @@
         $('input[type="checkbox"]', 'div.fontlist').on('click', function() {
             $('div.fontlist').trigger('update');
         });
+        
+        $('input[type="text"]', 'div.fontlist').on('change', function() {
+            $('div.fontlist').trigger('update');
+        });
 
         // create close action
         $('a.close', 'div.fontlist').not('.plus').click(function(e) {
