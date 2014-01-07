@@ -16,22 +16,27 @@
 
             // get each styleformat item
             $('div.styleformat', this).each(function() {
-                var data = {}, v, p = this;
+                var data = {}, v, p = this, x = 0;
 
-                // only proceed if title and element set
-                if ($('div.styleformat-item-title input', p).val() && $('div.styleformat-item-element select', p).val()) {
+                // only proceed if title set and at least one other value of element, class or style
+                if ($('div.styleformat-item-title input', p).val()) {
                     // get all values in sequence and encode
                     $('input[type="text"], select', p).each(function() {
                         var k = $(this).data('key'), v = $(this).val();
 
                         if (v !== "") {
+                            // count keys to make sure we have at least one
+                            if (k === 'element' || k === 'classes' || k === 'styles') {
+                                x++;
+                            }
+                            
                             data[k] = v;
                         }
                     });
                 }
 
                 // check if empty, convert to string
-                if (!$.isEmptyObject(data)) {
+                if (x > 0 && !$.isEmptyObject(data)) {
                     list.push(data);
                 }
             });

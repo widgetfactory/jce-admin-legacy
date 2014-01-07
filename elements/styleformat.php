@@ -101,7 +101,7 @@ class WFElementStyleFormat extends WFElement {
     protected function getElementOptions() {
         // create elements list
         $options = array(
-            JHTML::_('select.option', '', WFText::_('WF_OPTION_NOT_SET'))
+            JHTML::_('select.option', '', WFText::_('WF_OPTION_SELECTED_ELEMENT'))
         );
         
         $options[] = JHTML::_('select.option',  '<OPTGROUP>', WFText::_('WF_OPTION_SECTION_ELEMENTS'));
