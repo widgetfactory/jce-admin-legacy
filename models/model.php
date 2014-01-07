@@ -111,7 +111,7 @@ class WFModel extends WFModelBase {
         
         $wf = WFEditor::getInstance();
 
-        // cehck teh current user is in a profile
+        // check the current user is in a profile
         if ($wf->getProfile('browser')) {
             $token = WFToken::getToken();
 
