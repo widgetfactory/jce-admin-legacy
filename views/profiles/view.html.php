@@ -339,7 +339,7 @@ class WFViewProfiles extends WFView {
                     'com_cache',
                     'com_checkin',
                     'com_config',
-                    'com_cpanel',
+                    //'com_cpanel',
                     'com_finder',
                     'com_installer',
                     'com_languages',
