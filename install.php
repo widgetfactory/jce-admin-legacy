@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -858,6 +858,44 @@ abstract class WFInstall {
                         $table->plugins .= ',charmap';
                         $table->store();
                     }
+                }
+            }
+        }
+        
+        // transfer styleselect, fontselect, fontsize etc. to a plugin
+        if (version_compare($version, '2.3.5', '<')) {
+            $profiles = self::getProfiles();
+            $table = JTable::getInstance('Profiles', 'WFTable');
+
+            if (!empty($profiles)) {
+                foreach ($profiles as $item) {
+                    $table->load($item->id);
+                    
+                    $plugins = explode(',', $table->plugins);
+
+                    if (strpos($table->rows, 'formatselect') !== false) {
+                        $plugins[] = 'formatselect';
+                    }
+                    
+                    if (strpos($table->rows, 'styleselect') !== false) {
+                        $plugins[] = 'styleselect';
+                    }
+                    
+                    if (strpos($table->rows, 'fontselect') !== false) {
+                        $plugins[] = 'fontselect';
+                    }
+                    
+                    if (strpos($table->rows, 'fontsizeselect') !== false) {
+                        $plugins[] = 'fontsizeselect';
+                    }
+                    
+                    if (strpos($table->rows, 'forecolor') !== false || strpos($table->rows, 'backcolor') !== false) {
+                        $plugins[] = 'fontcolor';
+                    }
+                    
+                    $table->plugins = implode(',', $plugins);
+                    
+                    $table->store();
                 }
             }
         }
