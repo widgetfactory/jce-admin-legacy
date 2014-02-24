@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -47,11 +47,14 @@ foreach ($this->plugins as $plugin) :
                     <?php
                     // Draw parameters
                     foreach ($groups as $group) :
-                        echo '<fieldset class="adminform panelform">';
-                        echo '<legend>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group)) . '</legend>';
-                        echo '<p>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group) . '_DESC') . '</p>';
-                        echo $params->render('params[' . $plugin->name . ']', $group);
-                        echo '</fieldset>';
+                        $data = $params->render('params[' . $plugin->name . ']', $group);
+                        if (!empty($data)) :
+                            echo '<fieldset class="adminform panelform">';
+                            echo '<legend>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group)) . '</legend>';
+                            //echo '<p>' . WFText::_('WF_PROFILES_PLUGINS_' . strtoupper($group) . '_DESC') . '</p>';
+                            echo $data;
+                            echo '</fieldset>';
+                        endif;
                     endforeach;
 
                     $extensions = $this->model->getExtensions($plugin->name);
