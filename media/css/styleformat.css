@@ -43,8 +43,8 @@
 }
 
 #jce div.styleformat-list div.styleformat a.close.collapse {
-    right: 9px;
-    top: 50px;
+    right: 12px;
+    top: 45px;
     font-size: 14pt;
     height: 20px;
 }
@@ -71,7 +71,7 @@
 
 #jce div.styleformat-list div.styleformat div {
     margin : 5px 0;
-    padding : 10px;
+    padding : 5px 10px 5px 5px;
     position: relative;
 }
 
@@ -91,6 +91,7 @@
 #jce div.styleformat-list div.styleformat div.styleformat-item-title input {
     font-size: inherit;
     color : inherit;
+    float : none;
 }
 /* Values based on HTML4 stylesheet - http://www.w3.org/TR/CSS2/sample.html */
 #jce div.styleformat-list div.styleformat div.styleformat-item-title input.code,
@@ -135,4 +136,8 @@
     font-size : 0.9em;
     max-width: 320px;
     margin-top : 5px;
+}
+
+#jce div.styleformat-list div.styleformat div.styleformat-item-element option:first-child {
+    margin : 5px 0;
 }

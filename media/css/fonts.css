@@ -63,7 +63,8 @@
 
 #jce div.fontlist ul li.font-item input {
     width : 100px;
-    margin-right : 5px;
+    margin-right : 2px;
+    float : none;
 }
 
 #jce div.fontlist ul li.font-item input + input {
