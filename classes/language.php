@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -17,6 +17,14 @@ class WFLanguageParser extends JObject {
     protected $plugins = array();
     protected $sections = array();
 
+    /**
+     * Cache of processed data
+     *
+     * @var    array
+     * @since  11.1
+     */
+    protected static $cache = array();
+
     function __construct($config = array()) {
 
         if (array_key_exists('plugins', $config)) {
@@ -30,19 +38,153 @@ class WFLanguageParser extends JObject {
         $this->setProperties($config);
     }
 
-    protected static function object_to_array($data) {
-        if (is_array($data) || is_object($data)) {
-            $result = array();
-            foreach ($data as $key => $value) {
-                if (is_string($value)) {
-                    $value = str_replace(array("\n", "\r"), array('\n', '\r'), $value);
-                }
+    /**
+     * Parse an INI formatted string and convert it into an array.
+     *
+     * @param   string  $data     INI formatted string to convert.
+     * @param   bool   $process_sections  A boolean setting to process sections.
+     * @param   array  $sections  An array of sections to include.
+     * @param   mixed  $filter  A regular expression to filter sections by.
+     *
+     * @return  array   Data array.
+     *
+     * @since   2.4
+     * 
+     * Based on JRegistryFormatINI::stringToObject
+     * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+     * @license     GNU General Public License version 2 or later; see LICENSE
+     */
+    protected static function ini_to_array($data, $process_sections = false, $sections = array(), $filter = '') {
+        // Check the memory cache for already processed strings.
+        $hash = md5($data . ':' . (int) $process_sections . ':' . serialize($sections) . ':' . $filter);
 
-                $result[$key] = self::object_to_array($value);
-            }
-            return $result;
+        if (isset(self::$cache[$hash])) {
+            return self::$cache[$hash];
         }
-        return $data;
+
+        // If no lines present just return the array.
+        if (empty($data)) {
+            return array();
+        }
+
+        $array = array();
+        $section = false;
+        $lines = explode("\n", $data);
+
+        // Process the lines.
+        foreach ($lines as $line) {
+            // Trim any unnecessary whitespace.
+            $line = trim($line);
+
+            // Ignore empty lines and comments.
+            if (empty($line) || ($line{0} == ';')) {
+                continue;
+            }
+
+            if ($process_sections) {
+                $length = strlen($line);
+
+                // If we are processing sections and the line is a section add the object and continue.
+                if (($line[0] == '[') && ($line[$length - 1] == ']')) {
+                    $section = substr($line, 1, $length - 2);
+
+                    // filter section by regular expression
+                    if ($filter) {
+                        if (preg_match('#' . $filter . '#', $section)) {
+                            continue;
+                        }
+                    }
+
+                    // allow all sections
+                    if (empty($sections)) {
+                        $array[$section] = array();
+                    } else {
+                        if (in_array($section, $sections)) {
+                            $array[$section] = array();
+                        }
+                    }
+
+                    continue;
+                }
+            } elseif ($line{0} == '[') {
+                continue;
+            }
+
+            // Check that an equal sign exists and is not the first character of the line.
+            if (!strpos($line, '=')) {
+                // Maybe throw exception?
+                continue;
+            }
+
+            // Get the key and value for the line.
+            list ($key, $value) = explode('=', $line, 2);
+
+            // Validate the key.
+            if (preg_match('/[^A-Z0-9_]/i', $key)) {
+                // Maybe throw exception?
+                continue;
+            }
+
+            // If the value is quoted then we assume it is a string.
+            $length = strlen($value);
+
+            if ($length && ($value[0] == '"') && ($value[$length - 1] == '"')) {
+                // Strip the quotes and Convert the new line characters.
+                $value = stripcslashes(substr($value, 1, ($length - 2)));
+                $value = str_replace(array("\n", "\r"), array('\n', '\r'), $value);
+            } else {
+                // If the value is not quoted, we assume it is not a string.
+                // If the value is 'false' assume boolean false.
+                if ($value == 'false') {
+                    $value = false;
+                }
+                // If the value is 'true' assume boolean true.
+                elseif ($value == 'true') {
+                    $value = true;
+                }
+                // If the value is numeric than it is either a float or int.
+                elseif (is_numeric($value)) {
+                    // If there is a period then we assume a float.
+                    if (strpos($value, '.') !== false) {
+                        $value = (float) $value;
+                    } else {
+                        $value = (int) $value;
+                    }
+                }
+            }
+
+            // If a section is set add the key/value to the section, otherwise top level.
+            if ($section) {
+                $array[$section][$key] = $value;
+            } else {
+                $array[$key] = $value;
+            }
+        }
+
+        // Cache the string
+        self::$cache[$hash] = $array;
+
+        return $array;
+    }
+
+    protected static function filterSections($ini, $sections = array(), $filter = '') {
+        if ($ini && is_array($ini)) {
+
+            if (!empty($sections)) {
+                $ini = array_intersect_key($ini, array_flip($sections));
+            }
+
+            // filter keys by regular expression
+            if ($filter) {
+                foreach (array_keys($ini) as $key) {
+                    if (preg_match('#' . $filter . '#', $key)) {
+                        unset($ini[$key]);
+                    }
+                }
+            }
+        }
+
+        return $ini;
     }
 
     protected static function processLanguageINI($files, $sections = array(), $filter = '') {
@@ -51,33 +193,20 @@ class WFLanguageParser extends JObject {
         foreach ((array) $files as $file) {
             $ini = false;
 
-            $content = file_get_contents($file);
+            $content = @file_get_contents($file);
 
-            if ($content) {
+            if ($content && is_string($content)) {
                 if (function_exists('parse_ini_string')) {
                     $ini = @parse_ini_string($content, true);
+                    // filter
+                    $ini = self::filterSections($ini, $sections, $filter);
                 } else {
-                    $registry = JRegistryFormat::getInstance('INI');
-                    $obj = $registry->stringToObject($content, true);
-                    $ini = self::object_to_array($obj);
+                    $ini = self::ini_to_array($content, true, $sections, $filter);
                 }
             }
 
+            // merge with data array
             if ($ini && is_array($ini)) {
-                // only include these keys
-                if (!empty($sections)) {
-                    $ini = array_intersect_key($ini, array_flip($sections));
-                }
-
-                // filter keys by regular expression
-                if ($filter) {
-                    foreach (array_keys($ini) as $key) {
-                        if (preg_match('#' . $filter . '#', $key)) {
-                            unset($ini[$key]);
-                        }
-                    }
-                }
-
                 $data = array_merge($data, $ini);
             }
         }
@@ -199,12 +328,13 @@ class WFLanguageParser extends JObject {
             }
         }
 
+        // shorten the tag, eg: en-GB -> en
+        $tag = substr($tag, 0, strpos($tag, '-'));
+
         $sections = $this->get('sections');
         $filter = $this->getFilter();
 
         $data = self::processLanguageINI($files, $sections, $filter);
-        // shorten the tag, eg: en-GB -> en
-        $tag = substr($tag, 0, strpos($tag, '-'));
 
         // clean data
         $data = rtrim(trim($data), ',');
