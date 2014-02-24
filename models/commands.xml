@@ -55,7 +55,7 @@
         <row>1</row>
         <editable>0</editable>
     </command>
-    <command>
+    <!--command>
         <title>WF_FONTSELECT_TITLE</title>
         <description>WF_FONTSELECT_DESC</description>
         <name>fontselect</name>
@@ -72,8 +72,8 @@
         <icon>fontsizeselect</icon>
         <row>2</row>
         <editable>0</editable>
-    </command>
-    <command>
+    </command-->
+    <!--command>
         <title>WF_STYLESELECT_TITLE</title>
         <description>WF_STYLESELECT_DESC</description>
         <name>styleselect</name>
@@ -81,7 +81,7 @@
         <icon>styleselect</icon>
         <row>1</row>
         <editable>0</editable>
-    </command>
+    </command-->
     <command>
         <title>WF_STRIKETHROUGH_TITLE</title>
         <description>WF_STRIKETHROUGH_DESC</description>
@@ -145,7 +145,7 @@
         <row>1</row>
         <editable>0</editable>
     </command>
-    <command>
+    <!--command>
         <title>WF_FORECOLOR_TITLE</title>
         <description>WF_FORECOLOR_DESC</description>
         <name>forecolor</name>
@@ -162,7 +162,7 @@
         <icon>backcolor</icon>
         <row>2</row>
         <editable>0</editable>
-    </command>
+    </command-->
     <command>
         <title>WF_UNLINK_TITLE</title>
         <description>WF_UNLINK_DESC</description>

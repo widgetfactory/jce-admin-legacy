@@ -117,6 +117,51 @@
         <row>0</row>
         <core>1</core>
     </plugin>
+    <plugin name="formatselect">
+        <title>WF_FORMATSELECT_TITLE</title>
+        <description>WF_FORMATSELECT_DESC</description>
+        <name>formatselect</name>
+        <core>1</core>
+        <icon>formatselect</icon>
+        <row>1</row>
+        <editable>1</editable>
+    </plugin>
+    <plugin name="fontcolor">
+        <title>WF_FONTCOLOR_TITLE</title>
+        <description>WF_FONTCOLOR_DESC</description>
+        <name>fontcolor</name>
+        <core>1</core>
+        <icon>forecolor,backcolor</icon>
+        <row>2</row>
+        <editable>1</editable>
+    </plugin>
+    <plugin name="fontselect">
+        <title>WF_FONTSELECT_TITLE</title>
+        <description>WF_FONTSELECT_DESC</description>
+        <name>fontselect</name>
+        <core>1</core>
+        <icon>fontselect</icon>
+        <row>2</row>
+        <editable>1</editable>
+    </plugin>
+    <plugin name="fontsizeselect">
+        <title>WF_FONTSIZESELECT_TITLE</title>
+        <description>WF_FONTSIZESELECT_DESC</description>
+        <name>fontsizeselect</name>
+        <core>1</core>
+        <icon>fontsizeselect</icon>
+        <row>2</row>
+        <editable>1</editable>
+    </plugin>
+    <plugin name="fullpage">
+        <name>fullpage</name>
+        <title>WF_FULLPAGE_TITLE</title>
+        <description>WF_FULLPAGE_DESC</description>
+        <icon>fullpage</icon>
+        <editable>1</editable>
+        <row>4</row>
+        <core>1</core>
+    </plugin>
     <plugin name="fullscreen">
         <name>fullscreen</name>
         <title>WF_FULLSCREEN_TITLE</title>
@@ -242,6 +287,15 @@
         <editable>0</editable>
         <row>4</row>
         <core>1</core>
+    </plugin>
+    <plugin name="styleselect">
+        <title>WF_STYLESELECT_TITLE</title>
+        <description>WF_STYLESELECT_DESC</description>
+        <name>styleselect</name>
+        <core>1</core>
+        <icon>styleselect</icon>
+        <row>1</row>
+        <editable>1</editable>
     </plugin>
     <plugin name="tabfocus">
         <name>tabfocus</name>
