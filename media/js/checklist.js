@@ -1,6 +1,6 @@
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -133,10 +133,10 @@
                     var n = $.inArray(this.value, x);
 
                     if (n >= 0) {
-                        options[n] = this;
+                        //options[n] = this;
                         $(this).attr('selected', 'selected').prop('selected', true);
                     } else {
-                        options.push(this);
+                        //options.push(this);
                         $(this).removeAttr('selected').prop('selected', false);
                     }
                 });
@@ -147,7 +147,8 @@
                     
                     $(el).removeClass('isdirty').after('<input type="hidden" name="' + el.name + '" value="" class="isdirty" />');
                 } else {
-                    $(el).empty().append(options).change().next('input[type="hidden"]').remove();
+                    //$(el).empty().append(options).change().next('input[type="hidden"]').remove();
+                    $(el).change().next('input[type="hidden"]').remove();
                 }                
             } else {
                 $(el).val(x.join(',')).change();
