@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -172,7 +172,7 @@ class WFModelEditor extends WFModelBase {
             $settings['toggle_state'] = $wf->getParam('editor.toggle_state', 1, 1);
         }// end profile
         // set compression states
-        $compress = array('javascript' => intval($wf->getParam('editor.compress_javascript', 0)), 'css' => intval($wf->getParam('editor.compress_css', 0)));
+        $compress = array('javascript' => intval($wf->getParam('editor.compress_javascript', 1)), 'css' => intval($wf->getParam('editor.compress_css', 1)));
 
         // set compression
         if ($compress['css']) {
@@ -180,8 +180,6 @@ class WFModelEditor extends WFModelBase {
         } else {
             // CSS
             $this->addStyleSheet($this->getURL(true) . '/libraries/css/editor.css');
-
-            //$this->addStyleSheet($this->getURL(true) . '/libraries/bootstrap/css/bootstrap.css?version=' . $version);
             // get plugin styles
             $this->getPluginStyles($settings);
         }
@@ -549,6 +547,36 @@ class WFModelEditor extends WFModelBase {
 
                 $plugins = explode(',', $this->profile->plugins);
                 $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'colorpicker', 'upload', 'format'), $plugins));
+                
+                // add formatselect
+                if (in_array('formatselect', $plugins) === false && strpos($this->profile->rows, 'formatselect') !== false) {
+                    $plugins[] = 'formatselect';
+                }
+
+                // add styleselect
+                if (in_array('styleselect', $plugins) === false && strpos($this->profile->rows, 'styleselect') !== false) {
+                    $plugins[] = 'styleselect';
+                }
+                
+                // add fontselect
+                if (in_array('fontselect', $plugins) === false && strpos($this->profile->rows, 'fontselect') !== false) {
+                    $plugins[] = 'fontselect';
+                }
+                
+                // add formatselect
+                if (in_array('fontsizeselect', $plugins) === false && strpos($this->profile->rows, 'fontsizeselect') !== false) {
+                    $plugins[] = 'fontsizeselect';
+                }
+                
+                // add font colours
+                if (in_array('fontcolor', $plugins) === false && (strpos($this->profile->rows, 'forecolor') !== false || strpos($this->profile->rows, 'backcolor') !== false)) {
+                    $plugins[] = 'fontcolor';
+                }
+                
+                // add importcss
+                if (in_array('styleselect', $plugins) || in_array('fontselect', $plugins)) {
+                    $plugins[] = 'importcss';
+                }
 
                 // add advlists plugin if lists are loaded
                 if (in_array('lists', $plugins)) {
@@ -995,7 +1023,7 @@ class WFModelEditor extends WFModelBase {
                         $class = WF_EDITOR_PLUGINS . '/' . $plugin . '/classes/config.php';
                         if (JFile::exists($class)) {
                             require_once ($class);
-                            $classname = 'WF' . ucfirst($plugin) . 'PluginConfig';
+                            $classname = 'WF' . ucfirst($plugin) . 'PluginConfig';                            
                             if (class_exists($classname) && method_exists(new $classname, 'getStyles')) {
                                 $files = array_merge($files, (array) call_user_func(array($classname, 'getStyles')));
                             }
