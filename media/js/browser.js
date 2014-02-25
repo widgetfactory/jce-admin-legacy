@@ -87,8 +87,19 @@
         insert : function() {
             if(this.options.element) {
                 var src = WFFileBrowser.getSelectedItems(0);
-
-                window.parent.document.getElementById(this.options.element).value = $(src).data('url') || '';
+                var win = window.parent;
+                
+                var v = $(src).data('url') || '';
+                
+                if (win.jQuery) {
+                    win.jQuery('#' + this.options.element).val(v).change();
+                } else {
+                    var el = win.document.getElementById(this.options.element);
+                    
+                    if (el) {
+                        el.value = v;
+                    }
+                }
             }
         },
         close : function() {
