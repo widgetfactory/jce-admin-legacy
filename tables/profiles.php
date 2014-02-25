@@ -11,6 +11,8 @@
  */
 defined('JPATH_BASE') or die('RESTRICTED');
 
+require_once(dirname(dirname(__FILE__)) . '/helpers/encrypt.php');
+
 class WFTableProfiles extends JTable {
 
     /**
@@ -121,5 +123,49 @@ class WFTableProfiles extends JTable {
     public function __construct(& $db) {
         parent::__construct('#__wf_profiles', 'id', $db);
     }
+
+    /**
+     * Overridden JTable::load to decrypt parameters
+     *
+     * @param   integer  $id  An optional profile id.
+     * @param   boolean  $reset   False if row not found or on error
+     * (internal error state set in that case).
+     *
+     * @return  boolean  True on success, false on failure.
+     *
+     * @since   2.4
+     */
+    public function load($id = null, $reset = true) {
+        $return = parent::load($id, $reset);
+        
+        if ($return !== false && !empty($this->params)) {
+            $this->params = WFEncryptHelper::decrypt($this->params);
+        }
+        
+        return $return;
+    }
+
+    /**
+     * Overridden JTable::store to encrypt parameters
+     *
+     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     *
+     * @return  boolean  True on success.
+     *
+     * @since   2.4
+     */
+    public function store($updateNulls = false) {
+
+        if ($this->id && $this->params) {
+            $config = JComponentHelper::getParams('com_jce');
+            if ($config->get('secureparams', 0)) {
+                $this->params = WFEncryptHelper::encrypt($this->params);
+            }
+        }
+
+        return parent::store($updateNulls);
+    }
+
 }
+
 ?>

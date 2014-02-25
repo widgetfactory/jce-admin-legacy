@@ -105,7 +105,7 @@ class WFControllerProfiles extends WFController {
 
         return $merged;
     }
-
+    
     public function save() {
         // Check for request forgeries
         JRequest::checkToken() or die('RESTRICTED');
@@ -185,7 +185,7 @@ class WFControllerProfiles extends WFController {
                             $json[$plugin] = $value[$plugin];
                         }
                     }
-
+                    
                     // combine and encode as json string
                     $value = json_encode(self::array_merge_recursive_distinct($data, $json));
 
@@ -326,6 +326,8 @@ class WFControllerProfiles extends WFController {
     }
 
     public function export() {
+        wfimport('admin.helpers.encrypt');
+        
         $mainframe = JFactory::getApplication();
         $db = JFactory::getDBO();
         $tmp = $mainframe->getCfg('tmp_path');
@@ -358,6 +360,11 @@ class WFControllerProfiles extends WFController {
             unset($profile->checked_out_time);
             // set published to 0
             $profile->published = 0;
+            
+            // decrypt parameters
+            if (!empty($profile->params)) {
+                $profile->params = WFEncryptHelper::decrypt($profile->params);
+            }
 
             $buffer .= "\n\t\t";
             $buffer .= '<profile>';
