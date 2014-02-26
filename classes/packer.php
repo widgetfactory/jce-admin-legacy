@@ -121,8 +121,8 @@ class WFPacker extends JObject {
 
         $encoding = self::getEncoding();
 
-        $zlib = extension_loaded('zlib') && ini_get('zlib.output_compression');
-        $gzip = $gzip && !empty($encoding) && $zlib && function_exists('gzencode');
+        $zlib = function_exists('ini_get') && extension_loaded('zlib') && ini_get('zlib.output_compression');
+        $gzip = $gzip && !empty($encoding) && !$zlib && function_exists('gzencode');
 
         $content = $this->getContentStart();
 
@@ -135,12 +135,14 @@ class WFPacker extends JObject {
         }
 
         $content .= $this->getContentEnd();
-
-        // set content length
-        header("Content-Length: " . strlen($content));
+        
+        if ($zlib === false) {
+            // set content length
+            header("Content-Length: " . strlen($content));
+        }
 
         // get content hash
-        $hash = hash('md5', $content);
+        $hash = md5($content);
 
         // set etag header
         header("ETag: \"{$hash}\"");

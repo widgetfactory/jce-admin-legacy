@@ -344,6 +344,8 @@ class WFLanguageParser extends JObject {
 
     public function output($data) {
         if ($data) {
+            $zlib = function_exists('ini_get') && extension_loaded('zlib') && ini_get('zlib.output_compression');
+
             ob_start();
 
             header("Content-type: application/javascript; charset: UTF-8");
@@ -356,15 +358,17 @@ class WFLanguageParser extends JObject {
 
             // Handle proxies
             header("Expires: " . gmdate("D, d M Y H:i:s", time() + $expires) . " GMT");
-
+            
             // get content hash
-            $hash = hash('md5', $data);
+            $hash = md5($data);
 
             // set etag header
             header("ETag: \"{$hash}\"");
 
-            // set content length
-            header("Content-Length: " . strlen($data));
+            if ($zlib === false) {
+                // set content length
+                header("Content-Length: " . strlen($data));
+            }
 
             echo $data;
 
