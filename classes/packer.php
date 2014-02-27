@@ -102,6 +102,7 @@ class WFPacker extends JObject {
             header("Content-type: text/css; charset: UTF-8");
         }
 
+        // encoding
         header("Vary: Accept-Encoding");
 
         // expires after 48 hours
@@ -130,11 +131,6 @@ class WFPacker extends JObject {
         }
 
         $content .= $this->getContentEnd();
-        
-        if ($zlib === false) {
-            // set content length
-            header("Content-Length: " . strlen($content));
-        }
 
         // get content hash
         $hash = md5($content);
