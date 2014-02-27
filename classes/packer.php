@@ -91,11 +91,6 @@ class WFPacker extends JObject {
     public function pack($minify = true, $gzip = false) {
         $type = $this->getType();
 
-        /* $encoding = self::getEncoding();
-
-          $zlib = extension_loaded('zlib') && !ini_get('zlib.output_compression');
-          $gzip = $gzip && !empty($encoding) && $zlib && function_exists('gzencode'); */
-
         ob_start();
 
         // Headers
