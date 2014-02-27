@@ -20,19 +20,78 @@ require_once(dirname(dirname(__FILE__)) . '/classes/encrypt.php');
  */
 class WFEncryptHelper {
 
-    protected static function generateKey() {
-        jimport('joomla.filesystem.file');
-        jimport('joomla.crypt.crypt');
+    /**
+     * PBKDF2 Implementation for deriving keys.
+     *
+     * @param   string   $p   Password
+     * @param   string   $s   Salt
+     * @param   integer  $kl  Key length
+     * @param   integer  $c   Iteration count
+     * @param   string   $a   Hash algorithm
+     *
+     * @return  string  The derived key.
+     *
+     * @see     http://en.wikipedia.org/wiki/PBKDF2
+     * @see     http://www.ietf.org/rfc/rfc2898.txt
+     * 
+     * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+     */
+    protected static function pbkdf2($p, $s, $kl, $c = 10000, $a = 'sha256') {
+        // simple md5 version
+        if (!function_exists('hash')) {
+            $seed = $p.$s;
+		
+            $md5 = md5($seed);
+            
+            for($i = 0; $i < $c; $i++) {
+                $md5 = md5($md5 . md5(rand(0, 2147483647)));
+            }
+            
+            return substr($md5, 0, $kl);
+        }
         
-        $key = base64_encode(JCrypt::genRandomBytes(24));
+        // Hash length.
+        $hl = strlen(hash($a, null, true));
 
+        // Key blocks to compute.
+        $kb = ceil($kl / $hl);
+
+        // Derived key.
+        $dk = '';
+
+        // Create the key.
+        for ($block = 1; $block <= $kb; $block++) {
+            // Initial hash for this block.
+            $ib = $b = hash_hmac($a, $s . pack('N', $block), $p, true);
+
+            // Perform block iterations.
+            for ($i = 1; $i < $c; $i++) {
+                $ib ^= ($b = hash_hmac($a, $b, $p, true));
+            }
+
+            // Append the iterated block.
+            $dk .= $ib;
+        }
+
+        // Return derived key of correct length.
+        return substr($dk, 0, $kl);
+    }
+
+    protected static function generateKey() {
+        jimport('joomla.crypt.crypt');
+
+        $key    = JCrypt::genRandomBytes(32);
+        $salt   = md5_file(JPATH_SITE . '/configuration.php');
+        
+        $key    = base64_encode(self::pbkdf2($key, $salt, 32));
+        
         $filecontents = "<?php defined('WF_EDITOR') or die(); define('WF_SERVERKEY', '$key'); ?>";
         $filename = JPATH_COMPONENT_ADMINISTRATOR . '/serverkey.php';
 
         $result = JFile::write($filename, $filecontents);
 
         if (!$result) {
-            return false;
+            return '';
         } else {
             return base64_decode($key);
         }
