@@ -39,17 +39,17 @@ class WFEncryptHelper {
     protected static function pbkdf2($p, $s, $kl, $c = 10000, $a = 'sha256') {
         // simple md5 version
         if (!function_exists('hash')) {
-            $seed = $p.$s;
-		
+            $seed = $p . $s;
+
             $md5 = md5($seed);
-            
-            for($i = 0; $i < $c; $i++) {
+
+            for ($i = 0; $i < $c; $i++) {
                 $md5 = md5($md5 . md5(rand(0, 2147483647)));
             }
-            
+
             return substr($md5, 0, $kl);
         }
-        
+
         // Hash length.
         $hl = strlen(hash($a, null, true));
 
@@ -80,11 +80,11 @@ class WFEncryptHelper {
     protected static function generateKey() {
         jimport('joomla.crypt.crypt');
 
-        $key    = JCrypt::genRandomBytes(32);
-        $salt   = md5_file(JPATH_SITE . '/configuration.php');
-        
-        $key    = base64_encode(self::pbkdf2($key, $salt, 32));
-        
+        $key = JCrypt::genRandomBytes(32);
+        $salt = md5_file(JPATH_SITE . '/configuration.php');
+
+        $key = base64_encode(self::pbkdf2($key, $salt, 32));
+
         $filecontents = "<?php defined('WF_EDITOR') or die(); define('WF_SERVERKEY', '$key'); ?>";
         $filename = JPATH_COMPONENT_ADMINISTRATOR . '/serverkey.php';
 
@@ -103,16 +103,18 @@ class WFEncryptHelper {
      * @return string
      */
     public static function getKey() {
-        if (defined('WF_SERVERKEY'))
+        if (defined('WF_SERVERKEY')) {
             return base64_decode(WF_SERVERKEY);
+        }
 
         $filename = dirname(dirname(__FILE__)) . '/serverkey.php';
 
         if (file_exists($filename)) {
             include_once $filename;
 
-            if (defined('WF_SERVERKEY'))
+            if (defined('WF_SERVERKEY')) {
                 return base64_decode(WF_SERVERKEY);
+            }
         } else {
             return self::generateKey();
         }
@@ -124,8 +126,9 @@ class WFEncryptHelper {
      */
     public static function supportsEncryption() {
         // Do we have base64_encode/_decode required for encryption?
-        if (!function_exists('base64_encode') || !function_exists('base64_decode'))
+        if (!function_exists('base64_encode') || !function_exists('base64_decode')) {
             return false;
+        }
 
         // Pre-requisites met. We can encrypt and decrypt!
         return true;
@@ -200,10 +203,12 @@ class WFEncryptHelper {
             return $encrypted;
         }
 
-        if (empty($key))
+        if (empty($key)) {
             $key = self::getKey();
+        }
 
         $encrypted = substr($encrypted, 12);
+        
         switch ($mode) {
             case 'AES128':
                 $encrypted = base64_decode($encrypted);
