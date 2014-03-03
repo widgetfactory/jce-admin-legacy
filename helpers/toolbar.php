@@ -96,8 +96,9 @@ abstract class WFToolbarHelper {
                 $html  = '<a href="' . $link . '" target="_blank" onclick="' . self::createClick($link, $w, $h) . '" class="updates" title="' . WFText::_('WF_UPDATES') . '">';
                 $html .= '<span class="icon-32-default icon-32-update" title="' . WFText::_('WF_HELP') . '"></span>' . WFText::_('WF_UPDATES') . '</a>';
             }
+            
+            $bar->appendButton('Custom', $html, 'updates');
         }    
-        $bar->appendButton('Custom', $html, 'updates');
     }
 
     /*public static function access() {
