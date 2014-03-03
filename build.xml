@@ -84,6 +84,7 @@
             
             <exclude name="pkg_jce.xml" />
             <exclude name="install.pkg.php" />
+            <exclude name="serverkey.php" />
         </fileset>
 		
         <!-- Copy Component Admin Files -->
