@@ -344,11 +344,14 @@ class WFControllerProfiles extends WFController {
         }
 
         $cids = implode(',', $cid);
-
-        // get froup data
-        $query = 'SELECT * FROM #__wf_profiles'
-                . ' WHERE id IN (' . $cids . ')'
-        ;
+        
+        $query = $db->getQuery(true);
+        // check for name
+        if (is_object($query)) {
+            $query->select('*')->from('#__wf_profiles')->where('id IN (' . $cids . ')');
+        } else {
+            $query = 'SELECT * FROM #__wf_profiles WHERE id IN (' . $cids . ')';
+        }
 
         $db->setQuery($query);
         $profiles = $db->loadObjectList();
@@ -360,11 +363,6 @@ class WFControllerProfiles extends WFController {
             unset($profile->checked_out_time);
             // set published to 0
             $profile->published = 0;
-            
-            // decrypt parameters
-            if (!empty($profile->params)) {
-                $profile->params = WFEncryptHelper::decrypt($profile->params);
-            }
 
             $buffer .= "\n\t\t";
             $buffer .= '<profile>';
@@ -373,13 +371,24 @@ class WFControllerProfiles extends WFController {
                 if ($key == 'params') {
                     $buffer .= "\n\t\t\t" . '<' . $key . '>';
                     if ($value) {
-                        $params = explode("\n", $value);
-                        foreach ($params as $param) {
-                            if ($param !== '') {
-                                $buffer .= "\n\t\t\t\t" . '<param>' . $param . '</param>';
+                        // decrypt if necessary
+                        $value = WFEncryptHelper::decrypt($value);
+                        
+                        // check is valid json
+                        $valid = json_decode($value, false, 1);
+                        
+                        // json is valid
+                        if (is_null($valid) === false) {
+                            // create array
+                            $params = explode("\n", $value);
+
+                            foreach ($params as $param) {
+                                if ($param !== '') {
+                                    $buffer .= "\n\t\t\t\t" . '<param>' . $param . '</param>';
+                                }
                             }
+                            $buffer .= "\n\t\t\t\t";
                         }
-                        $buffer .= "\n\t\t\t\t";
                     }
                     $buffer .= '</' . $key . '>';
                 } else {
