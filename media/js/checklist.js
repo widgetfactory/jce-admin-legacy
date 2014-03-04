@@ -141,14 +141,16 @@
                     }
                 });
                 
+                // remove "Array"
+                el.name = el.name.replace("[]", "");
+                
                 if (x.length === 0) {
-                    // remove "Array"
-                    el.name = el.name.replace("[]", "");
-                    
-                    $(el).removeClass('isdirty').after('<input type="hidden" name="' + el.name + '" value="" class="isdirty" />');
+                    $(el).change().removeClass('isdirty').after('<input type="hidden" name="' + el.name + '" value="" class="isdirty" />');
                 } else {
                     //$(el).empty().append(options).change().next('input[type="hidden"]').remove();
                     $(el).change().next('input[type="hidden"]').remove();
+                    // add "Array"
+                    el.name += "[]";
                 }                
             } else {
                 $(el).val(x.join(',')).change();
