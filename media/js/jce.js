@@ -7,7 +7,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-(function($) {  
+(function($) {
     var $tmp = document.createElement('div');
 
     $.support.borderRadius = (function() {
@@ -17,21 +17,21 @@
     if (typeof Joomla === 'undefined') {
         Joomla = {};
     }
-    
+
     $.support.bootstrap = (function() {
         return $('script[src*="bootstrap"]').length > 0;
     })();
 
     Joomla.modal = function(el, url, width, height) {
         var o = {
-            'handler' : 'iframe',
-            'size' : {
-                x : width,
-                y : height
+            'handler': 'iframe',
+            'size': {
+                x: width,
+                y: height
             },
-            'url' : url,
-            onOpen : function() {
-                $('#sbox-window').css({'width' : 'auto', 'height' : 'auto'});
+            'url': url,
+            onOpen: function() {
+                $('#sbox-window').css({'width': 'auto', 'height': 'auto'});
             }
         };
 
@@ -52,7 +52,7 @@
             });
 
             // Custom checkbox
-            $(this).addClass('ui-checkbox-element').wrap('<span class="ui-checkbox" />').click(function() {               
+            $(this).addClass('ui-checkbox-element').wrap('<span class="ui-checkbox" />').click(function() {
                 $(this).parent().not('.disabled').toggleClass('checked', this.checked);
             }).on('check', function() {
                 $(this).parent().toggleClass('checked', this.checked);
@@ -102,7 +102,7 @@
 
             // add ui-jce class to body
             $('body').addClass('ui-jce');
-            
+
             // IE
             if (!$.support.cssFloat) {
                 $('#jce').addClass('ie');
@@ -118,7 +118,7 @@
                     }
                 }
             }
-            
+
             // add boostrap id class
             $('body').addClass('ui-bootstrap');
 
@@ -139,7 +139,7 @@
 
                 // handle basic tabs
                 $('#tabs').tabs({
-                    beforeActivate: function( event, ui ) {
+                    beforeActivate: function(event, ui) {
                         $(ui.oldTab).removeClass('active');
                         $(ui.newTab).addClass('active');
                     }
@@ -273,7 +273,7 @@
             }).trigger('hide');
 
             // show relevant item on change, hide others
-            $(':input.parameter-nested-parent').change(function() {                    
+            $(':input.parameter-nested-parent').change(function() {
                 // hide all others first
                 $(this).siblings('[data-parameter-nested-item]').trigger('hide').filter('[data-parameter-nested-item="' + this.value + '"]').trigger('show');
             }).change();
@@ -283,7 +283,7 @@
                 // set dependant parameters
                 self._setDependants();
             });
-            
+
             // create styled form elements
             $(document).ready(function() {
                 // custom checkbox
@@ -375,7 +375,6 @@
 
             $(':input[min]').min();
         },
-                
         _setDependants: function() {
             $('[data-parent]').each(function() {
                 var el = this, data = $(this).data('parent') || '';
@@ -396,11 +395,18 @@
                         k = k.replace(/[^\w]+/g, '');
 
                         // create namespaced event name
-                        var ev = 'change.' + k;
+                        var event = 'change.' + k;
 
                         // set parent onchange
-                        $('#params' + k).on(ev, function() {
-                            var state = $.inArray(this.value, v) != -1;
+                        $('#params' + k).on(event, function() {
+                            var ev = $(this).val();
+                            
+                            // convert value to array
+                            if ($.type(ev) !== "array") {
+                                ev = $.makeArray(ev);
+                            }
+
+                            var state = $(ev).filter(v).length > 0;
 
                             if (state) {
                                 // remove marker
@@ -426,17 +432,17 @@
                             } else {
                                 $(el).parent().hide();
                             }
-                        }).trigger(ev);
+                        }).trigger(event);
                     }
                 });
             });
         }
     };
     // run init when the doc is ready
-    $(document).ready(function()  {
+    $(document).ready(function() {
         $.jce.init();
     });
-    
+
 })(jQuery);
 // global shortcut
 var $jce = jQuery.jce;
