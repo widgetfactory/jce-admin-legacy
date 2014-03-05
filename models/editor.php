@@ -460,8 +460,8 @@ class WFModelEditor extends WFModelBase {
 
         // backwards compatability map
         $map = array(
-            'paste'     => 'clipboard',
-            'spacer'    => '|'
+            'paste' => 'clipboard',
+            'spacer' => '|'
         );
 
         $x = 0;
@@ -483,7 +483,7 @@ class WFModelEditor extends WFModelBase {
                     if (array_key_exists($item, $icons) === false) {
                         continue;
                     }
-                    
+
                     // assign icon
                     $item = $icons[$item]->icon;
                 }
@@ -547,7 +547,7 @@ class WFModelEditor extends WFModelBase {
 
                 $plugins = explode(',', $this->profile->plugins);
                 $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'colorpicker', 'upload', 'format'), $plugins));
-                
+
                 // add formatselect
                 if (in_array('formatselect', $plugins) === false && strpos($this->profile->rows, 'formatselect') !== false) {
                     $plugins[] = 'formatselect';
@@ -557,22 +557,22 @@ class WFModelEditor extends WFModelBase {
                 if (in_array('styleselect', $plugins) === false && strpos($this->profile->rows, 'styleselect') !== false) {
                     $plugins[] = 'styleselect';
                 }
-                
+
                 // add fontselect
                 if (in_array('fontselect', $plugins) === false && strpos($this->profile->rows, 'fontselect') !== false) {
                     $plugins[] = 'fontselect';
                 }
-                
+
                 // add formatselect
                 if (in_array('fontsizeselect', $plugins) === false && strpos($this->profile->rows, 'fontsizeselect') !== false) {
                     $plugins[] = 'fontsizeselect';
                 }
-                
+
                 // add font colours
                 if (in_array('fontcolor', $plugins) === false && (strpos($this->profile->rows, 'forecolor') !== false || strpos($this->profile->rows, 'backcolor') !== false)) {
                     $plugins[] = 'fontcolor';
                 }
-                
+
                 // add importcss
                 if (in_array('styleselect', $plugins) || in_array('fontselect', $plugins)) {
                     $plugins[] = 'importcss';
@@ -750,6 +750,23 @@ class WFModelEditor extends WFModelBase {
         return $assigned;
     }
 
+    private static function getYoothemePath($template) {
+        $warp7 = JPATH_SITE . '/templates/' . $template . '/warp.php';
+
+        if (is_file($warp7)) {
+            // get warp
+            $warp       = require($warp7);
+            $layouts    = $warp['config']->get('layouts');            
+            $style      = $layouts['default']['style'];
+
+            if (!empty($style)) {
+                return "templates/" . $template . "/styles/" . $style . "/css";
+            }
+        }
+        
+        return "templates/" . $template . "/css";
+    }
+
     private static function getStyleSheetsList($absolute = false) {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
@@ -776,8 +793,15 @@ class WFModelEditor extends WFModelBase {
             if (is_dir($path)) {
                 // assign template
                 $template = $item;
-                // assign url
-                $url = "templates/" . $template . "/css";
+
+                if (substr($template, 0, 4) === "yoo_") {
+                    $url  = self::getYoothemePath($template);
+                    $path = JPATH_SITE . '/' . $url;
+                } else {
+                    // assign url
+                    $url = "templates/" . $template . "/css";
+                }
+
                 break;
             }
         }
@@ -804,7 +828,7 @@ class WFModelEditor extends WFModelBase {
                 $css = array();
 
                 if (JFolder::exists($path)) {
-                    $css = JFolder::files($path, '(base|core|template|template_css)\.(css|less)$', false, true);
+                    $css = JFolder::files($path, '(base|core|theme|template|template_css)\.(css|less)$', false, true);
                 }
 
                 if (!empty($css)) {
@@ -1023,7 +1047,7 @@ class WFModelEditor extends WFModelBase {
                         $class = WF_EDITOR_PLUGINS . '/' . $plugin . '/classes/config.php';
                         if (JFile::exists($class)) {
                             require_once ($class);
-                            $classname = 'WF' . ucfirst($plugin) . 'PluginConfig';                            
+                            $classname = 'WF' . ucfirst($plugin) . 'PluginConfig';
                             if (class_exists($classname) && method_exists(new $classname, 'getStyles')) {
                                 $files = array_merge($files, (array) call_user_func(array($classname, 'getStyles')));
                             }
