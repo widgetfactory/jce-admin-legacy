@@ -47,7 +47,7 @@
             
             if (!init) {
                 // serialize and return
-                $('input[type="hidden"]', this).val(v).change();
+                $('input[type="hidden"]', this).first().val(v).change();
             }
         });
 
@@ -153,8 +153,17 @@
         // hide all
         if ($('div.styleformat', 'div.styleformat-list').length > 1) {
             $('div.styleformat div', 'div.styleformat-list').not('div.styleformat-item-title').addClass('hide');
+            
+            // set chevron
+            $('a.close.collapse', 'div.styleformat-list').removeClass('icon-chevron-up').addClass('icon-chevron-down');
         }
+        
         // set init flag false
         init = false;
+        
+        // update if there is more than 1 input, ie: conversion of legacy theme_advanced_styles
+        if ($('input[type="hidden"]', 'div.styleformat-list').length > 1) {
+            $('div.styleformat-list').trigger('update');
+        }
     });
 })(jQuery);
