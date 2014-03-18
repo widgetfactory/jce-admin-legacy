@@ -30,23 +30,28 @@ class WFViewUsers extends WFView {
 
         $this->addScript('components/com_jce/media/js/users.js');
 
-        $filter_order       = $app->getUserStateFromRequest("$option.$view.filter_order", 'filter_order', 'a.name', 'cmd');
-        $filter_order_Dir   = $app->getUserStateFromRequest("$option.$view.filter_order_Dir", 'filter_order_Dir', '', 'word');
-        $filter_type        = $app->getUserStateFromRequest("$option.$view.filter_type", 'filter_type', '', 'int');
-        $search             = $app->getUserStateFromRequest("$option.$view.search", 'search', '', 'cmd');
-        $search             = JString::strtolower($search);
+        $filter_order = $app->getUserStateFromRequest("$option.$view.filter_order", 'filter_order', 'a.name', 'cmd');
+        $filter_order_Dir = $app->getUserStateFromRequest("$option.$view.filter_order_Dir", 'filter_order_Dir', '', 'word');
+        $filter_type = $app->getUserStateFromRequest("$option.$view.filter_type", 'filter_type', '', 'int');
+        $search = $app->getUserStateFromRequest("$option.$view.search", 'search', '', 'cmd');
+        $search = JString::strtolower($search);
 
         $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'), 'int');
         $limitstart = $app->getUserStateFromRequest("$option.$view.limitstart", 'limitstart', 0, 'int');
 
         $where = array();
 
-        if (isset($search) && $search != '') {
-            $searchEscaped = $db->Quote('%' . $db->getEscaped($search, true) . '%', false);
-            $where[] = 'a.username LIKE ' . $searchEscaped . ' OR a.email LIKE ' . $searchEscaped . ' OR a.name LIKE ' . $searchEscaped;
+        if (!empty($search)) {
+            if (defined('JPATH_PLATFORM')) {
+                $quoted = $db->quote('%' . $search . '%', false);
+            } else {
+                $quoted = $db->Quote('%' . $search . '%', false);
+            }
+
+            $where[] = 'a.username LIKE ' . $quoted . ' OR a.email LIKE ' . $quoted . ' OR a.name LIKE ' . $quoted;
         }
 
-        if (defined('JPATH_PLATFORM')) {            
+        if (defined('JPATH_PLATFORM')) {
             if ($filter_type) {
                 $where[] = 'map.group_id = LOWER(' . $db->Quote($filter_type) . ') ';
             }
@@ -100,7 +105,6 @@ class WFViewUsers extends WFView {
 
             $query->group('a.id, a.name, a.username, g.title');
             $query->order(trim(implode(' ', $orderby)));
-            
         } else {
             $query = 'SELECT COUNT(a.id)'
                     . ' FROM #__users AS a'
@@ -157,7 +161,7 @@ class WFViewUsers extends WFView {
             $items = $db->loadObjectList();
 
             $i = '-';
-            
+
             //$options[] = JHTML::_('select.option', '0', WFText::_('Guest'));
 
             foreach ($items as $item) {
@@ -179,7 +183,7 @@ class WFViewUsers extends WFView {
         $this->assign('lists', $lists);
         $this->assign('items', $rows);
         $this->assign('pagination', $pagination);
-        
+
         $this->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/users.css');
 
         parent::display($tpl);
