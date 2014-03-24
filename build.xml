@@ -5,7 +5,7 @@
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
-    <property description="Copyright" name="copyright" value="Copyright (C) 2006 - 2013 Ryan Demmer. All rights reserved" />
+    <property description="Copyright" name="copyright" value="Copyright (C) 2006 - 2014 Ryan Demmer. All rights reserved" />
 
     <property description="Site Directory" name="component_site" value="../../../components/com_jce/" />
     <property description="Site Language" name="component_site_lang" value="../../../language/en-GB/" />
@@ -174,7 +174,7 @@
             <exclude name="editor/extensions/links/docmanlinks/**" />
             <exclude name="editor/extensions/links/zoo*" />
             <exclude name="editor/extensions/links/zoo/**" />
-            <exclude name="editor/extensions/links/k2links" />
+            <exclude name="editor/extensions/links/k2links**" />
             <exclude name="editor/extensions/links/k2links/**" />
             <exclude name="editor/extensions/mediaplayer/flowplayer*" />
             <exclude name="editor/extensions/mediaplayer/flowplayer/**" />
