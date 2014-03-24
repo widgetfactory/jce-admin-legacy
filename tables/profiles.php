@@ -137,11 +137,11 @@ class WFTableProfiles extends JTable {
      */
     public function load($id = null, $reset = true) {
         $return = parent::load($id, $reset);
-        
+
         if ($return !== false && !empty($this->params)) {
             $this->params = WFEncryptHelper::decrypt($this->params);
         }
-        
+
         return $return;
     }
 
@@ -157,8 +157,12 @@ class WFTableProfiles extends JTable {
     public function store($updateNulls = false) {
 
         if ($this->id && $this->params) {
-            $config = JComponentHelper::getParams('com_jce');
-            if ($config->get('secureparams', 0)) {
+            $component = WFExtensionHelper::getComponent();
+
+            // get params definitions
+            $params = new WFParameter($component->params, '', 'preferences');
+
+            if ($params->get('secureparams', 0)) {
                 $this->params = WFEncryptHelper::encrypt($this->params);
             }
         }
