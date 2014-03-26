@@ -906,7 +906,7 @@ abstract class WFInstall {
     private static function getProfiles() {
         $db = JFactory::getDBO();
         
-        $query = $db->getQuery();
+        $query = $db->getQuery(true);
 
         if (is_object($query)) {
             $query->select('id')->from('#__wf_profiles');
