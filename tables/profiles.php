@@ -11,6 +11,7 @@
  */
 defined('JPATH_BASE') or die('RESTRICTED');
 
+require_once(dirname(dirname(__FILE__)) . '/helpers/extension.php');
 require_once(dirname(dirname(__FILE__)) . '/helpers/encrypt.php');
 
 class WFTableProfiles extends JTable {
