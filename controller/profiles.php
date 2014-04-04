@@ -375,8 +375,8 @@ class WFControllerProfiles extends WFController {
                         $value = WFEncryptHelper::decrypt($value);
                         
                         // check is valid json
-                        $valid = json_decode($value, false, 1);
-                        
+                        $valid = json_decode($value, false);
+
                         // json is valid
                         if (is_null($valid) === false) {
                             // create array
