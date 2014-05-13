@@ -630,7 +630,9 @@ abstract class WFInstall {
             // remove tinymce langs
             $site . '/editor/tiny_mce/langs',
             // remove dragupload folder (ranamed to upload)
-            $site . '/editor/tiny_mce/plugins/dragupload'
+            $site . '/editor/tiny_mce/plugins/dragupload',
+            // remove googlemaps
+            $site . '/editor/extensions/aggregator/googlemaps'
         );
 
         foreach ($folders as $folder) {
@@ -696,7 +698,10 @@ abstract class WFInstall {
             $site . '/editor/extensions/links/build.xml',
             $site . '/editor/extensions/popups/build.xml',
             // remove legend.css
-            $admin . '/media/css/legend.css'
+            $admin . '/media/css/legend.css',
+            // remove googlemaps
+            $site . '/editor/extensions/aggregator/googlemaps.php',
+            $site . '/editor/extensions/aggregator/googlemaps.xml'
         );
 
         foreach ($files as $file) {
