@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.4beta5" />
-    <property description="Component Version" name="version_package" value="24beta5" />
+    <property description="Component Version" name="version" value="2.4" />
+    <property description="Component Version" name="version_package" value="240" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
@@ -170,6 +170,10 @@
             <exclude name="editor/extensions/popups_build.xml" />
             <exclude name="editor/extensions/filesystem/s3*" />
             <exclude name="editor/extensions/filesystem/s3/**" />
+            <exclude name="editor/extensions/filesystem/amazons3*" />
+            <exclude name="editor/extensions/filesystem/amazons3/**" />
+            <exclude name="editor/extensions/filesystem/google*" />
+            <exclude name="editor/extensions/filesystem/google/**" />
             <exclude name="editor/extensions/links/docmanlinks*" />
             <exclude name="editor/extensions/links/docmanlinks/**" />
             <exclude name="editor/extensions/links/zoo*" />
@@ -186,6 +190,8 @@
             <exclude name="editor/extensions/popups/highslide/**" />
             <exclude name="editor/extensions/aggregator/myriad*" />
             <exclude name="editor/extensions/aggregator/myriad/**" />
+            <exclude name="editor/extensions/aggregator/googlemaps*" />
+            <exclude name="editor/extensions/aggregator/googlemaps/**" />
             
             <exclude name="editor/extensions/imageeditor/**" />
 			
