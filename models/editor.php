@@ -449,25 +449,28 @@ class WFModelEditor extends WFModelBase {
         }
 
         // get plugins
-        $plugins = $model->getPlugins();
+        $plugins    = $model->getPlugins();
         // get core commands
-        $commands = $model->getCommands();
+        $commands   = $model->getCommands();
 
         // merge plugins and commands
         $icons = array_merge($commands, $plugins);
+        
         // create an array of rows
         $lists = explode(';', $this->profile->rows);
 
         // backwards compatability map
         $map = array(
-            'paste' => 'clipboard',
-            'spacer' => '|'
+            'paste'     => 'clipboard',
+            'spacer'    => '|',
+            'forecolor' => 'fontcolor',
+            'backcolor' => 'backcolor'
         );
 
         $x = 0;
         for ($i = 1; $i <= count($lists); $i++) {
-            $buttons = array();
-            $items = explode(',', $lists[$x]);
+            $buttons    = array();
+            $items      = explode(',', $lists[$x]);
 
             foreach ($items as $item) {
                 // set the plugin/command name
@@ -567,9 +570,9 @@ class WFModelEditor extends WFModelBase {
                 if (in_array('fontsizeselect', $plugins) === false && strpos($this->profile->rows, 'fontsizeselect') !== false) {
                     $plugins[] = 'fontsizeselect';
                 }
-
+                
                 // add font colours
-                if (in_array('fontcolor', $plugins) === false && (strpos($this->profile->rows, 'forecolor') !== false || strpos($this->profile->rows, 'backcolor') !== false)) {
+                if (in_array('fontcolor', $plugins) === false && preg_match('#(forecolor|backcolor)#', $this->profile->rows)) {
                     $plugins[] = 'fontcolor';
                 }
 
