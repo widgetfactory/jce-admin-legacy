@@ -89,23 +89,7 @@ class WFControllerProfiles extends WFController {
         $msg = JText::sprintf('WF_PROFILES_COPIED', $n);
         $this->setRedirect('index.php?option=com_jce&view=profiles', $msg);
     }
-    /*
-     * http://www.php.net/manual/en/function.array-merge-recursive.php#92195
-     */
-    private static function array_merge_recursive_distinct(array &$array1, array &$array2) {
-        $merged = $array1;
 
-        foreach ($array2 as $key => &$value) {
-            if (is_array($value) && isset($merged [$key]) && is_array($merged [$key])) {
-                $merged [$key] = self::array_merge_recursive_distinct($merged [$key], $value);
-            } else {
-                $merged [$key] = $value;
-            }
-        }
-
-        return $merged;
-    }
-    
     public function save() {
         // Check for request forgeries
         JRequest::checkToken() or die('RESTRICTED');
@@ -140,12 +124,12 @@ class WFControllerProfiles extends WFController {
                 case 'components':
                 case 'device':
                     $value = array_filter($value);
-                    
+
                     $value = implode(',', $this->cleanInput($value));
                     break;
                 case 'usergroups':
-                    $key    = 'types';
-                    $value  = implode(',', $this->cleanInput($value, 'int'));
+                    $key = 'types';
+                    $value = implode(',', $this->cleanInput($value, 'int'));
                     break;
                 case 'users':
                     $value = implode(',', $this->cleanInput($value, 'int'));
@@ -168,16 +152,16 @@ class WFControllerProfiles extends WFController {
                     // get params
                     $params = isset($row->params) ? $row->params : '';
                     // convert params to json data array
-                    $data   = (array) json_decode($params, true);
-                    
+                    $data = (array) json_decode($params, true);
+
                     // assign editor data
                     if (array_key_exists('editor', $value)) {
                         $json['editor'] = $value['editor'];
                     }
-                    
+
                     // get plugins
                     $plugins = explode(',', $row->plugins);
-                    
+
                     // assign plugin data
                     foreach ($plugins as $plugin) {
                         // add plugin params to array
@@ -185,9 +169,9 @@ class WFControllerProfiles extends WFController {
                             $json[$plugin] = $value[$plugin];
                         }
                     }
-                    
+
                     // combine and encode as json string
-                    $value = json_encode(self::array_merge_recursive_distinct($data, $json));
+                    $value = json_encode(WFParameter::mergeParams($data, $json, false));
 
                     break;
             }
@@ -327,7 +311,7 @@ class WFControllerProfiles extends WFController {
 
     public function export() {
         wfimport('admin.helpers.encrypt');
-        
+
         $mainframe = JFactory::getApplication();
         $db = JFactory::getDBO();
         $tmp = $mainframe->getCfg('tmp_path');
@@ -344,7 +328,7 @@ class WFControllerProfiles extends WFController {
         }
 
         $cids = implode(',', $cid);
-        
+
         $query = $db->getQuery(true);
         // check for name
         if (is_object($query)) {
@@ -373,7 +357,7 @@ class WFControllerProfiles extends WFController {
                     if ($value) {
                         // decrypt if necessary
                         $value = WFEncryptHelper::decrypt($value);
-                        
+
                         // check is valid json
                         $valid = json_decode($value, false);
 
