@@ -262,7 +262,7 @@ class WFParameter {
      */
     protected function bindData(&$parent, $data) {
         // Ensure the input data is an array.
-        if (is_object($data)) {
+        if (is_object($data)) {            
             $data = get_object_vars($data);
         } else {
             $data = (array) $data;
@@ -538,17 +538,18 @@ class WFParameter {
 
         return false;
     }
+    
+    /*
+     * http://www.php.net/manual/en/function.array-merge-recursive.php#92195
+     */
+    public static function mergeParams(array &$array1, array &$array2, $toObject = true) {
+        $merged = $array1;
 
-    public static function mergeParams($params1 = array(), $params2 = array(), $toObject = true) {
-        $merged = $params1;
-
-        foreach ($params2 as $key => $value) {
-            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+        foreach ($array2 as $key => &$value) {
+            if (is_array($value) && self::is_assoc($value) && isset($merged[$key]) && is_array($merged[$key])) {
                 $merged[$key] = self::mergeParams($merged[$key], $value);
             } else {
-                if ($value !== '') {
-                    $merged[$key] = $value;
-                }
+                $merged[$key] = $value;
             }
         }
 
@@ -578,7 +579,7 @@ class WFParameter {
         $object = new StdClass();
 
         foreach ($array as $key => $value) {
-            $object->$key = is_array($value) ? self::array_to_object($value) : $value;
+            $object->$key = is_array($value) && self::is_assoc($value) ? self::array_to_object($value) : $value;
         }
 
         return $object;
