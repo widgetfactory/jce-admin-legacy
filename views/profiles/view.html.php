@@ -181,8 +181,10 @@ class WFViewProfiles extends WFView {
                 if (count($rows) > 1) {
                     WFToolbarHelper::publishList();
                     WFToolbarHelper::unpublishList();
-                    WFToolbarHelper::deleteList('', 'remove', 'WF_PROFILES_DELETE');
                 }
+                
+                WFToolbarHelper::deleteList('', 'remove', 'WF_PROFILES_DELETE');
+               
                 WFToolbarHelper::help('profiles.about');
 
                 $options = array(
