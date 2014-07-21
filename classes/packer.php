@@ -13,12 +13,13 @@ defined('_JEXEC') or die('RESTRICTED');
 
 class WFPacker extends JObject {
 
+    const IMPORT_RX = '#@import([^;]+);#i';
+
     protected $files = array();
     protected $type = 'javascript';
     protected $text = '';
     protected $start = '';
     protected $end = '';
-    
     protected static $imports = array();
 
     /**
@@ -130,6 +131,15 @@ class WFPacker extends JObject {
             }
         }
 
+        if ($this->getType() == 'css') {
+            // move external import rules to top
+            foreach (array_unique(self::$imports) as $import) {
+                if (strpos($import, '//') !== false) {
+                    $content = '@import url("' . $import . '");' . $content;
+                }
+            }
+        }
+
         $content .= $this->getContentEnd();
 
         // get content hash
@@ -163,29 +173,22 @@ class WFPacker extends JObject {
     protected function cssmin($css) {
         // Normalize whitespace
         //$css = preg_replace('/\s+/', ' ', $css);
-
         // Remove comment blocks, everything between /* and */, unless
         // preserved with /*! ... */
         //$css = preg_replace('/\/\*[^\!](.*?)\*\//', '', $css);
-
         // Remove space after , : ; { }
         //$css = preg_replace('/(,|:|;|\{|}) /', '$1', $css);
-
         // Remove space before , ; { }
         //$css = preg_replace('/ (,|;|\{|})/', '$1', $css);
-
         // Strips leading 0 on decimal values (converts 0.5px into .5px)
         //$css = preg_replace('/(:| )0\.([0-9]+)(%|em|ex|px|in|cm|mm|pt|pc)/i', '${1}.${2}${3}', $css);
-
         // Strips units if value is 0 (converts 0px to 0)
         //$css = preg_replace('/(:| )(\.?)0(%|em|ex|px|in|cm|mm|pt|pc)/i', '${1}0', $css);
-
         // Converts all zeros value into short-hand
         //$css = preg_replace('/0 0 0 0/', '0', $css);
-
         // Shortern 6-character hex color codes to 3-character where possible
         //$css = preg_replace('/#([a-f0-9])\\1([a-f0-9])\\2([a-f0-9])\\3/i', '#\1\2\3', $css);
-        
+
         require_once(dirname(__FILE__) . '/cssmin.php');
         $min = new CSSmin();
         $css = $min->run($css);
@@ -199,29 +202,42 @@ class WFPacker extends JObject {
      * @param $data Data from file
      */
     protected function importCss($data, $file) {
-        if (preg_match_all('#@import url\([\'"]?([^\'"\)]+)[\'"]?\);#i', $data, $matches)) {
+        if (preg_match_all(self::IMPORT_RX, $data, $matches)) {
 
             $data = '';
 
             foreach ($matches[1] as $match) {
-                // url has a query, remove
-                if (strpos($match, '?') !== false) {
-                    $match = substr($match, 0, strpos($match, '?'));
-                }
-
-                if (strpos($match, '&') !== false) {
-                    $match = substr($match, 0, strpos($match, '&'));
-                }
+                // clean up url
+                $match = str_replace(array('url', '"', "'", '(', ')'), '', $match);
+                // trim
+                $match = trim($match);
 
                 if ($match) {
+                    // external url, skip it
+                    if (strpos($match, '//') !== false) {
+                        // add to imports list
+                        self::$imports[] = $match;
+                        continue;
+                    }
+
+                    // url has a query, remove
+                    if (strpos($match, '?') !== false) {
+                        $match = substr($match, 0, strpos($match, '?'));
+                    }
+
+                    if (strpos($match, '&') !== false) {
+                        $match = substr($match, 0, strpos($match, '&'));
+                    }
+
                     // get full path
                     $path = realpath($this->get('_cssbase') . '/' . $match);
-                    
+
                     // already import, don't repeat!
                     if (in_array($path, self::$imports)) {
                         continue;
                     }
-                    
+
+                    // get data
                     $data .= $this->getText($path);
                 }
             }
@@ -251,8 +267,9 @@ class WFPacker extends JObject {
     protected function getText($file = null, $minify = true) {
 
         if ($file && is_file($file)) {
-
-            if ($text = file_get_contents($file)) {
+            $text = file_get_contents($file);
+            
+            if ($text) {
                 // process css files
                 if ($this->getType() == 'css') {
                     // compile less files
@@ -264,7 +281,7 @@ class WFPacker extends JObject {
                         // minify
                         $text = $this->cssmin($text, $file);
                     }
-                    
+
                     // add to imports list
                     self::$imports[] = $file;
 
@@ -273,7 +290,7 @@ class WFPacker extends JObject {
                         $this->set('_cssbase', dirname($file));
 
                         // process import rules
-                        $text = $this->importCss($text, $file) . preg_replace('#@import url\([\'"]?([^\'"\)]+)[\'"]?\);#i', '', $text);
+                        $text = $this->importCss($text, $file) . preg_replace(self::IMPORT_RX, '', $text);
                     }
 
                     // store the base path of the current file
@@ -299,13 +316,22 @@ class WFPacker extends JObject {
     }
 
     protected function processPaths($data) {
-        $path = str_replace(JPATH_SITE, '', realpath($this->get('_imgbase') . '/' . $data[1]));
 
-        if ($path) {
-            return "url('" . JURI::root(true) . str_replace('\\', '/', $path) . "')";
+        if (isset($data[1])) {
+            if (strpos($data[1], '//') === false) {
+                $path = str_replace(JPATH_SITE, '', realpath($this->get('_imgbase') . '/' . $data[1]));
+
+                if ($path) {
+                    return "url('" . JURI::root(true) . str_replace('\\', '/', $path) . "')";
+                }
+
+                return "url('" . $data[1] . "')";
+            }
+
+            return $data[1];
         }
 
-        return "url('" . $data[1] . "')";
+        return "";
     }
 
 }
