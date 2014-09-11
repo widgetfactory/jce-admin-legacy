@@ -19,6 +19,10 @@ $view = JRequest::getCmd('view');
 // get task
 $task = JRequest::getCmd('task');
 
+if ($task === "plugin") {
+    throw new Exception('RESTRICTED', 403);
+}
+
 // legacy conversion
 if ($task == 'popup') {
     $view = 'popup';
@@ -40,13 +44,13 @@ if (file_exists($controllerPath)) {
 
     $controllerClass = 'WFController' . ucfirst($view);
     $controller = new $controllerClass(array(
-                'base_path' => WF_ADMINISTRATOR
-            ));
+        'base_path' => WF_ADMINISTRATOR
+    ));
 // load default controller
 } else {
     $controller = new WFController(array(
-                'base_path' => WF_ADMINISTRATOR
-            ));
+        'base_path' => WF_ADMINISTRATOR
+    ));
 }
 
 // check Authorisations
