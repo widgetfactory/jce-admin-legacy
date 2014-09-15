@@ -92,34 +92,27 @@ class WFPacker extends JObject {
     public function pack($minify = true, $gzip = false) {
         $type = $this->getType();
 
-        ob_start();
-
         // Headers
         if ($type == 'javascript') {
-            header("Content-type: application/javascript; charset: UTF-8");
+            JResponse::setHeader("Content-type", "application/javascript; charset: UTF-8", true);
         }
 
         if ($type == 'css') {
-            header("Content-type: text/css; charset: UTF-8");
+            JResponse::setHeader("Content-type", "text/css; charset: UTF-8", true);
         }
 
         // encoding
-        header("Vary: Accept-Encoding");
+        JResponse::setHeader("Vary", "Accept-Encoding", true);
 
         // expires after 48 hours
         $expires = 60 * 60 * 24 * 2;
 
-        header("Cache-Control: maxage=" . $expires);
+        JResponse::setHeader("Cache-Control", "maxage=" . $expires);
 
         // Handle proxies
-        header("Expires: " . gmdate("D, d M Y H:i:s", time() + $expires) . " GMT");
+        JResponse::setHeader("Expires", gmdate("D, d M Y H:i:s", time() + $expires) . " GMT", true);
 
         $files = $this->getFiles();
-
-        $encoding = self::getEncoding();
-
-        $zlib = function_exists('ini_get') && extension_loaded('zlib') && ini_get('zlib.output_compression');
-        $gzip = $gzip && !empty($encoding) && !$zlib && function_exists('gzencode');
 
         $content = $this->getContentStart();
 
@@ -146,18 +139,15 @@ class WFPacker extends JObject {
         $hash = md5($content);
 
         // set etag header
-        header("ETag: \"{$hash}\"");
-
-        // Generate GZIP'd content
-        if ($gzip) {
-            header("Content-Encoding: " . $encoding);
-            $content = gzencode($content, 4, FORCE_GZIP);
-        }
+        JResponse::setHeader("ETag", $hash, true);
+        
+        // set output content
+        JResponse::setBody($content);
 
         // stream to client
-        echo $content;
+        echo JResponse::toString($gzip);
 
-        exit(ob_get_clean());
+        exit();
     }
 
     protected function jsmin($data) {
