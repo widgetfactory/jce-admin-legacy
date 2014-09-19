@@ -821,14 +821,14 @@ class WFModelEditor extends WFModelBase {
                 $global_custom = $wf->getParam('editor.content_css_custom', '');
                 // Replace $template variable with site template name
                 $global_custom = str_replace('$template', $template, $global_custom);
-                // explode to array
-                $tmp = explode(',', $global_custom);
                 
-                $files = array();
-                
-                foreach(glob($tmp) as $file) {
-                    if (preg_match('#\.(css|less)$#', $file)) {
-                        $files[] = $file;
+                foreach(explode(',', $global_custom) as $tmp) {
+                    $tmp = JPATH_SITE . '/' . $tmp;
+                    
+                    foreach(glob($tmp) as $file) {
+                        if (is_file($file) && preg_match('#\.(css|less)$#', $file)) {
+                            $files[] = substr($file, strlen(JPATH_SITE) + 1);
+                        }
                     }
                 }
                 
@@ -868,23 +868,25 @@ class WFModelEditor extends WFModelBase {
                 $profile_custom = $wf->getParam('editor.profile_content_css_custom', '');
                 // Replace $template variable with site template name (defaults to 'system')
                 $profile_custom = str_replace('$template', $template, $profile_custom);
-                // explode to array
-                $tmp = explode(',', $profile_custom);
                 
-                $profile_custom = array();
-                
-                foreach(glob($tmp) as $file) {
-                    if (preg_match('#\.(css|less)$#', $file)) {
-                        $profile_custom[] = $file;
+                $custom = array();
+
+                foreach(explode(',', $profile_custom) as $tmp) {
+                    $tmp = JPATH_SITE . '/' . $tmp;
+                    
+                    foreach(glob($tmp) as $file) {
+                        if (is_file($file) && preg_match('#\.(css|less)$#', $file)) {
+                            $custom[] = substr($file, strlen(JPATH_SITE) + 1);
+                        }
                     }
                 }
-                
+
                 // add to existing list
-                if ($profile == 0) {
-                    $files = array_merge($files, $profile_custom);
+                if ($profile === 0) {
+                    $files = array_merge($files, $custom);
                     // overwrite global config value	
                 } else {
-                    $files = (array) $profile_custom;
+                    $files = (array) $custom;
                 }
                 break;
             // inherit global config value
@@ -899,11 +901,14 @@ class WFModelEditor extends WFModelBase {
 
         // check for existence of each file and make array of stylesheets
         foreach ($files as $file) {
+            if (empty($file)) {
+                continue;
+            }
+            
             // remove leading slash
             $file = ltrim($file, '/');
 
-            if ($file && JFile::exists(JPATH_SITE . '/' . $file)) {
-
+            if (JFile::exists(JPATH_SITE . '/' . $file)) {
                 $etag = "";
 
                 // add etag
