@@ -822,7 +822,16 @@ class WFModelEditor extends WFModelBase {
                 // Replace $template variable with site template name
                 $global_custom = str_replace('$template', $template, $global_custom);
                 // explode to array
-                $files = explode(',', $global_custom);
+                $tmp = explode(',', $global_custom);
+                
+                $files = array();
+                
+                foreach(glob($tmp) as $file) {
+                    if (preg_match('#\.(css|less)$#', $file)) {
+                        $files[] = $file;
+                    }
+                }
+                
                 break;
             // Template css (template.css or template_css.css)
             case 1 :
@@ -860,7 +869,16 @@ class WFModelEditor extends WFModelBase {
                 // Replace $template variable with site template name (defaults to 'system')
                 $profile_custom = str_replace('$template', $template, $profile_custom);
                 // explode to array
-                $profile_custom = explode(',', $profile_custom);
+                $tmp = explode(',', $profile_custom);
+                
+                $profile_custom = array();
+                
+                foreach(glob($tmp) as $file) {
+                    if (preg_match('#\.(css|less)$#', $file)) {
+                        $profile_custom[] = $file;
+                    }
+                }
+                
                 // add to existing list
                 if ($profile == 0) {
                     $files = array_merge($files, $profile_custom);
