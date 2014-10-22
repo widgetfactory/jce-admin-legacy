@@ -225,6 +225,9 @@ class WFLanguageParser extends JObject {
                     $i = 0;
 
                     foreach ($strings as $k => $v) {
+                        // remove "
+                        $v = str_replace('"', '', $v);
+                        
                         if (is_numeric($v)) {
                             $v = (float) $v;
                         } else {
