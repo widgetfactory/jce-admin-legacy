@@ -26,7 +26,7 @@
 
                         if (v !== "") {
                             // count keys to make sure we have at least one
-                            if (k === 'element' || k === 'classes' || k === 'styles') {
+                            if (k === 'element' || k === 'classes' || k === 'styles' || k === 'attributes') {
                                 x++;
                             }
                             

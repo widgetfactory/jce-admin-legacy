@@ -37,7 +37,7 @@ class WFElementStyleFormat extends WFElement {
         $output = array();
         
         // default item list (remove "attributes" for now)
-        $default = array('title' => '', 'element' => '', 'selector' => '', 'classes' => '', 'styles' => '');
+        $default = array('title' => '', 'element' => '', 'selector' => '', 'classes' => '', 'styles' => '', 'attributes' => '');
         
         // pass to items
         $items = json_decode($value, true);
