@@ -262,7 +262,7 @@ class WFParameter {
      */
     protected function bindData(&$parent, $data) {
         // Ensure the input data is an array.
-        if (is_object($data)) {            
+        if (is_object($data)) {
             $data = get_object_vars($data);
         } else {
             $data = (array) $data;
@@ -304,13 +304,13 @@ class WFParameter {
      */
     public function getGroups() {
         $results = array();
-        
+
         if (is_array($this->xml)) {
             foreach ($this->xml as $name => $group) {
-                $results[] = $name;//$this->getNumParams($name);
+                $results[] = $name; //$this->getNumParams($name);
             }
         }
-        
+
         return $results;
     }
 
@@ -488,14 +488,14 @@ class WFParameter {
 
     public function render($name = 'params', $group = '_default', $exclude = array()) {
         $params = $this->getParams($name, $group, $exclude);
-        $html   = '';
-        
+        $html = '';
+
         if (!empty($params)) {
             $html .= '<ul class="adminformlist">';
 
             foreach ($params as $item) {
                 //if (is_a($item, 'WFParameter')) {
-                if ($item instanceof WFParameter) {                    
+                if ($item instanceof WFParameter) {
                     foreach ($item->getGroups() as $group) {
                         $label = $group;
                         $class = '';
@@ -505,7 +505,7 @@ class WFParameter {
 
                         if ((string) $xml->attributes()->parent) {
                             $parent = '[' . (string) $xml->attributes()->parent . '][' . $group . ']';
-                            $label  = (string) $xml->attributes()->parent . '_' . $group;
+                            $label = (string) $xml->attributes()->parent . '_' . $group;
                         }
 
                         $html .= '<div data-parameter-nested-item="' . $group . '">';
@@ -513,8 +513,8 @@ class WFParameter {
                         $html .= '</div>';
                     }
                 } else {
-                    $label      = preg_replace_callback('#(for|id)="([^"]+)"#', array($this, 'cleanAttribute'), $item[0]);
-                    $element    = preg_replace_callback('#(id)="([^"]+)"#', array($this, 'cleanAttribute'), $item[1]);
+                    $label = preg_replace_callback('#(for|id)="([^"]+)"#', array($this, 'cleanAttribute'), $item[0]);
+                    $element = preg_replace_callback('#(id)="([^"]+)"#', array($this, 'cleanAttribute'), $item[1]);
 
                     $html .= '<li>' . $label . $element;
                 }
@@ -538,16 +538,21 @@ class WFParameter {
 
         return false;
     }
-    
+
     /*
      * http://www.php.net/manual/en/function.array-merge-recursive.php#92195
      */
-    public static function mergeParams(array &$array1, array &$array2, $toObject = true) {
+
+    public static function mergeParams(array &$array1, array &$array2, $toObject = true, $mergeEmpty = true) {
         $merged = $array1;
 
         foreach ($array2 as $key => &$value) {
+            if (!$mergeEmpty && array_key_exists($key, $merged) && $value === "") {
+                continue;
+            }
+
             if (is_array($value) && self::is_assoc($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                $merged[$key] = self::mergeParams($merged[$key], $value);
+                $merged[$key] = self::mergeParams($merged[$key], $value, $toObject, $mergeEmpty);
             } else {
                 $merged[$key] = $value;
             }
