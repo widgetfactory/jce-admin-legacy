@@ -62,7 +62,7 @@ class UpdatesHelper {
 
             // file download
             if ($result === false) {
-                return array('error' => 'CURL ERROR : ' . curl_error($ch));
+                return array('error' => 'CURL ERROR : ' . curl_errno($ch) . ' - ' . curl_error($ch));
             }
 
             curl_close($ch);
@@ -196,7 +196,7 @@ class UpdatesHelper {
             $result = function_exists('curl_init');
 
             if ($result) {
-                $cacert = JPATH_LIBRARIES . '/joomla/http/transport/cacert.pem';
+                $cacert = dirname(__FILE__) . '/cacert.pem';
 
                 // check for SSL support
                 $version = curl_version();
