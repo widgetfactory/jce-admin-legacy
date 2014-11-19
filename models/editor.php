@@ -171,8 +171,22 @@ class WFModelEditor extends WFModelBase {
             $settings['toggle_label'] = htmlspecialchars($wf->getParam('editor.toggle_label', '[Toggle Editor]', '[Toggle Editor]'));
             $settings['toggle_state'] = $wf->getParam('editor.toggle_state', 1, 1);
         }// end profile
-        // set compression states
-        $compress = array('javascript' => intval($wf->getParam('editor.compress_javascript', 1)), 'css' => intval($wf->getParam('editor.compress_css', 1)));
+
+        // check for joomla debug mode
+        $config = JFactory::getConfig();
+        
+        if (defined('JPATH_PLATFORM')) {
+            $debug  = $config->get('debug');
+        } else {
+            $debug  = $config->getValue('config.debug');
+        }
+        
+        $compress = array('javascript' => false, 'css' => false);
+        
+         // set compression states
+        if ((int) $debug === 0) {
+            $compress = array('javascript' => (int) $wf->getParam('editor.compress_javascript', 1), 'css' => (int) $wf->getParam('editor.compress_css', 1));
+        }
 
         // set compression
         if ($compress['css']) {
