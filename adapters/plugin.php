@@ -32,12 +32,12 @@ class WFInstallerPlugin extends JObject {
 
     private function setManifest() {
         $manifest = $this->parent->getManifest();
-        
+
         if (!$manifest) {
             return false;
         }
 
-        $values = array('name', 'description', 'install.script', 'uninstall.script', 'icon');
+        $values = array('name', 'description', 'icon');
 
         foreach ($values as $value) {
             $this->parent->set($value, WFXMLHelper::getElement($manifest, $value));
@@ -88,44 +88,8 @@ class WFInstallerPlugin extends JObject {
                 $this->parent->setPath('extension_root', JPATH_COMPONENT_SITE . '/editor/tiny_mce/plugins/' . $plugin);
             }
         } else {
-            // Non-JCE plugin type, probably JCE MediaBox
-            if ($type == 'plugin' && $group == 'system') {
-                // check manifest type against Joomla version
-                $manifest = $this->parent->getManifest();
-                
-                if (defined('JPATH_PLATFORM') && $manifest->getName() == 'install') {
-                    $this->parent->abort(WFText::_('WF_INSTALLER_EXTENSION_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_INVALID_MANIFEST'));
-                } else {
-                    @include_once(JPATH_LIBRARIES . '/joomla/installer/adapters/plugin.php');
-                    
-                    // try cms path for Joomla 3.1
-                    if (defined('JPATH_PLATFORM')) {
-                        @include_once(JPATH_LIBRARIES . '/cms/installer/adapter/plugin.php');
-                    }
-                    
-                    if (!class_exists('JInstallerPlugin')) {
-                    	$this->parent->abort();
-                    }
-
-                    // create adapter
-                    $adapter = new JInstallerPlugin($this->parent, $db);
-
-                    if (method_exists($adapter, 'loadLanguage')) {
-                        $adapter->loadLanguage($this->parent->getPath('source'));
-                    }
-
-                    // set adapter
-                    $this->parent->setAdapter('plugin', $adapter);
-                    // isntall
-                    return $adapter->install();
-                }
-                
-                return false;
-                
-            } else {
-                $this->parent->abort(WFText::_('WF_INSTALLER_EXTENSION_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_NO_PLUGIN_FILE'));
-                return false;
-            }
+            $this->parent->abort(WFText::_('WF_INSTALLER_EXTENSION_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_NO_PLUGIN_FILE'));
+            return false;
         }
 
         /**
@@ -172,38 +136,6 @@ class WFInstallerPlugin extends JObject {
         $language = JFactory::getLanguage();
         $language->load('com_jce_' . trim($plugin), JPATH_SITE);
 
-        $install = (string) $this->get('install.script');
-
-        if ($install) {
-            // Make sure it hasn't already been copied (this would be an error in the xml install file)
-            if (!file_exists($this->parent->getPath('extension_root') . '/' . $install)) {
-                $path['src']    = $this->parent->getPath('source') . '/' . $install;
-                $path['dest']   = $this->parent->getPath('extension_root') . '/' . $install;
-                if (!$this->parent->copyFiles(array($path))) {
-                    // Install failed, rollback changes
-                    $this->parent->abort(WFText::_('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_PHP_INSTALL_FILE_ERROR'));
-                    return false;
-                }
-            }
-        }
-
-        $uninstall = $this->get('uninstall.script');
-
-        if ($uninstall) {
-            // Make sure it hasn't already been copied (this would be an error in the xml install file)
-            if (!file_exists($this->parent->getPath('extension_root') . '/' . $uninstall)) {
-                $path['src'] = $this->parent->getPath('source') . '/' . $uninstall;
-                $path['dest'] = $this->parent->getPath('extension_root') . '/' . $uninstall;
-                if (!$this->parent->copyFiles(array(
-                            $path
-                        ))) {
-                    // Install failed, rollback changes
-                    $this->parent->abort(JText('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_PHP_UNINSTALL_FILE_ERROR'));
-                    return false;
-                }
-            }
-        }
-
         /**
          * ---------------------------------------------------------------------------------------------
          * Finalization and Cleanup Section
@@ -216,31 +148,7 @@ class WFInstallerPlugin extends JObject {
             return false;
         }
 
-        if ($install) {
-            if (file_exists($this->parent->getPath('extension_root') . '/' . $install)) {
-                ob_start();
-                ob_implicit_flush(false);
-                require_once($this->parent->getPath('extension_root') . '/' . $install);
-                if (function_exists('jce_install')) {
-                    if (jce_install() === false) {
-                        $this->parent->abort(WFText::_('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_CUSTOM_INSTALL_ERROR'));
-                        return false;
-                    }
-                } else if (function_exists('com_install')) {
-                    if (com_install() === false) {
-                        $this->parent->abort(WFText::_('WF_INSTALLER_PLUGIN_INSTALL') . ' : ' . WFText::_('WF_INSTALLER_CUSTOM_INSTALL_ERROR'));
-                        return false;
-                    }
-                }
-                $msg = ob_get_contents();
-                ob_end_clean();
-                if ($msg != '') {
-                    $this->parent->set('extension.message', $msg);
-                }
-            }
-        } else {
-            $this->parent->set('extension.message', '');
-        }
+        $this->parent->set('extension.message', '');
 
         $plugin = new StdClass();
         $plugin->name = $this->get('plugin');
@@ -327,34 +235,6 @@ class WFInstallerPlugin extends JObject {
             $this->parent->removeFiles($xml->languages, 0);
             $this->parent->removeFiles($xml->media, 0);
 
-            /**
-             * ---------------------------------------------------------------------------------------------
-             * Custom Uninstallation Script Section
-             * ---------------------------------------------------------------------------------------------
-             */
-            // Now lets load the uninstall file if there is one and execute the uninstall function if it exists.
-            $uninstall = (string) $xml->children('uninstall.script');
-
-            if ($uninstall) {
-                // Element exists, does the file exist?
-                if (is_file($this->parent->getPath('extension_root') . '/' . $uninstall)) {
-                    ob_start();
-                    ob_implicit_flush(false);
-                    require_once($this->parent->getPath('extension_root') . '/' . $uninstall);
-                    if (function_exists('com_uninstall')) {
-                        if (com_uninstall() === false) {
-                            JError::raiseWarning(100, WFText::_('WF_INSTALLER_PLUGIN_UNINSTALL') . ' : ' . WFText::_('WF_INSTALLER_CUSTOM_UNINSTALL_ERROR'));
-                            $retval = false;
-                        }
-                    }
-                    $msg = ob_get_contents();
-                    ob_end_clean();
-                    if ($msg != '') {
-                        $this->parent->set('extension.message', $msg);
-                    }
-                }
-            }
-
             // remove form profile
             if ($xml->icon) {
                 $plugin = new StdClass();
@@ -372,7 +252,7 @@ class WFInstallerPlugin extends JObject {
         }
         // set plugin path
         $path = $this->parent->getPath('extension_root');
-        
+
         // set extension path
         if ($type == 'extension') {
             $path = $this->parent->getPath('extension_root') . '/' . $name;
