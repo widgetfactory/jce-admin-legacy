@@ -236,12 +236,12 @@ class WFInstaller extends JObject {
             }
 
             // None of the XML files found were valid install files
-            JError::raiseWarning(JText::_('WF_INSTALLER_MANIFEST_INVALID'));
+            JError::raiseWarning(1, JText::_('WF_INSTALLER_MANIFEST_INVALID'));
 
             return false;
         } else {
             // No XML files were found in the install folder
-            JError::raiseWarning(JText::_('WF_INSTALLER_MANIFEST_LOAD_ERROR'));
+            JError::raiseWarning(1, JText::_('WF_INSTALLER_MANIFEST_LOAD_ERROR'));
             return false;
         }
     }
@@ -254,7 +254,7 @@ class WFInstaller extends JObject {
      * @return  mixed  A SimpleXMLElement, or null if the file failed to parse
      */
     public function isManifest($file) {
-        $xml = simplexml_load_file($file);
+        $xml = @simplexml_load_file($file);
 
         // If we cannot load the XML file return null
         if (!$xml) {
