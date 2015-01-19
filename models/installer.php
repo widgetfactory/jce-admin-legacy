@@ -189,8 +189,7 @@ class WFModelInstaller extends WFModel {
             $package = JPath::clean(dirname($dest) . '/' . uniqid('install_'));
 
             if (!JArchive::extract($dest, $package)) {
-                JInstallerHelper::cleanupInstall($package, $dest);
-                
+                JInstallerHelper::cleanupInstall($dest, $package);
                 JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_EXTRACT_ERROR'));
                 return false;
             }
@@ -199,8 +198,7 @@ class WFModelInstaller extends WFModel {
                 $type = self::detectType($package);
 
                 if ($type === false) {
-                    JInstallerHelper::cleanupInstall($package, $dest);
-
+                    JInstallerHelper::cleanupInstall($dest, $package);
                     JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_MANIFEST_INVALID'));
                     return false;
                 }
@@ -225,8 +223,7 @@ class WFModelInstaller extends WFModel {
             $type = self::detectType($dest);
 
             if ($type === false) {
-                JInstallerHelper::cleanupInstall($package, $dest);
-                
+                JInstallerHelper::cleanupInstall($dest, $package);
                 JError::raiseWarning(1, JText::_('WF_INSTALLER_MANIFEST_INVALID'));
                 return false;
             }
