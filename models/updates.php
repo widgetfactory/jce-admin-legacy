@@ -202,7 +202,7 @@ class WFModelUpdates extends WFModel {
         }
 
         foreach ($files as $file) {
-            $xml = simplexml_load_file($file);
+            $xml = @simplexml_load_file($file);
             if (!$xml) {
                 continue;
             }
@@ -238,6 +238,7 @@ class WFModelUpdates extends WFModel {
     private static function unpack($archive) {
         jimport('joomla.filesystem.file');
         jimport('joomla.filesystem.archive');
+        jimport('joomla.installer.helper');
 
         // Temporary folder to extract the archive into
         $tmpdir = uniqid('install_');
@@ -249,6 +250,7 @@ class WFModelUpdates extends WFModel {
         try {
             JArchive::extract($archive, $extractdir);
         } catch (Exception $e) {
+            JInstallerHelper::cleanupInstall($archive, $extractdir);
             return false;
         }
 
@@ -285,6 +287,7 @@ class WFModelUpdates extends WFModel {
         if ($retval['type']) {
             return $retval;
         } else {
+            JInstallerHelper::cleanupInstall($archive, $extractdir);
             return false;
         }
     }
@@ -314,8 +317,9 @@ class WFModelUpdates extends WFModel {
             if (JFile::exists($path)) {
                 // check hash
                 if ($hash == md5(md5_file($path))) {
-                    if ($package = self::unpack($path)) {
-
+                    $package = self::unpack($path);
+                    
+                    if ($package) {
                         // Install a JCE Add-on
                         if ($method == 'jce') {
                             wfimport('admin.classes.installer');
@@ -340,14 +344,10 @@ class WFModelUpdates extends WFModel {
                             }
                         }
                         // Cleanup the install files
-                        if (!is_file($package['packagefile'])) {
-                            $package['packagefile'] = $app->getCfg('tmp_path') . '/' . $package['packagefile'];
-                        }
-                        if (is_file($package['packagefile'])) {
-                            JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
-                        }
+                        JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
                     } else {
                         $result = array('error' => WFText::_('WF_UPDATES_ERROR_FILE_EXTRACT_FAIL'));
+                        JFile::delete($path);
                     }
                 } else {
                     $result = array('error' => WFText::_('WF_UPDATES_ERROR_FILE_VERIFICATION_FAIL'));

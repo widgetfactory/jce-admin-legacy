@@ -72,12 +72,8 @@ class WFModelInstaller extends WFModel {
         $this->setState('result', $result);
 
         // Cleanup the install files
-        if (!is_file($package['packagefile'])) {
-            $package['packagefile'] = $app->getCfg('tmp_path') . '/' . $package['packagefile'];
-        }
-        if (is_file($package['packagefile'])) {
-            JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
-        }
+        JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
+        
         return $result;
     }
 
@@ -161,19 +157,19 @@ class WFModelInstaller extends WFModel {
                 return false;
             }
 
-            $dest   = JPath::clean($app->getCfg('tmp_path') . '/' . $file['name']);
-            $src    = $file['tmp_name'];
+            $dest = JPath::clean($app->getCfg('tmp_path') . '/' . $file['name']);
+            $src = $file['tmp_name'];
             // upload file
             if (!JFile::upload($src, $dest)) {
                 JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_UPLOAD_FAILED'));
                 return false;
             }
-            
+
             if (!is_file($dest)) {
                 JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_UPLOAD_FAILED'));
                 return false;
             }
-            
+
             // path to file
         } else {
             $dest = JPath::clean($path);
@@ -193,12 +189,21 @@ class WFModelInstaller extends WFModel {
             $package = JPath::clean(dirname($dest) . '/' . uniqid('install_'));
 
             if (!JArchive::extract($dest, $package)) {
+                JInstallerHelper::cleanupInstall($package, $dest);
+                
                 JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_EXTRACT_ERROR'));
                 return false;
             }
 
             if (JFolder::exists($package)) {
                 $type = self::detectType($package);
+
+                if ($type === false) {
+                    JInstallerHelper::cleanupInstall($package, $dest);
+
+                    JError::raiseWarning('SOME_ERROR_CODE', WFText::_('WF_INSTALLER_MANIFEST_INVALID'));
+                    return false;
+                }
             }
 
             return array(
@@ -219,6 +224,13 @@ class WFModelInstaller extends WFModel {
             // Detect the package type
             $type = self::detectType($dest);
 
+            if ($type === false) {
+                JInstallerHelper::cleanupInstall($package, $dest);
+                
+                JError::raiseWarning(1, JText::_('WF_INSTALLER_MANIFEST_INVALID'));
+                return false;
+            }
+
             return array(
                 'manifest' => null,
                 'packagefile' => null,
@@ -238,7 +250,7 @@ class WFModelInstaller extends WFModel {
         }
 
         foreach ($files as $file) {
-            $xml = simplexml_load_file($file);
+            $xml = @simplexml_load_file($file);
             if (!$xml) {
                 continue;
             }
@@ -302,7 +314,7 @@ class WFModelInstaller extends WFModel {
 
         // pre-defined array of other plugins
         $related = preg_replace('#(\w+)#', "'$1'", $params->get('related_extensions', 'jcemediabox,jceutilities,mediaobject,wfmediabox,wfmediaelement'));
-        $query  = $db->getQuery(true);
+        $query = $db->getQuery(true);
 
         // Joomla! 2.5
         if (is_object($query)) {
@@ -318,7 +330,7 @@ class WFModelInstaller extends WFModel {
         $language = JFactory::getLanguage();
 
         $num = count($rows);
-        
+
         for ($i = 0; $i < $num; $i++) {
             $row = $rows[$i];
 
@@ -327,9 +339,9 @@ class WFModelInstaller extends WFModel {
             } else {
                 $file = JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element . ".xml";
             }
-            
+
             if (isset($row->extension_id)) {
-                $row->id = $row->extension_id; 
+                $row->id = $row->extension_id;
             }
 
             if (is_file($file)) {

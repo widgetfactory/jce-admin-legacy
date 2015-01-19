@@ -431,11 +431,14 @@ class WFControllerProfiles extends WFController {
             if (is_uploaded_file($file['tmp_name']) && $file['name']) {
                 // create destination path
                 $destination = $tmp . '/' . $file['name'];
+                
                 if (JFile::upload($file['tmp_name'], $destination)) {
                     // check it exists, was uploaded properly
                     if (JFile::exists($destination)) {
                         // process import
-                        $model->processImport($destination);
+                        if ($model->processImport($destination) === false) {
+                            JFile::delete($destination);
+                        }
                     } else {
                         $app->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_FAILED'), 'error');
                     }
