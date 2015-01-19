@@ -46,7 +46,7 @@ class UpdatesHelper {
             // Pretend we are Firefox, so that webservers play nice with us
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.14) Gecko/20110105 Firefox/3.6.14');
             curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             // The @ sign allows the next line to fail if open_basedir is set or if safe mode is enabled
             @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
