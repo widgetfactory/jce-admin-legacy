@@ -92,27 +92,34 @@ class WFPacker extends JObject {
     public function pack($minify = true, $gzip = false) {
         $type = $this->getType();
 
+        ob_start();
+
         // Headers
         if ($type == 'javascript') {
-            JResponse::setHeader("Content-type", "application/javascript; charset: UTF-8", true);
+            header("Content-type: application/javascript; charset: UTF-8");
         }
 
         if ($type == 'css') {
-            JResponse::setHeader("Content-type", "text/css; charset: UTF-8", true);
+            header("Content-type: text/css; charset: UTF-8");
         }
 
         // encoding
-        JResponse::setHeader("Vary", "Accept-Encoding", true);
+        header("Vary: Accept-Encoding");
 
         // expires after 48 hours
         $expires = 60 * 60 * 24 * 2;
 
-        JResponse::setHeader("Cache-Control", "maxage=" . $expires);
+        header("Cache-Control: maxage=" . $expires);
 
         // Handle proxies
-        JResponse::setHeader("Expires", gmdate("D, d M Y H:i:s", time() + $expires) . " GMT", true);
+        header("Expires: " . gmdate("D, d M Y H:i:s", time() + $expires) . " GMT");
 
         $files = $this->getFiles();
+
+        $encoding = self::getEncoding();
+
+        $zlib = function_exists('ini_get') && extension_loaded('zlib') && ini_get('zlib.output_compression');
+        $gzip = $gzip && !empty($encoding) && !$zlib && function_exists('gzencode');
 
         $content = $this->getContentStart();
 
@@ -139,15 +146,18 @@ class WFPacker extends JObject {
         $hash = md5($content);
 
         // set etag header
-        JResponse::setHeader("ETag", $hash, true);
-        
-        // set output content
-        JResponse::setBody($content);
+        header("ETag: \"{$hash}\"");
+
+        // Generate GZIP'd content
+        if ($gzip) {
+            header("Content-Encoding: " . $encoding);
+            $content = gzencode($content, 4, FORCE_GZIP);
+        }
 
         // stream to client
-        echo JResponse::toString($gzip);
+        echo $content;
 
-        exit();
+        exit(ob_get_clean());
     }
 
     protected function jsmin($data) {
