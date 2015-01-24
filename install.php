@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2015 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -632,7 +632,13 @@ abstract class WFInstall {
             // remove dragupload folder (ranamed to upload)
             $site . '/editor/tiny_mce/plugins/dragupload',
             // remove googlemaps
-            $site . '/editor/extensions/aggregator/googlemaps'
+            $site . '/editor/extensions/aggregator/googlemaps',
+            
+            // remove extensions folder
+            $site . '/editor/libraries/js/extensions',
+            
+            // remove fullpage plugin
+            $site . '/editor/tiny_mce/plugins/fullpage'
         );
 
         foreach ($folders as $folder) {
@@ -677,6 +683,13 @@ abstract class WFInstall {
             $site . '/editor/tiny_mce/themes/advanced/langs/en_dlg.js',
             // remove old jquery UI
             $site . '/editor/libraries/jquery/js/jquery-ui-1.9.0.custom.min.js',
+            $site . '/editor/libraries/jquery/js/jquery-ui-1.10.3.custom.min.js',
+            // remove old jquery
+            $site . '/editor/libraries/jquery/js/jquery-1.10.2.min.js',
+            // remove "touch-punch"
+            $site . '/editor/libraries/jquery/js/jquery.ui.touch-punch.min.js',
+            // remove "tiny_mce_utils"
+            $site . '/editor/libraries/js/tiny_mce_utils.js',
             // remove "theme" files
             $site . '/editor/libraries/classes/theme.php',
             $site . '/editor/tiny_mce/themes/advanced/theme.php',
@@ -701,7 +714,35 @@ abstract class WFInstall {
             $admin . '/media/css/legend.css',
             // remove googlemaps
             $site . '/editor/extensions/aggregator/googlemaps.php',
-            $site . '/editor/extensions/aggregator/googlemaps.xml'
+            $site . '/editor/extensions/aggregator/googlemaps.xml',
+
+            // remove concat files
+            $admin . '/media/js/jce.js',
+            
+            $admin . '/media/js/profiles.js',
+            $admin . '/media/js/extensions.js',
+            $admin . '/media/js/checklist.js',
+            $admin . '/media/js/styleformat.js',
+            $admin . '/media/js/fonts.js',
+            $admin . '/media/js/blockformats.js',
+            
+            $site . '/editor/libraries/js/html5.js',
+            $site . '/editor/libraries/js/select.js',
+            $site . '/editor/libraries/js/tips.js',
+            $site . '/editor/libraries/js/colorpicker.js',
+            $site . '/editor/libraries/js/plugin.js',
+
+            $site . '/editor/libraries/js/extensions.js',
+            $site . '/editor/libraries/js/aggregator.js',
+            $site . '/editor/libraries/js/mediaplayer.js',
+            $site . '/editor/libraries/js/popups.js',
+            $site . '/editor/libraries/plupload/plupload.full.js',
+            $site . '/editor/libraries/js/tree.js',
+            $site . '/editor/libraries/js/upload.js',
+            $site . '/editor/libraries/js/browser.js',
+            $site . '/editor/libraries/js/sort.js',
+            $site . '/editor/libraries/js/filter.js',
+            $site . '/editor/libraries/js/manager.js'
         );
 
         foreach ($files as $file) {

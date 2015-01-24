@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2015 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -91,7 +91,7 @@ class WFController extends WFControllerBase {
             $document->setMetaData('meta', 'width=device-width, initial-scale=1.0');
 
             // JQuery UI
-            $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-' . WF_JQUERY . '.min.js');
+            $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery.min.js');
             // jQuery noConflict
             $view->addScriptDeclaration('jQuery.noConflict();');
         } else {
@@ -99,9 +99,7 @@ class WFController extends WFControllerBase {
         }
 
         // JQuery UI
-        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-ui-' . WF_JQUERYUI . '.custom.min.js');
-        // JQuery Touch Punch
-        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery.ui.touch-punch.min.js');
+        $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery-ui.min.js');
 
         $scripts = array();
 
@@ -123,10 +121,8 @@ class WFController extends WFControllerBase {
 
                 $params = WFParameterHelper::getComponentParams();
                 $theme = $params->get('preferences.theme', 'jce');
-
-                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/tips.js');
-                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/html5.js');
-                $view->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/jce.js');
+                
+                $view->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/core.js');
 
                 $options = array(
                     'labels' => array(

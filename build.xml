@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.4.6" />
-    <property description="Component Version" name="version_package" value="246" />
+    <property description="Component Version" name="version" value="2.5.0" />
+    <property description="Component Version" name="version_package" value="250" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
-    <property description="Copyright" name="copyright" value="Copyright (C) 2006 - 2014 Ryan Demmer. All rights reserved" />
+    <property description="Copyright" name="copyright" value="Copyright (C) 2006 - 2015 Ryan Demmer. All rights reserved" />
 
     <property description="Site Directory" name="component_site" value="../../../components/com_jce/" />
     <property description="Site Language" name="component_site_lang" value="../../../language/en-GB/" />
@@ -86,12 +86,12 @@
             <exclude name="install.pkg.php" />
             <exclude name="serverkey.php" />
         </fileset>
-		
+
         <!-- Copy Component Admin Files -->
         <copy todir="${component_admin_export_dir}/">
             <fileset refid="component_admin_files" />
         </copy>
-		
+	
         <fileset dir="${component_admin_lang}" id="component_admin_lang">
             <include name="en-GB.com_jce.ini" />
             <include name="en-GB.com_jce.menu.ini" />
@@ -284,8 +284,76 @@
         
         <loadfile property="header" srcFile="${component_admin_export_dir}/header.js.txt"/>
         <loadfile property="header_tinymce" srcFile="${component_admin_export_dir}/header.tinymce.txt"/>
-        <!-- JSMin -->
         
+        <!-- Admin Concat and JSMin -->
+        
+        <concat destfile="${component_admin_export_dir}/media/js/core.js">
+            <filelist dir="${component_admin_export_dir}/media/js/lib">
+                <file name="profiles.js" />
+                <file name="extensions.js" />
+                <file name="checklist.js" />
+                <file name="styleformat.js" />
+                <file name="fonts.js" />
+                <file name="blockformats.js" />
+            </filelist>
+            <filelist dir="${component_site_export_dir}/editor/libraries/js/lib">
+                <file name="select.js" />
+                <file name="colorpicker.js" />
+            </filelist>
+        </concat>
+
+        <concat destfile="${component_admin_export_dir}/media/js/profile.js">
+            <filelist dir="${component_site_export_dir}/editor/libraries/js/lib">
+                <file name="html5.js" />
+                <file name="tips.js" />
+            </filelist>
+            <file name="${component_admin_export_dir}/media/js/lib/jce.js" />
+        </concat>
+        
+        <delete dir="${component_admin_export_dir}/media/js/lib" />
+        
+        <!-- Site Concat and JSMin -->
+        
+        <!-- Plupload --> 
+        <copy file="${component_site}/editor/libraries/plupload/plupload.full.js" tofile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full-src.js" />
+        <yuicompressor-moxiecode infile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full-src.js" outfile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full.js" />
+        <delete file="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full-src.js" quiet="true" /> 
+        
+        <concat destfile="${component_site_export_dir}/editor/libraries/js/plugin.full.js">
+            <filelist dir="${component_site_export_dir}/editor/libraries/js/lib">
+                <file name="html5.js" />
+                <file name="select.js" />
+                <file name="tips.js" />
+                <file name="colorpicker.js" />
+                <file name="plugin.js" />
+
+                <file name="extensions.js" />
+                <file name="aggregator.js" />
+                <file name="mediaplayer.js" />
+                <file name="popups.js" />
+            </filelist>
+        </concat>
+
+        <concat destfile="${component_site_export_dir}/editor/libraries/js/manager.full.js">
+            <filelist dir="${component_site_export_dir}/editor/libraries/js/lib">
+                <file name="../../plupload/plupload.full.js" />
+                <file name="tree.js" />
+                <file name="upload.js" />
+                <file name="browser.js" />
+                <file name="sort.js" />
+                <file name="filter.js" />
+                <file name="manager.js" />
+            </filelist>
+        </concat>
+        
+        <concat destfile="${component_site_export_dir}/editor/libraries/js/link.full.js">
+            <filelist dir="${component_site_export_dir}/editor/libraries/js/lib">
+                <file name="tree.js" />
+                <file name="link.js" />
+            </filelist>
+        </concat>
+
+        <!-- JSMin -->
         <jsmin force="true" copyright="${header_tinymce}">
             <fileset dir="${component_export_dir}">
                         
@@ -297,6 +365,7 @@
                 <exclude name="**/codemirror/**" />                
                 <exclude name="**/plupload/**" />
                 
+                <contains text="http://tinymce.moxiecode.com/license"  casesensitive="no" />
                 <contains text="http://www.tinymce.com/license"  casesensitive="no" />  
             </fileset>
         </jsmin>
@@ -318,21 +387,20 @@
                 </not>
             </fileset>
         </jsmin>
- 
-        <!-- Plupload --> 
-        <copy file="${component_site}/editor/libraries/plupload/plupload.full.js" tofile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full-src.js" />
-        <yuicompressor-moxiecode infile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full-src.js" outfile="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full.js" />
-        <delete file="${component_export_dir}/components/com_jce/editor/libraries/plupload/plupload.full-src.js" quiet="true" /> 
-         
-        <!-- TinyMCE --> 
-        <copy file="${component_site}/editor/tiny_mce/tiny_mce.js" tofile="${component_export_dir}/components/com_jce/editor/tiny_mce/tiny_mce_src.js" />
-        <yuicompressor-moxiecode infile="${component_export_dir}/components/com_jce/editor/tiny_mce/tiny_mce_src.js" outfile="${component_export_dir}/components/com_jce/editor/tiny_mce/tiny_mce.js" />
-        <delete file="${component_export_dir}/components/com_jce/editor/tiny_mce/tiny_mce_src.js" quiet="true" />
+        
+        <!--concat destfile="${component_site_export_dir}/editor/libraries/js/editor.full.js">
+            <file name="${component_site_export_dir}/tiny_mce/tiny_mce.js" />
+            <file name="${component_site_export_dir}/editor/libraries/js/lib/editor.js" />
+        </concat>
+        
+        <delete file="${component_site_export_dir}/editor/tiny_mce/tiny_mce.js" /-->
+        <delete dir="${component_site_export_dir}/editor/libraries/js/lib" />
+        <delete file="${component_site_export_dir}/editor/libraries/plupload/plupload.full.js" />
 
         <yui-compressor warn="false" charset="UTF-8" fromdir="${component_export_dir}" todir="${component_export_dir}">
-           <include name="**/*.css" />
-           <exclude name="**/bootstrap-responsive.min.css" />
-       </yui-compressor>
+            <include name="**/*.css" />
+            <exclude name="**/bootstrap-responsive.min.css" />
+        </yui-compressor>
        
         <delete dir="${component_export_dir}" quiet="true">
             <include name="**/*.css" />
@@ -340,97 +408,57 @@
             <exclude name="**/bootstrap.min.css" />
             <exclude name="**/codemirror/**" />
             <exclude name="**/codemirror/theme/**" />
-       </delete>
+        </delete>
 
-       <!-- Prepend header -->
-      <for param="file">
-        <path>
-            <fileset dir="${component_export_dir}">
-                <include name="**/*-min.css" />
-                <exclude name="**/bootstrap.min.css" />
-            </fileset>
-        </path>
-        <sequential>
-            <concat destfile="@{file}.tmp">
-                <fileset file="${component_admin_export_dir}/header.css.txt" />
-                <fileset file="@{file}" />
-            </concat>
-        </sequential>
-      </for>
+        <!-- Prepend header -->
+        <for param="file">
+            <path>
+                <fileset dir="${component_export_dir}">
+                    <include name="**/*-min.css" />
+                    <exclude name="**/bootstrap.min.css" />
+                </fileset>
+            </path>
+            <sequential>
+                <concat destfile="@{file}.tmp">
+                    <fileset file="${component_admin_export_dir}/header.css.txt" />
+                    <fileset file="@{file}" />
+                </concat>
+            </sequential>
+        </for>
 
-       <!-- CodeMirror -->
-       <for param="file">
-        <path>
+        <!-- CodeMirror -->
+        <for param="file">
+            <path>
+                <fileset dir="${component_export_dir}">
+                    <include name="**/codemirror/**-min.css" />
+                    <include name="**/codemirror/theme/**-min.css" />
+                </fileset>
+            </path>
+            <sequential>
+                <concat destfile="@{file}.tmp">
+                    <fileset file="header.codemirror.txt" />
+                    <fileset file="@{file}" />
+                </concat>
+            </sequential>
+        </for>
+        <!-- CodeMirror -->
+      
+        <move todir="${component_export_dir}" includeemptydirs="false">
             <fileset dir="${component_export_dir}">
-                <include name="**/codemirror/**-min.css" />
-                <include name="**/codemirror/theme/**-min.css" />
+                <include name="**/**-min.css.tmp" />
             </fileset>
-        </path>
-        <sequential>
-            <concat destfile="@{file}.tmp">
-                <fileset file="header.codemirror.txt" />
-                <fileset file="@{file}" />
-            </concat>
-        </sequential>
-      </for>
-      <!-- CodeMirror -->
+            <mapper type="regexp" from="^(.*)-min\.css\.tmp$" to="\1.css" />
+        </move>
       
-      <move todir="${component_export_dir}" includeemptydirs="false">
-           <fileset dir="${component_export_dir}">
-               <include name="**/**-min.css.tmp" />
-           </fileset>
-           <mapper type="regexp" from="^(.*)-min\.css\.tmp$" to="\1.css" />
-      </move>
-      
-      <delete dir="${component_export_dir}" quiet="true">
+        <delete dir="${component_export_dir}" quiet="true">
             <include name="**/**-min.css" />
-       </delete>
+        </delete>
       
-      <delete file="${component_export_dir}/administrator/components/com_jce/header.js.txt" quiet="true" />
-      <delete file="${component_export_dir}/administrator/components/com_jce/header.css.txt" quiet="true" />
-      <delete file="${component_export_dir}/administrator/components/com_jce/header.tinymce.txt" quiet="true" />
-      <delete file="${component_export_dir}/administrator/components/com_jce/header.codemirror.txt" quiet="true" />
+        <delete file="${component_export_dir}/administrator/components/com_jce/header.js.txt" quiet="true" />
+        <delete file="${component_export_dir}/administrator/components/com_jce/header.css.txt" quiet="true" />
+        <delete file="${component_export_dir}/administrator/components/com_jce/header.tinymce.txt" quiet="true" />
+        <delete file="${component_export_dir}/administrator/components/com_jce/header.codemirror.txt" quiet="true" />
 
-        <!--fileset dir="${component_export_dir}/plugins/editors" id="editor">
-            <include name="jce.xml" />
-            <include name="jce.php" />
-            <include name="legacy.xml" />
-        </fileset>
-        
-        <tar destfile="${component_export_dir}/packages/plg_editors_jce_${version_package}.tar.gz" basedir="${component_export_dir}/plugins/editors" compression="gzip">
-            <fileset refid="editor" />
-        </tar>
-        
-        <zip destfile="${component_export_dir}/packages/plg_editors_jce_${version_package}.zip" basedir="${component_export_dir}/plugins/editors">
-            <fileset refid="editor" />
-        </zip>
-        
-        <fileset dir="${component_export_dir}/plugins/quickicon" id="quickicon">
-            <include name="jcefilebrowser.xml" />
-            <include name="jcefilebrowser.php" />
-        </fileset>
-        
-        <tar destfile="${component_export_dir}/packages/plg_quickicon_jce_${version_package}.tar.gz" basedir="${component_export_dir}/plugins/quickicon" compression="gzip">
-            <fileset refid="quickicon" />
-        </tar>
-        
-        <zip destfile="${component_export_dir}/packages/plg_quickicon_jce_${version_package}.zip" basedir="${component_export_dir}/plugins/quickicon">
-            <fileset refid="quickicon" />
-        </zip>
-        
-        <fileset dir="${component_export_dir}/modules" id="modules">
-            <include name="mod_jcefilebrowser.xml" />
-            <include name="mod_jcefilebrowser.php" />
-        </fileset>
-        
-        <tar destfile="${component_export_dir}/packages/mod_jce_${version_package}.tar.gz" basedir="${component_export_dir}/modules" compression="gzip">
-            <fileset refid="modules" />
-        </tar>
-        
-        <zip destfile="${component_export_dir}/packages/mod_jce_${version_package}.zip" basedir="${component_export_dir}/modules">
-            <fileset refid="modules" />
-        </zip!-->
-        
         <fileset dir="${component_export_dir}" id="zip">            
             <include name="administrator" />
             <include name="components" />
@@ -448,25 +476,5 @@
         <zip destfile="${component_export_dir}/com_jce_${version_package}.zip" basedir="${component_export_dir}" excludes="*.zip,*.gz">
             <fileset refid="zip" />
         </zip>
-        
-        <!--fileset dir="${component_export_dir}" id="package-zip">
-            <include name="packages" />
-            <include name="pkg_jce.xml" />
-            <exclude name="packages/mod_jce_${version_package}.zip"/>
-        </fileset>
-     
-        <fileset dir="${component_export_dir}" id="package-gz">
-            <include name="packages" />
-            <include name="pkg_jce.xml" />
-            <exclude name="packages/mod_jce_${version_package}.tar.gz"/>
-        </fileset>   
-
-        <zip destfile="${component_export_dir}/pkg_jce_${version_package}.zip" basedir="${component_export_dir}" excludes="*.gz">
-            <fileset refid="package-zip" />
-        </zip>   
-        
-        <tar destfile="${component_export_dir}/pkg_jce_${version_package}.tar.gz" basedir="${component_export_dir}" compression="gzip"  excludes="*.zip">
-            <fileset refid="package-gz" />
-        </tar-->    
     </target>
 </project>
