@@ -287,7 +287,7 @@
         
         <!-- Admin Concat and JSMin -->
         
-        <concat destfile="${component_admin_export_dir}/media/js/core.js">
+        <concat destfile="${component_admin_export_dir}/media/js/profile.js">
             <filelist dir="${component_admin_export_dir}/media/js/lib">
                 <file name="profiles.js" />
                 <file name="extensions.js" />
@@ -296,16 +296,14 @@
                 <file name="fonts.js" />
                 <file name="blockformats.js" />
             </filelist>
-            <filelist dir="${component_site_export_dir}/editor/libraries/js/lib">
-                <file name="select.js" />
-                <file name="colorpicker.js" />
-            </filelist>
         </concat>
 
-        <concat destfile="${component_admin_export_dir}/media/js/profile.js">
+        <concat destfile="${component_admin_export_dir}/media/js/core.js">
             <filelist dir="${component_site_export_dir}/editor/libraries/js/lib">
                 <file name="html5.js" />
                 <file name="tips.js" />
+                <file name="select.js" />
+                <file name="colorpicker.js" />
             </filelist>
             <file name="${component_admin_export_dir}/media/js/lib/jce.js" />
         </concat>
@@ -322,11 +320,11 @@
         <concat destfile="${component_site_export_dir}/editor/libraries/js/plugin.full.js">
             <filelist dir="${component_site_export_dir}/editor/libraries/js/lib">
                 <file name="html5.js" />
+                <file name="validate.js" />
                 <file name="select.js" />
                 <file name="tips.js" />
                 <file name="colorpicker.js" />
                 <file name="plugin.js" />
-
                 <file name="extensions.js" />
                 <file name="aggregator.js" />
                 <file name="mediaplayer.js" />
@@ -352,60 +350,175 @@
                 <file name="link.js" />
             </filelist>
         </concat>
-
-        <!-- JSMin -->
-        <jsmin force="true" copyright="${header_tinymce}">
-            <fileset dir="${component_export_dir}">
-                        
-                <include name="**/**.js" />
-                <exclude name="**/**-min.js" />
-                <exclude name="**/jquery/**" />
-                <exclude name="**/tiny_mce.js" />
-                <exclude name="**/tiny_mce_popup.js" />
-                <exclude name="**/codemirror/**" />                
-                <exclude name="**/plupload/**" />
-                
-                <contains text="http://tinymce.moxiecode.com/license"  casesensitive="no" />
-                <contains text="http://www.tinymce.com/license"  casesensitive="no" />  
-            </fileset>
-        </jsmin>
         
-        <jsmin force="true" copyright="${header}">
-            <fileset dir="${component_export_dir}">                
-                <include name="**/**.js" />
-                <exclude name="**/**-min.js" />
-                <exclude name="**/jquery/**" />
-                <exclude name="**/tiny_mce.js" />
-                <exclude name="**/tiny_mce_popup.js" />
-                <exclude name="**/codemirror/**" />   
-                <exclude name="**/plupload/**" />
-                <not>
-                    <contains text="http://tinymce.moxiecode.com/license" />
-                </not>
-                <not>
-                    <contains text="http://www.tinymce.com/license" />
-                </not>
+        <!-- Create big tinymce file -->
+        <concat destfile="${component_site_export_dir}/editor/tiny_mce/tiny_mce.min.js">
+            <filelist dir="${component_site_export_dir}/editor/tiny_mce">
+                <file name="tiny_mce.js" />
+                <file name="themes/none/editor_template.js" />
+                <file name="themes/advanced/editor_template.js" />
+            </filelist>
+            <fileset dir="${component_site_export_dir}/editor/tiny_mce/plugins">
+                <include name="autolink/editor_plugin.js" />
+                <include name="cleanup/editor_plugin.js" />
+                <include name="code/editor_plugin.js" />
+                <include name="colorpicker/editor_plugin.js" />
+                <include name="core/editor_plugin.js" />
+                <include name="format/editor_plugin.js" />
+                <include name="upload/editor_plugin.js" />
             </fileset>
-        </jsmin>
-        
-        <!--concat destfile="${component_site_export_dir}/editor/libraries/js/editor.full.js">
-            <file name="${component_site_export_dir}/tiny_mce/tiny_mce.js" />
-            <file name="${component_site_export_dir}/editor/libraries/js/lib/editor.js" />
         </concat>
         
-        <delete file="${component_site_export_dir}/editor/tiny_mce/tiny_mce.js" /-->
+        <!-- JSMin -->        
+        <jsmin force="true" copyright="${header}" suffix="true">
+            <fileset dir="${component_site_export_dir}/editor/libraries/js">                
+                <include name="**/**.js" />
+            </fileset>
+            
+            <fileset dir="${component_admin_export_dir}/media/js">                
+                <include name="**/**.js" />
+            </fileset>
+            
+            <fileset dir="${component_site_export_dir}/editor/tiny_mce/plugins">                
+                <include name="**/**.js" />
+                <exclude name="**/**-min.js" />
+                <exclude name="**/codemirror/**" />                   
+                <not>
+                    <contains text="http://tinymce.moxiecode.com/license"  casesensitive="no" />
+                </not>
+                <not>
+                    <contains text="http://www.tinymce.com/license"  casesensitive="no" />
+                </not>  
+            </fileset>
+        </jsmin>
+        
+        <jsmin force="true" copyright="${header_tinymce}">
+            <fileset dir="${component_site_export_dir}/editor/tiny_mce">                
+                <include name="tiny_mce.min.js" />
+            </fileset>
+            <fileset dir="${component_site_export_dir}/editor/tiny_mce/plugins">                
+                <include name="**/editor_plugin.js" />
+            </fileset>
+            <fileset dir="${component_site_export_dir}/editor/tiny_mce/themes">                
+                <include name="**/editor_template.js" />
+            </fileset>
+        </jsmin>
+
+        <move todir="${component_export_dir}" includeemptydirs="false">
+            <fileset dir="${component_export_dir}">
+                <include name="**/**.min.js" />
+                <exclude name="**/jquery.min.js" />
+                <exclude name="**/jquery-ui.min.js" />
+            </fileset>
+            <mapper type="regexp" from="^(.*)\.min\.js$" to="\1.js" />
+        </move>
+        
+        <!-- Admin CSS -->
+        <concat destfile="${component_admin_export_dir}/media/css/global.css">
+            <filelist dir="${component_admin_export_dir}/media/css">
+                <file name="colorpicker.css" />
+                <file name="bootstrap.min.css" />
+                <file name="styles.css" />
+            </filelist>
+            <filelist dir="${component_site_export_dir}/editor/libraries/css">
+                <file name="tips.css" />
+                <file name="select.css" />
+            </filelist>
+        </concat>
+        
+        <concat destfile="${component_admin_export_dir}/media/css/profiles.css">
+            <filelist dir="${component_admin_export_dir}/media/css">
+                <file name="files.css" />
+                <file name="extensions.css" />
+                <file name="styleformat.css" />
+                <file name="fonts.css" />
+                <file name="blockformats.css" />
+                <file name="layout.css" />
+                <file name="profile.css" />
+            </filelist>
+        </concat>
+        
+        <!-- Delete CSS -->
+        <delete>
+            <fileset dir="${component_admin_export_dir}/media/css">
+                <include name="**/**.css" />
+                <exclude name="global.css" />
+                <exclude name="profiles.css" />
+                
+                <exclude name="cpanel.css" />
+                <exclude name="installer.css" />
+                <exclude name="install.css" />
+                <exclude name="upload.css" />
+                <exclude name="users.css" />
+                <exclude name="upload.css" />
+                <exclude name="updates.css" />
+                <exclude name="preferences.css" />
+                <exclude name="module.css" />
+            </fileset>
+        </delete>
+        
+        <!-- Site CSS -->
+        <concat destfile="${component_site_export_dir}/editor/libraries/css/plugin.css">
+            <filelist dir="${component_site_export_dir}/editor/libraries/css">
+                <file name="reset.css" />
+                <file name="tips.css" />
+                <file name="select.css" />
+                <file name="tree.css" />
+                <file name="colorpicker.css" />
+                <file name="dialog.css" />
+            </filelist>
+        </concat>
+        
+        <concat destfile="${component_site_export_dir}/editor/libraries/css/manager.css">
+            <filelist dir="${component_site_export_dir}/editor/libraries/css">
+                <file name="files.css" />
+                <file name="upload.css" />
+                <file name="browser.css" />
+            </filelist>
+        </concat>
+        
+        <!-- Delete CSS -->
+        <delete>
+            <fileset dir="${component_site_export_dir}/editor/libraries/css">
+                <include name="**/**.css" />
+                <exclude name="files.css" />
+                <exclude name="plugin.css" />
+                <exclude name="manager.css" />
+                <exclude name="help.css" />
+                <exclude name="editor.css" />
+                <exclude name="popup.css" />
+                <exclude name="colorpicker.css" />
+            </fileset>
+        </delete>
+
+        <!-- Delete JS -->
+
         <delete dir="${component_site_export_dir}/editor/libraries/js/lib" />
         <delete file="${component_site_export_dir}/editor/libraries/plupload/plupload.full.js" />
+        
+        <delete>
+            <fileset dir="${component_site_export_dir}/editor/tiny_mce/plugins">
+                <include name="autolink/editor_plugin.js" />
+                <include name="cleanup/editor_plugin.js" />
+                <include name="code/editor_plugin.js" />
+                <include name="colorpicker/editor_plugin.js" />
+                <include name="core/editor_plugin.js" />
+                <include name="format/editor_plugin.js" />
+                <include name="upload/editor_plugin.js" />
+            </fileset>
+            <fileset dir="${component_site_export_dir}/editor/tiny_mce/themes">
+                <include name="advanced/editor_template.js" />
+                <include name="none/editor_template.js" />
+            </fileset>
+        </delete>
 
         <yui-compressor warn="false" charset="UTF-8" fromdir="${component_export_dir}" todir="${component_export_dir}">
             <include name="**/*.css" />
-            <exclude name="**/bootstrap-responsive.min.css" />
         </yui-compressor>
        
         <delete dir="${component_export_dir}" quiet="true">
             <include name="**/*.css" />
             <exclude name="**/**-min.css" />
-            <exclude name="**/bootstrap.min.css" />
             <exclude name="**/codemirror/**" />
             <exclude name="**/codemirror/theme/**" />
         </delete>
@@ -415,7 +528,6 @@
             <path>
                 <fileset dir="${component_export_dir}">
                     <include name="**/*-min.css" />
-                    <exclude name="**/bootstrap.min.css" />
                 </fileset>
             </path>
             <sequential>
