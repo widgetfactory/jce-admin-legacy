@@ -66,9 +66,6 @@ class WFViewMediabox extends WFView {
 
         $this->assign('params', $params);
         $this->assign('client', $client);
-
-        $this->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/colorpicker.js');
-        $this->addStyleSheet('components/com_jce/media/css/colorpicker.css');
         
         wfimport('admin.models.editor');
 

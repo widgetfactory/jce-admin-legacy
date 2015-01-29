@@ -27,7 +27,7 @@ class WFModelEditor extends WFModelBase {
      * Editor version
      * @var string
      */
-    private static $version = null;
+    public static $version = null;
 
     /**
      * Profile object
@@ -563,7 +563,8 @@ class WFModelEditor extends WFModelBase {
                 $wf = WFEditor::getInstance();
 
                 $plugins = explode(',', $this->profile->plugins);
-                $plugins = array_unique(array_merge(array('autolink', 'cleanup', 'core', 'code', 'colorpicker', 'upload', 'format'), $plugins));
+                $core    = array('autolink', 'cleanup', 'core', 'code', 'colorpicker', 'upload', 'format');
+                $plugins = array_unique(array_merge($core, $plugins));
 
                 // add formatselect
                 if (in_array('formatselect', $plugins) === false && strpos($this->profile->rows, 'formatselect') !== false) {
@@ -611,6 +612,10 @@ class WFModelEditor extends WFModelBase {
                 }
 
                 foreach ($plugins as $k => $v) {
+                    if (in_array($v, $core)) {
+                        continue;
+                    }
+
                     // check plugin is correctly installed and is a tinymce plugin, ie: it has an editor_plugin.js file
                     if (!JFile::exists(WF_EDITOR_PLUGINS . '/' . $v . '/editor_plugin.js')) {
                         unset($plugins[$k]);
@@ -1025,13 +1030,22 @@ class WFModelEditor extends WFModelBase {
                 // add core file
                 $files[] = WF_EDITOR . "/tiny_mce/tiny_mce" . $suffix . ".js";
 
-                // Add themes
-                foreach ($themes as $theme) {
-                    $files[] = WF_EDITOR . "/tiny_mce/themes/" . $theme . "/editor_template" . $suffix . ".js";
+                // Add themes in dev mode
+                if (!self::$version) {
+                    foreach ($themes as $theme) {
+                        $files[] = WF_EDITOR . "/tiny_mce/themes/" . $theme . "/editor_template" . $suffix . ".js";
+                    }
                 }
+                
+                $core = array('autolink', 'cleanup', 'core', 'code', 'colorpicker', 'upload', 'format');
 
                 // Add plugins
                 foreach ($plugins as $plugin) {
+                    // skip core plugins in production mode
+                    if (self::$version && in_array($plugin, $core)) {
+                        continue;
+                    }
+                    
                     $files[] = WF_EDITOR . "/tiny_mce/plugins/" . $plugin . "/editor_plugin" . $suffix . ".js";
                 }
 

@@ -182,16 +182,8 @@ class WFController extends WFControllerBase {
         if (!JFolder::exists($site_path  . '/jquery/' . $theme)) {
             $theme = 'jce';
         }
-        
-        if (JFolder::exists($site_path . '/jquery/' . $theme)) {
-            $files = JFolder::files($site_path . '/jquery/' . $theme, '\.css');
-            
-            foreach ($files as $file) {
-                //$styles[] = 'components/com_jce/editor/libraries/css/jquery/' . $theme . '/' . $file;
-            }
-        }
 
-		// admin global css
+        // admin global css
         $styles = array_merge($styles, array(
             'administrator/components/com_jce/media/css/global.css'
         ));

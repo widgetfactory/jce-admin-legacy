@@ -766,3 +766,5 @@ to {transform:rotate(360deg);}
     border : 1px dashed #ccc;
     height : 60px;
 }
+
+span.colorpicker_widget {background: url("../../../../../components/com_jce/editor/libraries/img/icons.png") no-repeat 0 -1000px;width: 16px;height: 16px;cursor: pointer;vertical-align: middle;display: inline-block;margin: 4px 5px 2px 5px;}

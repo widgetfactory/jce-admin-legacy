@@ -37,6 +37,7 @@
     load('lib/jce.js');
     load('../../../../../components/com_jce/editor/libraries/js/lib/html5.js');
     load('../../../../../components/com_jce/editor/libraries/js/lib/tips.js');
+    load('../../../../../components/com_jce/editor/libraries/js/lib/colorpicker.js');
 
     writeScripts();
 })(this);
