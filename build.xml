@@ -417,12 +417,12 @@
         <concat destfile="${component_admin_export_dir}/media/css/global.css">
             <filelist dir="${component_admin_export_dir}/media/css">
                 <file name="colorpicker.css" />
+                <file name="select.css" />
                 <file name="bootstrap.min.css" />
                 <file name="styles.css" />
             </filelist>
             <filelist dir="${component_site_export_dir}/editor/libraries/css">
                 <file name="tips.css" />
-                <file name="select.css" />
             </filelist>
         </concat>
         
