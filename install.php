@@ -726,6 +726,16 @@ abstract class WFInstall {
             $admin . '/media/js/fonts.js',
             $admin . '/media/js/blockformats.js',
             
+            $admin . '/media/css/colorpicker.css',
+            $admin . '/media/css/bootstrap.min.css',
+            $admin . '/media/css/styles.css',
+            $admin . '/media/css/extensions.css',
+            $admin . '/media/css/styleformat.css',
+            $admin . '/media/css/fonts.css',
+            $admin . '/media/css/blockformats.css',
+            $admin . '/media/css/layout.css',
+            $admin . '/media/css/profile.css',
+            
             $site . '/editor/libraries/js/html5.js',
             $site . '/editor/libraries/js/select.js',
             $site . '/editor/libraries/js/tips.js',
@@ -742,7 +752,16 @@ abstract class WFInstall {
             $site . '/editor/libraries/js/browser.js',
             $site . '/editor/libraries/js/sort.js',
             $site . '/editor/libraries/js/filter.js',
-            $site . '/editor/libraries/js/manager.js'
+            $site . '/editor/libraries/js/manager.js',
+            $site . '/editor/libraries/js/link.js',
+            
+            $site . '/editor/libraries/css/reset.css',
+            $site . '/editor/libraries/css/tips.css',
+            $site . '/editor/libraries/css/tree.css',
+            $site . '/editor/libraries/css/dialog.css',
+            $site . '/editor/libraries/css/upload.css',
+            $site . '/editor/libraries/css/browser.css',
+            $site . '/editor/libraries/css/bootstrap.min.css'
         );
 
         foreach ($files as $file) {
