@@ -271,7 +271,7 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     margin : 0 10px;
 }
 
-.ui-bootstrap #jce div.tab-pane.tabbable.tabs-left ul li > a:first-child {
+#jce div.tab-pane.tabbable.tabs-left ul li > a:first-child {
     max-width: 100px;
     padding-bottom: 20px;
     padding-top: 20px;
@@ -285,7 +285,7 @@ html[dir="rtl"] .ui-jce .ui-tabs-vertical .ui-tabs-panel {
     box-shadow: inset -1px 0px 1px px rgba(0, 0, 0, 0.05);
 }
 
-.ui-bootstrap #jce div.tab-pane.tabbable.tabs-left ul li.active > a {
+#jce div.tab-pane.tabbable.tabs-left ul li.active > a {
     background-color : #fff;
     border-color : #eee #fff #eee #eee;
 

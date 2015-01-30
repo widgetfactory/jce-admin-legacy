@@ -57,7 +57,7 @@ class WFController extends WFControllerBase {
      * and includes addition of the JDocument Object with required scripts and styles
      * @return object
      */
-    public function getView($name = '', $type = '', $prefix = '', $config = array()) {        
+    public function getView($name = '', $type = '', $prefix = '', $config = array()) {
         $language = JFactory::getLanguage();
         $language->load('com_jce', JPATH_ADMINISTRATOR);
 
@@ -76,26 +76,25 @@ class WFController extends WFControllerBase {
                 'base_path' => dirname(__FILE__)
             );
         }
-        
+
         $model = $this->getModel($name);
 
         $view = parent::getView($name, $type, $prefix, $config);
         $document = JFactory::getDocument();
-        
-        // check for bootstrap
-        $bootstrap = is_file(JPATH_LIBRARIES . '/cms/html/bootstrap.php'); 
 
-        // not using JUI...
-        if (!$bootstrap) {
-            // set device-width meta
-            $document->setMetaData('meta', 'width=device-width, initial-scale=1.0');
+        // set device-width meta
+        $document->setMetaData('meta', 'width=device-width, initial-scale=1.0');
 
-            // JQuery UI
+        $version = new JVersion;
+
+        if ($version->isCompatible('3.0')) {
+            // Include jQuery
+            JHtml::_('jquery.framework');
+        } else {
+            // JQuery
             $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/jquery/js/jquery.min.js');
             // jQuery noConflict
             $view->addScriptDeclaration('jQuery.noConflict();');
-        } else {
-            JHtml::_('bootstrap.framework');
         }
 
         // JQuery UI
@@ -105,11 +104,11 @@ class WFController extends WFControllerBase {
 
         switch ($name) {
             case 'help':
-                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/help.js');                
+                $view->addScript(JURI::root(true) . '/components/com_jce/editor/libraries/js/help.js');
                 break;
             default:
                 $view->addStyleSheet(JURI::root(true) . '/administrator/components/com_jce/media/css/global.css');
-                
+
                 // load Joomla! core javascript
                 if (method_exists('JHtml', 'core')) {
                     JHtml::core();
@@ -121,7 +120,7 @@ class WFController extends WFControllerBase {
 
                 $params = WFParameterHelper::getComponentParams();
                 $theme = $params->get('preferences.theme', 'jce');
-                
+
                 $view->addScript(JURI::root(true) . '/administrator/components/com_jce/media/js/core.js');
 
                 $options = array(
@@ -133,8 +132,7 @@ class WFController extends WFControllerBase {
                         'saveclose' => WFText::_('WF_LABEL_SAVECLOSE'),
                         'alert' => WFText::_('WF_LABEL_ALERT'),
                         'required' => WFText::_('WF_MESSAGE_REQUIRED')
-                    ),
-                    'bootstrap' => $bootstrap
+                    )
                 );
 
                 $view->addScriptDeclaration('jQuery.jce.options = ' . json_encode($options) . ';');
@@ -159,27 +157,26 @@ class WFController extends WFControllerBase {
 
         return $view;
     }
-    
-    protected function getStyles()
-    {
+
+    protected function getStyles() {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
-        
+
         wfimport('admin.helpers.extension');
-        
+
         $view = JRequest::getCmd('view', 'cpanel');
 
-        $component 	= WFExtensionHelper::getComponent();        
-        $params 	= new WFParameter($component->params);
-        
-        $theme  	= $params->get('preferences.theme', 'jce');
-        $site_path      = JPATH_COMPONENT_SITE . '/editor/libraries/css';
-	$admin_path     = JPATH_COMPONENT_ADMINISTRATOR . '/media/css';
-        
+        $component = WFExtensionHelper::getComponent();
+        $params = new WFParameter($component->params);
+
+        $theme = $params->get('preferences.theme', 'jce');
+        $site_path = JPATH_COMPONENT_SITE . '/editor/libraries/css';
+        $admin_path = JPATH_COMPONENT_ADMINISTRATOR . '/media/css';
+
         // Load styles
         $styles = array();
-        
-        if (!JFolder::exists($site_path  . '/jquery/' . $theme)) {
+
+        if (!JFolder::exists($site_path . '/jquery/' . $theme)) {
             $theme = 'jce';
         }
 
@@ -187,7 +184,7 @@ class WFController extends WFControllerBase {
         $styles = array_merge($styles, array(
             'administrator/components/com_jce/media/css/global.css'
         ));
-        
+
         return $styles;
     }
 
@@ -252,7 +249,7 @@ class WFController extends WFControllerBase {
         $type = JRequest::getWord('type', 'tables');
 
         switch ($type) {
-            case 'tables' :                
+            case 'tables' :
                 wfimport('admin.models.profiles');
                 $profiles = new WFModelProfiles();
 
@@ -283,7 +280,7 @@ class WFController extends WFControllerBase {
 
     public function authorize($task) {
         wfimport('admin.models.model');
-        
+
         // map updates/blank/cpanel task to manage
         if (empty($task) || $task == 'cpanel' || $task == 'updates') {
             $task = 'manage';
@@ -308,21 +305,22 @@ class WFController extends WFControllerBase {
 
         return false;
     }
-    
+
     public function cleanInput($input, $method = 'string') {
         $filter = JFilterInput::getInstance();
-        $input  = (array) $input;
+        $input = (array) $input;
 
-        foreach($input as $k => $v) {
+        foreach ($input as $k => $v) {
             if (is_array($v)) {
                 $input[$k] = $this->cleanInput($v, $method);
             } else {
                 $input[$k] = $filter->clean($v, $method);
             }
         }
-        
+
         return $input;
     }
+
 }
 
 ?>
