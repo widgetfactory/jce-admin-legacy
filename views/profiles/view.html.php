@@ -19,7 +19,7 @@ class WFViewProfiles extends WFView {
         wfimport('admin.models.editor');
         
         $options = array(
-            'editableselects' => array('label' => WFText::_('WF_TOOLS_EDITABLESELECT_LABEL')),
+            'combobox' => array('label' => WFText::_('WF_TOOLS_EDITABLESELECT_LABEL')),
             'extensions' => array(
                 'labels' => array(
                     'type_new' => WFText::_('WF_EXTENSION_MAPPER_TYPE_NEW'),
@@ -573,9 +573,6 @@ class WFViewProfiles extends WFView {
                 
                 // get options for various widgets
                 $options = $this->getOptions($params);
-                
-                // set suhosin flag
-                $options['suhosin'] = ini_get('suhosin.post.max_vars') && (int) ini_get('suhosin.post.max_vars') < 1000;
 
                 $this->addScriptDeclaration('jQuery.jce.Profiles.options = ' . json_encode($options) . ';');
 
