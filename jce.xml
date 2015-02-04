@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<extension version="1.6" type="component" method="upgrade">
+<extension type="component" version="2.5" method="upgrade">
     <name>JCE</name>
     <author>Ryan Demmer</author>
     <creationDate>@@date@@</creationDate>
