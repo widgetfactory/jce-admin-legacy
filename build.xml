@@ -170,18 +170,6 @@
             <exclude name="editor/extensions/popups_build.xml" />
             <exclude name="editor/extensions/filesystem/s3*" />
             <exclude name="editor/extensions/filesystem/s3/**" />
-            <exclude name="editor/extensions/filesystem/amazons3*" />
-            <exclude name="editor/extensions/filesystem/amazons3/**" />
-            <exclude name="editor/extensions/filesystem/google*" />
-            <exclude name="editor/extensions/filesystem/google/**" />
-            <exclude name="editor/extensions/links/docmanlinks*" />
-            <exclude name="editor/extensions/links/docmanlinks/**" />
-            <exclude name="editor/extensions/links/zoo*" />
-            <exclude name="editor/extensions/links/zoo/**" />
-            <exclude name="editor/extensions/links/k2links**" />
-            <exclude name="editor/extensions/links/k2links/**" />
-            <exclude name="editor/extensions/mediaplayer/flowplayer*" />
-            <exclude name="editor/extensions/mediaplayer/flowplayer/**" />
             <exclude name="editor/extensions/popups/widgetkit*" />
             <exclude name="editor/extensions/popups/widgetkit/**" />
             <exclude name="editor/extensions/popups/rokbox*" />
@@ -372,6 +360,10 @@
         <!-- JSMin -->        
         <jsmin force="true" copyright="${header}" suffix="true">
             <fileset dir="${component_site_export_dir}/editor/libraries/js">                
+                <include name="**/**.js" />
+            </fileset>
+            
+            <fileset dir="${component_site_export_dir}/editor/extensions">                
                 <include name="**/**.js" />
             </fileset>
             
