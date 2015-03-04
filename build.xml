@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.5.0 beta3" />
-    <property description="Component Version" name="version_package" value="250beta3" />
+    <property description="Component Version" name="version" value="2.5.0 beta4" />
+    <property description="Component Version" name="version_package" value="250beta4" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
@@ -131,15 +131,14 @@
         <!-- Compress popup  -->
         <yuicompress infile="${classes_dir}/Popup.js" outfile="${build_dir}/tiny_mce_popup.js" />
         
-        <concat destfile="${build_dir}/tiny_mce_popup.js.tmp">
+        <!--concat destfile="${build_dir}/tiny_mce_popup.js.tmp">
             <header filtering="no" trimleading="yes">
                 // Uncomment and change this document.domain value if you are loading the script cross subdomains
                 // document.domain = 'moxiecode.com';
-
             </header>
             <fileset file="${build_dir}/tiny_mce_popup.js" />
         </concat>
-        <move file="${build_dir}/tiny_mce_popup.js.tmp" tofile="${build_dir}/tiny_mce_popup.js" overwrite="true" />
+        <move file="${build_dir}/tiny_mce_popup.js.tmp" tofile="${build_dir}/tiny_mce_popup.js" overwrite="true" /-->
 
         <!-- Cleanup -->
         <delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>
