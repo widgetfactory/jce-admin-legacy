@@ -227,16 +227,19 @@ class WFModelPlugins extends WFModel {
                 if (in_array($plugin->name, preg_split('/[;,]+/', $profile->rows)) === false) {
                     // get rows as array	
                     $rows = explode(';', $profile->rows);
-                    // get key (row number)
-                    $key = (int) $plugin->row - 1;
-                    // get row contents as array
-                    $row = explode(',', $rows[$key]);
-                    // add plugin name to end of row
-                    $row[] = $plugin->name;
-                    // add row data back to rows array
-                    $rows[$key] = implode(',', $row);
+                    
+                    if (count($rows)) {
+                        // get key (row number)
+                        $key = count($rows) - 1;
+                        // get row contents as array
+                        $row = explode(',', $rows[$key]);
+                        // add plugin name to end of row
+                        $row[] = $plugin->name;
+                        // add row data back to rows array
+                        $rows[$key] = implode(',', $row);
 
-                    $profile->rows = implode(';', $rows);
+                        $profile->rows = implode(';', $rows);
+                    }
                 }
 
                 if (!$profile->store()) {
