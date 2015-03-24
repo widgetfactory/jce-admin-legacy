@@ -69,6 +69,7 @@ defined('_JEXEC') or die('RESTRICTED');
             </div>
         </div>
     </div>
+    <input type="hidden" name="users[]" value="" />
     <input type="hidden" name="option" value="com_jce" />
     <input type="hidden" name="id" value="<?php echo $this->profile->id; ?>" />
     <input type="hidden" name="cid[]" value="<?php echo $this->profile->id; ?>" />
