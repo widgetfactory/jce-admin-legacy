@@ -29,7 +29,7 @@ class WFViewHelp extends WFView {
         require_once(WF_ADMINISTRATOR . '/classes/parameter.php');
 
         $params = new WFParameter($component->params);
-        $url = $params->get('preferences.help.url', 'http://www.joomlacontenteditor.net');
+        $url = $params->get('preferences.help.url', 'https://www.joomlacontenteditor.net');
         $method = $params->get('preferences.help.method', 'reference');
         $pattern = $params->get('preferences.help.pattern', '');
 
