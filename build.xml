@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.5.0" />
-    <property description="Component Version" name="version_package" value="250" />
+    <property description="Component Version" name="version" value="2.5.0RC1" />
+    <property description="Component Version" name="version_package" value="250rc1" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
@@ -26,7 +26,7 @@
     
     <!-- Concat and minify classes and scripts -->
     <target name="build-tinymce" depends="" description="Build TinyMCE">
-        <property description="Classes directory" name="classes_dir" location="${component_site}/editor/tiny_mce/classes" />
+        <property description="Classes directory" name="classes_dir" location="/Users/ryandemmer/Sites/tinymce-for-jce2/jscripts/tiny_mce/classes" />
         <property description="Temp directory" name="temp_dir" location="${component_export_dir}/tmp" />
         <property description="Build directory" name="build_dir" location="${component_export_dir}/tiny_mce" />
         <property environment="env" />
@@ -320,11 +320,7 @@
             <exclude name="editor/extensions/popups/build.xml" />
             <exclude name="editor/extensions/filesystem/build.xml" />
             <exclude name="editor/extensions/links/build.xml" />
-            
-            <!-- Unit Test -->
-            <exclude name="editor/tiny_mce/tests/**" />
-            
-            <exclude name="editor/tiny_mce/classes/**" />
+
             <exclude name="editor/tiny_mce/tiny_mce_popup.js" />
         </fileset>
 	  
