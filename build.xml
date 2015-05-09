@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.5.0RC2" />
-    <property description="Component Version" name="version_package" value="250rc2" />
+    <property description="Component Version" name="version" value="2.5.0RC4" />
+    <property description="Component Version" name="version_package" value="250rc4" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
@@ -304,6 +304,9 @@
             <exclude name="editor/extensions/aggregator/googlemaps/**" />
             
             <exclude name="editor/extensions/imageeditor/**" />
+            
+            <exclude name="editor/extensions/links/k2links*" />
+            <exclude name="editor/extensions/links/k2links/**" />
 			
             <!-- Plugin Exclusions -->
             <exclude name="editor/tiny_mce/plugins/caption/**" />
