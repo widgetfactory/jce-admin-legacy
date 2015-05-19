@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="JCE Administration Component" basedir="." default="build">
-    <property description="Component Version" name="version" value="2.5.0RC4" />
-    <property description="Component Version" name="version_package" value="250rc4" />
+    <property description="Component Version" name="version" value="2.5.0RC5" />
+    <property description="Component Version" name="version_package" value="250rc5" />
     <property description="Component Name" name="name" value="JCE Editor" />
     <property description="E-Mail" name="e-mail" value="info@joomlacontenteditor.net" />
     <property description="Licence" name="licence" value="GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html" />
@@ -19,11 +19,20 @@
     <property description="Component Admin Export directory" name="component_admin_export_dir" value="${component_export_dir}/administrator/components/com_jce" />
     <property description="Component Site Export directory" name="component_site_export_dir" value="${component_export_dir}/components/com_jce" />
 
+    <include file="${component_site}/editor/tiny_mce/plugins/caption/build.xml" as="caption" />
+    <include file="${component_site}/editor/tiny_mce/plugins/emotions/build.xml" as="emotions" />
+    <include file="${component_site}/editor/tiny_mce/plugins/filemanager/build.xml" as="filemanager" />
+    <include file="${component_site}/editor/tiny_mce/plugins/iframe/build.xml" as="iframe" />
+    <include file="${component_site}/editor/tiny_mce/plugins/imgmanager_ext/build.xml" as="imgmanager_ext" />
+    <include file="${component_site}/editor/tiny_mce/plugins/mediamanager/build.xml" as="mediamanager" />
+    <include file="${component_site}/editor/tiny_mce/plugins/templatemanager/build.xml" as="templatemanager" />
+    <include file="${component_site}/editor/tiny_mce/plugins/microdata/build.xml" as="microdata" />
+
     <target name="setup">
         <delete dir="${component_export_dir}" quiet="true" />
         <delete dir="${language_export_dir}" quiet="true" />
     </target>
-    
+
     <!-- Concat and minify classes and scripts -->
     <target name="build-tinymce" depends="" description="Build TinyMCE">
         <property description="Classes directory" name="classes_dir" location="/Users/ryandemmer/Sites/tinymce-for-jce2/jscripts/tiny_mce/classes" />
@@ -692,20 +701,60 @@
         <delete file="${component_export_dir}/administrator/components/com_jce/header.tinymce.txt" quiet="true" />
         <delete file="${component_export_dir}/administrator/components/com_jce/header.codemirror.txt" quiet="true" />
     </target>
-    
-    <target name="production-release" depends="setup,build-tinymce,build-editor">
+        
+    <target name="production-release-standard" depends="setup,build-tinymce,build-editor">
         <delete dir="${component_export_dir}/tiny_mce" quiet="true" />
         
+        <fileset dir="${component_export_dir}" id="package-standard">            
+            <include name="administrator" />
+            <include name="components" />
+            <include name="language" />
+            <include name="packages" />
+            <include name="jce.xml" />
+            <include name="legacy.xml" />
+            <include name="install.script.php" />
+        </fileset>
+        
         <zip destfile="${component_export_dir}/com_jce_${version_package}.zip" basedir="${component_export_dir}" excludes="*.zip,*.gz">
-            <fileset dir="${component_export_dir}">            
-                <include name="administrator" />
-                <include name="components" />
-                <include name="language" />
-                <include name="packages" />
-                <include name="jce.xml" />
-                <include name="legacy.xml" />
-                <include name="install.script.php" />
-            </fileset>
+            <fileset refid="package-standard" />
+        </zip>
+    </target>
+
+    <target name="production-release-pro" depends="setup,build-tinymce,build-editor">
+        <delete dir="${component_export_dir}/tiny_mce" quiet="true" />
+        
+        <for param="plugin" list="caption,emotions,filemanager,iframe,imgmanager_ext,mediamanager,templatemanager,microdata">
+            <sequential>
+                <echo message="@{plugin} - ${@{plugin}_package_version}" />
+                
+                <copy todir="${component_export_dir}/components/com_jce/editor/tiny_mce/plugins/@{plugin}">
+                    <fileset dir="${component_export_dir}/../../plugins/@{plugin}/${@{plugin}_package_version}">
+                        <include name="**/**" />
+                        <exclude name="en-GB.com_jce_*.ini" />
+                    </fileset>
+                </copy>
+        
+                <copy todir="${component_export_dir}/language">
+                    <fileset dir="${component_export_dir}/../../plugins/@{plugin}/${@{plugin}_package_version}">
+                        <exclude name="**/**" />
+                        <include name="en-GB.com_jce_@{plugin}.ini" />
+                    </fileset>
+                </copy>
+            </sequential>
+        </for>
+
+        <fileset dir="${component_export_dir}" id="package-pro">            
+            <include name="administrator" />
+            <include name="components" />
+            <include name="language" />
+            <include name="packages" />
+            <include name="jce.xml" />
+            <include name="legacy.xml" />
+            <include name="install.script.php" />
+        </fileset>
+        
+        <zip destfile="${component_export_dir}/com_jce_${version_package}_pro.zip" basedir="${component_export_dir}" excludes="*.zip,*.gz">
+            <fileset refid="package-pro" />
         </zip>
     </target>
 </project>

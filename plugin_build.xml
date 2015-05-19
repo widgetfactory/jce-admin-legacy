@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JCE Editor Plugin" basedir="." default="build">
+    <property description="Language directory" name="plugin_lang_dir" value="/Users/ryandemmer/Sites/20x/language/en-GB" />
+    <property description="Export directory" name="plugin_export_dir" value="/Users/ryandemmer/Releases/plugins/" />
+    <property description="E-mail" name="e-mail" value="info@joomlacontenteditor.net" />
+    <property description="Licence" name="licence" value="GNU/GPL Version 2 - http://www.gnu.org/licenses/gpl-2.0.html" />
+    <property description="Copyright" name="copyright" value="Copyright (C) 2006 - 2015 Ryan Demmer. All rights reserved" />
+    
+    <property description="Plugin Directory" name="plugin_dir" value="/Users/ryandemmer/Sites/20x/components/com_jce/editor/tiny_mce/plugins/${plugin_name}" />
+    <property name="base_dir" value="/Users/ryandemmer/Sites/20x/administrator/components/com_jce" />
+    
+    <target name="build">        
+        <!-- Setup classpath for js-build-tools ant tasks -->
+        <path id="tasks.classpath">
+            <pathelement location="."/>
+
+            <fileset dir="/Users/ryandemmer/ant-tools">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+        <!-- generate checksum of this file -->
+        <checksum file="build.xml" property="etag" />
+ 
+        <taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpathref="tasks.classpath" />
+        <taskdef name="yuicompressor-moxiecode" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+        <taskdef name="yui-compressor" classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask" classpathref="tasks.classpath" />
+        
+        <tstamp>
+            <format property="DATE" pattern="dd MMMM yyyy" />
+        </tstamp>
+
+        <delete dir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}"
+                quiet="true" />
+        <delete file="${plugin_export_dir}/jce_${plugin_name}_${plugin_package_version}.zip"
+                quiet="true" />
+
+        <copy todir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}/">
+            <fileset dir="${plugin_dir}" defaultexcludes="yes">
+                <include name="**" />
+                <exclude name="build.xml" />
+                <exclude name=".project" />
+                <exclude name=".settings" />
+                <exclude name=".buildpath" />
+                <exclude name=".externalToolBuilders/" />
+                <exclude name="**.project" />
+                <exclude name="**.settings" />
+                <exclude name="*.settings" />
+                <exclude name="**.settings/" />
+                <exclude name="**.buildpath" />
+                <exclude name="**.externalToolBuilders/" />
+                <exclude name="changelog.txt" />
+                <exclude name="README" />
+                <exclude name="**/nbproject" />
+                <exclude name="**/nbproject/**" />
+            </fileset>
+            <fileset dir="${plugin_lang_dir}">
+                <include name="en-GB.com_jce_${plugin_name}.ini" />
+            </fileset>
+            
+            <fileset dir="${base_dir}">
+                <include name="header.js.txt" />
+                <include name="header.css.txt" />
+            </fileset>
+        </copy>
+        
+        <replace 
+            dir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}/">
+            <replacefilter 
+                token="@@name@@" 
+                value="${plugin_name}"/>
+            <replacefilter 
+                token="@@version@@" 
+                value="${plugin_version}"/>
+            <replacefilter 
+                token="@@e-mail@@" 
+                value="${e-mail}"/>
+            <replacefilter 
+                token="@@date@@" 
+                value="${DATE}"/>
+            <replacefilter 
+                token="@@licence@@" 
+                value="${licence}"/>
+            <replacefilter 
+                token="@@copyright@@" 
+                value="${copyright}"/>
+        </replace>
+        
+        <!-- Load Header file -->
+        
+        <loadfile property="header" srcFile="${plugin_export_dir}/${plugin_name}/${plugin_package_version}/header.js.txt"/>
+        <loadfile property="header" srcFile="${plugin_export_dir}/${plugin_name}/${plugin_package_version}/header.css.txt"/>
+        
+        <!-- JSMin -->
+        
+        <jsmin force="true" copyright="${header}">
+            <fileset dir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}">                
+                <include name="**/*.js" />                
+            </fileset>
+        </jsmin>
+        
+        <yui-compressor warn="false" charset="UTF-8" fromdir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}" todir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}">
+           <include name="**/*.css" />
+       </yui-compressor>
+
+       <!-- Prepend header -->
+      <for param="file">
+        <path>
+            <fileset dir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}">
+                <include name="**/*-min.css" />
+            </fileset>
+        </path>
+        <sequential>
+            <concat destfile="@{file}.tmp">
+                <fileset file="${plugin_export_dir}/${plugin_name}/${plugin_package_version}/header.css.txt" />
+                <fileset file="@{file}" />
+            </concat>
+        </sequential>
+      </for>
+      
+      <move todir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}" includeemptydirs="false">
+           <fileset dir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}">
+               <include name="**/**-min.css.tmp" />
+           </fileset>
+           <mapper type="regexp" from="^(.*)-min\.css\.tmp$" to="\1.css" />
+      </move>
+      
+      <delete dir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}" quiet="true">
+            <include name="**/**-min.css" />
+       </delete>
+        
+        <delete file="${plugin_export_dir}/${plugin_name}/${plugin_package_version}/header.js.txt" quiet="true" />
+        <delete file="${plugin_export_dir}/${plugin_name}/${plugin_package_version}/header.css.txt" quiet="true" />
+
+        <zip destfile="${plugin_export_dir}/jce_${plugin_name}_${plugin_package_version}.zip"
+             basedir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}/">
+            <fileset dir="${plugin_export_dir}/${plugin_name}/${plugin_package_version}/" />
+        </zip>
+    </target>
+</project>
