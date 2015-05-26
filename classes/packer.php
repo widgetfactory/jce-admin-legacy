@@ -190,7 +190,7 @@ class WFPacker extends JObject {
         //$css = preg_replace('/#([a-f0-9])\\1([a-f0-9])\\2([a-f0-9])\\3/i', '#\1\2\3', $css);
 
         require_once(dirname(__FILE__) . '/cssmin.php');
-        $min = new CSSmin();
+        $min = new CSSmin(false);
         $css = $min->run($css);
 
         return trim($css);
